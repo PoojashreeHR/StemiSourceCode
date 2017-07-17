@@ -3,15 +3,119 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:background="@color/appBackground"
     android:layout_height="match_parent"
-    tools:context="com.stemi.stemiapp.MainActivity">
+    tools:context="com.stemi.stemiapp.activity.MainActivity">
+
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/et_email"
+        style="@style/StyledTilEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="150dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp">
+
+        <EditText
+            android:id="@+id/et_email_login"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="EMAIL"
+            android:imeOptions="actionNext"
+            android:inputType="textEmailAddress" />
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/view5"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/et_email"
+        android:layout_marginTop="20dp"
+        style="@style/StyledTilEditText"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp">
+
+        <EditText
+            android:id="@+id/et_password_login"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="PASSWORD"
+            android:textColor="@color/white"
+            android:imeOptions="actionGo"
+            android:inputType="textPassword"/>
+    </android.support.design.widget.TextInputLayout>
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/tv_forgot_password"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="TextView"
-        android:layout_centerInParent="true"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="69dp" />
+        android:text="@string/forgot_password"
+        android:textSize="20sp"
+        android:textColor="@color/white"
+        android:layout_above="@+id/tv_not_registered"
+        android:layout_alignLeft="@+id/tv_not_registered"
+        android:layout_alignStart="@+id/tv_not_registered"
+        android:layout_marginBottom="164dp" />
+
+    <Button
+        android:id="@+id/btn_login"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/button_oval_shape"
+        android:text="SIGN IN"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:textColor="@color/appBackground"
+        android:layout_marginBottom="78dp"
+        android:layout_above="@+id/tv_not_registered"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <!--<RelativeLayout
+        android:id="@+id/rl_customize"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_below="@+id/btn_login"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true">
+
+        <View
+            android:id="@+id/view1"
+            android:layout_width="150dp"
+            android:layout_height="2dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="8dp"
+            android:background="@color/dark_grey" />
+
+        <TextView
+            android:id="@+id/tv_or"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/view1"
+            android:text="OR" />
+
+        <View
+            android:id="@+id/view2"
+            android:layout_width="150dp"
+            android:layout_height="2dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="8dp"
+            android:layout_toRightOf="@+id/tv_or"
+            android:background="@color/dark_grey" />
+
+    </RelativeLayout>-->
+
+
+    <TextView
+        android:id="@+id/tv_not_registered"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:textSize="20sp"
+        android:textColor="@color/white"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="44dp"
+        android:text="@string/registration" />
 </RelativeLayout>

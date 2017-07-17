@@ -1,7 +1,9 @@
-package com.stemi.stemiapp;
+package com.stemi.stemiapp.activity;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
+import com.stemi.stemiapp.R;
 
 public class MainActivity extends AppCompatActivity {
 
