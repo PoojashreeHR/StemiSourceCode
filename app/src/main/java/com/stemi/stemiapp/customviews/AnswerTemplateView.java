@@ -20,6 +20,16 @@ public class AnswerTemplateView extends LinearLayout implements View.OnClickList
     private String response;
     private boolean hideDontKnow;
 
+    public void setResponseChangedListener(ResponseChangedListener responseChangedListener) {
+        this.responseChangedListener = responseChangedListener;
+    }
+
+
+    public interface ResponseChangedListener{
+        void onResponse(String response);
+    }
+    private ResponseChangedListener responseChangedListener;
+
     public AnswerTemplateView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
 
@@ -80,6 +90,10 @@ public class AnswerTemplateView extends LinearLayout implements View.OnClickList
 
         tv_yes.setBackgroundColor(getResources().getColor(R.color.white));
         tv_yes.setTextColor(getResources().getColor(R.color.appBackground));
+
+        if(responseChangedListener != null){
+            responseChangedListener.onResponse(response);
+        }
     }
 
     public void setNo()
@@ -93,6 +107,10 @@ public class AnswerTemplateView extends LinearLayout implements View.OnClickList
 
         tv_no.setBackgroundColor(getResources().getColor(R.color.white));
         tv_no.setTextColor(getResources().getColor(R.color.appBackground));
+
+        if(responseChangedListener != null){
+            responseChangedListener.onResponse(response);
+        }
     }
 
     public void setDontKnow(){
@@ -105,6 +123,10 @@ public class AnswerTemplateView extends LinearLayout implements View.OnClickList
 
         tv_dont_know.setBackgroundColor(getResources().getColor(R.color.white));
         tv_dont_know.setTextColor(getResources().getColor(R.color.appBackground));
+
+        if(responseChangedListener != null){
+            responseChangedListener.onResponse(response);
+        }
     }
     @Override
     public void onClick(View view) {

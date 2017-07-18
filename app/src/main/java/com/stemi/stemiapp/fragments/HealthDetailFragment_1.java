@@ -113,11 +113,17 @@ public class HealthDetailFragment_1 extends Fragment implements View.OnClickList
         public void onBindViewHolder(final MyViewHolder holder, final int position) {
             HealthQuestions questions = healthQuestions.get(position);
             holder.question.setText(questions.getQuestions());
-            holder.answerTemplateView.setOnClickListener(new View.OnClickListener() {
+//            holder.answerTemplateView.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    Toast.makeText(mContext, "you Clicked : "+ holder.answerTemplateView.getResponse(), Toast.LENGTH_SHORT).show();
+//
+//                }
+//            });
+            holder.answerTemplateView.setResponseChangedListener(new AnswerTemplateView.ResponseChangedListener() {
                 @Override
-                public void onClick(View v) {
-                    Toast.makeText(mContext, "you Clicked : "+ holder.answerTemplateView.getResponse(), Toast.LENGTH_SHORT).show();
-
+                public void onResponse(String response) {
+                    Toast.makeText(mContext, "You clicked "+response, Toast.LENGTH_SHORT).show();
                 }
             });
         }
