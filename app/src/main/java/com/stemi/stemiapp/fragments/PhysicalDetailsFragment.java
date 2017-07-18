@@ -27,8 +27,6 @@ public class PhysicalDetailsFragment extends Fragment implements View.OnClickLis
 
         View view = inflater.inflate(R.layout.fragment_physical_details, container, false);
         view.findViewById(R.id.bt_physical_next).setOnClickListener(this);
-        textView =(TextView) view.findViewById(R.id.tv_smoke_yes);
-        textView.setOnClickListener(this);
 
 
         // view.findViewById(R.id.userDetailButton).setOnClickListener(this);
@@ -50,10 +48,6 @@ public class PhysicalDetailsFragment extends Fragment implements View.OnClickLis
                 //Move to Fragment 03
                 ((RegistrationActivity) getActivity()).showFragment(new HealthDetailFragment_1());
                 break;
-            case R.id.tv_smoke_yes:
-                textView.setBackgroundColor(getResources().getColor(R.color.white));
-                textView.setTextColor(getResources().getColor(R.color.appBackground));
-                Toast.makeText(getActivity(), "Yes", Toast.LENGTH_SHORT).show();
 
         }
     }

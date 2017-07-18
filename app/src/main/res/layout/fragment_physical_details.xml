@@ -70,7 +70,7 @@
         android:textColor="@color/white"
         android:layout_marginTop="20dp"/>
 
-        <LinearLayout
+       <!-- <LinearLayout
             android:id="@+id/layout_smoke"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -101,7 +101,15 @@
                 android:background="@drawable/text_border_with_color"
                 android:textColor="@color/white"/>
 
-        </LinearLayout>
+        </LinearLayout>-->
+        <com.stemi.stemiapp.customviews.AnswerTemplateView
+            android:id="@+id/smoke_answerLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/have_diabetes"
+            android:layout_marginTop="10dp">
+
+        </com.stemi.stemiapp.customviews.AnswerTemplateView>
 
         <TextView
             android:id="@+id/heart_attack_before"
@@ -112,6 +120,17 @@
             android:textColor="@color/white"
             android:layout_marginTop="20dp"/>
 
+        <com.stemi.stemiapp.customviews.AnswerTemplateView
+            android:id="@+id/answerLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/have_diabetes"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp">
+
+        </com.stemi.stemiapp.customviews.AnswerTemplateView>
+
+<!--
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -153,6 +172,7 @@
                 android:textColor="@color/white"/>
 
         </LinearLayout>
+-->
 
     </LinearLayout>
     </ScrollView>

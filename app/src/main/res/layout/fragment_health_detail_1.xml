@@ -335,7 +335,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="13dp"
         android:layout_marginRight="13dp"
-        android:text="NEXT"
+        android:text="REGISTER"
         android:textSize="20sp"
         android:textColor="@color/appBackground"
         android:layout_alignParentBottom="true" />
