@@ -57,42 +57,54 @@ public class AnswerTemplateView extends LinearLayout implements View.OnClickList
         return response;
     }
 
+    public void setYes(){
+        response = "YES";
+        tv_no.setBackground(getResources().getDrawable(R.drawable.text_border_with_color));
+        //tv_no.setBackgroundColor(getResources().getColor(R.color.appBackground));
+        tv_no.setTextColor(getResources().getColor(R.color.white));
+
+        tv_dont_know.setBackground(getResources().getDrawable(R.drawable.text_border_with_color));
+        tv_dont_know.setTextColor(getResources().getColor(R.color.white));
+
+        tv_yes.setBackgroundColor(getResources().getColor(R.color.white));
+        tv_yes.setTextColor(getResources().getColor(R.color.appBackground));
+    }
+
+    public void setNo()
+    {
+        response = "NO";
+        tv_yes.setBackground(getResources().getDrawable(R.drawable.text_border_with_color));
+        tv_yes.setTextColor(getResources().getColor(R.color.white));
+
+        tv_dont_know.setBackground(getResources().getDrawable(R.drawable.text_border_with_color));
+        tv_dont_know.setTextColor(getResources().getColor(R.color.white));
+
+        tv_no.setBackgroundColor(getResources().getColor(R.color.white));
+        tv_no.setTextColor(getResources().getColor(R.color.appBackground));
+    }
+
+    public void setDontKnow(){
+        response = "DON'T KNOW";
+        tv_no.setBackground(getResources().getDrawable(R.drawable.text_border_with_color));
+        tv_no.setTextColor(getResources().getColor(R.color.white));
+
+        tv_yes.setBackground(getResources().getDrawable(R.drawable.text_border_with_color));
+        tv_yes.setTextColor(getResources().getColor(R.color.white));
+
+        tv_dont_know.setBackgroundColor(getResources().getColor(R.color.white));
+        tv_dont_know.setTextColor(getResources().getColor(R.color.appBackground));
+    }
     @Override
     public void onClick(View view) {
         switch(view.getId()){
             case R.id.tv_yes:
-                response = "YES";
-                tv_no.setBackground(getResources().getDrawable(R.drawable.text_border_with_color));
-                //tv_no.setBackgroundColor(getResources().getColor(R.color.appBackground));
-                tv_no.setTextColor(getResources().getColor(R.color.white));
-
-                tv_dont_know.setBackground(getResources().getDrawable(R.drawable.text_border_with_color));
-                tv_dont_know.setTextColor(getResources().getColor(R.color.white));
-
-                tv_yes.setBackgroundColor(getResources().getColor(R.color.white));
-                tv_yes.setTextColor(getResources().getColor(R.color.appBackground));
+                setYes();
                 break;
             case R.id.tv_no:
-                response = "NO";
-                tv_yes.setBackground(getResources().getDrawable(R.drawable.text_border_with_color));
-                tv_yes.setTextColor(getResources().getColor(R.color.white));
-
-                tv_dont_know.setBackground(getResources().getDrawable(R.drawable.text_border_with_color));
-                tv_dont_know.setTextColor(getResources().getColor(R.color.white));
-
-                tv_no.setBackgroundColor(getResources().getColor(R.color.white));
-                tv_no.setTextColor(getResources().getColor(R.color.appBackground));
+                setNo();
                 break;
             case R.id.tv_dont_know:
-                response = "DON'T KNOW";
-                tv_no.setBackground(getResources().getDrawable(R.drawable.text_border_with_color));
-                tv_no.setTextColor(getResources().getColor(R.color.white));
-
-                tv_yes.setBackground(getResources().getDrawable(R.drawable.text_border_with_color));
-                tv_yes.setTextColor(getResources().getColor(R.color.white));
-
-                tv_dont_know.setBackgroundColor(getResources().getColor(R.color.white));
-                tv_dont_know.setTextColor(getResources().getColor(R.color.appBackground));
+                setDontKnow();
                 break;
         }
 
