@@ -37,7 +37,7 @@ public class UserDetailsFragment extends Fragment implements View.OnClickListene
     @BindView(R.id.et_phone) EditText et_phone;
     @BindView(R.id.et_address) EditText et_address;
 
-    RegisteredUserDetails registeredUserDetails;
+
     Button user_next;
     BetterSpinner gender_spinner;
     ArrayList<String> genderText;
@@ -53,7 +53,6 @@ public class UserDetailsFragment extends Fragment implements View.OnClickListene
         ButterKnife.bind(this,view);
         view.findViewById(R.id.userDetailButton).setOnClickListener(this);
 
-        registeredUserDetails = new RegisteredUserDetails();
         gender_spinner = (BetterSpinner) view.findViewById(R.id.gender_spinner);
         genderText = new ArrayList<>();
         gender_spinner.setOnItemSelectedListener(this);
@@ -65,7 +64,7 @@ public class UserDetailsFragment extends Fragment implements View.OnClickListene
                 R.layout.spinner_layout, genderText );
         gender_spinner.setAdapter(arrayAdapter);
 
-       /* ArrayAdapter<String> quantityAdapter = new ArrayAdapter<>(getActivity(), R.layout.spinner_layout, genderText);
+        /*ArrayAdapter<String> quantityAdapter = new ArrayAdapter<>(getActivity(), R.layout.spinner_layout, genderText);
         quantityAdapter.setDropDownViewResource(R.layout.spinner_layout);
         gender_spinner.setAdapter(quantityAdapter);*/
         return view;
@@ -74,10 +73,18 @@ public class UserDetailsFragment extends Fragment implements View.OnClickListene
     @Override
     public void onResume() {
         super.onResume();
+        saveUserDetails();
        // ((RegistrationActivity) getActivity()).disableNavigationIcon();
        // ((RegistrationActivity) getActivity()).setToolbarTitle(R.string.MainFragmentTitle);
     }
 
+    public void saveUserDetails(){
+        RegistrationActivity.registeredUserDetails.setName(et_name.getText().toString());
+        RegistrationActivity.registeredUserDetails.setAge(et_age.getText().toString());
+        RegistrationActivity.registeredUserDetails.setGender(genderText.toString());
+        RegistrationActivity.registeredUserDetails.setPhone(et_phone.getText().toString());
+        RegistrationActivity.registeredUserDetails.setAddress(et_address.getText().toString());
+    }
     @Override
     public void onClick(View v) {
 
@@ -85,11 +92,7 @@ public class UserDetailsFragment extends Fragment implements View.OnClickListene
             case R.id.userDetailButton:
                 //Move to Fragment 03
                 if (validateAllFields()) {
-                    registeredUserDetails.setName(et_name.getText().toString());
-                    registeredUserDetails.setAge(et_age.getText().toString());
-                    registeredUserDetails.setGender(genderText.toString());
-                    registeredUserDetails.setPhone(et_phone.getText().toString());
-                    registeredUserDetails.setAddress(et_address.getText().toString());
+                    saveUserDetails();
                     ((RegistrationActivity) getActivity()).showFragment(new PhysicalDetailsFragment());
                     break;
                 }

@@ -27,6 +27,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Height (Cm)"
+            android:inputType="number"
             android:imeOptions="actionNext" />
     </android.support.design.widget.TextInputLayout>
 
@@ -43,6 +44,7 @@
             android:layout_height="wrap_content"
             android:hint="Weight (Kg)"
             android:textColor="@color/white"
+            android:inputType="number"
             android:imeOptions="actionGo" />
     </android.support.design.widget.TextInputLayout>
     <android.support.design.widget.TextInputLayout
@@ -57,6 +59,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Waist (In)"
+            android:inputType="number"
             android:textColor="@color/white"
             android:imeOptions="actionGo" />
     </android.support.design.widget.TextInputLayout>

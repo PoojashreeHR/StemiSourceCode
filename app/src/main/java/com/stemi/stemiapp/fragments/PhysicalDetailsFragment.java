@@ -41,19 +41,36 @@ public class PhysicalDetailsFragment extends Fragment implements View.OnClickLis
         View view = inflater.inflate(R.layout.fragment_physical_details, container, false);
         ButterKnife.bind(this,view);
         view.findViewById(R.id.bt_physical_next).setOnClickListener(this);
-
-
         // view.findViewById(R.id.userDetailButton).setOnClickListener(this);
+
+        if(RegistrationActivity.registeredUserDetails != null){
+            et_height.setText(RegistrationActivity.registeredUserDetails.getWeight());
+            et_weight.setText(RegistrationActivity.registeredUserDetails.getWeight());
+            et_waist.setText(RegistrationActivity.registeredUserDetails.getWaist());
+
+            if(RegistrationActivity.registeredUserDetails.getDo_you_smoke() != null) {
+                smoke_answer.setResponse(RegistrationActivity.registeredUserDetails.getDo_you_smoke());
+            }
+        }
         return view;
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        saveDetails();
         // ((RegistrationActivity) getActivity()).disableNavigationIcon();
         // ((RegistrationActivity) getActivity()).setToolbarTitle(R.string.MainFragmentTitle);
     }
 
+
+
+   public void saveDetails(){
+       RegistrationActivity.registeredUserDetails.setHeight(et_height.getText().toString());
+       RegistrationActivity.registeredUserDetails.setWeight(et_weight.getText().toString());
+       RegistrationActivity.registeredUserDetails.setWaist(et_waist.getText().toString());
+       RegistrationActivity.registeredUserDetails.setDo_you_smoke(smoke_answer.getResponse());
+    }
     @Override
     public void onClick(View v) {
 
@@ -61,6 +78,7 @@ public class PhysicalDetailsFragment extends Fragment implements View.OnClickLis
             case R.id.bt_physical_next:
                 //Move to Fragment 03
                 if(validateFields()) {
+                    saveDetails();
                     ((RegistrationActivity) getActivity()).showFragment(new HealthDetailFragment_1());
                     break;
                 }
@@ -94,12 +112,11 @@ public class PhysicalDetailsFragment extends Fragment implements View.OnClickLis
             et_waist.setError(null);
         }
 
-        String smoke = smoke_answer.getResponse().toString();
-        if (TextUtils.isEmpty(smoke)) {
+        if(smoke_answer.getResponse() == null){
             Toast.makeText(getActivity(), "You must select atleast one answer", Toast.LENGTH_SHORT).show();
             valid = false;
         } else {
-            Toast.makeText(getActivity(), "Your Response is: ", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "Your Response is: " + smoke_answer.getResponse().toString(), Toast.LENGTH_SHORT).show();
         }
         return valid;
     }

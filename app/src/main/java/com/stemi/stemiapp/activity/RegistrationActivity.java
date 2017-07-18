@@ -9,15 +9,17 @@ import android.view.View;
 
 import com.stemi.stemiapp.R;
 import com.stemi.stemiapp.fragments.UserDetailsFragment;
+import com.stemi.stemiapp.model.RegisteredUserDetails;
 
 public class RegistrationActivity extends AppCompatActivity {
+
+    public static RegisteredUserDetails registeredUserDetails = new RegisteredUserDetails();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration);
         showFragment(new UserDetailsFragment());
-
     }
 
     public void showFragment(Fragment fragment) {
@@ -59,6 +61,7 @@ public class RegistrationActivity extends AppCompatActivity {
         if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
             finish();
         }
+
     }
 
     protected void enableNavigationIcon() {

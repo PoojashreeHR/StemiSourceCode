@@ -53,10 +53,22 @@ public class AnswerTemplateView extends LinearLayout implements View.OnClickList
     }
 
 
-    public String getResponse() {
-        return response;
-    }
+    public String getResponse() {return response;}
 
+    public void setResponse(String response) {
+        this.response = response;
+        switch (response) {
+            case "YES":
+                setYes();
+                break;
+            case "NO":
+                setNo();
+                break;
+            case "DON'T KNOW":
+                setDontKnow();
+                break;
+        }
+    }
     public void setYes(){
         response = "YES";
         tv_no.setBackground(getResources().getDrawable(R.drawable.text_border_with_color));

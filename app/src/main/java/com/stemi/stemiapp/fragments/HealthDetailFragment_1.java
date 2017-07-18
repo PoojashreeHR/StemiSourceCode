@@ -14,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.stemi.stemiapp.R;
+import com.stemi.stemiapp.customviews.AnswerTemplateView;
 import com.stemi.stemiapp.model.HealthAnswers;
 import com.stemi.stemiapp.model.HealthQuestions;
 
@@ -83,13 +84,15 @@ public class HealthDetailFragment_1 extends Fragment implements View.OnClickList
 
         public class MyViewHolder extends RecyclerView.ViewHolder {
             public TextView yes, no,dont_know, question;
+            public AnswerTemplateView answerTemplateView;
 
             public MyViewHolder(View view) {
                 super(view);
                 question = (TextView) view.findViewById(R.id.have_diabetes);
-                yes = (TextView) view.findViewById(R.id.tv_yes);
+                answerTemplateView = (AnswerTemplateView) view.findViewById(R.id.answerLayout);
+               /* yes = (TextView) view.findViewById(R.id.tv_yes);
                 no = (TextView) view.findViewById(R.id.tv_no);
-                dont_know = (TextView) view.findViewById(R.id.tv_dont_know);
+                dont_know = (TextView) view.findViewById(R.id.tv_dont_know);*/
             }
         }
 
@@ -107,10 +110,16 @@ public class HealthDetailFragment_1 extends Fragment implements View.OnClickList
         }
 
         @Override
-        public void onBindViewHolder(final MyViewHolder holder, int position) {
+        public void onBindViewHolder(final MyViewHolder holder, final int position) {
             HealthQuestions questions = healthQuestions.get(position);
             holder.question.setText(questions.getQuestions());
+            holder.answerTemplateView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(mContext, "you Clicked : "+ holder.answerTemplateView.getResponse(), Toast.LENGTH_SHORT).show();
 
+                }
+            });
         }
 
         @Override
