@@ -106,7 +106,7 @@
             android:id="@+id/smoke_answerLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/have_diabetes"
+            app:hideDontKnow="true"
             android:layout_marginTop="10dp">
 
         </com.stemi.stemiapp.customviews.AnswerTemplateView>
@@ -121,10 +121,9 @@
             android:layout_marginTop="20dp"/>
 
         <com.stemi.stemiapp.customviews.AnswerTemplateView
-            android:id="@+id/answerLayout"
+            android:id="@+id/heart_attack"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/have_diabetes"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp">
 

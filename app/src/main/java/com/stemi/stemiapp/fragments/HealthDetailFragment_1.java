@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.stemi.stemiapp.R;
 import com.stemi.stemiapp.model.HealthAnswers;
@@ -44,16 +45,7 @@ public class HealthDetailFragment_1 extends Fragment implements View.OnClickList
         healthRecycler.setLayoutManager(mLayoutManager);
         healthRecycler.setAdapter(healthAdapter);
         HealthData();
-       // HealthData();// view.findViewById(R.id.userDetailButton).setOnClickListener(this);
         return view;
-    }
-
-
-    private HealthAnswers faqProduct(String values,boolean isClicked) {
-        HealthAnswers answers = new HealthAnswers();
-        answers.setValues(values);
-        answers.setClicked(isClicked);
-        return answers;
     }
 
 
@@ -61,7 +53,6 @@ public class HealthDetailFragment_1 extends Fragment implements View.OnClickList
         HealthQuestions questions = new HealthQuestions();
         questions.setQuestions(Question);
         questions.setSize(size);
-        //questions.setHealthAnswers(answers);
         healthQuestions.add(questions);
     }
 
@@ -70,20 +61,19 @@ public class HealthDetailFragment_1 extends Fragment implements View.OnClickList
 
     }
 
-    private void HealthData(){
 
-        ArrayList<HealthAnswers> answers = new ArrayList<>();
-        /*answers.add(faqProduct("YES",false));
-        answers.add(faqProduct("NO",false));
-        answers.add(faqProduct("DON'T KNOW",false));*/
-        prepareHealthData("Do you have diabetes?",3);
-        prepareHealthData("Do you have high blood pressure?",3);
-        prepareHealthData("Do you have high cholesterol?",3);
-        prepareHealthData("Did you ever had paralytic stroke?",3);
-        prepareHealthData("Do you have bronchial astama?",3);
-        prepareHealthData("Did anyone in your immediate family had a heart attack?",3);
+    //Setting question and adding it to recyclerview
+    private void HealthData(){
+        prepareHealthData(getResources().getString(R.string.have_diabetes),3);
+        prepareHealthData(getResources().getString(R.string.have_blood_presssure),3);
+        prepareHealthData(getResources().getString(R.string.have_cholesterol),3);
+        prepareHealthData(getResources().getString(R.string.had_paralytic_stroke),3);
+        prepareHealthData(getResources().getString(R.string.have_astama),3);
+        prepareHealthData(getResources().getString(R.string.family_health),3);
 
     }
+
+    // Recycleview Adapter
 
     public class HealthAdapter extends RecyclerView.Adapter<HealthAdapter.MyViewHolder> {
 
@@ -96,20 +86,16 @@ public class HealthDetailFragment_1 extends Fragment implements View.OnClickList
 
             public MyViewHolder(View view) {
                 super(view);
-              //  title = (TextView) view.findViewById(R.id.title);
                 question = (TextView) view.findViewById(R.id.have_diabetes);
                 yes = (TextView) view.findViewById(R.id.tv_yes);
                 no = (TextView) view.findViewById(R.id.tv_no);
                 dont_know = (TextView) view.findViewById(R.id.tv_dont_know);
-                // = (TextView) view.findViewById(R.id.);
             }
         }
-
 
         public HealthAdapter(List<HealthQuestions> healthQuestions,Context context) {
             this.healthQuestions = healthQuestions;
             this.mContext =context;
-         //   healthAnswers = healthQuestions.get(0).getHealthAnswers();
         }
 
         @Override
@@ -124,28 +110,7 @@ public class HealthDetailFragment_1 extends Fragment implements View.OnClickList
         public void onBindViewHolder(final MyViewHolder holder, int position) {
             HealthQuestions questions = healthQuestions.get(position);
             holder.question.setText(questions.getQuestions());
-            /*for(int i=0; i<questions.getHealthAnswers().size();i++) {
-                    holder.yes.setText(questions.getHealthAnswers().get(0).getValues());
-                    holder.no.setText(questions.getHealthAnswers().get(1).getValues());
-                    holder.dont_know.setText(questions.getHealthAnswers().get(2).getValues());
-            }
 
-            for (int i = 0; i < questions.getHealthAnswers().size(); i++) {
-                if(questions.getHealthAnswers().get(i).getClicked()){
-
-                }
-            }
-            holder.yes.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                        holder.yes.setBackground(getResources().getDrawable(R.drawable.inverted_textcolor));
-                    }else {
-                        holder.yes.setBackgroundDrawable(getResources().getDrawable(R.drawable.inverted_textcolor));
-                    }
-                }
-            });*/
-          //  holder.year.setText(movie.getYear());
         }
 
         @Override

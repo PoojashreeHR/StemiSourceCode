@@ -39,7 +39,7 @@
             android:layout_height="wrap_content"
             android:hint="Name"
             android:imeOptions="actionNext"
-            android:inputType="textEmailAddress" />
+            android:inputType="textPersonName" />
     </android.support.design.widget.TextInputLayout>
 
     <android.support.design.widget.TextInputLayout
@@ -55,7 +55,8 @@
             android:layout_height="wrap_content"
             android:hint="Age"
             android:textColor="@color/white"
-            android:imeOptions="actionGo" />
+            android:imeOptions="actionGo"
+            android:inputType="number"/>
     </android.support.design.widget.TextInputLayout>
 
         <com.stemi.stemiapp.customviews.BetterSpinner
@@ -106,7 +107,8 @@
                 android:layout_height="wrap_content"
                 android:hint="Phone"
                 android:textColor="@color/white"
-                android:imeOptions="actionGo" />
+                android:imeOptions="actionGo"
+                android:inputType="phone"/>
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout

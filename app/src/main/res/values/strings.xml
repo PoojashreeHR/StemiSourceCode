@@ -8,4 +8,14 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!-- Health Related Question-->
+    <string name="Do_you_smoke">Do you smoke?</string>
+    <string name="had_heart_attack">Did you had a heart attack before?</string>
+    <string name="have_diabetes">Do you have diabetes?</string>
+    <string name="have_blood_presssure">Do you have high blood pressure?</string>
+    <string name="have_cholesterol">Do you have high cholesterol?</string>
+    <string name="had_paralytic_stroke">Did you ever had a paralytic stroke?</string>
+    <string name="have_astama">Do you have bronchial asthma?</string>
+    <string name="family_health">Did anyone in your immediate family had a heart attack?</string>
 </resources>
