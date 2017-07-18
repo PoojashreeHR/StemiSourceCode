@@ -1,6 +1,7 @@
 package com.stemi.stemiapp.customviews;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -17,9 +18,22 @@ import com.stemi.stemiapp.R;
 public class AnswerTemplateView extends LinearLayout implements View.OnClickListener {
     private TextView tv_yes, tv_no, tv_dont_know;
     private String response;
+    private boolean hideDontKnow;
 
     public AnswerTemplateView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
+
+        TypedArray a = context.getTheme().obtainStyledAttributes(
+                attrs,
+                R.styleable.AnswerTemplateView,
+                0, 0);
+        try{
+            hideDontKnow = a.getBoolean(R.styleable.AnswerTemplateView_hideDontKnow, false);
+        }
+        finally {
+            a.recycle();
+        }
+
 
         View v = LayoutInflater.from(context).inflate(R.layout.answer_layout, null);
         tv_yes = (TextView) v.findViewById(R.id.tv_yes);
@@ -29,6 +43,10 @@ public class AnswerTemplateView extends LinearLayout implements View.OnClickList
         tv_yes.setOnClickListener(this);
         tv_no.setOnClickListener(this);
         tv_dont_know.setOnClickListener(this);
+
+        if(hideDontKnow){
+            tv_dont_know.setVisibility(GONE);
+        }
 
         addView(v, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.MATCH_PARENT));
 
