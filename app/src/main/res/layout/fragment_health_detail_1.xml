@@ -9,7 +9,7 @@
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/button"
+        android:layout_above="@+id/bt_register"
         android:layout_margin="10dp"
         android:id="@+id/health_recyclerview"
         android:layout_alignParentLeft="true"
@@ -17,12 +17,13 @@
     </android.support.v7.widget.RecyclerView>
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/bt_register"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="REGISTER"
         android:textSize="20sp"
         android:textColor="@color/appBackground"
-        android:layout_alignParentBottom="true" />
+        android:layout_alignParentBottom="true"
+        android:background="@color/white"/>
 
 </RelativeLayout>

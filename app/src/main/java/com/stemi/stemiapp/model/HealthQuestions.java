@@ -7,10 +7,29 @@ import java.util.List;
  * Created by Pooja on 17-07-2017.
  */
 
-public class HealthQuestions {
+public class HealthQuestions extends RegisteredUserDetails {
 
     private String questions;
     private int size;
+    private String answer;
+    private boolean isClicked;
+
+    public String getAnswer() {
+        return answer;
+    }
+
+    public void setAnswer(String answer) {
+        this.answer = answer;
+    }
+
+    public boolean isClicked() {
+        return isClicked;
+    }
+
+    public void setClicked(boolean clicked) {
+        isClicked = clicked;
+    }
+
     private List<HealthAnswers> healthAnswers = new ArrayList<>();
 
 

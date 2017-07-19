@@ -47,10 +47,13 @@ public class PhysicalDetailsFragment extends Fragment implements View.OnClickLis
             et_height.setText(RegistrationActivity.registeredUserDetails.getWeight());
             et_weight.setText(RegistrationActivity.registeredUserDetails.getWeight());
             et_waist.setText(RegistrationActivity.registeredUserDetails.getWaist());
-
             if(RegistrationActivity.registeredUserDetails.getDo_you_smoke() != null) {
                 smoke_answer.setResponse(RegistrationActivity.registeredUserDetails.getDo_you_smoke());
             }
+            if(RegistrationActivity.registeredUserDetails.getHeart_attack() != null){
+                heart_attack.setResponse(RegistrationActivity.registeredUserDetails.getHeart_attack());
+            }
+
         }
         return view;
     }
@@ -70,6 +73,7 @@ public class PhysicalDetailsFragment extends Fragment implements View.OnClickLis
        RegistrationActivity.registeredUserDetails.setWeight(et_weight.getText().toString());
        RegistrationActivity.registeredUserDetails.setWaist(et_waist.getText().toString());
        RegistrationActivity.registeredUserDetails.setDo_you_smoke(smoke_answer.getResponse());
+       RegistrationActivity.registeredUserDetails.setHeart_attack(heart_attack.getResponse());
     }
     @Override
     public void onClick(View v) {
@@ -116,7 +120,14 @@ public class PhysicalDetailsFragment extends Fragment implements View.OnClickLis
             Toast.makeText(getActivity(), "You must select atleast one answer", Toast.LENGTH_SHORT).show();
             valid = false;
         } else {
-            Toast.makeText(getActivity(), "Your Response is: " + smoke_answer.getResponse().toString(), Toast.LENGTH_SHORT).show();
+         //   Toast.makeText(getActivity(), "Your Response is: " + smoke_answer.getResponse().toString(), Toast.LENGTH_SHORT).show();
+        }
+
+        if(heart_attack.getResponse() == null){
+            Toast.makeText(getActivity(), "You must select atleast one answer", Toast.LENGTH_SHORT).show();
+            valid = false;
+        } else {
+           // Toast.makeText(getActivity(), "Your Response is: " + heart_attack.getResponse().toString(), Toast.LENGTH_SHORT).show();
         }
         return valid;
     }

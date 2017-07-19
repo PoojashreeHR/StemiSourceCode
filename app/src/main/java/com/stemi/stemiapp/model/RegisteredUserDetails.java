@@ -1,5 +1,7 @@
 package com.stemi.stemiapp.model;
 
+import java.util.List;
+
 /**
  * Created by Pooja on 18-07-2017.
  */
@@ -15,12 +17,41 @@ public class RegisteredUserDetails {
     String waist;
     String do_you_smoke;
     String heart_attack;
+    List<HealthQuestions> healthQuestions;
     String diabetes;
     String blood_pressure;
     String cholesterol;
     String had_paralytic_stroke;
     String have_asthma;
     String family_had_heart_attack;
+    Boolean isClicked;
+
+    public List<HealthQuestions> getHealthQuestions() {
+        return healthQuestions;
+    }
+
+    public void setHealthQuestions(List<HealthQuestions> healthQuestions) {
+        this.healthQuestions = healthQuestions;
+    }
+
+    public Boolean getClicked() {
+        return isClicked;
+    }
+
+    public void setClicked(Boolean clicked) {
+        isClicked = clicked;
+    }
+/*
+    public String getQuestions() {
+        return questions;
+    }
+
+    public void setQuestions(String questions) {
+        this.questions = questions;
+    }
+
+    private String questions;*/
+
 
     public String getName() {
         return name;

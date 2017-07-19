@@ -4,6 +4,7 @@ package com.stemi.stemiapp.fragments;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,8 +23,12 @@ import com.stemi.stemiapp.model.RegisteredUserDetails;
 
 import java.util.ArrayList;
 
+import javax.security.auth.login.LoginException;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static android.content.ContentValues.TAG;
 
 /**
  * Created by Pooja on 14-07-2017.
@@ -55,18 +60,26 @@ public class UserDetailsFragment extends Fragment implements View.OnClickListene
 
         gender_spinner = (BetterSpinner) view.findViewById(R.id.gender_spinner);
         genderText = new ArrayList<>();
-        gender_spinner.setOnItemSelectedListener(this);
         genderText.add("Male");
         genderText.add("Female");
        // genderText.add("Mrs");
 
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(getActivity(),
-                R.layout.spinner_layout, genderText );
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(getActivity(), R.layout.spinner_layout, genderText );
         gender_spinner.setAdapter(arrayAdapter);
+        gender_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                salutatioSelected = parent.getItemAtPosition(position).toString();
+                gender_spinner.getText();
 
-        /*ArrayAdapter<String> quantityAdapter = new ArrayAdapter<>(getActivity(), R.layout.spinner_layout, genderText);
-        quantityAdapter.setDropDownViewResource(R.layout.spinner_layout);
-        gender_spinner.setAdapter(quantityAdapter);*/
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
         return view;
     }
 
@@ -74,8 +87,6 @@ public class UserDetailsFragment extends Fragment implements View.OnClickListene
     public void onResume() {
         super.onResume();
         saveUserDetails();
-       // ((RegistrationActivity) getActivity()).disableNavigationIcon();
-       // ((RegistrationActivity) getActivity()).setToolbarTitle(R.string.MainFragmentTitle);
     }
 
     public void saveUserDetails(){
@@ -103,17 +114,7 @@ public class UserDetailsFragment extends Fragment implements View.OnClickListene
     private boolean validateAllFields() {
         boolean valid = true;
 
-       /* String salutation = et_title.getText().toString();
-        if (TextUtils.isEmpty(salutation)) {
-            et_title.setError("Required");
-            valid = false;
-        } else if (salutation.length() > 3 || salutation.length() < 2) {
-            et_title.setError("Eg: Mr or Mrs");
-            valid = false;
-        } else {
-            et_title.setError(null);
-        }*/
-    //    CommonUtils.loge(TAG, "validateAllFields: " + salutatioSelected);
+        Log.e(TAG, "validateAllFields: " + salutatioSelected);
 
 
         String firstName = et_name.getText().toString();
@@ -163,7 +164,6 @@ public class UserDetailsFragment extends Fragment implements View.OnClickListene
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        salutatioSelected = parent.getItemAtPosition(position).toString();
     }
 
     @Override
