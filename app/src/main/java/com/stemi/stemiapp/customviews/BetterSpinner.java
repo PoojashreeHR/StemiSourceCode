@@ -15,13 +15,12 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.support.v7.widget.AppCompatAutoCompleteTextView;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.stemi.stemiapp.R;
 
 import java.util.Calendar;
 
-public class BetterSpinner extends AppCompatAutoCompleteTextView implements AdapterView.OnItemSelectedListener {
+public class BetterSpinner extends AppCompatAutoCompleteTextView implements AdapterView.OnItemClickListener {
 
     private static final int MAX_CLICK_DURATION = 200;
     private long startClickTime;
@@ -30,17 +29,17 @@ public class BetterSpinner extends AppCompatAutoCompleteTextView implements Adap
 
     public BetterSpinner(Context context) {
         super(context);
-        setOnItemSelectedListener(this);
+        setOnItemClickListener(this);
     }
 
     public BetterSpinner(Context arg0, AttributeSet arg1) {
         super(arg0, arg1);
-        setOnItemSelectedListener(this);
+        setOnItemClickListener(this);
     }
 
     public BetterSpinner(Context arg0, AttributeSet arg1, int arg2) {
         super(arg0, arg1, arg2);
-        setOnItemSelectedListener(this);
+        setOnItemClickListener(this);
     }
 
     @Override
@@ -91,12 +90,12 @@ public class BetterSpinner extends AppCompatAutoCompleteTextView implements Adap
         return super.onTouchEvent(event);
     }
 
-  /*  @Override
+    @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
         mPosition = position;
         isPopup = false;
     }
-*/
+
     @Override
     public void setCompoundDrawablesWithIntrinsicBounds(Drawable left, Drawable top, Drawable right, Drawable bottom) {
         Drawable dropdownIcon = ContextCompat.getDrawable(getContext(), R.drawable.ic_down_arrow_24px);
@@ -109,15 +108,5 @@ public class BetterSpinner extends AppCompatAutoCompleteTextView implements Adap
 
     public int getPosition() {
         return mPosition;
-    }
-
-    @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        Toast.makeText(getContext(), "Something", Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onNothingSelected(AdapterView<?> parent) {
-
     }
 }

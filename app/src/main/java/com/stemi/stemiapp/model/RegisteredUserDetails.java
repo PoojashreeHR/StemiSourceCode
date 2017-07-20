@@ -7,6 +7,7 @@ import java.util.List;
  */
 
 public class RegisteredUserDetails {
+    String uniqueId;
     String name;
     String age;
     String gender;
@@ -25,6 +26,14 @@ public class RegisteredUserDetails {
     String have_asthma;
     String family_had_heart_attack;
     Boolean isClicked;
+
+    public String getUniqueId() {
+        return uniqueId;
+    }
+
+    public void setUniqueId(String uniqueId) {
+        this.uniqueId = uniqueId;
+    }
 
     public List<HealthQuestions> getHealthQuestions() {
         return healthQuestions;

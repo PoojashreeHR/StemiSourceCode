@@ -1,10 +1,14 @@
 package com.stemi.stemiapp.fragments;
 
 import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,11 +21,14 @@ import android.widget.Toast;
 import com.stemi.stemiapp.R;
 import com.stemi.stemiapp.activity.RegistrationActivity;
 import com.stemi.stemiapp.customviews.AnswerTemplateView;
+import com.stemi.stemiapp.databases.DBforUserDetails;
 import com.stemi.stemiapp.model.HealthAnswers;
 import com.stemi.stemiapp.model.HealthQuestions;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static android.content.ContentValues.TAG;
 
 /**
  * Created by Pooja on 17-07-2017.
@@ -34,6 +41,7 @@ public class HealthDetailFragment_1 extends Fragment implements View.OnClickList
     private ArrayList<HealthAnswers> healthAnswers = new ArrayList<>();
     private HealthAdapter healthAdapter;
     Button registerButton;
+    DBforUserDetails dBforUserDetails;
     public HealthDetailFragment_1() {
     }
 
@@ -45,6 +53,7 @@ public class HealthDetailFragment_1 extends Fragment implements View.OnClickList
         healthRecycler = (RecyclerView) view.findViewById(R.id.health_recyclerview);
         registerButton = (Button) view.findViewById(R.id.bt_register);
         registerButton.setOnClickListener(this);
+        dBforUserDetails = new DBforUserDetails(getActivity());
         healthAdapter = new HealthAdapter(healthQuestions, getActivity());
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         healthRecycler.setLayoutManager(mLayoutManager);
@@ -68,8 +77,12 @@ public class HealthDetailFragment_1 extends Fragment implements View.OnClickList
             case R.id.bt_register:
                 //Move to Fragment 03
                 if (validateAllFields()) {
-                    Toast.makeText(getActivity(), "All details are correct", Toast.LENGTH_SHORT).show();
-                    break;
+                   // if(dBforUserDetails.KET)
+                    String deviceId = Settings.Secure.getString(getActivity().getContentResolver(), Settings.Secure.ANDROID_ID);
+                    Log.e(TAG, "onClick: "+ deviceId);
+                    RegistrationActivity.registeredUserDetails.setUniqueId(deviceId);
+                    dBforUserDetails.addEntry(RegistrationActivity.registeredUserDetails);
+                    Toast.makeText(getActivity(), "One row added successfully", Toast.LENGTH_SHORT).show();
                 }
 
         }

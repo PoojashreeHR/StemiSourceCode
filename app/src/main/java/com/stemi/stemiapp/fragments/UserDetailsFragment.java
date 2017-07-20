@@ -3,7 +3,9 @@ package com.stemi.stemiapp.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -66,18 +68,22 @@ public class UserDetailsFragment extends Fragment implements View.OnClickListene
 
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(getActivity(), R.layout.spinner_layout, genderText );
         gender_spinner.setAdapter(arrayAdapter);
-        gender_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                salutatioSelected = parent.getItemAtPosition(position).toString();
-                gender_spinner.getText();
 
+        gender_spinner.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
 
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                salutatioSelected = gender_spinner.getText().toString();
+                Log.e("TAG","Text is :"+gender_spinner.getText().toString());
             }
         });
         return view;
@@ -87,12 +93,14 @@ public class UserDetailsFragment extends Fragment implements View.OnClickListene
     public void onResume() {
         super.onResume();
         saveUserDetails();
+       // ((RegistrationActivity) getActivity()).disableNavigationIcon();
+       // ((RegistrationActivity) getActivity()).setToolbarTitle(R.string.MainFragmentTitle);
     }
 
     public void saveUserDetails(){
         RegistrationActivity.registeredUserDetails.setName(et_name.getText().toString());
         RegistrationActivity.registeredUserDetails.setAge(et_age.getText().toString());
-        RegistrationActivity.registeredUserDetails.setGender(genderText.toString());
+        RegistrationActivity.registeredUserDetails.setGender(gender_spinner.getText().toString());
         RegistrationActivity.registeredUserDetails.setPhone(et_phone.getText().toString());
         RegistrationActivity.registeredUserDetails.setAddress(et_address.getText().toString());
     }
@@ -133,7 +141,7 @@ public class UserDetailsFragment extends Fragment implements View.OnClickListene
             et_age.setError(null);
         }
 
-        String gender = gender_spinner.getText().toString();
+        String gender = salutatioSelected;
         if (TextUtils.isEmpty(gender)) {
             gender_spinner.setError("Required");
             valid = false;
