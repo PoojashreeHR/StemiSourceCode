@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:background="@android:color/holo_orange_light"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/tv_food_today"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textSize="20dp"
+        android:paddingLeft="10dp"
+        android:layout_marginTop="21dp"
+        android:drawableRight="@drawable/ic_down_arrow_24px"
+        android:text="Today  "
+        android:textColor="@color/white"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
+    <View
+        android:id="@+id/view"
+        android:layout_width="wrap_content"
+        android:layout_height="2dp"
+        android:background="@color/white"
+        android:layout_marginTop="10dp"
+        android:layout_below="@+id/tv_food_today"
+        android:layout_alignLeft="@+id/tv_food_today"
+        android:layout_alignStart="@+id/tv_food_today"
+        android:layout_alignRight="@+id/tv_food_today"
+        android:layout_alignEnd="@+id/tv_food_today" />
+
+    <TextView
+        android:id="@+id/tv_food_que"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/view"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        android:gravity="center"
+        android:layout_margin="10dp"
+        android:text="Did you keep within your calorie limit?" />
+
+    <com.stemi.stemiapp.customviews.AnswerTemplateView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:colorView="@android:color/holo_orange_light"
+        android:layout_margin="10dp"
+        app:textBackground="@drawable/food_template"
+        android:layout_below="@+id/tv_food_que">
+    </com.stemi.stemiapp.customviews.AnswerTemplateView>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="Save"
+        android:textSize="15dp"
+        android:textColor="@color/white"
+        android:background="@color/appBackground"
+        android:layout_alignParentBottom="true"
+        />
+</RelativeLayout>

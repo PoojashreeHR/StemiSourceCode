@@ -1,6 +1,7 @@
 package com.stemi.stemiapp.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -20,6 +21,7 @@ import android.widget.Toast;
 
 import com.stemi.stemiapp.R;
 import com.stemi.stemiapp.activity.RegistrationActivity;
+import com.stemi.stemiapp.activity.TrackActivity;
 import com.stemi.stemiapp.customviews.AnswerTemplateView;
 import com.stemi.stemiapp.databases.DBforUserDetails;
 import com.stemi.stemiapp.model.HealthAnswers;
@@ -83,8 +85,8 @@ public class HealthDetailFragment_1 extends Fragment implements View.OnClickList
                     RegistrationActivity.registeredUserDetails.setUniqueId(deviceId);
                     dBforUserDetails.addEntry(RegistrationActivity.registeredUserDetails);
                     Toast.makeText(getActivity(), "One row added successfully", Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(getActivity(), TrackActivity.class));
                 }
-
         }
     }
 

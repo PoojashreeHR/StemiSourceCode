@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_about_us"
+            android:title="Element 1" />
+        <item
+
+            android:id="@+id/nav_faqs"
+            android:title="Element 2" />
+        <item
+            android:id="@+id/nav_privacy"
+            android:title="Element 3" />
+        <item
+            android:id="@+id/nav_terms_condition"
+            android:title="Element 4" />
+
+        <item
+            android:id="@+id/nav_contact_us"
+            android:title="Element 5" />
+
+    </group>
+    <!--  <group android:id="@+id/nav_footer">
+          <item
+              android:id="@+id/action_feedback"
+              android:title=""
+              app:actionLayout="@layout/nav_footer"
+              />
+      </group>
+  -->
+</menu>

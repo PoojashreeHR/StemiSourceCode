@@ -8,38 +8,35 @@
 
     <TextView
         android:id="@+id/tv_yes"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:textSize="20sp"
         android:text="YES"
         android:padding="10dp"
         android:textAlignment="center"
-        android:background="@drawable/text_border_with_color"
         android:textColor="@color/white"/>
 
     <TextView
         android:id="@+id/tv_no"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:textSize="20sp"
         android:text="NO"
         android:padding="10dp"
         android:textAlignment="center"
-        android:background="@drawable/text_border_with_color"
         android:textColor="@color/white"/>
 
     <TextView
         android:id="@+id/tv_dont_know"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
+        android:layout_weight="2"
         android:textSize="20sp"
         android:text="DON'T KNOW"
         android:padding="10dp"
         android:textAlignment="center"
-        android:background="@drawable/text_border_with_color"
         android:textColor="@color/white"/>
 
 </LinearLayout>

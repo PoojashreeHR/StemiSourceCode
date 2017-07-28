@@ -2,5 +2,7 @@
 <resources>
     <declare-styleable name="AnswerTemplateView">
         <attr name="hideDontKnow" format="boolean"/>
+        <attr name="colorView" format="color"/>
+        <attr name="textBackground" format="integer"/>
     </declare-styleable>
 </resources>

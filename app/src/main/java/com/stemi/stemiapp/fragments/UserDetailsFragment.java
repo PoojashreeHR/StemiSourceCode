@@ -1,6 +1,7 @@
 package com.stemi.stemiapp.fragments;
 
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
@@ -15,6 +16,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.stemi.stemiapp.R;
 import com.stemi.stemiapp.activity.MainActivity;
@@ -36,7 +39,7 @@ import static android.content.ContentValues.TAG;
  * Created by Pooja on 14-07-2017.
  */
 
-public class UserDetailsFragment extends Fragment implements View.OnClickListener, AdapterView.OnItemSelectedListener{
+public class UserDetailsFragment extends Fragment implements View.OnClickListener{
 
 
     @BindView(R.id.et_name) EditText et_name;
@@ -53,8 +56,7 @@ public class UserDetailsFragment extends Fragment implements View.OnClickListene
     public UserDetailsFragment() {
     }
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_user_details, container, false);
         ButterKnife.bind(this,view);
@@ -68,18 +70,15 @@ public class UserDetailsFragment extends Fragment implements View.OnClickListene
 
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(getActivity(), R.layout.spinner_layout, genderText );
         gender_spinner.setAdapter(arrayAdapter);
-
         gender_spinner.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
             }
-
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
 
             }
-
             @Override
             public void afterTextChanged(Editable s) {
                 salutatioSelected = gender_spinner.getText().toString();
@@ -168,14 +167,5 @@ public class UserDetailsFragment extends Fragment implements View.OnClickListene
             et_address.setError(null);
         }
         return valid;
-    }
-
-    @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-    }
-
-    @Override
-    public void onNothingSelected(AdapterView<?> parent) {
-        salutatioSelected = parent.getItemAtPosition(0).toString();
     }
 }
