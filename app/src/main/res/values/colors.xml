@@ -7,5 +7,7 @@
     <color name="appBackground">#AA1F24</color>
     <color name="white">#FFFFFF</color>
     <color name="lightWhite">#dfdfdf</color>
+    <color name="colorGreen">#30AD63</color>
+    <color name="colorGrey">#CCCCCC</color>
 
 </resources>
