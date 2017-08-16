@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:background="@color/lightWhite"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/tv_smoke_today"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textSize="20dp"
+        android:paddingLeft="10dp"
+        android:layout_marginTop="21dp"
+        android:drawableRight="@drawable/sort_down_48"
+        android:text="Today  "
+        android:textColor="@color/black"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
+    <View
+        android:id="@+id/view"
+        android:layout_width="wrap_content"
+        android:layout_height="1dp"
+        android:background="@color/black"
+        android:layout_marginTop="10dp"
+        android:layout_below="@+id/tv_smoke_today"
+        android:layout_alignLeft="@+id/tv_smoke_today"
+        android:layout_alignStart="@+id/tv_smoke_today"
+        android:layout_alignRight="@+id/tv_smoke_today"
+        android:layout_alignEnd="@+id/tv_smoke_today" />
+
+    <TextView
+        android:id="@+id/tv_smoke_que"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/view"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        android:gravity="center"
+        android:layout_margin="10dp"
+        android:text="  Did you smoke today?" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_smoke_que"
+        android:id="@+id/linearLayout3">
+
+        <com.stemi.stemiapp.customviews.AnswerTemplateView
+            android:layout_width="370dp"
+            android:layout_height="wrap_content"
+            app:colorView="@color/white"
+            android:layout_margin="10dp"
+            app:layoutVal="1"
+            app:hideDontKnow="true"
+            app:textColor="@color/colorPrimaryDark"
+            app:clickedColor="@color/colorPrimaryDark"
+            app:textBackground="@drawable/text_border_with_color">
+        </com.stemi.stemiapp.customviews.AnswerTemplateView>
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        android:gravity="center"
+        android:text=" If yes, How many?"
+        android:layout_below="@+id/linearLayout3"
+        android:id="@+id/textView2" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        android:textSize="20sp"
+        android:padding="10dp"
+        android:hint="Select"
+        android:drawableRight="@drawable/sort_down_grey"
+        android:background="@drawable/edittext_boundary"
+        android:layout_below="@+id/textView2"
+        android:layout_centerHorizontal="true" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="Save"
+        android:textSize="15dp"
+        android:textColor="@color/white"
+        android:background="@color/appBackground"
+        android:layout_alignParentBottom="true"
+        />
+
+</RelativeLayout>

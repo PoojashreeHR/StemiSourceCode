@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:background="@color/appBackground"
+    android:background="@color/white"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -55,7 +55,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Age"
-            android:textColor="@color/white"
             android:imeOptions="actionGo"
             android:inputType="number"/>
     </android.support.design.widget.TextInputLayout>
@@ -66,9 +65,9 @@
             android:layout_height="wrap_content"
             android:hint="Gender"
             android:layout_marginTop="15dp"
-            android:textColorHint="@color/lightWhite"
+            android:textColorHint="@color/colorPrimaryDark"
             style="@style/StyledTilEditText"
-            android:textColor="@color/white" />
+            android:textColor="@color/colorPrimaryDark" />
 <!--
         <Spinner
             android:layout_width="match_parent"
@@ -107,7 +106,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Phone"
-                android:textColor="@color/white"
                 android:imeOptions="actionGo"
                 android:inputType="phone"/>
         </android.support.design.widget.TextInputLayout>
@@ -125,7 +123,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Address"
-                android:textColor="@color/white"
                 android:imeOptions="actionGo"/>
         </android.support.design.widget.TextInputLayout>
     </LinearLayout>
@@ -135,9 +132,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Next"
-        android:textColor="@color/appBackground"
+        android:textColor="@color/white"
         android:textSize="20sp"
-        android:background="@color/white"
+        android:background="@color/appBackground"
         android:layout_marginTop="10dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true" />

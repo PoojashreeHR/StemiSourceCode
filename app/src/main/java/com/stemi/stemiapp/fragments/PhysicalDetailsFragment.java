@@ -3,7 +3,10 @@ package com.stemi.stemiapp.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
+import android.text.InputFilter;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +17,7 @@ import android.widget.Toast;
 import com.stemi.stemiapp.R;
 import com.stemi.stemiapp.activity.RegistrationActivity;
 import com.stemi.stemiapp.customviews.AnswerTemplateView;
+import com.stemi.stemiapp.customviews.InputFilterMinMax;
 import com.stemi.stemiapp.model.RegisteredUserDetails;
 
 import butterknife.BindView;
@@ -39,18 +43,18 @@ public class PhysicalDetailsFragment extends Fragment implements View.OnClickLis
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_physical_details, container, false);
-        ButterKnife.bind(this,view);
+        ButterKnife.bind(this, view);
         view.findViewById(R.id.bt_physical_next).setOnClickListener(this);
         // view.findViewById(R.id.userDetailButton).setOnClickListener(this);
 
-        if(RegistrationActivity.registeredUserDetails != null){
+        if (RegistrationActivity.registeredUserDetails != null) {
             et_height.setText(RegistrationActivity.registeredUserDetails.getWeight());
             et_weight.setText(RegistrationActivity.registeredUserDetails.getWeight());
             et_waist.setText(RegistrationActivity.registeredUserDetails.getWaist());
-            if(RegistrationActivity.registeredUserDetails.getDo_you_smoke() != null) {
+            if (RegistrationActivity.registeredUserDetails.getDo_you_smoke() != null) {
                 smoke_answer.setResponse(RegistrationActivity.registeredUserDetails.getDo_you_smoke());
             }
-            if(RegistrationActivity.registeredUserDetails.getHeart_attack() != null){
+            if (RegistrationActivity.registeredUserDetails.getHeart_attack() != null) {
                 heart_attack.setResponse(RegistrationActivity.registeredUserDetails.getHeart_attack());
             }
 
@@ -96,6 +100,9 @@ public class PhysicalDetailsFragment extends Fragment implements View.OnClickLis
         if (TextUtils.isEmpty(height)) {
             et_height.setError("Required");
             valid = false;
+        }else if (Integer.parseInt(height) < 20 || Integer.parseInt(height) > 200) {
+            et_height.setError("Enter valid Height");
+            valid = false;
         } else {
             et_height.setError(null);
         }
@@ -104,6 +111,9 @@ public class PhysicalDetailsFragment extends Fragment implements View.OnClickLis
         if (TextUtils.isEmpty(weight)) {
             et_weight.setError("Required");
             valid = false;
+        } else if (Integer.parseInt(weight) < 20 || Integer.parseInt(weight) > 200) {
+            et_weight.setError("Enter valid weight");
+            valid = false;
         } else {
             et_weight.setError(null);
         }
@@ -111,6 +121,9 @@ public class PhysicalDetailsFragment extends Fragment implements View.OnClickLis
         String waist = et_waist.getText().toString();
         if (TextUtils.isEmpty(waist)) {
             et_waist.setError("Required");
+            valid = false;
+        } else if (Integer.parseInt(waist) < 20 || Integer.parseInt(waist) > 200) {
+            et_waist.setError("Enter valid waist");
             valid = false;
         } else {
             et_waist.setError(null);

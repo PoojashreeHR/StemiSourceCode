@@ -98,7 +98,7 @@ public class BetterSpinner extends AppCompatAutoCompleteTextView implements Adap
 
     @Override
     public void setCompoundDrawablesWithIntrinsicBounds(Drawable left, Drawable top, Drawable right, Drawable bottom) {
-        Drawable dropdownIcon = ContextCompat.getDrawable(getContext(), R.drawable.ic_down_arrow_24px);
+        Drawable dropdownIcon = ContextCompat.getDrawable(getContext(), R.drawable.sort_down_filled);
         if (dropdownIcon != null) {
             right = dropdownIcon;
             right.mutate().setAlpha(128);

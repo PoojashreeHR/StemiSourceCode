@@ -1,8 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- For Custom Answer Layout-->
     <declare-styleable name="AnswerTemplateView">
         <attr name="hideDontKnow" format="boolean"/>
         <attr name="colorView" format="color"/>
-        <attr name="textBackground" format="integer"/>
+        <attr name="textBackground" format="integer" />
+        <attr name="textColor" format="color"/>
+        <attr name="clickedColor" format="color"/>
+        <attr name="layoutVal" format="integer" />
     </declare-styleable>
+
+    <!-- For Custom CircleImage view-->
+    <declare-styleable name="CircleImageView">
+        <attr name="civ_border_width" format="dimension" />
+        <attr name="civ_border_color" format="color" />
+        <attr name="civ_border_overlay" format="boolean" />
+        <attr name="civ_fill_color" format="color" />
+    </declare-styleable>
+
+
+    <!--For Custom Spinner attributes-->
+
+    <declare-styleable name="SpinnerWithHint">
+        <attr name="showHint" format="boolean"/>
+        <attr name="showPrompt" format="boolean"/>
+        <attr name="promptText" format="string"/>
+        <attr name="hintText" format="string"/>
+        <attr name="dropdownResource" format="reference"/>
+        <attr name="viewResource" format="reference"/>
+   </declare-styleable>
 </resources>

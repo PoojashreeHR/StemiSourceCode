@@ -155,4 +155,10 @@ public class TrackFragment extends Fragment {
         }
         super.setMenuVisibility(menuVisible);
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+      //  ((TrackActivity) getActivity()).setActionBarTitle("Track");
+    }
 }

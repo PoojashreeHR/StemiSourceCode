@@ -4,12 +4,12 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/appBackground">
+    android:background="@color/white">
 
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/bt_register"
+        android:layout_above="@+id/bt_healthNext"
         android:layout_margin="10dp"
         android:id="@+id/health_recyclerview"
         android:layout_alignParentLeft="true"
@@ -17,13 +17,13 @@
     </android.support.v7.widget.RecyclerView>
 
     <Button
-        android:id="@+id/bt_register"
+        android:id="@+id/bt_healthNext"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="REGISTER"
+        android:text="NEXT"
         android:textSize="20sp"
-        android:textColor="@color/appBackground"
+        android:textColor="@color/white"
         android:layout_alignParentBottom="true"
-        android:background="@color/white"/>
+        android:background="@color/appBackground"/>
 
 </RelativeLayout>

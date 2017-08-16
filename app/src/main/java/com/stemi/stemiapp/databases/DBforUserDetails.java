@@ -11,6 +11,10 @@ import android.widget.Toast;
 
 import com.stemi.stemiapp.model.RegisteredUserDetails;
 
+import java.util.ArrayList;
+
+import static android.content.ContentValues.TAG;
+
 /**
  * Created by Pooja on 20-07-2017.
  */
@@ -76,14 +80,20 @@ public class DBforUserDetails extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public boolean isExist(String uid) {
+    public String isExist(String userName) {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cur = db.rawQuery("SELECT * FROM " + TABLE_NAME +  " WHERE "+ uid + "="+ "'" + 0 +"'", null);
-        boolean exist = (cur.getCount() > 0);
+        String string = null;
+        Log.e(TAG, "isExist: " + "SELECT " + USER_NAME + " FROM " + TABLE_NAME + " WHERE " + USER_NAME + "=" + "'" + userName + "'", null);
+        Cursor cur = db.rawQuery("SELECT " + USER_NAME + " FROM " + TABLE_NAME + " WHERE " + "UPPER("+ USER_NAME + ")" + "=" + "\"" + userName.toUpperCase() + "\"", null);
+        if (cur.moveToFirst()){
+            for (int i = 0; i < cur.getCount(); i++){
+             string = cur.getString(cur.getColumnIndex(USER_NAME));
+             cur.moveToNext();
+            }
+        }
         cur.close();
         db.close();
-        return exist;
-
+        return string;
     }
 
     public long getProfilesCount() {
@@ -92,7 +102,6 @@ public class DBforUserDetails extends SQLiteOpenHelper {
         //db.close();
         return cnt;
     }
-
 
     //function for adding the note to database
     public void addEntry(RegisteredUserDetails registeredUserDetails) {
@@ -127,4 +136,26 @@ public class DBforUserDetails extends SQLiteOpenHelper {
         //so we don't need to open and close db connection outside this class
 
     }
+
+
+    public void removeNote(String name) {
+        SQLiteDatabase db = getWritableDatabase();
+        db.delete(TABLE_NAME, USER_NAME + " = ?", new String[] { name });
+        db.close();
+    }
+
+
+    public ArrayList<String> getRecords(){
+        ArrayList<String> data=new ArrayList<String>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(TABLE_NAME, new String[]{USER_NAME},null, null, null, null, null);
+        String fieldToAdd=null;
+        while(cursor.moveToNext()){
+            fieldToAdd=cursor.getString(0);
+            data.add(fieldToAdd);
+        }
+        cursor.close();  // dont forget to close the cursor after operation done
+        return data;
+    }
+
 }

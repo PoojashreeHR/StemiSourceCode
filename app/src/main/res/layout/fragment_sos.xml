@@ -1,15 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/lightWhite"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:ct="http://schemas.android.com/tools">
 
     <TextView
-        android:layout_width="wrap_content"
+        android:id="@+id/sos_text"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:text="SOS Fragment"
-        android:textSize="20dp"
-        android:textStyle="bold" />
+        android:layout_marginTop="15dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:text="Who has chest pain?"
+        android:textSize="20sp"
+        android:textColor="@color/black"/>
 
+    <com.stemi.stemiapp.customviews.BetterSpinner
+        android:id="@+id/person_Spinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/sos_text"
+        android:layout_margin="15dp"
+        style="@style/StyledTilEditText"
+        android:textColor="@color/black"
+        android:textColorHint="@color/colorPrimaryDark"
+        android:hint="Select Person"/>
+
+    <TextView
+        android:id="@+id/tv_location"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_below="@id/person_Spinner"
+        android:text="Where is he/she?"
+        android:textSize="20sp"
+        android:textColor="@color/black"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_location"
+        android:drawableRight="@drawable/location_center"
+        android:hint="Enter location"
+        android:textColor="@color/black"
+        style="@style/StyledTilEditText"
+        android:layout_margin="15dp"/>
 </RelativeLayout>

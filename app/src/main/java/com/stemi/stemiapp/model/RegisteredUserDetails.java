@@ -26,6 +26,15 @@ public class RegisteredUserDetails {
     String have_asthma;
     String family_had_heart_attack;
     Boolean isClicked;
+    String imgUrl;
+
+    public String getImgUrl() {
+        return imgUrl;
+    }
+
+    public void setImgUrl(String imgUrl) {
+        this.imgUrl = imgUrl;
+    }
 
     public String getUniqueId() {
         return uniqueId;

@@ -11,14 +11,16 @@
         android:layout_height="wrap_content"
         android:text="Do you have diabetes?"
         android:textSize="20dp"
-        android:textColor="@color/white"
+        android:textColor="@color/black"
         android:layout_marginTop="20dp"/>
 
     <com.stemi.stemiapp.customviews.AnswerTemplateView
         android:id="@+id/answerLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:colorView="@color/appBackground"
+        app:colorView="@color/white"
+        app:clickedColor="@color/colorPrimaryDark"
+        app:textColor="@color/colorPrimaryDark"
         app:textBackground="@drawable/text_border_with_color"
         android:layout_below="@+id/have_diabetes"
         android:layout_marginTop="10dp">

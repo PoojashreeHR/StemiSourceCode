@@ -23,6 +23,7 @@ import com.stemi.stemiapp.R;
 import com.stemi.stemiapp.activity.MainActivity;
 import com.stemi.stemiapp.activity.RegistrationActivity;
 import com.stemi.stemiapp.customviews.BetterSpinner;
+import com.stemi.stemiapp.databases.DBforUserDetails;
 import com.stemi.stemiapp.model.RegisteredUserDetails;
 
 
@@ -47,7 +48,7 @@ public class UserDetailsFragment extends Fragment implements View.OnClickListene
     @BindView(R.id.et_phone) EditText et_phone;
     @BindView(R.id.et_address) EditText et_address;
 
-
+    DBforUserDetails dBforUserDetails;
     Button user_next;
     BetterSpinner gender_spinner;
     ArrayList<String> genderText;
@@ -61,7 +62,7 @@ public class UserDetailsFragment extends Fragment implements View.OnClickListene
         View view = inflater.inflate(R.layout.fragment_user_details, container, false);
         ButterKnife.bind(this,view);
         view.findViewById(R.id.userDetailButton).setOnClickListener(this);
-
+        dBforUserDetails = new DBforUserDetails(getActivity());
         gender_spinner = (BetterSpinner) view.findViewById(R.id.gender_spinner);
         genderText = new ArrayList<>();
         genderText.add("Male");
@@ -125,10 +126,19 @@ public class UserDetailsFragment extends Fragment implements View.OnClickListene
 
 
         String firstName = et_name.getText().toString();
+        String userName = dBforUserDetails.isExist(firstName);
         if (TextUtils.isEmpty(firstName)) {
             et_name.setError("Required");
             valid = false;
-        } else {
+        }/* else if(userName != null)  {
+                if (userName.equalsIgnoreCase(firstName)) {
+                    Log.e(TAG, "validateAllFields: " + "True ");
+                    et_name.setError("Name already registered");
+                    valid = false;
+                } else {
+                    Log.e(TAG, "validateAllFields: " + "False ");
+                }
+            }*/else {
             et_name.setError(null);
         }
 
@@ -136,7 +146,10 @@ public class UserDetailsFragment extends Fragment implements View.OnClickListene
         if (TextUtils.isEmpty(age)) {
             et_age.setError("Required");
             valid = false;
-        } else {
+        } else if (Integer.parseInt(age) < 18 || Integer.parseInt(age) > 100) {
+            et_age.setError("Enter Valid Age");
+            valid = false;
+        }  else {
             et_age.setError(null);
         }
 

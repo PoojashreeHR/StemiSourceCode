@@ -5,6 +5,7 @@ import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -21,7 +22,10 @@ public class AnswerTemplateView extends LinearLayout implements View.OnClickList
     private String response;
     private boolean hideDontKnow;
     private int color;
+    private int Backgroundcolor;
+    private int clickedColor;
     private Drawable setBackground;
+    private int layoutVal;
 
     public void setResponseChangedListener(ResponseChangedListener responseChangedListener) {
         this.responseChangedListener = responseChangedListener;
@@ -44,6 +48,9 @@ public class AnswerTemplateView extends LinearLayout implements View.OnClickList
             hideDontKnow = a.getBoolean(R.styleable.AnswerTemplateView_hideDontKnow, false);
             color = a.getColor(R.styleable.AnswerTemplateView_colorView, 0 );
             setBackground = a.getDrawable(R.styleable.AnswerTemplateView_textBackground);
+            Backgroundcolor = a.getColor(R.styleable.AnswerTemplateView_textColor,0);
+            clickedColor = a.getColor(R.styleable.AnswerTemplateView_clickedColor,0);
+            layoutVal = a.getInteger(R.styleable.AnswerTemplateView_layoutVal,0);
         }
         finally {
             a.recycle();
@@ -51,23 +58,35 @@ public class AnswerTemplateView extends LinearLayout implements View.OnClickList
 
 
         View v = LayoutInflater.from(context).inflate(R.layout.answer_layout, null);
+
+        LinearLayout linearLayout = (LinearLayout) v.findViewById(R.id.layout_smoke);
+
         tv_yes = (TextView) v.findViewById(R.id.tv_yes);
         tv_yes.setBackgroundDrawable(setBackground);
+        tv_yes.setTextColor(clickedColor);
+
         tv_no = (TextView) v.findViewById(R.id.tv_no);
         tv_no.setBackgroundDrawable(setBackground);
+        tv_no.setTextColor(clickedColor);
+
         tv_dont_know = (TextView) v.findViewById(R.id.tv_dont_know);
         tv_dont_know.setBackgroundDrawable(setBackground);
+        tv_dont_know.setTextColor(clickedColor);
 
         tv_yes.setOnClickListener(this);
         tv_no.setOnClickListener(this);
         tv_dont_know.setOnClickListener(this);
 
         if(hideDontKnow){
-            tv_dont_know.setVisibility(GONE);
+            if(layoutVal == 1){
+                tv_dont_know.setVisibility(GONE);
+                linearLayout.setGravity(Gravity.CENTER);
+            }else {
+                tv_dont_know.setVisibility(GONE);
+            }
+//            linearLayout.setGravity(Gravity.CENTER);
         }
-
         addView(v, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.MATCH_PARENT));
-
     }
 
 
@@ -90,12 +109,12 @@ public class AnswerTemplateView extends LinearLayout implements View.OnClickList
     public void setYes(){
         response = "YES";
         tv_no.setBackground(setBackground);
-        tv_no.setTextColor(getResources().getColor(R.color.white));
+        tv_no.setTextColor(Backgroundcolor);
 
         tv_dont_know.setBackground(setBackground);
-        tv_dont_know.setTextColor(getResources().getColor(R.color.white));
+        tv_dont_know.setTextColor(Backgroundcolor);
 
-        tv_yes.setBackgroundColor(getResources().getColor(R.color.white));
+        tv_yes.setBackgroundColor(Backgroundcolor);
         tv_yes.setTextColor(color);
 
         if(responseChangedListener != null){
@@ -107,12 +126,12 @@ public class AnswerTemplateView extends LinearLayout implements View.OnClickList
     {
         response = "NO";
         tv_yes.setBackground(setBackground);
-        tv_yes.setTextColor(getResources().getColor(R.color.white));
+        tv_yes.setTextColor(Backgroundcolor);
 
         tv_dont_know.setBackground(setBackground);
-        tv_dont_know.setTextColor(getResources().getColor(R.color.white));
+        tv_dont_know.setTextColor(Backgroundcolor);
 
-        tv_no.setBackgroundColor(getResources().getColor(R.color.white));
+        tv_no.setBackgroundColor(Backgroundcolor);
         tv_no.setTextColor(color);
 
         if(responseChangedListener != null){
@@ -123,12 +142,12 @@ public class AnswerTemplateView extends LinearLayout implements View.OnClickList
     public void setDontKnow(){
         response = "DON'T KNOW";
         tv_no.setBackground(setBackground);
-        tv_no.setTextColor(getResources().getColor(R.color.white));
+        tv_no.setTextColor(Backgroundcolor);
 
         tv_yes.setBackground(setBackground);
-        tv_yes.setTextColor(getResources().getColor(R.color.white));
+        tv_yes.setTextColor(Backgroundcolor);
 
-        tv_dont_know.setBackgroundColor(getResources().getColor(R.color.white));
+        tv_dont_know.setBackgroundColor(Backgroundcolor);
         tv_dont_know.setTextColor(color);
 
         if(responseChangedListener != null){

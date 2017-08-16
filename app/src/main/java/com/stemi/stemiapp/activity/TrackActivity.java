@@ -16,6 +16,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -48,6 +49,7 @@ public class TrackActivity extends AppCompatActivity implements NavigationView.O
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("Learn");
+        toolbar.setTitleTextColor(getResources().getColor(R.color.colorPrimary));
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -184,11 +186,22 @@ public class TrackActivity extends AppCompatActivity implements NavigationView.O
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+    protected void backstackFragment() {
+        Log.d("Stack count", getSupportFragmentManager().getBackStackEntryCount() + "");
+
+        if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
+            finish();
+        }
+        getSupportFragmentManager().popBackStack();
+        removeCurrentFragment();
+    }
+
     @Override
     public void onBackPressed() {
         if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
             getSupportFragmentManager().popBackStack();
-            removeCurrentFragment();
+            backstackFragment();
         }
         else{
             super.onBackPressed();

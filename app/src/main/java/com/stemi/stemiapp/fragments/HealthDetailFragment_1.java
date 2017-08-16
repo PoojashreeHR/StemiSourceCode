@@ -39,7 +39,7 @@ import static android.content.ContentValues.TAG;
 public class HealthDetailFragment_1 extends Fragment implements View.OnClickListener {
 
     RecyclerView healthRecycler;
-    private List<HealthQuestions> healthQuestions = new ArrayList<>();
+    private List<HealthQuestions> healthQuestions;
     private ArrayList<HealthAnswers> healthAnswers = new ArrayList<>();
     private HealthAdapter healthAdapter;
     Button registerButton;
@@ -53,7 +53,8 @@ public class HealthDetailFragment_1 extends Fragment implements View.OnClickList
 
         View view = inflater.inflate(R.layout.fragment_health_detail_1, container, false);
         healthRecycler = (RecyclerView) view.findViewById(R.id.health_recyclerview);
-        registerButton = (Button) view.findViewById(R.id.bt_register);
+        healthQuestions = new ArrayList<>();
+        registerButton = (Button) view.findViewById(R.id.bt_healthNext);
         registerButton.setOnClickListener(this);
         dBforUserDetails = new DBforUserDetails(getActivity());
         healthAdapter = new HealthAdapter(healthQuestions, getActivity());
@@ -76,16 +77,10 @@ public class HealthDetailFragment_1 extends Fragment implements View.OnClickList
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.bt_register:
+            case R.id.bt_healthNext:
                 //Move to Fragment 03
                 if (validateAllFields()) {
-                   // if(dBforUserDetails.KET)
-                    String deviceId = Settings.Secure.getString(getActivity().getContentResolver(), Settings.Secure.ANDROID_ID);
-                    Log.e(TAG, "onClick: "+ deviceId);
-                    RegistrationActivity.registeredUserDetails.setUniqueId(deviceId);
-                    dBforUserDetails.addEntry(RegistrationActivity.registeredUserDetails);
-                    Toast.makeText(getActivity(), "One row added successfully", Toast.LENGTH_SHORT).show();
-                    startActivity(new Intent(getActivity(), TrackActivity.class));
+                    ((RegistrationActivity) getActivity()).showFragment(new ProfilePhotoFragment());
                 }
         }
     }
@@ -212,7 +207,6 @@ public class HealthDetailFragment_1 extends Fragment implements View.OnClickList
     @Override
     public void onResume() {
         super.onResume();
-
     }
 
     public  void saveValues(int position, String response){

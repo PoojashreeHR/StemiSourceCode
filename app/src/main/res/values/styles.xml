@@ -6,6 +6,7 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="drawerArrowStyle">@style/MyDrawerArrowToggle</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
@@ -24,9 +25,9 @@
     <style name="TextviewStyle">
         <!-- Customize your theme here. -->
         <item name="windowNoTitle">true</item>
-        <item name="colorPrimary">@color/white</item>
-        <item name="colorPrimaryDark">@color/white</item>
-        <item name="android:textColorPrimary">@color/white</item>
+        <item name="colorPrimary">@color/colorPrimaryDark</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="android:textColorPrimary">@color/colorPrimaryDark</item>
         <item name="android:typeface">monospace</item>
         <item name="android:keyTextSize">18sp</item>
         <item name="android:textSize">16sp</item>
@@ -37,16 +38,20 @@
     <style name="StyledTilEditTextTheme">
         <item name="android:imeOptions">actionNext</item>
         <item name="android:singleLine">true</item>
-        <item name="android:textColorHint">@color/lightWhite</item>
+        <item name="android:textColorHint">@color/colorPrimaryDark</item>
         <item name="android:keyTextSize">20sp</item>
-        <item name="colorControlNormal">@color/lightWhite</item>
-        <item name="colorControlActivated">@color/white</item>
-        <item name="android:textColorPrimary">@color/white</item>
+        <item name="colorControlNormal">@color/colorPrimaryDark</item>
+        <item name="colorControlActivated">@color/colorPrimaryDark</item>
+        <item name="android:textColorPrimary">@color/colorPrimaryDark</item>
         <item name="android:textSize">20sp</item>
     </style>
 
     <style name="StyledTilEditText">
         <item name="android:theme">@style/StyledTilEditTextTheme</item>
-        <item name="android:paddingTop">20dp</item>
+        <item name="android:paddingTop">15dp</item>
+    </style>
+
+    <style name="MyDrawerArrowToggle" parent="Widget.AppCompat.DrawerArrowToggle">
+    <item name="color">@color/appBackground</item>
     </style>
 </resources>
