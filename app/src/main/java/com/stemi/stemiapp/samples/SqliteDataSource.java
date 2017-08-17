@@ -101,7 +101,7 @@ public class SqliteDataSource extends SQLiteOpenHelper {
     }
 
     public boolean isTableEmpty(){
-        String query = "SELECT * FROM "+TABLE_FOOD;
+        String query = "SELECT * FROM "+ TABLE_FOOD;
         SQLiteDatabase db = this.getReadableDatabase();
         int count = 0;
         try{
