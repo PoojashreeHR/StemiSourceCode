@@ -21,4 +21,8 @@
     <string name="had_paralytic_stroke">Did you ever had a paralytic stroke?</string>
     <string name="have_astama">Do you have bronchial asthma?</string>
     <string name="family_health">Did anyone in your immediate family had a heart attack?</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="gps_network_not_enabled">Location services is turned off, please enable</string>
+    <string name="open_location_settings">ENABLE</string>
+    <string name="cancel">CANCEL</string>
 </resources>

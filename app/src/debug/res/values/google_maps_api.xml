@@ -1,0 +1,26 @@
+<resources>
+    <!--
+    TODO: Before you run your application, you need a Google Maps API key.
+
+    To get one, follow this link, follow the directions and press "Create" at the end:
+
+    https://console.developers.google.com/flows/enableapi?apiid=maps_android_backend&keyType=CLIENT_SIDE_ANDROID&r=9F:B0:F9:97:DF:2A:D2:F8:59:7B:11:09:93:6F:0B:A0:3C:BD:71:30%3Bcom.stemi.stemiapp.activity
+
+    You can also add your credentials to an existing key, using these values:
+
+    Package name:
+    9F:B0:F9:97:DF:2A:D2:F8:59:7B:11:09:93:6F:0B:A0:3C:BD:71:30
+
+    SHA-1 certificate fingerprint:
+    9F:B0:F9:97:DF:2A:D2:F8:59:7B:11:09:93:6F:0B:A0:3C:BD:71:30
+
+    Alternatively, follow the directions here:
+    https://developers.google.com/maps/documentation/android/start#get-key
+
+    Once you have your key (it starts with "AIza"), replace the "google_maps_key"
+    string in this file.
+    -->
+    <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">
+        AIzaSyCYe4wTVw8_cGA5nhAxvR1r8Wn8k0hrMJ0
+    </string>
+</resources>
