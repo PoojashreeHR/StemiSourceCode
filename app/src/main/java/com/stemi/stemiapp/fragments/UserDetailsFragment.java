@@ -130,7 +130,7 @@ public class UserDetailsFragment extends Fragment implements View.OnClickListene
         if (TextUtils.isEmpty(firstName)) {
             et_name.setError("Required");
             valid = false;
-        }/* else if(userName != null)  {
+        } else if(userName != null)  {
                 if (userName.equalsIgnoreCase(firstName)) {
                     Log.e(TAG, "validateAllFields: " + "True ");
                     et_name.setError("Name already registered");
@@ -138,7 +138,7 @@ public class UserDetailsFragment extends Fragment implements View.OnClickListene
                 } else {
                     Log.e(TAG, "validateAllFields: " + "False ");
                 }
-            }*/else {
+            }else {
             et_name.setError(null);
         }
 

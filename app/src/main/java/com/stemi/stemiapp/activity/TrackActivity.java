@@ -1,5 +1,6 @@
 package com.stemi.stemiapp.activity;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -181,6 +182,12 @@ public class TrackActivity extends AppCompatActivity implements NavigationView.O
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+            int id = menuItem.getItemId();
+        switch (id) {
+            case R.id.Registration:
+                startActivity(new Intent(TrackActivity.this, RegistrationActivity.class));
+                break;
+        }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         assert drawer != null;
         drawer.closeDrawer(GravityCompat.START);
