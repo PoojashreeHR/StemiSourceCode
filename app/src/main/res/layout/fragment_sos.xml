@@ -40,13 +40,26 @@
         android:textSize="20sp"
         android:textColor="@color/black"/>
 
-    <EditText
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/tv_location"
-        android:drawableRight="@drawable/location_center"
-        android:hint="Enter location"
-        android:textColor="@color/black"
-        style="@style/StyledTilEditText"
-        android:layout_margin="15dp"/>
+        >
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/et_location"
+            android:hint="Enter location"
+            android:textColor="@color/black"
+            style="@style/StyledTilEditText"
+            android:layout_margin="15dp"/>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/location_center"
+            android:layout_gravity="right|center"
+            android:id="@+id/pick_location"
+            />
+    </FrameLayout>
+
 </RelativeLayout>
