@@ -39,7 +39,6 @@ public class StatusFragment extends Fragment {
                 startActivity(new Intent(getActivity(), ChartSampleActivity.class));
             }
         });
-       // ((TrackActivity) getActivity()).setActionBarTitle("Status");
 
         return view;
     }

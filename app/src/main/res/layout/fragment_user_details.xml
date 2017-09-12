@@ -47,7 +47,6 @@
         android:id="@+id/tl_age"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/et_email"
         style="@style/StyledTilEditText">
 
         <EditText
@@ -59,46 +58,42 @@
             android:inputType="number"/>
     </android.support.design.widget.TextInputLayout>
 
-        <com.stemi.stemiapp.customviews.BetterSpinner
-            android:id="@+id/gender_spinner"
+        <RadioGroup
+            android:id="@+id/radioGroup1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Gender"
-            android:layout_marginTop="15dp"
-            android:textColorHint="@color/colorPrimaryDark"
-            style="@style/StyledTilEditText"
-            android:textColor="@color/colorPrimaryDark" />
-<!--
-        <Spinner
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/gender_spinner"
-            android:prompt="Gender"
-            android:outlineProvider="background">
-        </Spinner>
--->
-      <!--  <android.support.design.widget.TextInputLayout
-            android:id="@+id/tl_gender"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/et_email"
-            style="@style/StyledTilEditText"
-            android:layout_weight="1">
+            android:layout_below="@+id/tl_age"
+            android:orientation="horizontal">
 
-            <EditText
-                android:id="@+id/et_gender"
-                android:layout_width="match_parent"
+            <RadioButton
+                android:id="@+id/radioButton1"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:hint="Gender"
-                android:textColor="@color/white"
-                android:imeOptions="actionGo" />
-        </android.support.design.widget.TextInputLayout>
--->
+                android:text="  MALE"
+                android:checked="true"
+                android:buttonTint="@color/colorDarkGrey"
+                android:padding="10dp"
+                android:layout_marginTop="10dp"
+                android:drawableLeft="@drawable/ic_male"/>
+
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/radioGroup1"
+                android:layout_below="@+id/radioGroup1"
+                android:text="  FEMALE"
+                android:padding="10dp"
+                android:layout_marginTop="10dp"
+                android:buttonTint="@color/colorDarkGrey"
+                android:drawableLeft="@drawable/ic_female"/>
+            />
+
+        </RadioGroup>
         <android.support.design.widget.TextInputLayout
             android:id="@+id/tl_phone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/et_email"
             style="@style/StyledTilEditText">
 
             <EditText
@@ -111,18 +106,18 @@
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
-            android:id="@+id/tl_address"
+            android:id="@+id/tl_email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/et_email"
             android:layout_marginBottom="10dp"
             style="@style/StyledTilEditText">
 
             <EditText
-                android:id="@+id/et_address"
+                android:id="@+id/et_email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Address"
+                android:hint="Email"
+                android:inputType="textEmailAddress"
                 android:imeOptions="actionGo"/>
         </android.support.design.widget.TextInputLayout>
     </LinearLayout>

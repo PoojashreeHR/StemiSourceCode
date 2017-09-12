@@ -5,4 +5,31 @@ package com.stemi.stemiapp.model;
  */
 
 public class HeartSymptomsModel {
+    private String SymptomNumb;
+    private String Symptoms;
+    private int symptomsImg;
+
+    public String getSymptomNumb() {
+        return SymptomNumb;
+    }
+
+    public void setSymptomNumb(String symptomNumb) {
+        SymptomNumb = symptomNumb;
+    }
+
+    public String getSymptoms() {
+        return Symptoms;
+    }
+
+    public void setSymptoms(String symptoms) {
+        Symptoms = symptoms;
+    }
+
+    public int getSymptomsImg() {
+        return symptomsImg;
+    }
+
+    public void setSymptomsImg(int symptomsImg) {
+        this.symptomsImg = symptomsImg;
+    }
 }

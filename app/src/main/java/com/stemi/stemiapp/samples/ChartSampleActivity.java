@@ -129,13 +129,13 @@ public class ChartSampleActivity extends AppCompatActivity {
         // List<Boolean> data = getDataFromDB(index, new Date());
         if(data.size() == 0){
             for(int i=0; i<7; i++) {
-                colors.add(this.getResources().getColor(R.color.colorGrey));
+                colors.add(this.getResources().getColor(R.color.colorDarkGrey));
             }
         }
         else {
             for (int i = 0; i < 7; i++) {
                 if ( data.size()<= i || !data.get(i) ) {
-                    colors.add(this.getResources().getColor(R.color.colorGrey));
+                    colors.add(this.getResources().getColor(R.color.colorDarkGrey));
                 } else {
                     colors.add(this.getResources().getColor(R.color.colorGreen));
                 }

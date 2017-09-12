@@ -28,7 +28,6 @@ public class HospitalFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_hospital, container, false);
-       // ((TrackActivity) getActivity()).setActionBarTitle("STEMI Hospital");
 
         return view;
     }

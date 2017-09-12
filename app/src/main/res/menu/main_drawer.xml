@@ -6,8 +6,8 @@
             android:title="Registration" />
         <item
 
-            android:id="@+id/nav_faqs"
-            android:title="Element 2" />
+            android:id="@+id/logout"
+            android:title="Logout" />
         <item
             android:id="@+id/nav_privacy"
             android:title="Element 3" />

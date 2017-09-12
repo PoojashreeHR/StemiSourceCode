@@ -26,4 +26,7 @@ public interface ApiInterface {
     @GET("getTipOfTheDay")
     Call<StatusMessageResponse> callTipOfTheDAy(@Query("date") String date, @Query("token") String token);
 
+    @FormUrlEncoded
+    @POST("forgetpassword")
+    Call<StatusMessageResponse> callForgotPassword(@Field("email") String email);
 }

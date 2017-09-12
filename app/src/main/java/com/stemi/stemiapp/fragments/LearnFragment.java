@@ -1,6 +1,5 @@
 package com.stemi.stemiapp.fragments;
 
-
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -11,7 +10,7 @@ import android.widget.TextView;
 
 import com.stemi.stemiapp.R;
 import com.stemi.stemiapp.activity.TrackActivity;
-import com.stemi.stemiapp.model.apiModels.SignUpResponseModel;
+
 import com.stemi.stemiapp.model.apiModels.StatusMessageResponse;
 import com.stemi.stemiapp.preference.AppSharedPreference;
 import com.stemi.stemiapp.rest.ApiClient;
@@ -34,8 +33,8 @@ import static android.content.ContentValues.TAG;
  */
 
 public class LearnFragment extends Fragment implements AppConstants{
-    @BindView(R.id.tvTips)
-    TextView tvTips;
+    @BindView(R.id.tvTips) TextView tvTips;
+    @BindView(R.id.tvExpandable) TextView tvExpandableSymptoms;
     ApiInterface apiInterface;
     AppSharedPreference appSharedPreference;
     public LearnFragment() {
@@ -57,6 +56,13 @@ public class LearnFragment extends Fragment implements AppConstants{
         apiInterface = ApiClient.getClient().create(ApiInterface.class);
         appSharedPreference = new AppSharedPreference(getActivity());
         callGetTipOfTheDay();
+
+        tvExpandableSymptoms.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((TrackActivity) getActivity()).showFragment(new HeartSymptomsFragment());
+            }
+        });
         return view;
     }
 
@@ -67,6 +73,7 @@ public class LearnFragment extends Fragment implements AppConstants{
         Log.e(TAG, "onCreateView: "+ formattedDate );
 
         String token = appSharedPreference.getUserToken(USER_TOKEN);
+        Log.e(TAG, "callGetTipOfTheDay: "+token );
         Call<StatusMessageResponse> call = apiInterface.callTipOfTheDAy(formattedDate, token);
         call.enqueue(new Callback<StatusMessageResponse>() {
             @Override

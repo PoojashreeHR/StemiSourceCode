@@ -41,7 +41,6 @@ public class TrackFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_track, container, false);
-    //    ((TrackActivity) getActivity()).setActionBarTitle("Track");
         List<TrackElements> rowListItem = getAllItemList();
         lLayout = new GridLayoutManager(getActivity(), 2);
 
@@ -60,13 +59,12 @@ public class TrackFragment extends Fragment {
     private List<TrackElements> getAllItemList() {
 
         List<TrackElements> allItems = new ArrayList<>();
-        allItems.add(new TrackElements("Medication", android.R.drawable.alert_dark_frame));
-        allItems.add(new TrackElements("Exercise", android.R.drawable.alert_dark_frame));
-        allItems.add(new TrackElements("Food", android.R.drawable.alert_dark_frame));
-        allItems.add(new TrackElements("Smoking",android.R.drawable.alert_dark_frame));
-        allItems.add(new TrackElements("Weight",android.R.drawable.alert_dark_frame));
-        allItems.add(new TrackElements("Blood Test Result",android.R.drawable.alert_dark_frame));
-        //allItems.add(new FAQ("Photo Frames",R.drawable.ic_faq_delivery));
+        allItems.add(new TrackElements("Medication", R.drawable.btn_medication));
+        allItems.add(new TrackElements("Exercise", R.drawable.btn_exercise));
+        allItems.add(new TrackElements("Stress",  R.drawable.btn_stress));
+        allItems.add(new TrackElements("Smoking", R.drawable.btn_smoking));
+        allItems.add(new TrackElements("Weight", R.drawable.btn_weight));
+        allItems.add(new TrackElements("Blood Test Result", R.drawable.btn_blood_test));
 
         return allItems;
     }
@@ -159,6 +157,5 @@ public class TrackFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-      //  ((TrackActivity) getActivity()).setActionBarTitle("Track");
     }
 }
