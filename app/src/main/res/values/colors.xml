@@ -9,4 +9,7 @@
     <color name="black">#000</color>
     <color name="colorGreen">#7cef8d</color>
     <color name="colorGrey">#737373</color>
+    <color name="btnColorRed">#D01421</color>
+    <color name="statsFontColor">#FD715E</color>
+    <color name="statsNameFontColor">#808080</color>
 </resources>

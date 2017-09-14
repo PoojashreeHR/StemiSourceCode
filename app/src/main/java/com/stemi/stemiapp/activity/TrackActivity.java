@@ -30,6 +30,7 @@ import com.stemi.stemiapp.fragments.SOSFragment;
 import com.stemi.stemiapp.fragments.StatusFragment;
 import com.stemi.stemiapp.fragments.TrackFragment;
 import com.stemi.stemiapp.fragments.UserDetailsFragment;
+import com.stemi.stemiapp.utils.CustomViewPager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,7 +54,7 @@ public class TrackActivity extends AppCompatActivity implements NavigationView.O
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        viewPager = (ViewPager) findViewById(R.id.viewpager);
+        viewPager = (CustomViewPager) findViewById(R.id.viewpager);
         mainContainer = (RelativeLayout) findViewById(R.id.mainContainer);
 
         if(viewPager.getVisibility() == View.VISIBLE) {
@@ -116,6 +117,10 @@ public class TrackActivity extends AppCompatActivity implements NavigationView.O
         fragmentTransaction.replace(R.id.mainContainer, fragment, TAG);
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commitAllowingStateLoss();
+    }
+
+    public CustomViewPager getViewPager(){
+        return (CustomViewPager) this.viewPager;
     }
 
            /* @Override

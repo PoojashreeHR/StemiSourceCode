@@ -1,13 +1,619 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <Button
+    <android.support.design.widget.TabLayout
+        android:id="@+id/tabs"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Status Fragment"
-        android:gravity="center"
-        android:id="@+id/bt_Button"
-        android:textSize="20dp"/>
+        app:tabMode="fixed"
+        app:tabGravity="fill"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/health_layout"
+        android:layout_below="@+id/tabs"
+        android:visibility="visible"
+        >
+
+        <com.jjoe64.graphview.GraphView
+            android:layout_width="match_parent"
+            android:layout_height="300dip"
+            android:id="@+id/health_graph"
+            android:layout_marginTop="30dp"
+            />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/weight_layout"
+        android:visibility="gone"
+        android:layout_below="@+id/tabs"
+        >
+
+        <com.jjoe64.graphview.GraphView
+            android:layout_width="match_parent"
+            android:layout_height="200dip"
+            android:id="@+id/weight_graph"
+            android:layout_marginTop="30dp"
+            />
+
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/blood_test_layout"
+        android:visibility="gone"
+        android:layout_below="@+id/tabs"
+        >
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:id="@+id/date_component"
+            android:background="@drawable/date_text_border"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp"
+            android:padding="5dp"
+            >
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_keyboard_arrow_left"
+                android:id="@+id/date_left_btn"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:id="@+id/date_text"
+                android:textStyle="bold"
+                android:layout_marginTop="5dp"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                />
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_keyboard_arrow_right"
+                android:id="@+id/date_right_btn"
+                />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp"
+            android:layout_below="@+id/date_component"
+            android:orientation="vertical"
+            android:weightSum="10"
+            android:background="@color/white"
+            >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="2"
+                android:background="@drawable/bottom_border">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/top_border"
+                    android:weightSum="2"
+                    android:orientation="horizontal"
+                    >
+
+                    <RelativeLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1">
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:orientation="vertical"
+                            >
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center">
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textAppearance="?android:attr/textAppearanceLarge"
+                                    android:text="0.0"
+                                    android:id="@+id/txt_heamoglobin"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/statsFontColor"
+                                    />
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/statsFontColor"
+                                    android:layout_toRightOf="@+id/txt_urea_creatinine"
+                                    android:textAppearance="?android:attr/textAppearanceSmall"
+                                    android:text=" g/dL"
+                                    android:gravity="bottom"
+
+                                    />
+                            </LinearLayout>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Heamoglobin"
+                                android:textColor="@color/statsNameFontColor"
+                                android:textStyle="bold"
+                                android:textAppearance="?android:attr/textAppearanceSmall"
+                                />
+                        </LinearLayout>
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@drawable/left_border"
+                        >
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:orientation="vertical"
+                            >
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center">
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textAppearance="?android:attr/textAppearanceLarge"
+                                    android:text="0.0"
+                                    android:id="@+id/txt_urea_creatinine"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/statsFontColor"
+                                    />
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/statsFontColor"
+                                    android:layout_toRightOf="@+id/txt_urea_creatinine"
+                                    android:textAppearance="?android:attr/textAppearanceSmall"
+                                    android:text=" mg/dL"
+                                    android:gravity="bottom"
+
+                                    />
+                            </LinearLayout>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Urea Creatinine"
+                                android:textColor="@color/statsNameFontColor"
+                                android:textStyle="bold"
+                                android:textAppearance="?android:attr/textAppearanceSmall"
+                                />
+                        </LinearLayout>
+
+                    </RelativeLayout>
+                </LinearLayout>
+
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="2"
+                android:background="@drawable/bottom_border">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/top_border"
+                    android:weightSum="2"
+                    android:orientation="horizontal"
+                    >
+
+                    <RelativeLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1">
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:orientation="vertical"
+                            >
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center">
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textAppearance="?android:attr/textAppearanceLarge"
+                                    android:text="0.0"
+                                    android:id="@+id/txt_total_cholestrol"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/statsFontColor"
+                                    />
+
+                                <TextView
+                                    android:id="@+id/textView5"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_toRightOf="@+id/txt_urea_creatinine"
+                                    android:gravity="bottom"
+                                    android:text=" mg/dL"
+                                    android:textAppearance="?android:attr/textAppearanceSmall"
+                                    android:textColor="@color/statsFontColor"
+
+                                    android:textStyle="bold" />
+                            </LinearLayout>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Total Cholestrol"
+                                android:textColor="@color/statsNameFontColor"
+                                android:textStyle="bold"
+                                android:textAppearance="?android:attr/textAppearanceSmall"
+                                />
+                        </LinearLayout>
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@drawable/left_border"
+                        >
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:orientation="vertical"
+                            >
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center">
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textAppearance="?android:attr/textAppearanceLarge"
+                                    android:text="0.0"
+                                    android:id="@+id/txt_high_density_lipo"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/statsFontColor"
+                                    />
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/statsFontColor"
+                                    
+                                    android:textAppearance="?android:attr/textAppearanceSmall"
+                                    android:text=" mg/dL"
+                                    android:gravity="bottom"
+
+                                    />
+                            </LinearLayout>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="High Density Lipoprotein"
+                                android:textColor="@color/statsNameFontColor"
+                                android:textStyle="bold"
+                                android:textAppearance="?android:attr/textAppearanceSmall"
+                                />
+                        </LinearLayout>
+
+                    </RelativeLayout>
+                </LinearLayout>
+
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="2"
+                android:background="@drawable/bottom_border">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/top_border"
+                    android:weightSum="2"
+                    android:orientation="horizontal"
+                    >
+
+                    <RelativeLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1">
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:orientation="vertical"
+                            >
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center">
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textAppearance="?android:attr/textAppearanceLarge"
+                                    android:text="0.0"
+                                    android:id="@+id/txt_low_density_lipo"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/statsFontColor"
+                                    />
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/statsFontColor"
+                                    android:layout_toRightOf="@+id/txt_urea_creatinine"
+                                    android:textAppearance="?android:attr/textAppearanceSmall"
+                                    android:text=" mg/dL"
+                                    android:gravity="bottom"
+
+                                    />
+                            </LinearLayout>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Low Density Lipoprotein"
+                                android:textColor="@color/statsNameFontColor"
+                                android:textStyle="bold"
+                                android:textAppearance="?android:attr/textAppearanceSmall"
+                                />
+                        </LinearLayout>
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@drawable/left_border"
+                        >
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:orientation="vertical"
+                            >
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center">
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textAppearance="?android:attr/textAppearanceLarge"
+                                    android:text="0.0"
+                                    android:id="@+id/txt_triglycerides"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/statsFontColor"
+                                    />
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/statsFontColor"
+                                    android:layout_toRightOf="@+id/txt_urea_creatinine"
+                                    android:textAppearance="?android:attr/textAppearanceSmall"
+                                    android:text=" mg/dL"
+                                    android:gravity="bottom"
+
+                                    />
+                            </LinearLayout>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Triglycerides"
+                                android:textColor="@color/statsNameFontColor"
+                                android:textStyle="bold"
+                                android:textAppearance="?android:attr/textAppearanceSmall"
+                                />
+                        </LinearLayout>
+
+                    </RelativeLayout>
+                </LinearLayout>
+
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="2"
+                android:background="@drawable/bottom_border">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/top_border"
+                    android:weightSum="2"
+                    android:orientation="horizontal"
+                    >
+
+                    <RelativeLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1">
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:orientation="vertical"
+                            >
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center">
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textAppearance="?android:attr/textAppearanceLarge"
+                                    android:text="0.0"
+                                    android:id="@+id/txt_random_plasma_glucose"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/statsFontColor"
+                                    />
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/statsFontColor"
+                                    android:layout_toRightOf="@+id/txt_urea_creatinine"
+                                    android:textAppearance="?android:attr/textAppearanceSmall"
+                                    android:text=" mg/dL"
+                                    android:gravity="bottom"
+
+                                    />
+                            </LinearLayout>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Random plasma Glucose"
+                                android:textColor="@color/statsNameFontColor"
+                                android:textStyle="bold"
+                                android:textAppearance="?android:attr/textAppearanceSmall"
+                                />
+                        </LinearLayout>
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@drawable/left_border"
+                        >
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:orientation="vertical"
+                            >
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center">
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textAppearance="?android:attr/textAppearanceLarge"
+                                    android:text="0.0"
+                                    android:id="@+id/txt_fasting_plasma_glucose"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/statsFontColor"
+                                    />
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/statsFontColor"
+                                    android:layout_toRightOf="@+id/txt_urea_creatinine"
+                                    android:textAppearance="?android:attr/textAppearanceSmall"
+                                    android:text=" mg/dL"
+                                    android:gravity="bottom"
+
+                                    />
+                            </LinearLayout>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Fasting plasma Glucose"
+                                android:textColor="@color/statsNameFontColor"
+                                android:textStyle="bold"
+                                android:textAppearance="?android:attr/textAppearanceSmall"
+                                />
+                        </LinearLayout>
+
+                    </RelativeLayout>
+                </LinearLayout>
+
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="2"
+                android:background="@drawable/bottom_border">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/top_border"
+                    android:weightSum="2"
+                    android:orientation="horizontal"
+                    >
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1">
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:orientation="vertical"
+                            >
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center">
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textAppearance="?android:attr/textAppearanceLarge"
+                                    android:text="0.0"
+                                    android:id="@+id/txt_post_prandial_plasma_glucose"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/statsFontColor"
+                                    />
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/statsFontColor"
+                                    android:layout_toRightOf="@+id/txt_urea_creatinine"
+                                    android:textAppearance="?android:attr/textAppearanceSmall"
+                                    android:text=" mg/dL"
+                                    android:gravity="bottom"
+
+                                    />
+                            </LinearLayout>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Post-prandial plasma Glucose"
+                                android:textColor="@color/statsNameFontColor"
+                                android:textStyle="bold"
+                                android:textAppearance="?android:attr/textAppearanceSmall"
+                                />
+                        </LinearLayout>
+                    </RelativeLayout>
+
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
 </RelativeLayout>

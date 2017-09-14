@@ -74,6 +74,7 @@ public class SOSFragment extends Fragment {
                 checkLocationServices();
             }
         });
+        ((TrackActivity)getActivity()).getViewPager().setPagingEnabled(true);
 
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(getActivity(), R.layout.spinner_layout, personName );
         personSpinner.setAdapter(arrayAdapter);

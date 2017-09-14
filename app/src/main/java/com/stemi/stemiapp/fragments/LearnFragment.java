@@ -29,6 +29,7 @@ public class LearnFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_learn, container, false);
+        ((TrackActivity)getActivity()).getViewPager().setPagingEnabled(true);
         return view;
     }
 
