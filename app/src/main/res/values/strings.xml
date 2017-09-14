@@ -5,12 +5,26 @@
     <!-- Login Strings -->
     <string name="registration"><u>Not Registered?</u></string>
     <string name="forgot_password"><u>Forgot Password?</u></string>
-
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
+    <!-- SignUp Strings -->
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="confirmPassword">Confirm password</string>
+    <string name="alreadyResitered"><u>Already Registered?</u></string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!-- Forgot Password Strings -->
+    <string name="regEmail">Enter registered email id </string>
+    <string name="forgot_password_subheading">We\’ll send a new password to this email id, using that you can then set a new password.</string>
+
+    <!-- Intro screen Strings -->
+    <string name="chest_pain">Recognise Chest Pain Symptoms</string>
+    <string name="nearest_hospital">Find Nearest Heart-Attack Ready (STEMI) Hospital</string>
+    <string name="stay_healthy">Stay Healthy</string>
+    <string name="track_medication">Track Your Medication</string>
 
     <!-- Health Related Question-->
     <string name="Do_you_smoke">Do you smoke?</string>
@@ -25,4 +39,14 @@
     <string name="gps_network_not_enabled">Location services is turned off, please enable</string>
     <string name="open_location_settings">ENABLE</string>
     <string name="cancel">CANCEL</string>
+
+    <!-- Heart Attack Symptoms-->
+    <string name="heart_pain">Pain / discomfort in Chest</string>
+    <string name="jaw_pain">Pain in Jaw / Neck / Arm / Shoulder / Back</string>
+    <string name="shortnessOfBreath">Shortness of breath</string>
+    <string name="lightheadednes">Lightheadednes</string>
+    <string name="vomitting">Nausea or Vomitting</string>
+    <string name="title_activity_new_registration">NewRegistrationActivity</string>
+
+
 </resources>

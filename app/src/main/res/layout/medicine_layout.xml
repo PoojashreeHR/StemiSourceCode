@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<HorizontalScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:scrollbars="none">
+
+<LinearLayout
+    android:orientation="horizontal"
+    android:id="@+id/imageTypeLayout"
+    android:layout_alignParentRight="true"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent">
+
+<!--
+   <ImageView
+       android:id="@+id/tablet"
+       android:layout_width="30dp"
+       android:layout_height="30dp"
+       android:layout_margin="10dp"
+       android:visibility="gone"
+       android:background="@drawable/ic_tablet"/>
+
+    <ImageView
+        android:id="@+id/capsule"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_margin="10dp"
+        android:visibility="gone"
+        android:background="@drawable/ic_capsule"/>
+
+    <ImageView
+        android:id="@+id/syrup"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_margin="10dp"
+        android:visibility="gone"
+        android:background="@drawable/ic_syrup"/>
+-->
+<!--
+    <ImageView
+        android:id="@+id/iv_info"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:background="@drawable/ic_info"
+        android:layout_margin="10dp"/>-->
+</LinearLayout>
+</HorizontalScrollView>

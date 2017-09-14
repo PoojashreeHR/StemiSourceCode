@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/lightWhite">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/tvMedicine"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="MEDICINE NAME"
+                android:textSize="15sp"
+                android:gravity="center"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="10dp"/>
+
+            <EditText
+                android:id="@+id/etMedicineName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tvMedicine"
+                android:background="@drawable/edittext_boundary"
+                android:layout_marginLeft="20dp"
+                android:textCursorDrawable="@drawable/cursor_drawable"
+                android:singleLine="true"
+                android:textColor="@color/appBackground"
+                android:layout_marginRight="20dp"
+                android:hint="Enter medicine name"
+                android:inputType="text"
+                android:gravity="center"
+                android:textSize="18sp"
+                android:padding="15dp"/>
+
+            <TextView
+                android:id="@+id/tvType"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/etMedicineName"
+                android:text="TYPE"
+                android:gravity="center"
+                android:textSize="15sp"
+                android:layout_marginTop="15dp"/>
+
+            <LinearLayout
+                android:id="@+id/ll_medicine"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tvType"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:orientation="horizontal"
+                android:weightSum="3">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="Tablet"
+                    android:textSize="20sp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp"
+                    android:layout_margin="5dp"
+                    android:background="@drawable/edittext_boundary"
+                    android:drawableTop="@drawable/ic_tablet" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="Capsule"
+                    android:layout_margin="5dp"
+                    android:textSize="20sp"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:background="@drawable/edittext_boundary"
+                    android:drawableTop="@drawable/ic_capsule" />
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="Syrup"
+                    android:textSize="20sp"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp"
+                    android:layout_margin="5dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:background="@drawable/edittext_boundary"
+                    android:drawableTop="@drawable/ic_syrup" />
+            </LinearLayout>
+            <TextView
+                android:id="@+id/tvColor"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/ll_medicine"
+                android:text="COLOR"
+                android:gravity="center"
+                android:textSize="15sp"
+                android:layout_marginTop="15dp"/>
+
+            <LinearLayout
+                android:id="@+id/ll_color"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tvColor"
+                android:orientation="horizontal"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="10dp"
+                android:weightSum="8"
+                android:layout_marginRight="20dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="30dp"
+                    android:layout_weight="1"
+                    android:layout_margin="5dp"
+                    android:textColor="@color/white"
+                    />
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="30dp"
+                    android:layout_weight="1"
+                    android:layout_margin="5dp" />
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="30dp"
+                    android:layout_weight="1"
+                    android:layout_margin="5dp" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="30dp"
+                    android:layout_weight="1"
+                    android:layout_margin="5dp" />
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="30dp"
+                    android:layout_weight="1"
+                    android:layout_margin="5dp" />
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="30dp"
+                    android:layout_weight="1"
+                    android:layout_margin="5dp" />
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="30dp"
+                    android:layout_weight="1"
+                    android:layout_margin="5dp" />
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="30dp"
+                    android:layout_weight="1"
+                    android:layout_margin="5dp" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tvTime"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/ll_color"
+                android:text="TIME"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="10dp"
+                android:gravity="center"
+                android:textSize="15sp" />
+
+            <LinearLayout
+                android:id="@+id/ll_time"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tvTime"
+                android:orientation="horizontal"
+                android:weightSum="3"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_weight="1">
+                    <TextView
+                        android:id="@+id/morningMedicine"
+                        android:layout_width="100dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_margin="5dp"
+                        android:padding="5dp"
+                        android:text="Morning"
+                        android:textColor="@color/white"
+                        android:textSize="18sp"
+                        android:gravity="center"
+                        android:background="@drawable/oval_shape_textview"/>
+
+                    <TextView
+                        android:id="@+id/tvMorningTime"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="8:00 AM"
+                        android:layout_weight="1"
+                        android:textColor="@color/appBackground"
+                        android:gravity="center"
+                        android:visibility="visible"
+                        android:layout_marginTop="5dp"
+                        android:layout_gravity="center"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_weight="1"
+                    android:weightSum="2">
+                    <TextView
+                        android:id="@+id/noonMedicine"
+                        android:layout_width="100dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_margin="5dp"
+                        android:padding="5dp"
+                        android:text="Afternoon"
+                        android:textSize="18sp"
+                        android:gravity="center"
+                        android:background="@drawable/button_transparent_oval_shape"/>
+
+                    <TextView
+                        android:id="@+id/tvNoonTime"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="1:00 PM"
+                        android:textColor="@color/appBackground"
+                        android:visibility="gone"
+                        android:layout_weight="1"
+                        android:layout_marginTop="5dp"
+                        android:gravity="center"
+                        android:layout_gravity="center"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_weight="1"
+                    android:weightSum="2">
+
+                    <TextView
+                        android:id="@+id/nightMedicine"
+                        android:layout_width="100dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_margin="5dp"
+                        android:padding="5dp"
+                        android:text="Night"
+                        android:textSize="18sp"
+                        android:gravity="center"
+                        android:background="@drawable/button_transparent_oval_shape"/>
+
+
+                    <TextView
+                        android:id="@+id/tvNightTime"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="9:00 PM"
+                        android:textColor="@color/appBackground"
+                        android:visibility="gone"
+                        android:layout_weight="1"
+                        android:layout_marginTop="5dp"
+                        android:gravity="center"
+                        android:layout_gravity="center"/>
+                </LinearLayout>
+            </LinearLayout>
+            <TextView
+                android:id="@+id/tvDays"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="DAYS"
+                android:gravity="center"
+                android:layout_marginTop="25dp"
+                android:layout_marginBottom="10dp"
+                android:layout_below="@+id/ll_time" />
+
+            <EditText
+                android:id="@+id/medicineDays"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tvDays"
+                android:background="@drawable/edittext_boundary"
+                android:layout_marginLeft="20dp"
+                android:singleLine="true"
+                android:layout_marginRight="20dp"
+                android:hint="Enter number of days"
+                android:textColor="@color/appBackground"
+                android:gravity="center"
+                android:textCursorDrawable="@drawable/cursor_drawable"
+                android:textSize="18sp"
+                android:text="3"
+                android:inputType="number"
+                android:padding="15dp"/>
+
+            <CheckBox
+                android:id="@+id/medicineRemainder"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/medicineDays"
+                android:layout_margin="20dp"
+                android:textSize="18sp"
+                android:checked="true"
+                android:buttonTint="@color/appBackground"
+                android:text=" Remind me for this Medicine"/>
+        </RelativeLayout>
+    </ScrollView>
+</RelativeLayout>

@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.stemi.stemiapp.model.MedicineDetails;
 import com.stemi.stemiapp.model.RegisteredUserDetails;
 
 import java.util.ArrayList;
@@ -25,7 +26,9 @@ public class DBforUserDetails extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "dbStemiapp";
 
     private static final String TABLE_NAME = "dbuserDetails";
-    //column names
+    private static final String MED_TABLE_NAME = "dbMedicationDetails";
+
+    //column names for User Details
     private static final String KEY_ID = "id";
     private static final String USER_UID = "uniqueId";
     private static final String USER_NAME = "name";
@@ -44,8 +47,25 @@ public class DBforUserDetails extends SQLiteOpenHelper {
     private static final String HAD_STROKE = "hadStroke";
     private static final String HAVE_ASTHMA = "haveAsthma";
     private static final String FAMILY_HEALTH = "familyHealth";
+    private static final  String USER_PROFILR_URL = "profileUrl";
 
-    //sql query to creating table in database
+
+    //Column name for Medication
+    private static final String MED_KEY_ID = "id";
+    private  static final String MED_MEDICINE_DETAILS = "medicineDetails";
+    private  static final String RELATED_PERSON = "relatedPerson";
+  /*  private  static final String MED_MEDICINE_MORNING = "medicineMorning";
+    private  static final String MED_MORNING_TIME = "medicineMorningTime";
+    private  static final String MED_MEDICINE_AFTERNOON = "medicineAfternoon";
+    private  static final String MED_NOON_TIME = "medicineNoonTime";
+    private  static final String MED_MEDICINE_NIGHT = "medicineNight";
+    private  static final String MED_NIGHT_TIME = "medicineNightTime";
+    private  static final String MED_MEDICINE_KEY_ID = "id";
+    private  static final String MED_MEDICINE_DAYS = "medicineDays";
+    private  static final String MED_REMINDER = "medicineRemainder";
+*/
+
+    //sql query to creating User Details table in database
     private static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME + "("
             + KEY_ID + " INTEGER PRIMARY KEY,"
             + USER_UID + " TEXT,"
@@ -64,7 +84,16 @@ public class DBforUserDetails extends SQLiteOpenHelper {
             + HIGH_CHOLESTEROL + " TEXT,"
             + HAD_STROKE + " TEXT,"
             + HAVE_ASTHMA + " TEXT,"
-            + FAMILY_HEALTH + " TEXT"
+            + FAMILY_HEALTH + " TEXT, "
+            + USER_PROFILR_URL + " TEXT"
+            + ")";
+
+    //sql query to creating Medicine Details table in database
+
+    private static final String CREATE_MEDICINE_TABLE = "CREATE TABLE " + MED_TABLE_NAME + "("
+            + MED_KEY_ID + " INTEGER PRIMARY KEY,"
+            + MED_MEDICINE_DETAILS + " TEXT,"
+            + RELATED_PERSON + " TEXT"
             + ")";
 
     public DBforUserDetails(Context context) {super(context, DATABASE_NAME, null, DATABASE_VERSION);}
@@ -72,14 +101,16 @@ public class DBforUserDetails extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(CREATE_TABLE);
+        db.execSQL(CREATE_MEDICINE_TABLE);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + MED_TABLE_NAME);
         onCreate(db);
     }
-
+// For User Details
     public String isExist(String userName) {
         SQLiteDatabase db = this.getReadableDatabase();
         String string = null;
@@ -96,6 +127,7 @@ public class DBforUserDetails extends SQLiteOpenHelper {
         return string;
     }
 
+    // To get Number of profile
     public long getProfilesCount() {
        SQLiteDatabase db = this.getReadableDatabase();
         long cnt  = DatabaseUtils.queryNumEntries(db, TABLE_NAME);
@@ -126,6 +158,7 @@ public class DBforUserDetails extends SQLiteOpenHelper {
         values.put(HAD_STROKE,registeredUserDetails.getHad_paralytic_stroke());
         values.put(HAVE_ASTHMA, registeredUserDetails.getHave_asthma());
         values.put(FAMILY_HEALTH,registeredUserDetails.getFamily_had_heart_attack());
+        values.put(USER_PROFILR_URL,registeredUserDetails.getImgUrl());
 
         long id = db.insert(TABLE_NAME, null, values);
         Log.e("DATABASE VALUES", "addDataTODb: " + id);
@@ -156,6 +189,51 @@ public class DBforUserDetails extends SQLiteOpenHelper {
         }
         cursor.close();  // dont forget to close the cursor after operation done
         return data;
+    }
+
+    public void addMedicineDetails(String medicineDetails,String personName) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        //long count = getProfilesCount();
+        //count = count+1;
+        //   values.put(MED_KEY_ID,);
+        values.put(MED_MEDICINE_DETAILS, medicineDetails);
+        values.put(RELATED_PERSON, personName);
+
+        long id = db.insert(MED_TABLE_NAME, null, values);
+        Log.e("DATABASE VALUES", "addDataTODb: " + id);
+        //closing the database connection
+        db.close();
+    }
+        //see that all database connection stuff is inside this method
+        //so we don't need to open and close db connection outside this class
+
+        // To get Number of profile
+        public long getMedicineDetailsCount() {
+            SQLiteDatabase db = this.getReadableDatabase();
+            long cnt  = DatabaseUtils.queryNumEntries(db, MED_TABLE_NAME);
+            //db.close();
+            return cnt;
+        }
+
+    public ArrayList<String> getMedicine(){
+        ArrayList<String> data=new ArrayList<String>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(MED_TABLE_NAME, new String[]{MED_MEDICINE_DETAILS},null, null, null, null, null);
+        String fieldToAdd=null;
+        while(cursor.moveToNext()){
+            fieldToAdd=cursor.getString(0);
+            data.add(fieldToAdd);
+        }
+        cursor.close();  // dont forget to close the cursor after operation done
+        return data;
+    }
+
+
+    public void removeMedicalDetails(String name) {
+        SQLiteDatabase db = getWritableDatabase();
+        db.delete(MED_TABLE_NAME, RELATED_PERSON + " = ?", new String[] { name });
+        db.close();
     }
 
 }

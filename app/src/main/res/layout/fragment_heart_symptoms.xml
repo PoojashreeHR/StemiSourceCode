@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/lightWhite">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/scrollView2">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/rl_symptoms"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:background="@color/white">
+    <TextView
+        android:id="@+id/tvHeartAttack"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="HEART ATTACK SYMPTOMS"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:gravity="center"
+        android:textSize="15sp"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/heartSymptomsRecycler"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_below="@+id/tvHeartAttack">
+    </android.support.v7.widget.RecyclerView>
+    </RelativeLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Find any of these symptoms?"
+            android:layout_below="@+id/rl_symptoms"
+            android:textSize="17sp"
+            android:layout_margin="10dp"
+            android:gravity="center"
+            android:id="@+id/textView6" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/textView6"
+                android:text="Ask for help"
+                android:gravity="center"
+                android:textSize="17sp"
+                android:textColor="@color/appBackground"
+                android:layout_marginBottom="10dp"/>
+        </RelativeLayout>
+    </ScrollView>
+
+</RelativeLayout>

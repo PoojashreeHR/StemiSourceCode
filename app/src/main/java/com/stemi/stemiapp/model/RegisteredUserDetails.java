@@ -12,6 +12,7 @@ public class RegisteredUserDetails {
     String age;
     String gender;
     String  phone;
+    String email;
     String address;
     String  height;
     String  weight;
@@ -27,6 +28,14 @@ public class RegisteredUserDetails {
     String family_had_heart_attack;
     Boolean isClicked;
     String imgUrl;
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
     public String getImgUrl() {
         return imgUrl;

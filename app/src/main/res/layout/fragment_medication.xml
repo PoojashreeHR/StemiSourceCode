@@ -1,15 +1,184 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
+    android:background="@color/lightWhite"
     android:layout_height="match_parent">
 
-
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/tv_medication_today"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Medication"
         android:gravity="center"
         android:textSize="20dp"
-        android:layout_centerInParent="true" />
+        android:paddingLeft="10dp"
+        android:layout_marginTop="21dp"
+        android:drawableRight="@drawable/sort_down_48"
+        android:text="Today  "
+        android:textColor="@color/black"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
+    <View
+        android:id="@+id/view"
+        android:layout_width="wrap_content"
+        android:layout_height="1dp"
+        android:background="@color/black"
+        android:layout_marginTop="10dp"
+        android:layout_below="@+id/tv_medication_today"
+        android:layout_alignLeft="@+id/tv_medication_today"
+        android:layout_alignStart="@+id/tv_medication_today"
+        android:layout_alignRight="@+id/tv_medication_today"
+        android:layout_alignEnd="@+id/tv_medication_today" />
+
+
+    <RelativeLayout
+        android:id="@+id/rv_morning"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_below="@+id/view"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="5dp"
+        android:background="@color/white">
+
+        <TextView
+            android:id="@+id/textView5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:text="Morning"
+            android:layout_marginRight="10dp"
+            android:textSize="18sp"
+            android:layout_marginLeft="10dp"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_toRightOf="@+id/textView5"
+            android:layout_toEndOf="@+id/textView5"
+            android:layout_toLeftOf="@+id/ivInfo"
+            android:layout_toStartOf="@+id/ivInfo">
+
+            <include layout="@layout/medicine_layout"/>
+        </RelativeLayout>
+
+        <ImageView
+            android:id="@+id/ivInfo"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/ic_info"
+            android:layout_marginLeft="10dp"/>
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/rv_noon"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_below="@+id/rv_morning"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:background="@color/white">
+
+        <TextView
+            android:id="@+id/textView6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:text="Afternoon"
+            android:textSize="18sp"
+            android:layout_marginLeft="10dp"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_toLeftOf="@+id/ivInfo1"
+            android:layout_toStartOf="@+id/ivInfo1">
+
+            <include layout="@layout/medicine_layout"/>
+        </RelativeLayout>
+
+        <ImageView
+            android:id="@+id/ivInfo1"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/ic_info"
+            android:layout_marginLeft="10dp"/>
+    </RelativeLayout>
+
+
+
+    <RelativeLayout
+        android:id="@+id/rv_night"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_below="@+id/rv_noon"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:background="@color/white">
+
+        <TextView
+            android:id="@+id/textView7"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:text="Night"
+            android:textSize="18sp"
+            android:layout_marginLeft="10dp"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_toLeftOf="@+id/ivInfo2"
+            android:layout_toStartOf="@+id/ivInfo2">
+            <include layout="@layout/medicine_layout"/>
+
+        </RelativeLayout>
+        <ImageView
+            android:id="@+id/ivInfo2"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/ic_info"
+            android:layout_marginLeft="10dp"/>
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/bt_addNewMedicine"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="50dp"
+        android:background="@color/white"
+        android:padding="10dp"
+        android:text="+ ADD NEW MEDICINE"
+        android:gravity="center"
+        android:textColor="@color/appBackground"
+        android:textSize="20sp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
+
 </RelativeLayout>

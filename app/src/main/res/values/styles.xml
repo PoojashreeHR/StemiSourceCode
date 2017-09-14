@@ -52,6 +52,33 @@
     </style>
 
     <style name="MyDrawerArrowToggle" parent="Widget.AppCompat.DrawerArrowToggle">
-    <item name="color">@color/appBackground</item>
+        <item name="color">@color/appBackground</item>
     </style>
+
+
+    <style name="MyTheme" parent="android:Theme.Holo.Dialog">
+        <item name="android:alertDialogStyle">@style/CustomAlertDialogStyle</item>
+        <item name="android:windowBackground">@color/transparent</item>
+        <item name="android:textColorPrimary">#FFFFFF</item>
+        <item name="android:backgroundDimEnabled">false</item>
+        <item name="android:textColor">#FFFFFF</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="CustomAlertDialogStyle">
+        <item name="android:type">sweep</item>
+        <item name="android:gravity">center</item>
+        <item name="android:bottomBright">@color/appBackground</item>
+        <item name="android:bottomDark">@color/appBackground</item>
+        <item name="android:bottomMedium">@color/appBackground</item>
+        <item name="android:centerBright">@color/appBackground</item>
+        <item name="android:centerDark">@color/appBackground</item>
+        <item name="android:centerMedium">@color/appBackground</item>
+        <item name="android:fullBright">@color/appBackground</item>
+        <item name="android:fullDark">@color/appBackground</item>
+        <item name="android:topBright">@color/appBackground</item>
+        <item name="android:topDark">@color/appBackground</item>
+    </style>
+
 </resources>

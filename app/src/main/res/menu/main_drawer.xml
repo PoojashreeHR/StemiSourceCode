@@ -2,12 +2,12 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_about_us"
-            android:title="Element 1" />
+            android:id="@+id/Registration"
+            android:title="Registration" />
         <item
 
-            android:id="@+id/nav_faqs"
-            android:title="Element 2" />
+            android:id="@+id/logout"
+            android:title="Logout" />
         <item
             android:id="@+id/nav_privacy"
             android:title="Element 3" />

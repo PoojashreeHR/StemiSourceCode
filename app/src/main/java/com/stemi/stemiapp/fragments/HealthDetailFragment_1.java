@@ -1,17 +1,10 @@
 package com.stemi.stemiapp.fragments;
 
 import android.content.Context;
-import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.telephony.TelephonyManager;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +14,6 @@ import android.widget.Toast;
 
 import com.stemi.stemiapp.R;
 import com.stemi.stemiapp.activity.RegistrationActivity;
-import com.stemi.stemiapp.activity.TrackActivity;
 import com.stemi.stemiapp.customviews.AnswerTemplateView;
 import com.stemi.stemiapp.databases.DBforUserDetails;
 import com.stemi.stemiapp.model.HealthAnswers;
@@ -29,8 +21,6 @@ import com.stemi.stemiapp.model.HealthQuestions;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static android.content.ContentValues.TAG;
 
 /**
  * Created by Pooja on 17-07-2017.
@@ -61,15 +51,14 @@ public class HealthDetailFragment_1 extends Fragment implements View.OnClickList
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         healthRecycler.setLayoutManager(mLayoutManager);
         healthRecycler.setAdapter(healthAdapter);
-        HealthData();
+        healthData();
         return view;
     }
 
 
-    private void prepareHealthData(String Question, int size) {
+    private void prepareHealthData(String question) {
         HealthQuestions questions = new HealthQuestions();
-        questions.setQuestions(Question);
-        //  questions.setSize(size);
+        questions.setQuestions(question);
         healthQuestions.add(questions);
         RegistrationActivity.registeredUserDetails.setHealthQuestions(healthQuestions);
     }
@@ -111,13 +100,13 @@ public class HealthDetailFragment_1 extends Fragment implements View.OnClickList
     }
 
     //Setting question and adding it to recyclerview
-    private void HealthData() {
-        prepareHealthData(getResources().getString(R.string.have_diabetes), 3);
-        prepareHealthData(getResources().getString(R.string.have_blood_presssure), 3);
-        prepareHealthData(getResources().getString(R.string.have_cholesterol), 3);
-        prepareHealthData(getResources().getString(R.string.had_paralytic_stroke), 3);
-        prepareHealthData(getResources().getString(R.string.have_astama), 3);
-        prepareHealthData(getResources().getString(R.string.family_health), 3);
+    private void healthData() {
+        prepareHealthData(getResources().getString(R.string.have_diabetes));
+        prepareHealthData(getResources().getString(R.string.have_blood_presssure));
+        prepareHealthData(getResources().getString(R.string.have_cholesterol));
+        prepareHealthData(getResources().getString(R.string.had_paralytic_stroke));
+        prepareHealthData(getResources().getString(R.string.have_astama));
+        prepareHealthData(getResources().getString(R.string.family_health));
 
     }
 
@@ -175,25 +164,8 @@ public class HealthDetailFragment_1 extends Fragment implements View.OnClickList
             holder.answerTemplateView.setResponseChangedListener(new AnswerTemplateView.ResponseChangedListener() {
                 @Override
                 public void onResponse(String response) {
-                   // Toast.makeText(mContext, "You clicked " + response + "in position " + position, Toast.LENGTH_SHORT).show();
                     saveValues(position,response);
-                    /*for (int i = 0; i < RegistrationActivity.registeredUserDetails.getHealthQuestions().size(); i++) {
-                        if (RegistrationActivity.registeredUserDetails.getHealthQuestions().get(i).getQuestions()
-                                .equals(RegistrationActivity.registeredUserDetails.getHealthQuestions().get(holder.getAdapterPosition()).getQuestions())) {
-                            //Toast.makeText(mContext, "Equals"  , Toast.LENGTH_SHORT).show();
-                            Log.e("HealthDetailFragment", " EQUAL");
-                            RegistrationActivity.registeredUserDetails.getHealthQuestions().get(i).setClicked(true);
 
-                        } else {
-                            //Toast.makeText(mContext, "Not EQUAL", Toast.LENGTH_SHORT).show();
-                            Log.e("HealthDetailFragment", " NOT EQUAL");
-                        }
-                    }
-                    //healthQuestions.get(position).setAnswer(response);
-                    //healthQuestions.get(position).setClicked(true);
-                    RegistrationActivity.registeredUserDetails.setHealthQuestions(healthQuestions);
-                    RegistrationActivity.registeredUserDetails.setClicked(true);
-*/
                 }
             });
         }

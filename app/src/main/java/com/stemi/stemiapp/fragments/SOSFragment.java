@@ -45,7 +45,7 @@ public class SOSFragment extends Fragment {
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
     private static final String TAG = "SOSFragment";
     int PLACE_PICKER_REQUEST = 1;
-    private EditText et_location;
+    private EditText etLocation;
 
     public SOSFragment() {
         // Required empty public constructor
@@ -62,13 +62,13 @@ public class SOSFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_sos, container, false);
         personSpinner = (BetterSpinner) view.findViewById(R.id.person_Spinner);
-        pick_location = (ImageView) view.findViewById(R.id.pick_location);
-        et_location = (EditText)view.findViewById(R.id.et_location);
+        //pick_location = (ImageView) view.findViewById(R.id.pick_location);
+        etLocation = (EditText)view.findViewById(R.id.et_location);
         dBforUserDetails = new DBforUserDetails(getActivity());
         personName = new ArrayList<>();
         personName = dBforUserDetails.getRecords();
 
-        pick_location.setOnClickListener(new View.OnClickListener() {
+        etLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 checkLocationServices();
@@ -99,7 +99,7 @@ public class SOSFragment extends Fragment {
             if (resultCode == RESULT_OK) {
                 Place place = PlacePicker.getPlace(data, getActivity());
                 String toastMsg = String.format("Place: %s", place.getAddress());
-                et_location.setText(place.getAddress());
+                etLocation.setText(place.getAddress());
             }
         }
     }
@@ -109,9 +109,7 @@ public class SOSFragment extends Fragment {
 
         try {
             if(checkPlayServices()){
-                startActivityForResult(builder.build(getActivity())
-
-                        , PLACE_PICKER_REQUEST);
+                startActivityForResult(builder.build(getActivity()), PLACE_PICKER_REQUEST);
             }
 
         } catch (GooglePlayServicesRepairableException e) {

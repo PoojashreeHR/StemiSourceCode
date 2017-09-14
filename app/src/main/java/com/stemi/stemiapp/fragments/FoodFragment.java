@@ -74,19 +74,17 @@ public class FoodFragment extends Fragment {
         }
 
         public void onDateSet(DatePicker view, int year, int month, int day){
-            Calendar c = Calendar.getInstance();
-
             Date parseDate = null;
-            String Date1 = day + "-" + (month+1) + "-" + year;
+            String date1 = day + "-" + (month+1) + "-" + year;
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
             try {
-                parseDate = dateFormat.parse(Date1);
+                parseDate = dateFormat.parse(date1);
             } catch (ParseException e) {
                 e.printStackTrace();
             }
-            String st_date= dateFormat.format(parseDate); //2016/11/16 12:08:43
+            String stDate= dateFormat.format(parseDate); //2016/11/16 12:08:43
             Log.e("Comparing Date :"," Your date is correct");
-            tvFoodToday.setText(st_date);
+            tvFoodToday.setText(stDate);
 
         }
     }

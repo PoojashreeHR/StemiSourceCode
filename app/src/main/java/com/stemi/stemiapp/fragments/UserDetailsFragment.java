@@ -1,35 +1,22 @@
 package com.stemi.stemiapp.fragments;
 
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.text.Editable;
 import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Spinner;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 
 import com.stemi.stemiapp.R;
-import com.stemi.stemiapp.activity.MainActivity;
 import com.stemi.stemiapp.activity.RegistrationActivity;
-import com.stemi.stemiapp.customviews.BetterSpinner;
 import com.stemi.stemiapp.databases.DBforUserDetails;
-import com.stemi.stemiapp.model.RegisteredUserDetails;
 
-
-import java.util.ArrayList;
-
-import javax.security.auth.login.LoginException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -43,15 +30,18 @@ import static android.content.ContentValues.TAG;
 public class UserDetailsFragment extends Fragment implements View.OnClickListener{
 
 
-    @BindView(R.id.et_name) EditText et_name;
-    @BindView(R.id.et_age)  EditText et_age;
-    @BindView(R.id.et_phone) EditText et_phone;
-    @BindView(R.id.et_address) EditText et_address;
+    @BindView(R.id.et_name) EditText etName;
+    @BindView(R.id.et_age)  EditText etAge;
+    @BindView(R.id.et_phone) EditText etPhone;
+    @BindView(R.id.et_email) EditText etEmail;
 
+    String emailPattern = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$";
+
+
+    //  EditText etEmail;
     DBforUserDetails dBforUserDetails;
-    Button user_next;
-    BetterSpinner gender_spinner;
-    ArrayList<String> genderText;
+    String gender;
+    RadioGroup genderRadiogroup;
     String salutatioSelected = "";
 
     public UserDetailsFragment() {
@@ -61,29 +51,21 @@ public class UserDetailsFragment extends Fragment implements View.OnClickListene
 
         View view = inflater.inflate(R.layout.fragment_user_details, container, false);
         ButterKnife.bind(this,view);
+
         view.findViewById(R.id.userDetailButton).setOnClickListener(this);
         dBforUserDetails = new DBforUserDetails(getActivity());
-        gender_spinner = (BetterSpinner) view.findViewById(R.id.gender_spinner);
-        genderText = new ArrayList<>();
-        genderText.add("Male");
-        genderText.add("Female");
-       // genderText.add("Mrs");
+        genderRadiogroup = (RadioGroup) view.findViewById(R.id.radioGroup1);
+        genderRadiogroup.clearCheck();
 
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(getActivity(), R.layout.spinner_layout, genderText );
-        gender_spinner.setAdapter(arrayAdapter);
-        gender_spinner.addTextChangedListener(new TextWatcher() {
+       /* Attach CheckedChangeListener to radio group */
+        genderRadiogroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                gender = ((RadioButton) group.findViewById(checkedId)).getText().toString();
+                if(null!=gender && checkedId > -1){
+                    Log.e(TAG, "onCheckedChanged: User is :"+ gender );
+                }
 
-            }
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-            @Override
-            public void afterTextChanged(Editable s) {
-                salutatioSelected = gender_spinner.getText().toString();
-                Log.e("TAG","Text is :"+gender_spinner.getText().toString());
             }
         });
         return view;
@@ -93,16 +75,15 @@ public class UserDetailsFragment extends Fragment implements View.OnClickListene
     public void onResume() {
         super.onResume();
         saveUserDetails();
-       // ((RegistrationActivity) getActivity()).disableNavigationIcon();
-       // ((RegistrationActivity) getActivity()).setToolbarTitle(R.string.MainFragmentTitle);
     }
 
     public void saveUserDetails(){
-        RegistrationActivity.registeredUserDetails.setName(et_name.getText().toString());
-        RegistrationActivity.registeredUserDetails.setAge(et_age.getText().toString());
-        RegistrationActivity.registeredUserDetails.setGender(gender_spinner.getText().toString());
-        RegistrationActivity.registeredUserDetails.setPhone(et_phone.getText().toString());
-        RegistrationActivity.registeredUserDetails.setAddress(et_address.getText().toString());
+        String gender1 = gender;
+        RegistrationActivity.registeredUserDetails.setName(etName.getText().toString());
+        RegistrationActivity.registeredUserDetails.setAge(etAge.getText().toString());
+        RegistrationActivity.registeredUserDetails.setGender(gender1);
+        RegistrationActivity.registeredUserDetails.setPhone(etPhone.getText().toString());
+        RegistrationActivity.registeredUserDetails.setEmail(etEmail.getText().toString());
     }
     @Override
     public void onClick(View v) {
@@ -115,7 +96,6 @@ public class UserDetailsFragment extends Fragment implements View.OnClickListene
                     ((RegistrationActivity) getActivity()).showFragment(new PhysicalDetailsFragment());
                     break;
                 }
-
         }
 
     }
@@ -125,60 +105,55 @@ public class UserDetailsFragment extends Fragment implements View.OnClickListene
         Log.e(TAG, "validateAllFields: " + salutatioSelected);
 
 
-        String firstName = et_name.getText().toString();
+        String firstName = etName.getText().toString();
         String userName = dBforUserDetails.isExist(firstName);
         if (TextUtils.isEmpty(firstName)) {
-            et_name.setError("Required");
+            etName.setError("Required");
             valid = false;
-        }/* else if(userName != null)  {
+        } else if(userName != null)  {
                 if (userName.equalsIgnoreCase(firstName)) {
                     Log.e(TAG, "validateAllFields: " + "True ");
-                    et_name.setError("Name already registered");
+                    etName.setError("Name already registered");
                     valid = false;
                 } else {
                     Log.e(TAG, "validateAllFields: " + "False ");
                 }
-            }*/else {
-            et_name.setError(null);
+            }else {
+            etName.setError(null);
         }
 
-        String age = et_age.getText().toString();
+        String age = etAge.getText().toString();
         if (TextUtils.isEmpty(age)) {
-            et_age.setError("Required");
+            etAge.setError("Required");
             valid = false;
         } else if (Integer.parseInt(age) < 18 || Integer.parseInt(age) > 100) {
-            et_age.setError("Enter Valid Age");
+            etAge.setError("Enter Valid Age");
             valid = false;
         }  else {
-            et_age.setError(null);
+            etAge.setError(null);
         }
 
-        String gender = salutatioSelected;
-        if (TextUtils.isEmpty(gender)) {
-            gender_spinner.setError("Required");
-            valid = false;
-        } else {
-            gender_spinner.setError(null);
-    }
-
-        String mobileNumber = et_phone.getText().toString();
+        String mobileNumber = etPhone.getText().toString();
         if (TextUtils.isEmpty(mobileNumber)) {
-            et_phone.setError("Required");
+            etPhone.setError("Required");
             valid = false;
         } else if (mobileNumber.length() < 10 || mobileNumber.length() > 10) {
-            et_phone.setError("Enter Valid Mobile Number");
+            etPhone.setError("Enter Valid Mobile Number");
             valid = false;
         } else {
-            et_phone.setError(null);
+            etPhone.setError(null);
         }
 
-        String password = et_address.getText().toString();
-        if (TextUtils.isEmpty(password)) {
-            et_address.setError("Required");
+        String email = etEmail.getText().toString();
+        if (TextUtils.isEmpty(email)) {
+            etEmail.setError("Required");
             valid = false;
-        } else {
-            et_address.setError(null);
-        }
+        }if (etEmail.getText().toString().matches(emailPattern)) {
+            etEmail.setError(null);
+        } else{
+            etEmail.setError("Enter Valid Email");
+                valid = false;
+            }
         return valid;
     }
 }

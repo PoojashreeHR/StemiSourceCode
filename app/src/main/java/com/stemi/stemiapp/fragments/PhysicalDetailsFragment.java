@@ -4,21 +4,24 @@ package com.stemi.stemiapp.fragments;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
-import android.text.InputFilter;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.stemi.stemiapp.R;
 import com.stemi.stemiapp.activity.RegistrationActivity;
 import com.stemi.stemiapp.customviews.AnswerTemplateView;
-import com.stemi.stemiapp.customviews.InputFilterMinMax;
+import com.stemi.stemiapp.customviews.BetterSpinner;
+import com.stemi.stemiapp.customviews.MaterialSpinner;
 import com.stemi.stemiapp.model.RegisteredUserDetails;
+
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -28,12 +31,17 @@ import butterknife.ButterKnife;
  */
 
 public class PhysicalDetailsFragment extends Fragment implements View.OnClickListener {
-    @BindView(R.id.et_height) EditText et_height;
-    @BindView(R.id.et_weight) EditText et_weight;
-    @BindView(R.id.et_waist) EditText et_waist;
-    @BindView(R.id.smoke_answerLayout) AnswerTemplateView smoke_answer;
-    @BindView(R.id.heart_attack) AnswerTemplateView heart_attack;
+    @BindView(R.id.et_height) EditText etHeight;
+    @BindView(R.id.et_weight) EditText etWeight;
+    @BindView(R.id.et_waist) EditText etWaist;
+    @BindView(R.id.et_address) EditText etAddress;
+    @BindView(R.id.smoke_answerLayout) AnswerTemplateView smokeAnswer;
+    @BindView(R.id.heart_attack) AnswerTemplateView heartAttack;
 
+    //  BetterSpinner gender_spinner;
+    ArrayList<String> genderText;
+    String salutatioSelected = "";
+  //  BetterSpinner spinner;
     RegisteredUserDetails registeredUserDetails;
     public PhysicalDetailsFragment() {
     }
@@ -45,17 +53,39 @@ public class PhysicalDetailsFragment extends Fragment implements View.OnClickLis
         View view = inflater.inflate(R.layout.fragment_physical_details, container, false);
         ButterKnife.bind(this, view);
         view.findViewById(R.id.bt_physical_next).setOnClickListener(this);
-        // view.findViewById(R.id.userDetailButton).setOnClickListener(this);
 
+       // spinner = (BetterSpinner) view.findViewById(R.id.spinner);
+        genderText = new ArrayList<>();
+        genderText.add("Feet and In");
+        genderText.add("CM");
+        // genderText.add("Mrs");
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(getActivity(), R.layout.spinner_layout, genderText );
+        /*spinner.setAdapter(arrayAdapter);
+        spinner.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+            @Override
+            public void afterTextChanged(Editable s) {
+                salutatioSelected = spinner.getText().toString();
+                Log.e("TAG","Text is :"+spinner.getText().toString());
+            }
+        });*/
         if (RegistrationActivity.registeredUserDetails != null) {
-            et_height.setText(RegistrationActivity.registeredUserDetails.getWeight());
-            et_weight.setText(RegistrationActivity.registeredUserDetails.getWeight());
-            et_waist.setText(RegistrationActivity.registeredUserDetails.getWaist());
+            etHeight.setText(RegistrationActivity.registeredUserDetails.getWeight());
+            etWeight.setText(RegistrationActivity.registeredUserDetails.getWeight());
+            etWaist.setText(RegistrationActivity.registeredUserDetails.getWaist());
+            etAddress.setText(RegistrationActivity.registeredUserDetails.getAddress());
             if (RegistrationActivity.registeredUserDetails.getDo_you_smoke() != null) {
-                smoke_answer.setResponse(RegistrationActivity.registeredUserDetails.getDo_you_smoke());
+                smokeAnswer.setResponse(RegistrationActivity.registeredUserDetails.getDo_you_smoke());
             }
             if (RegistrationActivity.registeredUserDetails.getHeart_attack() != null) {
-                heart_attack.setResponse(RegistrationActivity.registeredUserDetails.getHeart_attack());
+                heartAttack.setResponse(RegistrationActivity.registeredUserDetails.getHeart_attack());
             }
 
         }
@@ -66,18 +96,17 @@ public class PhysicalDetailsFragment extends Fragment implements View.OnClickLis
     public void onResume() {
         super.onResume();
         saveDetails();
-        // ((RegistrationActivity) getActivity()).disableNavigationIcon();
-        // ((RegistrationActivity) getActivity()).setToolbarTitle(R.string.MainFragmentTitle);
     }
 
 
 
    public void saveDetails(){
-       RegistrationActivity.registeredUserDetails.setHeight(et_height.getText().toString());
-       RegistrationActivity.registeredUserDetails.setWeight(et_weight.getText().toString());
-       RegistrationActivity.registeredUserDetails.setWaist(et_waist.getText().toString());
-       RegistrationActivity.registeredUserDetails.setDo_you_smoke(smoke_answer.getResponse());
-       RegistrationActivity.registeredUserDetails.setHeart_attack(heart_attack.getResponse());
+       RegistrationActivity.registeredUserDetails.setHeight(etHeight.getText().toString());
+       RegistrationActivity.registeredUserDetails.setWeight(etWeight.getText().toString());
+       RegistrationActivity.registeredUserDetails.setWaist(etWaist.getText().toString());
+       RegistrationActivity.registeredUserDetails.setAddress(etAddress.getText().toString());
+       RegistrationActivity.registeredUserDetails.setDo_you_smoke(smokeAnswer.getResponse());
+       RegistrationActivity.registeredUserDetails.setHeart_attack(heartAttack.getResponse());
     }
     @Override
     public void onClick(View v) {
@@ -96,51 +125,61 @@ public class PhysicalDetailsFragment extends Fragment implements View.OnClickLis
     private boolean validateFields() {
         boolean valid = true;
 
-        String height = et_height.getText().toString();
+       /*    String gender = salutatioSelected;
+        if (TextUtils.isEmpty(gender)) {
+            spinner.setError("Required");
+            valid = false;
+        } else {
+            spinner.setError(null);
+    }*/
+        String height = etHeight.getText().toString();
         if (TextUtils.isEmpty(height)) {
-            et_height.setError("Required");
+            etHeight.setError("Required");
             valid = false;
         }else if (Integer.parseInt(height) < 20 || Integer.parseInt(height) > 200) {
-            et_height.setError("Enter valid Height");
+            etHeight.setError("Enter valid Height");
             valid = false;
         } else {
-            et_height.setError(null);
+            etHeight.setError(null);
         }
 
-        String weight = et_weight.getText().toString();
+        String weight = etWeight.getText().toString();
         if (TextUtils.isEmpty(weight)) {
-            et_weight.setError("Required");
+            etWeight.setError("Required");
             valid = false;
         } else if (Integer.parseInt(weight) < 20 || Integer.parseInt(weight) > 200) {
-            et_weight.setError("Enter valid weight");
+            etWeight.setError("Enter valid weight");
             valid = false;
         } else {
-            et_weight.setError(null);
+            etWeight.setError(null);
         }
 
-        String waist = et_waist.getText().toString();
+        String waist = etWaist.getText().toString();
         if (TextUtils.isEmpty(waist)) {
-            et_waist.setError("Required");
+            etWaist.setError("Required");
             valid = false;
         } else if (Integer.parseInt(waist) < 20 || Integer.parseInt(waist) > 200) {
-            et_waist.setError("Enter valid waist");
+            etWaist.setError("Enter valid waist");
             valid = false;
         } else {
-            et_waist.setError(null);
+            etWaist.setError(null);
         }
 
-        if(smoke_answer.getResponse() == null){
-            Toast.makeText(getActivity(), "You must select atleast one answer", Toast.LENGTH_SHORT).show();
+        String address = etAddress.getText().toString();
+        if (TextUtils.isEmpty(address)) {
+            etAddress.setError("Required");
             valid = false;
         } else {
-         //   Toast.makeText(getActivity(), "Your Response is: " + smoke_answer.getResponse().toString(), Toast.LENGTH_SHORT).show();
+            etAddress.setError(null);
+        }
+        if(smokeAnswer.getResponse() == null){
+            Toast.makeText(getActivity(), "You must select atleast one answer", Toast.LENGTH_SHORT).show();
+            valid = false;
         }
 
-        if(heart_attack.getResponse() == null){
+        if(heartAttack.getResponse() == null){
             Toast.makeText(getActivity(), "You must select atleast one answer", Toast.LENGTH_SHORT).show();
             valid = false;
-        } else {
-           // Toast.makeText(getActivity(), "Your Response is: " + heart_attack.getResponse().toString(), Toast.LENGTH_SHORT).show();
         }
         return valid;
     }

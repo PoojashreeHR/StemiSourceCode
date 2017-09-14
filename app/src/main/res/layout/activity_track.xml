@@ -5,32 +5,35 @@
     android:layout_height="match_parent">
 
     <android.support.design.widget.AppBarLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/appBarLayout"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+           android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+           android:id="@+id/appBarLayout"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
-    <android.support.v7.widget.Toolbar
-           android:id="@+id/toolbar"
+       <android.support.v7.widget.Toolbar
+           android:id="@+id/track_toolbar"
            android:layout_width="match_parent"
            android:layout_height="?attr/actionBarSize"
            android:background="@color/white"
            app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
     </android.support.design.widget.AppBarLayout>
 
-    <com.stemi.stemiapp.utils.CustomViewPager
+ <!--   <include layout="@layout/custom_tab"
+        android:id="@+id/tab"/>-->
+
+    <com.stemi.stemiapp.customviews.CustomViewPager
          android:id="@+id/viewpager"
          android:layout_width="match_parent"
          android:layout_height="match_parent"
          android:visibility="visible"
-         android:layout_above="@+id/tabs"
+         android:layout_above="@+id/tab"
          android:layout_below="@+id/appBarLayout"
-         android:background="@android:color/darker_gray"
+         android:background="@color/lightWhite"
          app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
 
     <android.support.design.widget.TabLayout
-         android:id="@+id/tabs"
+         android:id="@+id/tab"
          android:layout_gravity="bottom"
          android:layout_width="match_parent"
          android:layout_height="70dp"
@@ -45,7 +48,7 @@
         android:id="@+id/mainContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/tabs"
+        android:layout_above="@+id/tab"
         android:layout_below="@+id/appBarLayout"
         android:visibility="gone">
     </RelativeLayout>
