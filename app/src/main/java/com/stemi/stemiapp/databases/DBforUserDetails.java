@@ -9,8 +9,12 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.stemi.stemiapp.activity.RegistrationActivity;
 import com.stemi.stemiapp.model.MedicineDetails;
 import com.stemi.stemiapp.model.RegisteredUserDetails;
+import com.stemi.stemiapp.preference.AppSharedPreference;
+import com.stemi.stemiapp.utils.AppConstants;
 
 import java.util.ArrayList;
 
@@ -49,21 +53,12 @@ public class DBforUserDetails extends SQLiteOpenHelper {
     private static final String FAMILY_HEALTH = "familyHealth";
     private static final  String USER_PROFILR_URL = "profileUrl";
 
-
     //Column name for Medication
     private static final String MED_KEY_ID = "id";
     private  static final String MED_MEDICINE_DETAILS = "medicineDetails";
     private  static final String RELATED_PERSON = "relatedPerson";
-  /*  private  static final String MED_MEDICINE_MORNING = "medicineMorning";
-    private  static final String MED_MORNING_TIME = "medicineMorningTime";
-    private  static final String MED_MEDICINE_AFTERNOON = "medicineAfternoon";
-    private  static final String MED_NOON_TIME = "medicineNoonTime";
-    private  static final String MED_MEDICINE_NIGHT = "medicineNight";
-    private  static final String MED_NIGHT_TIME = "medicineNightTime";
-    private  static final String MED_MEDICINE_KEY_ID = "id";
-    private  static final String MED_MEDICINE_DAYS = "medicineDays";
-    private  static final String MED_REMINDER = "medicineRemainder";
-*/
+
+
 
     //sql query to creating User Details table in database
     private static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME + "("
@@ -139,9 +134,8 @@ public class DBforUserDetails extends SQLiteOpenHelper {
     public void addEntry(RegisteredUserDetails registeredUserDetails) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        long count = getProfilesCount();
-        count = count+1;
-        values.put(USER_UID,registeredUserDetails.getUniqueId()+"_"+ count);
+
+        values.put(USER_UID,registeredUserDetails.getUniqueId());
         values.put(USER_NAME,registeredUserDetails.getName());
         values.put(USER_AGE,registeredUserDetails.getAge());
         values.put(USER_GENDER,registeredUserDetails.getGender());
@@ -171,7 +165,7 @@ public class DBforUserDetails extends SQLiteOpenHelper {
     }
 
 
-    public void removeNote(String name) {
+    public void removeUserDetails(String name) {
         SQLiteDatabase db = getWritableDatabase();
         db.delete(TABLE_NAME, USER_NAME + " = ?", new String[] { name });
         db.close();
@@ -216,24 +210,134 @@ public class DBforUserDetails extends SQLiteOpenHelper {
             return cnt;
         }
 
-    public ArrayList<String> getMedicine(){
+        //Get all Medicine Details
+    public ArrayList<String> getMedicine(String time){
         ArrayList<String> data=new ArrayList<String>();
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(MED_TABLE_NAME, new String[]{MED_MEDICINE_DETAILS},null, null, null, null, null);
-        String fieldToAdd=null;
+        String fieldToAdd = null;
         while(cursor.moveToNext()){
-            fieldToAdd=cursor.getString(0);
-            data.add(fieldToAdd);
+
+            fieldToAdd = cursor.getString(0);
+            Gson gsonObj = new Gson();
+            MedicineDetails medicineDetails = gsonObj.fromJson(fieldToAdd , MedicineDetails.class);
+
+            if(medicineDetails.getMedicineMorning().equals(time)){
+                String MedicineString = gsonObj.toJson(medicineDetails);
+                data.add(MedicineString);
+            }
+            if(medicineDetails.getMedicineAfternoon().equals(time)){
+                String MedicineString = gsonObj.toJson(medicineDetails);
+                data.add(MedicineString);
+            }
+            if(medicineDetails.getMedicineNight().equals(time)){
+                String MedicineString = gsonObj.toJson(medicineDetails);
+                data.add(MedicineString);
+            }
+
         }
         cursor.close();  // dont forget to close the cursor after operation done
         return data;
     }
 
+    //calling from splash screen to delete unwanted data from DB
+    public void removeMedicalData() {
+        ArrayList<String> data=new ArrayList<String>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        SQLiteDatabase database = this.getWritableDatabase();
+        Cursor cursor = db.query(MED_TABLE_NAME, new String[]{MED_MEDICINE_DETAILS},null, null, null, null, null);
+        String fieldToAdd = null;
+        while(cursor.moveToNext()) {
 
+            fieldToAdd = cursor.getString(0);
+            Gson gsonObj = new Gson();
+            MedicineDetails medicineDetails = gsonObj.fromJson(fieldToAdd, MedicineDetails.class);
+
+            if(medicineDetails.getMedicineMorning().equals("") &&
+                    medicineDetails.getMedicineAfternoon().equals("")
+                    && medicineDetails.getMedicineNight().equals("")){
+                database.delete(MED_TABLE_NAME, MED_MEDICINE_DETAILS + " ='" + fieldToAdd + "'", null);
+            }
+        }
+        db.close();
+    }
+
+    //Remove all medical details of particular person
     public void removeMedicalDetails(String name) {
         SQLiteDatabase db = getWritableDatabase();
         db.delete(MED_TABLE_NAME, RELATED_PERSON + " = ?", new String[] { name });
         db.close();
     }
 
+
+    //Remove medicine details from recyclerview
+
+    public void removeMedicine(ArrayList<MedicineDetails> deletedList,Context context,int id) {
+        AppSharedPreference appSharedPreference = new AppSharedPreference(context);
+
+        SQLiteDatabase readDb = this.getReadableDatabase();
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        String selectQuery = "SELECT  * FROM " + MED_TABLE_NAME;
+        Cursor cursor = readDb.rawQuery(selectQuery,null);
+        String fieldToAdd = null;
+
+        for (int i = 0; i < deletedList.size(); i++) {
+        while (cursor.moveToNext()) {
+            fieldToAdd = cursor.getString(1);
+            Gson gsonObj = new Gson();
+            MedicineDetails medicineDetails = gsonObj.fromJson(fieldToAdd, MedicineDetails.class);
+
+                if (medicineDetails.equals(deletedList.get(i))
+                        && appSharedPreference.getProfileName(AppConstants.PROFILE_NAME).equals(deletedList.get(i).getPersonName())) {
+                    String old = new Gson().toJson(deletedList.get(i));
+                    if(id == 1) {
+                        for (int j = 0; j < deletedList.size(); j++) {
+                            deletedList.get(j).setMedicineMorning("");
+                            deletedList.get(j).setMedicineMorningTime("");
+                        }
+                    }else if(id == 2){
+                        for (int j = 0; j < deletedList.size(); j++) {
+                            deletedList.get(j).setMedicineAfternoon("");
+                            deletedList.get(j).setMedicineNoonTime("");
+                        }
+                    }else if(id == 3){
+                        for (int j = 0; j < deletedList.size(); j++) {
+                            deletedList.get(j).setMedicineNight("");
+                            deletedList.get(j).setMedicineNightTime("");
+                        }
+                    }
+                    String s = new Gson().toJson(deletedList.get(i));
+
+                    ContentValues cv = new ContentValues();
+                    cv.put(MED_MEDICINE_DETAILS,s);
+                    cv.put(RELATED_PERSON,deletedList.get(i).getPersonName());
+
+                    long l = db.update(MED_TABLE_NAME, cv, MED_MEDICINE_DETAILS + "='" + old
+                            + "' AND "+ RELATED_PERSON + "='"+
+                            appSharedPreference.getProfileName(AppConstants.PROFILE_NAME) + "'",null);
+                    Log.e(TAG, "removeMedicine: "+l );
+
+                }else {
+                    Log.e(TAG, "removeMedicine: "+"Nothing Deleted " );
+                }
+            }
+            cursor.close();  //
+            db.close();
+        }
+    }
+
+
+    //Get single medicine Details
+    public void getMedicineToEdit(ArrayList<MedicineDetails> beforeEditData,String afterEdit){
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        String old = new Gson().toJson(beforeEditData.get(0));
+        ContentValues cv = new ContentValues();
+        cv.put(MED_MEDICINE_DETAILS, afterEdit);
+
+        long count = db.update(MED_TABLE_NAME, cv, MED_MEDICINE_DETAILS + "='" + old + "'" ,null);
+        Log.e(TAG, "getMedicineToEdit: " + count );
+        db.close();
+    }
 }

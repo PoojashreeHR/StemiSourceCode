@@ -6,58 +6,150 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:ct="http://schemas.android.com/tools">
 
-    <TextView
-        android:id="@+id/sos_text"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:text="Who has chest pain?"
-        android:textSize="20sp"
-        android:textColor="@color/black"/>
+    <ScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
 
-    <com.stemi.stemiapp.customviews.BetterSpinner
-        android:id="@+id/person_Spinner"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/sos_text"
-        android:layout_margin="15dp"
-        style="@style/StyledTilEditText"
-        android:textColor="@color/black"
-        android:textColorHint="@color/colorPrimaryDark"
-        android:hint="Select Person"/>
-
-    <TextView
-        android:id="@+id/tv_location"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:layout_below="@id/person_Spinner"
-        android:text="Where is he/she?"
-        android:textSize="20sp"
-        android:textColor="@color/black"/>
-
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/et_location"
-            android:hint="Enter location"
-            android:layout_below="@id/tv_location"
-            android:textColor="@color/black"
-            android:focusableInTouchMode="false"
-            android:drawableRight="@drawable/location_center"
-            style="@style/StyledTilEditText"
-            android:layout_margin="15dp"/>
-
-       <!-- <ImageView
-            android:id="@+id/pick_location"
+        <RelativeLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right|center"
-            android:src="@drawable/location_center" />
-    </FrameLayout>-->
+            android:layout_height="wrap_content">
 
+            <TextView
+                android:id="@+id/sos_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:text="Who has chest pain?"
+                android:textSize="20sp"
+                android:textColor="@color/black"/>
+
+            <com.stemi.stemiapp.customviews.BetterSpinner
+                android:id="@+id/person_Spinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/sos_text"
+                android:layout_margin="15dp"
+                style="@style/StyledTilEditText"
+                android:textColor="@color/black"
+                android:textColorHint="@color/colorPrimaryDark"
+                android:hint="Select Person"/>
+
+            <TextView
+                android:id="@+id/tv_location"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_below="@id/person_Spinner"
+                android:text="Where is he/she?"
+                android:textSize="20sp"
+                android:textColor="@color/black"/>
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/et_location"
+                    android:hint="Enter location"
+                    android:layout_below="@id/tv_location"
+                    android:textColor="@color/black"
+                    android:focusableInTouchMode="false"
+                    android:drawableRight="@drawable/location_center"
+                    style="@style/StyledTilEditText"
+                    android:layout_margin="15dp"/>
+
+               <!-- <ImageView
+                    android:id="@+id/pick_location"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right|center"
+                    android:src="@drawable/location_center" />
+            </FrameLayout>-->
+
+            <Button
+                android:id="@+id/bt_share_location"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/et_location"
+                android:background="@color/white"
+                android:layout_margin="20dp"
+                android:text="Share my location"
+                android:textStyle="bold"
+                android:textColor="@color/appBackground"
+                android:drawableLeft="@drawable/ic_share"
+                android:layout_centerHorizontal="true"
+                android:padding="10dp"/>
+
+            <TextView
+                android:id="@+id/nearestHosp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/bt_share_location"
+                android:text="@string/nearest_hospital"
+                android:gravity="center"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:textSize="18sp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/nearestHosp"
+                android:layout_margin="20dp"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <RelativeLayout
+                    android:id="@+id/rl_call"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:layout_margin="10dp"
+                    android:background="@color/white" >
+                <ImageView
+                    android:id="@+id/iv_call"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/ic_call"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="20dp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/iv_call"
+                        android:text="Call 108"
+                        android:padding="10dp"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="10dp"/>
+                </RelativeLayout>
+                <RelativeLayout
+                    android:id="@+id/rl_locateMap"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:layout_margin="10dp"
+                    android:background="@color/white" >
+                    <ImageView
+                        android:id="@+id/iv_map"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/ic_location"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="20dp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/iv_map"
+                        android:text="Locate on Map"
+                        android:padding="10dp"
+                        android:layout_centerHorizontal="true"
+                        android:layout_margin="10dp"/>
+                </RelativeLayout>
+            </LinearLayout>
+        </RelativeLayout>
+    </ScrollView>
 </RelativeLayout>

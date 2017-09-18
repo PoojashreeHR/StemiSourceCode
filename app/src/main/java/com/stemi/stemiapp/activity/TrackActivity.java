@@ -25,17 +25,21 @@ import android.support.design.widget.TabLayout;
 
 import com.stemi.stemiapp.R;
 import com.stemi.stemiapp.customviews.CustomViewPager;
+import com.stemi.stemiapp.fragments.AddMedicineFragment;
 import com.stemi.stemiapp.fragments.HospitalFragment;
 import com.stemi.stemiapp.fragments.LearnFragment;
+import com.stemi.stemiapp.fragments.MedicationFragment;
 import com.stemi.stemiapp.fragments.SOSFragment;
 import com.stemi.stemiapp.fragments.StatusFragment;
 import com.stemi.stemiapp.fragments.TrackFragment;
+import com.stemi.stemiapp.model.DataPassListener;
+import com.stemi.stemiapp.model.MedicineDetails;
 import com.stemi.stemiapp.preference.AppSharedPreference;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class TrackActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
+public class TrackActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, DataPassListener{
 
     TabLayout tabLayout;
     Toolbar toolbar;
@@ -119,6 +123,18 @@ public class TrackActivity extends AppCompatActivity implements NavigationView.O
         fragmentTransaction.commitAllowingStateLoss();
     }
 
+    @Override
+    public void passData(ArrayList<MedicineDetails> data) {
+        AddMedicineFragment addMedicineFragment = new AddMedicineFragment ();
+        Bundle args = new Bundle();
+        args.putParcelableArrayList("RECIEVE DATA", data );
+       // args.putString(AddMedicineFragment.DATA_RECEIVE, data);
+        addMedicineFragment .setArguments(args);
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.mainContainer, addMedicineFragment).commit();
+    }
+
+
     /**
      * Adding custom view to tab
      */
@@ -166,6 +182,7 @@ public class TrackActivity extends AppCompatActivity implements NavigationView.O
         adapter.addFrag(new StatusFragment(), "Status");
         viewPager.setAdapter(adapter);
     }
+
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
@@ -219,12 +236,12 @@ public class TrackActivity extends AppCompatActivity implements NavigationView.O
     }
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-
-        if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
-            finish();
-        }else {
+        if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+            getSupportFragmentManager().popBackStack();
             backstackFragment();
+        }
+        else{
+            super.onBackPressed();
         }
     }
 
@@ -237,7 +254,7 @@ public class TrackActivity extends AppCompatActivity implements NavigationView.O
         mainContainer.setVisibility(View.GONE);
 
         if (currentFrag != null) {
-            //getSupportFragmentManager().popBackStack();
+            getSupportFragmentManager().popBackStack();
             transaction.remove(currentFrag);
         }
         transaction.commitAllowingStateLoss();

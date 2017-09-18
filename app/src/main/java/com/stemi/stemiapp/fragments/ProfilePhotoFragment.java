@@ -242,8 +242,10 @@ public class ProfilePhotoFragment extends Fragment implements AppConstants,View.
             case R.id.bt_register:
                     String deviceId = Settings.Secure.getString(getActivity().getContentResolver(), Settings.Secure.ANDROID_ID);
                     Log.e(TAG, "onClick: "+ deviceId);
-                    RegistrationActivity.registeredUserDetails.setUniqueId(deviceId);
-                    appSharedPreference.addProfileName(PROFILE_NAME,RegistrationActivity.registeredUserDetails.getName());
+                    long count = dBforUserDetails.getProfilesCount();
+                    count = count+1;
+                    RegistrationActivity.registeredUserDetails.setUniqueId(deviceId+"_"+ count);
+                    appSharedPreference.addProfileName(PROFILE_NAME,RegistrationActivity.registeredUserDetails.getUniqueId());
                    // dBforUserDetails.removeNote(RegistrationActivity.registeredUserDetails.getName());
                     dBforUserDetails.addEntry(RegistrationActivity.registeredUserDetails);
                     Log.e(TAG, "onClick: DB COUNT " + dBforUserDetails.getProfilesCount() );

@@ -10,6 +10,7 @@ import android.content.ContentValues;
 import android.content.res.ColorStateList;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
@@ -44,6 +45,7 @@ import com.stemi.stemiapp.utils.CommonUtils;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
@@ -58,26 +60,38 @@ import static android.content.ContentValues.TAG;
  */
 
 public class AddMedicineFragment extends Fragment implements View.OnClickListener, AppConstants {
-    @BindView(R.id.ll_color) LinearLayout color;
-    @BindView(R.id.ll_medicine) LinearLayout medicineType;
+    @BindView(R.id.ll_color)
+    LinearLayout color;
+    @BindView(R.id.ll_medicine)
+    LinearLayout medicineType;
 
-    @BindView(R.id.etMedicineName)EditText medicineNamee;
+    @BindView(R.id.etMedicineName)
+    EditText medicineNamee;
 
-    @BindView(R.id.morningMedicine)TextView morningMedicine;
-    @BindView(R.id.noonMedicine)TextView noonMedicine;
-    @BindView(R.id.nightMedicine)TextView nightMedicine;
+    @BindView(R.id.morningMedicine)
+    TextView morningMedicine;
+    @BindView(R.id.noonMedicine)
+    TextView noonMedicine;
+    @BindView(R.id.nightMedicine)
+    TextView nightMedicine;
 
-    @BindView(R.id.tvMorningTime)TextView morningTime;
-    @BindView(R.id.tvNoonTime)TextView noonTime;
-    @BindView(R.id.tvNightTime)TextView nightTime;
+    @BindView(R.id.tvMorningTime)
+    TextView morningTime;
+    @BindView(R.id.tvNoonTime)
+    TextView noonTime;
+    @BindView(R.id.tvNightTime)
+    TextView nightTime;
 
-    @BindView(R.id.medicineDays)EditText medicineDays;
-    @BindView(R.id.medicineRemainder)CheckBox medicineRemainder;
+    @BindView(R.id.medicineDays)
+    EditText medicineDays;
+    @BindView(R.id.medicineRemainder)
+    CheckBox medicineRemainder;
 
+    public final static String DATA_RECEIVE = "dataRecieve";
 
     MedicineDetails medicineDetails;
     int setTime;
-    int timeHour,timeMinute;
+    int timeHour, timeMinute;
     long time;
     long endTime;
     String typeOfMedicine;
@@ -87,6 +101,8 @@ public class AddMedicineFragment extends Fragment implements View.OnClickListene
     Gson gson;
     AppSharedPreference appSharedPreference;
     DBforUserDetails dBforUserDetails;
+    ArrayList<MedicineDetails> showReceivedData;
+    int checkEditOrNot = 0;
     public AddMedicineFragment() {
         // Required empty public constructor
     }
@@ -96,12 +112,13 @@ public class AddMedicineFragment extends Fragment implements View.OnClickListene
         super.onCreate(savedInstanceState);
     }
 
+    @SuppressLint("NewApi")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_add_medicine, container, false);
-        ButterKnife.bind(this,view);
+        ButterKnife.bind(this, view);
         formIsValid(color);
         formIsValid(medicineType);
 
@@ -109,33 +126,103 @@ public class AddMedicineFragment extends Fragment implements View.OnClickListene
         medicineDetails = new MedicineDetails();
         gson = new Gson();
         dBforUserDetails = new DBforUserDetails(getActivity());
-        morningMedicine.setOnClickListener(this);
-        noonMedicine.setOnClickListener(this);
-        nightMedicine.setOnClickListener(this);
-        morningTime.setOnClickListener(this);
-        noonTime.setOnClickListener(this);
-        nightTime.setOnClickListener(this);
-        medicineRemainder.setOnClickListener(this);
+        showReceivedData = new ArrayList<>();
+        Bundle args = getArguments();
+        if (args != null) {
+            showReceivedData = args.getParcelableArrayList("RECIEVE DATA");
+            Log.e(TAG, "onCreateView: " + showReceivedData.get(0));
+            medicineNamee.setText(showReceivedData.get(0).getMedicineName());
+            medicineDays.setText(showReceivedData.get(0).getMedicineDays());
+            medicineRemainder.setChecked(showReceivedData.get(0).getMedicineRemainder());
 
-        medicineDays.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            for (int i = 0; i < color.getChildCount(); i++) {
+                    View v = color.getChildAt(i);
+                    if (v instanceof TextView) {
+                        final TextView textView = (TextView) v;
+                        int[] medicineColor = getResources().getIntArray(R.array.medicineColor);
+                        if (medicineColor[i] == showReceivedData.get(0).getMedicineColor()) {
+                            colorOfMedicine = medicineColor[i];
+                            textView.setBackgroundResource(R.drawable.ic_checked);
+                        }
+                    }
 
             }
+            for (int i = 0; i < medicineType.getChildCount(); i++) {
+                View v = medicineType.getChildAt(i);
+                if (v instanceof TextView) {
+                    final TextView textView = (TextView) v;
+                    if(textView.getText().equals(showReceivedData.get(0).getMedicineType())){
+                        typeOfMedicine = textView.getText().toString();
+                        textView.setTextColor(getResources().getColor(R.color.appBackground));
+                        for (Drawable drawable : textView.getCompoundDrawables()) {
+                            if (drawable != null) {
+                                drawable.setColorFilter(new PorterDuffColorFilter(getResources().getColor(R.color.appBackground), PorterDuff.Mode.SRC_IN));
+                            }
+                        }
+                    }
 
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                if(s.length() != 0){
-                    numberOfDays = medicineDays.getText().toString();
                 }
+
             }
-        });
-        return view;
-    }
+
+                if (!showReceivedData.get(0).getMedicineMorning().equals("")) {
+                    morningMedicine.setBackgroundResource(R.drawable.oval_shape_textview);
+                    morningMedicine.setTextColor(getResources().getColor(R.color.white));
+                    morningTime.setVisibility(View.VISIBLE);
+                    morningMedicine.setSelected(false);
+                    morningTime.setText(showReceivedData.get(0).getMedicineMorningTime());
+                }
+
+                if (!showReceivedData.get(0).getMedicineAfternoon().equals("")) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                        noonMedicine.setBackground(getResources().getDrawable(R.drawable.oval_shape_textview));
+                    } else {
+                        noonMedicine.setBackgroundResource(R.drawable.oval_shape_textview);
+                    }
+                    noonMedicine.setTextColor(getResources().getColor(R.color.white));
+                    noonTime.setVisibility(View.VISIBLE);
+                    noonMedicine.setSelected(true);
+                    morningTime.setText(showReceivedData.get(0).getMedicineMorningTime());
+                }
+                if (!showReceivedData.get(0).getMedicineNight().equals("")) {
+                    nightMedicine.setBackgroundResource(R.drawable.oval_shape_textview);
+                    nightMedicine.setTextColor(getResources().getColor(R.color.white));
+                    nightTime.setVisibility(View.VISIBLE);
+                    nightMedicine.setSelected(true);
+                    morningTime.setText(showReceivedData.get(0).getMedicineMorningTime());
+                }
+
+                checkEditOrNot = 1;
+        }
+
+
+            morningMedicine.setOnClickListener(this);
+            noonMedicine.setOnClickListener(this);
+            nightMedicine.setOnClickListener(this);
+            morningTime.setOnClickListener(this);
+            noonTime.setOnClickListener(this);
+            nightTime.setOnClickListener(this);
+            medicineRemainder.setOnClickListener(this);
+
+            medicineDays.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+                    if (s.length() != 0) {
+                        numberOfDays = medicineDays.getText().toString();
+                    }
+                }
+            });
+            return view;
+        }
     public static String getDate(Calendar cal){
         return "" + (cal.get(Calendar.MONTH)+1) +"/" +
                 (cal.get(Calendar.DATE));
@@ -158,6 +245,7 @@ public class AddMedicineFragment extends Fragment implements View.OnClickListene
 
                 Log.e(TAG, "formIsValid: " + i);//validate your EditText here
                 final int tempVar = i;
+
                 textView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -259,11 +347,10 @@ public class AddMedicineFragment extends Fragment implements View.OnClickListene
                 if(layout == color) {
                     colorOfMedicine = medicineColor[j];
                     tv.setBackgroundResource(R.drawable.ic_checked);
-                    medicineDetails.setMedicineColor(colorOfMedicine);
 
                 }else {
                     typeOfMedicine = tv.getText().toString();
-                    medicineDetails.setMedicineType(typeOfMedicine);
+
                     tv.setTextColor(getResources().getColor(R.color.appBackground));
                     for (Drawable drawable : tv.getCompoundDrawables()) {
                         if (drawable != null) {
@@ -474,6 +561,9 @@ public class AddMedicineFragment extends Fragment implements View.OnClickListene
         medicineDetails.setPersonName(appSharedPreference.getProfileName(PROFILE_NAME));
         medicineDetails.setMedicineName(medicineNamee.getText().toString());
         medicineDetails.setMedicineDays(medicineDays.getText().toString());
+        medicineDetails.setMedicineColor(colorOfMedicine);
+        medicineDetails.setMedicineType(typeOfMedicine);
+
         if(morningTime.getVisibility() == View.VISIBLE){
             medicineDetails.setMedicineMorning(morningMedicine.getText().toString());
             medicineDetails.setMedicineMorningTime(morningTime.getText().toString());
@@ -498,9 +588,15 @@ public class AddMedicineFragment extends Fragment implements View.OnClickListene
         }
 
         String MedicineString = gson.toJson(medicineDetails);
-        dBforUserDetails.addMedicineDetails(MedicineString, medicineDetails.getPersonName());
-        long getCount = dBforUserDetails.getMedicineDetailsCount();
-        Log.e(TAG, "onCreateView: Get Medicine Count " + getCount );
+
+        if(checkEditOrNot == 1){
+            dBforUserDetails.getMedicineToEdit(showReceivedData,MedicineString);
+        }else {
+            dBforUserDetails.addMedicineDetails(MedicineString, medicineDetails.getPersonName());
+            long getCount = dBforUserDetails.getMedicineDetailsCount();
+
+            Log.e(TAG, "onCreateView: Get Medicine Count " + getCount);
+        }
     }
 
     public void syncWithCalender(){
@@ -566,6 +662,8 @@ public class AddMedicineFragment extends Fragment implements View.OnClickListene
                         ((TrackActivity) getActivity()).showFragment(new MedicationFragment());
                         Toast.makeText(getActivity(), "You pressed Back", Toast.LENGTH_SHORT).show();
                         return true;
+                    }else {
+
                     }
                 }
                 return false;
@@ -588,8 +686,20 @@ public class AddMedicineFragment extends Fragment implements View.OnClickListene
         if (TextUtils.isEmpty(medicineType)) {
             Toast.makeText(getActivity(),"Select medicine type",Toast.LENGTH_SHORT).show();
             valid = false;
-        }else {
+        }
 
+      /*  String Mmedicine = morningMedicine.getText().toString();
+        if (TextUtils.isEmpty(medicineName)) {
+            morningMedicine.setError("Required");
+            valid = false;
+        }else {
+            medicineNamee.setError(null);
+        }*/
+
+        int medicineColor = colorOfMedicine;
+        if(medicineColor == 0){
+            Toast.makeText(getActivity(),"Select medicine Color",Toast.LENGTH_SHORT).show();
+            valid = false;
         }
 
       /* // String medicineColor = med.getText().toString();

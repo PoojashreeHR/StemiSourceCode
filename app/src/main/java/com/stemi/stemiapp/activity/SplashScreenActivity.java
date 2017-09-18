@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.view.Menu;
 
 import com.stemi.stemiapp.R;
+import com.stemi.stemiapp.databases.DBforUserDetails;
 import com.stemi.stemiapp.preference.AppSharedPreference;
 import com.stemi.stemiapp.utils.AppConstants;
 
@@ -25,6 +26,7 @@ public class SplashScreenActivity extends AppCompatActivity implements AppConsta
     private static final int MY_PERMISSIONS_REQUEST = 1234;
     boolean introScreensShown;
     AppSharedPreference sharedPreference;
+    DBforUserDetails dBforUserDetails;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,9 +35,8 @@ public class SplashScreenActivity extends AppCompatActivity implements AppConsta
         sharedPreference = new AppSharedPreference(this);
         introScreensShown = sharedPreference.isFirstTimeLaunch(IS_FIRST_TIME_LAUNCH);
         checkAppPermission();
-           /* New Handler to start the Menu-Activity
-         * and close this Splash-Screen after some seconds.*/
-
+        dBforUserDetails = new DBforUserDetails(this);
+        dBforUserDetails.removeMedicalData();
     }
 
 

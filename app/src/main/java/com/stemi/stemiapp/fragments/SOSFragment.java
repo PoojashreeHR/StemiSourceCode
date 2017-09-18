@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -14,8 +15,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -30,6 +33,9 @@ import com.stemi.stemiapp.databases.DBforUserDetails;
 
 import java.util.ArrayList;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 import static android.app.Activity.RESULT_OK;
 
 
@@ -37,7 +43,11 @@ import static android.app.Activity.RESULT_OK;
  * Created by Pooja on 24-07-2017.
  */
 
-public class SOSFragment extends Fragment {
+public class SOSFragment extends Fragment implements View.OnClickListener {
+    @BindView(R.id.bt_share_location)Button shateLocation;
+    @BindView(R.id.rl_call)RelativeLayout rlCall;
+    @BindView(R.id.rl_locateMap)RelativeLayout rlLocateMap;
+
     DBforUserDetails dBforUserDetails;
     BetterSpinner personSpinner;
     ArrayList<String> personName;
@@ -61,6 +71,11 @@ public class SOSFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_sos, container, false);
+        ButterKnife.bind(this,view);
+
+        rlCall.setOnClickListener(this);
+        rlLocateMap.setOnClickListener(this);
+
         personSpinner = (BetterSpinner) view.findViewById(R.id.person_Spinner);
         //pick_location = (ImageView) view.findViewById(R.id.pick_location);
         etLocation = (EditText)view.findViewById(R.id.et_location);
@@ -177,6 +192,31 @@ public class SOSFragment extends Fragment {
         }
         else{
             openPlacePicker();
+        }
+    }
+
+
+    @Override
+    public void onClick(View v) {
+        int id = v.getId();
+        switch (id){
+            case R.id.bt_share_location:
+                break;
+
+            case R.id.rl_call:
+                Intent intent = new Intent(Intent.ACTION_DIAL);
+                intent.setData(Uri.parse("tel:+91 108"));
+                startActivity(intent);
+                break;
+
+            case R.id.rl_locateMap:
+                Uri gmmIntentUri = Uri.parse("https://goo.gl/maps/vfsSm2dbFXz");
+                Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                mapIntent.setPackage("com.google.android.apps.maps");
+                if (mapIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+                    startActivity(mapIntent);
+                }
+                break;
         }
     }
 }

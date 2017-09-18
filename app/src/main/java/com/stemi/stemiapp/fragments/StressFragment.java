@@ -28,11 +28,11 @@ import butterknife.ButterKnife;
  * Created by Pooja on 26-07-2017.
  */
 
-public class FoodFragment extends Fragment {
+public class StressFragment extends Fragment {
 
     @BindView(R.id.tv_food_today) TextView tvFoodToday;
 
-    public FoodFragment() {
+    public StressFragment() {
         // Required empty public constructor
     }
 

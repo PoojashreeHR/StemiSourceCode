@@ -34,7 +34,7 @@
                 android:textColor="@color/appBackground"
                 android:layout_marginRight="20dp"
                 android:hint="Enter medicine name"
-                android:inputType="text"
+                android:inputType="textCapSentences"
                 android:gravity="center"
                 android:textSize="18sp"
                 android:padding="15dp"/>
