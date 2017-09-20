@@ -19,7 +19,7 @@
     <color name="orange">#FCBD56</color>
     <color name="brickRed">#FF6F58</color>
     <color name="purple">#958ACF</color>
-    
+
     <array name="splash_screen_color">
         <item> @color/blue</item>
         <item> @color/orange</item>
@@ -60,5 +60,9 @@
     <color name="orange1">#F1884A</color>
     <color name="yellow">#F9C33F</color>
     <color name="green">#B3D45E</color>
+    <color name="colorGrey">#737373</color>
+    <color name="btnColorRed">#D01421</color>
+    <color name="statsFontColor">#FD715E</color>
+    <color name="statsNameFontColor">#808080</color>
 </resources>
 

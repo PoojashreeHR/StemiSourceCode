@@ -134,6 +134,21 @@ public class TrackActivity extends AppCompatActivity implements NavigationView.O
         fragmentTransaction.replace(R.id.mainContainer, addMedicineFragment).commit();
     }
 
+    public CustomViewPager getViewPager(){
+        return (CustomViewPager) this.viewPager;
+    }
+
+           /* @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
+*/
 
     /**
      * Adding custom view to tab

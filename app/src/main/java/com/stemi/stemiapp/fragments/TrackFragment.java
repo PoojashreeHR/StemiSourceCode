@@ -50,7 +50,7 @@ public class TrackFragment extends Fragment {
 
         RecyclerViewAdapter rcAdapter = new RecyclerViewAdapter(getActivity(), rowListItem);
         rView.setAdapter(rcAdapter);
-
+        ((TrackActivity)getActivity()).getViewPager().setPagingEnabled(true);
 
         return view;
 
