@@ -8,4 +8,5 @@ import java.util.ArrayList;
 
 public interface DataPassListener {
     void passData(ArrayList<MedicineDetails> data);
+    void goBack();
 }

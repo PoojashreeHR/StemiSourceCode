@@ -4,17 +4,34 @@ import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.DatePicker;
+import android.widget.LinearLayout;
+import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.stemi.stemiapp.R;
 import com.stemi.stemiapp.activity.TrackActivity;
+import com.stemi.stemiapp.customviews.AnimateHorizontalProgressBar;
+import com.stemi.stemiapp.databases.DBForTrackActivities;
+import com.stemi.stemiapp.model.DataPassListener;
+import com.stemi.stemiapp.model.MessageEvent;
+import com.stemi.stemiapp.preference.AppSharedPreference;
+import com.stemi.stemiapp.utils.AppConstants;
+import com.stemi.stemiapp.utils.CommonUtils;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -28,10 +45,16 @@ import butterknife.ButterKnife;
  * Created by Pooja on 26-07-2017.
  */
 
-public class StressFragment extends Fragment {
+public class StressFragment extends Fragment implements AppConstants, TrackActivity.OnBackPressedListener {
 
     @BindView(R.id.tv_food_today) TextView tvFoodToday;
+    @BindView(R.id.seekbar) SeekBar mSeekLin;
+    @BindView(R.id.ll_seekbar)LinearLayout seekbarText;
 
+    AppSharedPreference appSharedPreference;
+    String stressCount = null;
+    DBForTrackActivities dbForTrackActivities;
+    int progresValue;
     public StressFragment() {
         // Required empty public constructor
     }
@@ -45,8 +68,31 @@ public class StressFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_food, container, false);
+        View view = inflater.inflate(R.layout.fragment_stress, container, false);
         ButterKnife.bind(this,view);
+
+        appSharedPreference = new AppSharedPreference(getActivity());
+        dbForTrackActivities = new DBForTrackActivities();
+        mSeekLin.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                progresValue = progress ;
+               //Toast.makeText(getActivity(),"seekbar progress: " + progress, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+               // Toast.makeText(getActivity(),"seekbar touch started!", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                stressCount = String.valueOf(progresValue);
+                Toast.makeText(getActivity(),"seekbar touch stopped! "+ progresValue + "/" + seekBar.getMax(), Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        addLabelsBelowSeekBar();
         tvFoodToday.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -54,8 +100,19 @@ public class StressFragment extends Fragment {
                 dialogfragment.show(getActivity().getFragmentManager(), "Date Picker Dialog");
             }
         });
-        ((TrackActivity) getActivity()).setActionBarTitle("Food");
+        ((TrackActivity) getActivity()).setActionBarTitle("Stress");
+        ((TrackActivity) getActivity()).setOnBackPressedListener(this);
+
         return view;
+    }
+
+    @Override
+    public void doBack() {
+        if(stressCount != null){
+            storeData();
+        }else {
+            EventBus.getDefault().post(new MessageEvent("Hello!"));
+        }
     }
 
     public class DatePickerDialogClass extends DialogFragment implements DatePickerDialog.OnDateSetListener{
@@ -75,8 +132,15 @@ public class StressFragment extends Fragment {
 
         public void onDateSet(DatePicker view, int year, int month, int day){
             Date parseDate = null;
-            String date1 = day + "-" + (month+1) + "-" + year;
-            SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+            Calendar cal=Calendar.getInstance();
+            SimpleDateFormat month_date = new SimpleDateFormat("MMM");
+            cal.set(Calendar.MONTH,(month));
+            String month_name = month_date.format(cal.getTime());
+
+            Log.e("",""+month_name);
+
+            String date1 = day + " " + month_name + " " + year;
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy");
             try {
                 parseDate = dateFormat.parse(date1);
             } catch (ParseException e) {
@@ -88,5 +152,67 @@ public class StressFragment extends Fragment {
 
         }
     }
+
+    private void addLabelsBelowSeekBar() {
+        int maxCount = 6;
+        for (int count = 0; count < 6; count++) {
+            TextView textView = new TextView(getActivity());
+            textView.setText(String.valueOf(count));
+            textView.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
+            textView.setGravity(Gravity.LEFT);
+            seekbarText.addView(textView);
+            textView.setLayoutParams((count == maxCount - 1) ? getLayoutParams(0.0f) : getLayoutParams(1.0f));
+        }
+
+    }
+
+    LinearLayout.LayoutParams getLayoutParams(float weight) {
+        return new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT, weight);
+    }
+
+    public void storeData(){
+        TrackActivity.userEventDetails.setUid(appSharedPreference.getProfileName(PROFILE_NAME));
+        if (tvFoodToday.getText().equals("Today  ")){
+            Date dt = new Date();
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy");// set format for date
+            String todaysDate = dateFormat.format(dt); // parse it like
+            TrackActivity.userEventDetails.setDate(todaysDate);
+        }else {
+            TrackActivity.userEventDetails.setDate(tvFoodToday.getText().toString());
+        }
+        TrackActivity.userEventDetails.setStressCount(stressCount);
+        boolean date = dbForTrackActivities.getDate(TrackActivity.userEventDetails.getDate());
+        if (!date) {
+            dbForTrackActivities.addEntry(TrackActivity.userEventDetails);
+            ((TrackActivity) getActivity()).showFragment(new TrackFragment());
+            EventBus.getDefault().post(new MessageEvent("Hello!"));
+        } else {
+            CommonUtils.buidDialog(this.getContext(),2);
+        }
+    }
+
+/*    @Override
+    //Pressed return button - returns to the results menu
+    public void onResume() {
+        super.onResume();
+        mSeekLin.setFocusableInTouchMode(true);
+        mSeekLin.requestFocus();
+        mSeekLin.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK) {
+                    if( mSeekLin.requestFocus()){
+                        storeData();
+                    }else {
+                        ((TrackActivity) getActivity()).showFragment(new TrackFragment());
+                    }
+                    Toast.makeText(getActivity(), "You pressed Back", Toast.LENGTH_SHORT).show();
+                }
+                return false;
+            }
+        });
+    }*/
 
 }

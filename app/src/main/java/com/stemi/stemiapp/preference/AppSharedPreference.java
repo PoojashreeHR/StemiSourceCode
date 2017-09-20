@@ -38,6 +38,17 @@ public class AppSharedPreference implements AppConstants {
         return sharedPreferences.getString(key, null);
     }
 
+    //Store  Person Name in SP
+    public void setprofileUrl(String key, String value) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(key, value);
+        editor.apply();
+    }
+    // Get Token from SP.
+    public String getProfileUrl(String key) {
+        return sharedPreferences.getString(key, null);
+    }
+
 
     //Store  Person Name in SP
     public void addProfileName(String key, String value) {
@@ -64,6 +75,9 @@ public class AppSharedPreference implements AppConstants {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.remove(USER_TOKEN);
         editor.remove(PROFILE_NAME);
+        editor.remove(USER_HEIGHT);
+        editor.remove(IS_FIRST_TIME_LAUNCH);
+
         editor.apply();
     }
 }

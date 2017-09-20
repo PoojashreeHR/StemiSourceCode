@@ -7,6 +7,7 @@ import android.app.DialogFragment;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,8 +19,13 @@ import android.widget.Toast;
 
 import com.stemi.stemiapp.R;
 import com.stemi.stemiapp.activity.TrackActivity;
+import com.stemi.stemiapp.databases.DBForTrackActivities;
+import com.stemi.stemiapp.model.MessageEvent;
 import com.stemi.stemiapp.preference.AppSharedPreference;
 import com.stemi.stemiapp.utils.AppConstants;
+import com.stemi.stemiapp.utils.CommonUtils;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -33,14 +39,18 @@ import butterknife.ButterKnife;
  * Created by Pooja on 26-07-2017.
  */
 
-public class WeightFragment  extends Fragment implements View.OnClickListener {
+public class WeightFragment  extends Fragment implements View.OnClickListener,TrackActivity.OnBackPressedListener {
     @BindView(R.id.tv_weight_today) TextView tvWeightToday;
     @BindView(R.id.bt_calculatebmi)Button btCalculateBmi;
     @BindView(R.id.et_todayweight)EditText todaysWeight;
     @BindView(R.id.bmiValue) TextView BmiValue;
     @BindView(R.id.bmiResult) TextView bmiResult;
     @BindView(R.id.learn_more)TextView learnMore;
+    String bmiCount = null;
+
     AppSharedPreference appSharedPreference;
+    DBForTrackActivities dbForTrackActivities;
+
     public WeightFragment() {
         // Required empty public constructor
     }
@@ -57,6 +67,8 @@ public class WeightFragment  extends Fragment implements View.OnClickListener {
         View view = inflater.inflate(R.layout.fragment_weight, container, false);
         ButterKnife.bind(this,view);
         appSharedPreference = new AppSharedPreference(getActivity());
+        dbForTrackActivities = new DBForTrackActivities();
+
         btCalculateBmi.setOnClickListener(this);
         tvWeightToday.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -65,7 +77,8 @@ public class WeightFragment  extends Fragment implements View.OnClickListener {
                 dialogfragment.show(getActivity().getFragmentManager(), "Date Picker Dialog");
             }
         });
-        ((TrackActivity) getActivity()).setActionBarTitle("Food");
+        ((TrackActivity) getActivity()).setActionBarTitle("Weight");
+        ((TrackActivity) getActivity()).setOnBackPressedListener(this);
 
         return view;
     }
@@ -83,15 +96,25 @@ public class WeightFragment  extends Fragment implements View.OnClickListener {
         switch (id) {
             case R.id.bt_calculatebmi:
                 if(!todaysWeight.getText().toString().equals("")) {
-                    float bmiValue = calculateBMI(todaysWeight.getText().toString(), "127");
-                    String s= String.format("%.2f",bmiValue);
+                    float bmiValue = calculateBMI(todaysWeight.getText().toString(), appSharedPreference.getUserHeight(AppConstants.USER_HEIGHT));
+                    bmiCount = String.format("%.2f",bmiValue);
                     String string = interpretBMI(bmiValue);
-                    BmiValue.setText("Your BMI is " + s);
+                    BmiValue.setText("Your BMI is " + bmiCount);
                     bmiResult.setText(string);
                     learnMore.setVisibility(View.VISIBLE);
                 }else {
                     Toast.makeText(getActivity(), "Please enter your weight!!", Toast.LENGTH_SHORT).show();
                 }
+        }
+    }
+
+    @Override
+    public void doBack() {
+        if(!todaysWeight.getText().toString().equals("")){
+            SaveData();
+        }else {
+            EventBus.getDefault().post(new MessageEvent("Hello!"));
+
         }
     }
 
@@ -113,8 +136,15 @@ public class WeightFragment  extends Fragment implements View.OnClickListener {
 
         public void onDateSet(DatePicker view, int year, int month, int day){
             Date parseDate = null;
-            String date1 = day + "-" + (month+1) + "-" + year;
-            SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+            Calendar cal=Calendar.getInstance();
+            SimpleDateFormat month_date = new SimpleDateFormat("MMM");
+            cal.set(Calendar.MONTH,(month));
+            String month_name = month_date.format(cal.getTime());
+
+            Log.e("",""+month_name);
+
+            String date1 = day + " " + month_name + " " + year;
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy");
             try {
                 parseDate = dateFormat.parse(date1);
             } catch (ParseException e) {
@@ -144,4 +174,56 @@ public class WeightFragment  extends Fragment implements View.OnClickListener {
             return "Which means you are obese";
         }
     }
+
+    public void SaveData(){
+        TrackActivity.userEventDetails.setUid(appSharedPreference.getProfileName(AppConstants.PROFILE_NAME));
+        if (tvWeightToday.getText().equals("Today  ")){
+            Date dt = new Date();
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy");// set format for date
+            String todaysDate = dateFormat.format(dt); // parse it like
+            TrackActivity.userEventDetails.setDate(todaysDate);
+        }else {
+            TrackActivity.userEventDetails.setDate(tvWeightToday.getText().toString());
+        }
+        TrackActivity.userEventDetails.setTodaysWeight(todaysWeight.getText().toString());
+        if(bmiCount == null){
+            float bmiValue = calculateBMI(todaysWeight.getText().toString(), appSharedPreference.getUserHeight(AppConstants.USER_HEIGHT));
+            bmiCount = String.format("%.2f",bmiValue);
+        }
+        TrackActivity.userEventDetails.setBmiValue(bmiCount);
+
+        boolean date = dbForTrackActivities.getDate(TrackActivity.userEventDetails.getDate());
+        if (!date) {
+            dbForTrackActivities.addEntry(TrackActivity.userEventDetails);
+            ((TrackActivity) getActivity()).showFragment(new TrackFragment());
+        } else {
+            CommonUtils.buidDialog(this.getContext(),4);
+        }
+    }
+
+/*    @Override
+    //Pressed return button - returns to the results menu
+    public void onResume() {
+        super.onResume();
+        todaysWeight.setFocusableInTouchMode(true);
+        todaysWeight.setFocusableInTouchMode(true);
+        todaysWeight.requestFocus();
+        todaysWeight.requestFocus();
+        todaysWeight.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK) {
+                    if(todaysWeight.getText().toString().equals("")){
+                        ((TrackActivity) getActivity()).showFragment(new TrackFragment());
+                    }else {
+                        SaveData();
+
+                    }
+                   // ((TrackActivity) getActivity()).showFragment(new TrackFragment());
+                    Toast.makeText(getActivity(), "You pressed Back", Toast.LENGTH_SHORT).show();
+                }
+                return false;
+            }
+        });
+    }*/
 }

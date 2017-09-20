@@ -12,6 +12,52 @@ public class UserEventDetails {
     private String others;
     private String date;
     private String uid;
+    private String stressCount;
+    private String smokeToday;
+    private String howMany;
+    private String todaysWeight;
+    private String bmiValue;
+
+
+    public String getStressCount() {
+        return stressCount;
+    }
+
+    public void setStressCount(String stressCount) {
+        this.stressCount = stressCount;
+    }
+
+    public String getSmokeToday() {
+        return smokeToday;
+    }
+
+    public void setSmokeToday(String smokeToday) {
+        this.smokeToday = smokeToday;
+    }
+
+    public String getHowMany() {
+        return howMany;
+    }
+
+    public void setHowMany(String howMany) {
+        this.howMany = howMany;
+    }
+
+    public String getTodaysWeight() {
+        return todaysWeight;
+    }
+
+    public void setTodaysWeight(String todaysWeight) {
+        this.todaysWeight = todaysWeight;
+    }
+
+    public String getBmiValue() {
+        return bmiValue;
+    }
+
+    public void setBmiValue(String bmiValue) {
+        this.bmiValue = bmiValue;
+    }
 
     public String getIswalked() {
         return iswalked;

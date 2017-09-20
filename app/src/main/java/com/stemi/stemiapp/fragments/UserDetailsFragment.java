@@ -8,14 +8,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
 import com.stemi.stemiapp.R;
 import com.stemi.stemiapp.activity.RegistrationActivity;
-import com.stemi.stemiapp.databases.DBforUserDetails;
+import com.stemi.stemiapp.databases.UserDetailsTable;
 
 
 import butterknife.BindView;
@@ -39,7 +38,7 @@ public class UserDetailsFragment extends Fragment implements View.OnClickListene
 
 
     //  EditText etEmail;
-    DBforUserDetails dBforUserDetails;
+    UserDetailsTable dBforUserDetails;
     String gender;
     RadioGroup genderRadiogroup;
     String salutatioSelected = "";
@@ -53,7 +52,7 @@ public class UserDetailsFragment extends Fragment implements View.OnClickListene
         ButterKnife.bind(this,view);
 
         view.findViewById(R.id.userDetailButton).setOnClickListener(this);
-        dBforUserDetails = new DBforUserDetails(getActivity());
+        dBforUserDetails = new UserDetailsTable();
         genderRadiogroup = (RadioGroup) view.findViewById(R.id.radioGroup1);
         genderRadiogroup.clearCheck();
 

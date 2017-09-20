@@ -1,7 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.Toolbar
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
-
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white">
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    <com.stemi.stemiapp.customviews.CircleImageView
+        android:id="@+id/profileImg"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="@drawable/ic_user"
+        android:layout_marginRight="15dp"
+        android:layout_gravity="right"/>
+    </FrameLayout>
 </android.support.v7.widget.Toolbar>

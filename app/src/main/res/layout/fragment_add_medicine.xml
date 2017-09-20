@@ -16,38 +16,38 @@
                 android:id="@+id/tvMedicine"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="MEDICINE NAME"
-                android:textSize="15sp"
-                android:gravity="center"
+                android:layout_marginBottom="10dp"
                 android:layout_marginTop="20dp"
-                android:layout_marginBottom="10dp"/>
+                android:gravity="center"
+                android:text="MEDICINE NAME"
+                android:textSize="15sp" />
 
             <EditText
                 android:id="@+id/etMedicineName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/tvMedicine"
-                android:background="@drawable/edittext_boundary"
                 android:layout_marginLeft="20dp"
-                android:textCursorDrawable="@drawable/cursor_drawable"
-                android:singleLine="true"
-                android:textColor="@color/appBackground"
                 android:layout_marginRight="20dp"
+                android:background="@drawable/edittext_boundary"
+                android:gravity="center"
                 android:hint="Enter medicine name"
                 android:inputType="textCapSentences"
-                android:gravity="center"
-                android:textSize="18sp"
-                android:padding="15dp"/>
+                android:padding="15dp"
+                android:singleLine="true"
+                android:textColor="@color/appBackground"
+                android:textCursorDrawable="@drawable/cursor_drawable"
+                android:textSize="18sp" />
 
             <TextView
                 android:id="@+id/tvType"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/etMedicineName"
-                android:text="TYPE"
+                android:layout_marginTop="15dp"
                 android:gravity="center"
-                android:textSize="15sp"
-                android:layout_marginTop="15dp"/>
+                android:text="TYPE"
+                android:textSize="15sp" />
 
             <LinearLayout
                 android:id="@+id/ll_medicine"
@@ -62,105 +62,196 @@
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text="Tablet"
-                    android:textSize="20sp"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:paddingTop="10dp"
-                    android:paddingBottom="10dp"
                     android:layout_margin="5dp"
+                    android:layout_weight="1"
                     android:background="@drawable/edittext_boundary"
-                    android:drawableTop="@drawable/ic_tablet" />
+                    android:drawableTop="@drawable/ic_tablet"
+                    android:gravity="center"
+                    android:paddingBottom="10dp"
+                    android:paddingTop="10dp"
+                    android:text="Tablet"
+                    android:textSize="20sp" />
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text="Capsule"
                     android:layout_margin="5dp"
-                    android:textSize="20sp"
-                    android:paddingTop="10dp"
-                    android:paddingBottom="10dp"
                     android:layout_weight="1"
-                    android:gravity="center"
                     android:background="@drawable/edittext_boundary"
-                    android:drawableTop="@drawable/ic_capsule" />
+                    android:drawableTop="@drawable/ic_capsule"
+                    android:gravity="center"
+                    android:paddingBottom="10dp"
+                    android:paddingTop="10dp"
+                    android:text="Capsule"
+                    android:textSize="20sp" />
+
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text="Syrup"
-                    android:textSize="20sp"
-                    android:paddingTop="10dp"
-                    android:paddingBottom="10dp"
                     android:layout_margin="5dp"
                     android:layout_weight="1"
-                    android:gravity="center"
                     android:background="@drawable/edittext_boundary"
-                    android:drawableTop="@drawable/ic_syrup" />
+                    android:drawableTop="@drawable/ic_syrup"
+                    android:gravity="center"
+                    android:paddingBottom="10dp"
+                    android:paddingTop="10dp"
+                    android:text="Syrup"
+                    android:textSize="20sp" />
             </LinearLayout>
+
             <TextView
                 android:id="@+id/tvColor"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/ll_medicine"
-                android:text="COLOR"
+                android:layout_marginTop="15dp"
                 android:gravity="center"
-                android:textSize="15sp"
-                android:layout_marginTop="15dp"/>
+                android:text="COLOR"
+                android:textSize="15sp" />
 
             <LinearLayout
                 android:id="@+id/ll_color"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/tvColor"
-                android:orientation="horizontal"
                 android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
                 android:layout_marginTop="10dp"
-                android:weightSum="8"
-                android:layout_marginRight="20dp">
+                android:orientation="horizontal"
+                android:weightSum="8">
 
-                <TextView
+                <FrameLayout
                     android:layout_width="0dp"
-                    android:layout_height="30dp"
-                    android:layout_weight="1"
-                    android:layout_margin="5dp"
-                    android:textColor="@color/white"
-                    />
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="30dp"
-                    android:layout_weight="1"
-                    android:layout_margin="5dp" />
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="30dp"
-                    android:layout_weight="1"
-                    android:layout_margin="5dp" />
+                    android:layout_height="40dp"
+                    android:layout_weight="1">
 
-                <TextView
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_margin="5dp"
+                        android:textColor="@color/white" />
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity="center"/>
+                </FrameLayout>
+
+                <FrameLayout
                     android:layout_width="0dp"
-                    android:layout_height="30dp"
-                    android:layout_weight="1"
-                    android:layout_margin="5dp" />
-                <TextView
+                    android:layout_height="40dp"
+                    android:layout_weight="1">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_margin="5dp"
+                        android:textColor="@color/white" />
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity="center"/>
+                </FrameLayout>
+
+                <FrameLayout
                     android:layout_width="0dp"
-                    android:layout_height="30dp"
-                    android:layout_weight="1"
-                    android:layout_margin="5dp" />
-                <TextView
+                    android:layout_height="40dp"
+                    android:layout_weight="1">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_margin="5dp"
+                        android:textColor="@color/white" />
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity="center"/>
+                </FrameLayout>
+
+                <FrameLayout
                     android:layout_width="0dp"
-                    android:layout_height="30dp"
-                    android:layout_weight="1"
-                    android:layout_margin="5dp" />
-                <TextView
+                    android:layout_height="40dp"
+                    android:layout_weight="1">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_margin="5dp"
+                        android:textColor="@color/white" />
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity="center"/>
+                </FrameLayout>
+
+                <FrameLayout
                     android:layout_width="0dp"
-                    android:layout_height="30dp"
-                    android:layout_weight="1"
-                    android:layout_margin="5dp" />
-                <TextView
+                    android:layout_height="40dp"
+                    android:layout_weight="1">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_margin="5dp"
+                        android:textColor="@color/white" />
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity="center"/>
+                </FrameLayout>
+
+                <FrameLayout
                     android:layout_width="0dp"
-                    android:layout_height="30dp"
-                    android:layout_weight="1"
-                    android:layout_margin="5dp" />
+                    android:layout_height="40dp"
+                    android:layout_weight="1">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_margin="5dp"
+                        android:textColor="@color/white" />
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity="center"/>
+                </FrameLayout>
+
+                <FrameLayout
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="1">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_margin="5dp"
+                        android:textColor="@color/white" />
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity="center"/>
+                </FrameLayout>
+
+                <FrameLayout
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="1">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_margin="5dp"
+                        android:textColor="@color/white" />
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity="center"/>
+                </FrameLayout>
             </LinearLayout>
 
             <TextView
@@ -168,10 +259,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/ll_color"
-                android:text="TIME"
-                android:layout_marginTop="20dp"
                 android:layout_marginBottom="10dp"
+                android:layout_marginTop="20dp"
                 android:gravity="center"
+                android:text="TIME"
                 android:textSize="15sp" />
 
             <LinearLayout
@@ -179,133 +270,135 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/tvTime"
-                android:orientation="horizontal"
-                android:weightSum="3"
                 android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp">
+                android:layout_marginRight="20dp"
+                android:orientation="horizontal"
+                android:weightSum="3">
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_weight="1">
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
                     <TextView
                         android:id="@+id/morningMedicine"
                         android:layout_width="100dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
                         android:layout_margin="5dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/button_transparent_oval_shape"
+                        android:gravity="center"
                         android:padding="5dp"
                         android:text="Morning"
-                        android:textColor="@color/white"
-                        android:textSize="18sp"
-                        android:gravity="center"
-                        android:background="@drawable/oval_shape_textview"/>
+                        android:textSize="18sp" />
 
                     <TextView
                         android:id="@+id/tvMorningTime"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="8:00 AM"
-                        android:layout_weight="1"
-                        android:textColor="@color/appBackground"
-                        android:gravity="center"
-                        android:visibility="visible"
+                        android:layout_gravity="center"
                         android:layout_marginTop="5dp"
-                        android:layout_gravity="center"/>
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="8:00 AM"
+                        android:textColor="@color/appBackground"
+                        android:visibility="gone" />
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
                     android:layout_weight="1"
+                    android:orientation="vertical"
                     android:weightSum="2">
+
                     <TextView
                         android:id="@+id/noonMedicine"
                         android:layout_width="100dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
                         android:layout_margin="5dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/button_transparent_oval_shape"
+                        android:gravity="center"
                         android:padding="5dp"
                         android:text="Afternoon"
-                        android:textSize="18sp"
-                        android:gravity="center"
-                        android:background="@drawable/button_transparent_oval_shape"/>
+                        android:textSize="18sp" />
 
                     <TextView
                         android:id="@+id/tvNoonTime"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="5dp"
+                        android:layout_weight="1"
+                        android:gravity="center"
                         android:text="1:00 PM"
                         android:textColor="@color/appBackground"
-                        android:visibility="gone"
-                        android:layout_weight="1"
-                        android:layout_marginTop="5dp"
-                        android:gravity="center"
-                        android:layout_gravity="center"/>
+                        android:visibility="gone" />
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
                     android:layout_weight="1"
+                    android:orientation="vertical"
                     android:weightSum="2">
 
                     <TextView
                         android:id="@+id/nightMedicine"
                         android:layout_width="100dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
                         android:layout_margin="5dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/button_transparent_oval_shape"
+                        android:gravity="center"
                         android:padding="5dp"
                         android:text="Night"
-                        android:textSize="18sp"
-                        android:gravity="center"
-                        android:background="@drawable/button_transparent_oval_shape"/>
+                        android:textSize="18sp" />
 
 
                     <TextView
                         android:id="@+id/tvNightTime"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="5dp"
+                        android:layout_weight="1"
+                        android:gravity="center"
                         android:text="9:00 PM"
                         android:textColor="@color/appBackground"
-                        android:visibility="gone"
-                        android:layout_weight="1"
-                        android:layout_marginTop="5dp"
-                        android:gravity="center"
-                        android:layout_gravity="center"/>
+                        android:visibility="gone" />
                 </LinearLayout>
             </LinearLayout>
+
             <TextView
                 android:id="@+id/tvDays"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="DAYS"
-                android:gravity="center"
-                android:layout_marginTop="25dp"
+                android:layout_below="@+id/ll_time"
                 android:layout_marginBottom="10dp"
-                android:layout_below="@+id/ll_time" />
+                android:layout_marginTop="25dp"
+                android:gravity="center"
+                android:text="DAYS" />
 
             <EditText
                 android:id="@+id/medicineDays"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/tvDays"
-                android:background="@drawable/edittext_boundary"
                 android:layout_marginLeft="20dp"
-                android:singleLine="true"
                 android:layout_marginRight="20dp"
-                android:hint="Enter number of days"
-                android:textColor="@color/appBackground"
+                android:background="@drawable/edittext_boundary"
                 android:gravity="center"
-                android:textCursorDrawable="@drawable/cursor_drawable"
-                android:textSize="18sp"
-                android:text="3"
+                android:hint="Enter number of days"
                 android:inputType="number"
-                android:padding="15dp"/>
+                android:padding="15dp"
+                android:singleLine="true"
+                android:text="3"
+                android:textColor="@color/appBackground"
+                android:textCursorDrawable="@drawable/cursor_drawable"
+                android:textSize="18sp" />
 
             <CheckBox
                 android:id="@+id/medicineRemainder"
@@ -313,10 +406,10 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/medicineDays"
                 android:layout_margin="20dp"
-                android:textSize="18sp"
-                android:checked="true"
                 android:buttonTint="@color/appBackground"
-                android:text=" Remind me for this Medicine"/>
+                android:checked="true"
+                android:text=" Remind me for this Medicine"
+                android:textSize="18sp" />
         </RelativeLayout>
     </ScrollView>
 </RelativeLayout>

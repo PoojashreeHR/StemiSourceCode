@@ -7,17 +7,14 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Context;
-import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Layout;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -30,29 +27,25 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.stemi.stemiapp.R;
-import com.stemi.stemiapp.activity.RegistrationActivity;
 import com.stemi.stemiapp.activity.TrackActivity;
-import com.stemi.stemiapp.customviews.AnswerTemplateView;
-import com.stemi.stemiapp.databases.DBforUserDetails;
+import com.stemi.stemiapp.databases.MedicineTable;
 import com.stemi.stemiapp.model.DataPassListener;
-import com.stemi.stemiapp.model.HealthQuestions;
 import com.stemi.stemiapp.model.MedicineDetails;
 import com.stemi.stemiapp.model.MedicineInfo;
+import com.stemi.stemiapp.model.MessageEvent;
 import com.stemi.stemiapp.preference.AppSharedPreference;
 import com.stemi.stemiapp.utils.AppConstants;
 
-import org.json.JSONObject;
+import org.greenrobot.eventbus.EventBus;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -63,7 +56,7 @@ import static android.content.ContentValues.TAG;
  * Created by Pooja on 26-07-2017.
  */
 
-public class MedicationFragment extends Fragment implements AppConstants,View.OnClickListener {
+public class MedicationFragment extends Fragment implements AppConstants,View.OnClickListener,TrackActivity.OnBackPressedListener {
     @BindView(R.id.tv_medication_today)
     TextView tvMedicationToday;
     @BindView(R.id.bt_addNewMedicine)
@@ -81,7 +74,7 @@ public class MedicationFragment extends Fragment implements AppConstants,View.On
 
     LinearLayout layout2;
     AppSharedPreference appSharedPreference;
-    DBforUserDetails dBforUserDetails;
+    MedicineTable medicineTable;
     long getCount;
     Boolean checkedImg = false;
     DataPassListener mCallback;
@@ -118,15 +111,17 @@ public class MedicationFragment extends Fragment implements AppConstants,View.On
         View view = inflater.inflate(R.layout.fragment_medication, container, false);
         ButterKnife.bind(this, view);
         initView();
+        ((TrackActivity) getActivity()).setOnBackPressedListener(this);
+        ((TrackActivity) getActivity()).setOnBackPressedListener(this);
         ((TrackActivity) getActivity()).setActionBarTitle("Medication");
         return view;
     }
 
     public void initView() {
-        dBforUserDetails = new DBforUserDetails(getActivity());
+        medicineTable = new MedicineTable();
         // dBforUserDetails.removeMedicalDetails("Pooja");
         appSharedPreference = new AppSharedPreference(getActivity());
-        long count = dBforUserDetails.getMedicineDetailsCount();
+        long count = medicineTable.getMedicineDetailsCount();
         Log.e(TAG, "onCreateView: Profile Count" + count);
 
         morningMedicineInfo.setOnClickListener(this);
@@ -157,7 +152,7 @@ public class MedicationFragment extends Fragment implements AppConstants,View.On
 
 
     public void getMedicineDetails(String time, final RelativeLayout layout){
-        ArrayList<String> medicine = dBforUserDetails.getMedicine(time);
+        ArrayList<String> medicine = medicineTable.getMedicine(time);
         layout2 = (LinearLayout) layout.findViewById(R.id.imageTypeLayout);
         ImageView remove_img;
         for (int i = 0; i < medicine.size(); i++) {
@@ -307,7 +302,7 @@ public class MedicationFragment extends Fragment implements AppConstants,View.On
         switch (id) {
             case R.id.ivInfo:
                 //dBforUserDetails.getMedicine("Morning");
-                ArrayList<String> Mmedicine = dBforUserDetails.getMedicine("Morning");
+                ArrayList<String> Mmedicine = medicineTable.getMedicine("Morning");
                 ArrayList<MedicineDetails> medicines = new ArrayList<>();
                 for (int i = 0; i < Mmedicine.size(); i++) {
                     MedicineDetails medicineInfo = new MedicineDetails();
@@ -327,7 +322,7 @@ public class MedicationFragment extends Fragment implements AppConstants,View.On
                 break;
 
             case R.id.ivInfo1:
-                ArrayList<String> Amedicine =  dBforUserDetails.getMedicine("Afternoon");
+                ArrayList<String> Amedicine =  medicineTable.getMedicine("Afternoon");
                 ArrayList<MedicineDetails> Amedicines = new ArrayList<>();
                 for (int i = 0; i < Amedicine.size(); i++) {
                     MedicineDetails AmedicineInfo = new MedicineDetails();
@@ -346,7 +341,7 @@ public class MedicationFragment extends Fragment implements AppConstants,View.On
                 break;
 
             case R.id.ivInfo2:
-                ArrayList<String> Nmedicine =  dBforUserDetails.getMedicine("Night");
+                ArrayList<String> Nmedicine =  medicineTable.getMedicine("Night");
                 if(Nmedicine.size() > 0) {
                     ArrayList<MedicineDetails> Nmedicines = new ArrayList<>();
                     for (int i = 0; i < Nmedicine.size(); i++) {
@@ -368,6 +363,11 @@ public class MedicationFragment extends Fragment implements AppConstants,View.On
         }
     }
 
+    @Override
+    public void doBack() {
+        EventBus.getDefault().post(new MessageEvent("Hello!"));
+    }
+
     public class DatePickerDialogClass extends DialogFragment implements DatePickerDialog.OnDateSetListener {
 
         @Override
@@ -385,10 +385,17 @@ public class MedicationFragment extends Fragment implements AppConstants,View.On
 
         public void onDateSet(DatePicker view, int year, int month, int day) {
             Date parseDate = null;
-            String Date1 = day + "-" + (month + 1) + "-" + year;
-            SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+            Calendar cal=Calendar.getInstance();
+            SimpleDateFormat month_date = new SimpleDateFormat("MMM");
+            cal.set(Calendar.MONTH,(month));
+            String month_name = month_date.format(cal.getTime());
+
+            Log.e("",""+month_name);
+
+            String date1 = day + " " + month_name + " " + year;
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy");
             try {
-                parseDate = dateFormat.parse(Date1);
+                parseDate = dateFormat.parse(date1);
             } catch (ParseException e) {
                 e.printStackTrace();
             }
@@ -449,15 +456,15 @@ public class MedicationFragment extends Fragment implements AppConstants,View.On
                 public void onClick(View v) {
                     ArrayList<MedicineDetails> medDetails = adapter.getList();
                     if(id == 1){
-                        dBforUserDetails.removeMedicine(medDetails,getActivity(),1);
+                        medicineTable.updateMedicine(medDetails,getActivity(),1);
                         infoDialogFragment.dismiss();
 
                     }else if(id == 2){
-                        dBforUserDetails.removeMedicine(medDetails,getActivity(),2);
+                        medicineTable.updateMedicine(medDetails,getActivity(),2);
                         infoDialogFragment.dismiss();
 
                     }else if(id==3){
-                        dBforUserDetails.removeMedicine(medDetails,getActivity(),3);
+                        medicineTable.updateMedicine(medDetails,getActivity(),3);
                         infoDialogFragment.dismiss();
                     }
                     infoDialogFragment.setCancelable(false);

@@ -1,8 +1,15 @@
 package com.stemi.stemiapp.activity;
 
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -18,14 +25,19 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.support.v7.widget.Toolbar;
 import android.widget.TextView;
 import android.support.design.widget.TabLayout;
+import android.widget.Toast;
 
 import com.stemi.stemiapp.R;
+import com.stemi.stemiapp.customviews.CircleImageView;
 import com.stemi.stemiapp.customviews.CustomViewPager;
 import com.stemi.stemiapp.fragments.AddMedicineFragment;
+import com.stemi.stemiapp.fragments.BloodTestFragment;
 import com.stemi.stemiapp.fragments.HospitalFragment;
 import com.stemi.stemiapp.fragments.LearnFragment;
 import com.stemi.stemiapp.fragments.MedicationFragment;
@@ -34,10 +46,19 @@ import com.stemi.stemiapp.fragments.StatusFragment;
 import com.stemi.stemiapp.fragments.TrackFragment;
 import com.stemi.stemiapp.model.DataPassListener;
 import com.stemi.stemiapp.model.MedicineDetails;
+import com.stemi.stemiapp.model.MessageEvent;
+import com.stemi.stemiapp.model.UserEventDetails;
 import com.stemi.stemiapp.preference.AppSharedPreference;
+import com.stemi.stemiapp.utils.AppConstants;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import butterknife.BindView;
 
 public class TrackActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, DataPassListener{
 
@@ -47,6 +68,9 @@ public class TrackActivity extends AppCompatActivity implements NavigationView.O
     private DrawerLayout drawer;
     RelativeLayout mainContainer;
     AppSharedPreference appSharedPreferences;
+    public static UserEventDetails userEventDetails;
+    CircleImageView profileImg;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +83,8 @@ public class TrackActivity extends AppCompatActivity implements NavigationView.O
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        profileImg = (CircleImageView) findViewById(R.id.profileImg);
+        userEventDetails = new UserEventDetails();
         appSharedPreferences = new AppSharedPreference(this);
         viewPager = (CustomViewPager) findViewById(R.id.viewpager);
         viewPager.setPagingEnabled(true);
@@ -72,7 +98,11 @@ public class TrackActivity extends AppCompatActivity implements NavigationView.O
             setupViewPager(viewPager);
         }
 
-
+        if(appSharedPreferences.getProfileUrl(AppConstants.PROFILE_URL).equals("")){
+            profileImg.setImageResource(R.drawable.ic_user);
+        }else {
+            profileImg.setImageURI(Uri.parse(appSharedPreferences.getProfileUrl(AppConstants.PROFILE_URL)));
+        }
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -82,6 +112,7 @@ public class TrackActivity extends AppCompatActivity implements NavigationView.O
         assert navigationView != null;
         navigationView.setNavigationItemSelectedListener(this);
 
+
         tabLayout = (TabLayout)findViewById(R.id.tab);
         tabLayout.setupWithViewPager(viewPager);
         setupTabIcons();
@@ -89,11 +120,23 @@ public class TrackActivity extends AppCompatActivity implements NavigationView.O
         tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
+                int position = tab.getPosition();
                 if(viewPager.getVisibility() == View.GONE) {
                     viewPager.setVisibility(View.VISIBLE);
                     mainContainer.setVisibility(View.GONE);
                 }
-                tabLayout.setTabTextColors(R.color.colorDarkGrey,R.color.appBackground);
+//                for(int i=0;i<tabLayout.getChildCount();i++)
+//                {
+
+              //  }
+
+                    /*TabLayout.Tab tab = tabLayout.getTabAt(i);
+                    Drawable icon = tab.getIcon();
+
+                    if (icon != null) {
+                        icon = DrawableCompat.wrap(icon);
+                        DrawableCompat.setTintList(icon, colors);
+                    }*/
             }
 
             @Override
@@ -103,9 +146,18 @@ public class TrackActivity extends AppCompatActivity implements NavigationView.O
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
-
             }
         });
+    }
+
+    protected OnBackPressedListener onBackPressedListener;
+
+    public interface OnBackPressedListener {
+        void doBack();
+    }
+
+    public void setOnBackPressedListener(OnBackPressedListener onBackPressedListener) {
+        this.onBackPressedListener = onBackPressedListener;
     }
     public void setActionBarTitle(String title){
         toolbar.setTitle(title);
@@ -134,6 +186,10 @@ public class TrackActivity extends AppCompatActivity implements NavigationView.O
         fragmentTransaction.replace(R.id.mainContainer, addMedicineFragment).commit();
     }
 
+    @Override
+    public void goBack(){
+
+    }
     public CustomViewPager getViewPager(){
         return (CustomViewPager) this.viewPager;
     }
@@ -252,12 +308,38 @@ public class TrackActivity extends AppCompatActivity implements NavigationView.O
     @Override
     public void onBackPressed() {
         if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
-            getSupportFragmentManager().popBackStack();
-            backstackFragment();
-        }
-        else{
+            onBackPressedListener.doBack();
+
+
+           /* new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    backstackFragment();
+                }
+            },1000);
+        }*/
+        } else{
             super.onBackPressed();
         }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
+    }
+// This method will be called when a SomeOtherEvent is posted
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(MessageEvent event) {
+        backstackFragment();
+       // Toast.makeText(this, event.message, Toast.LENGTH_SHORT).show();
     }
 
     private void removeCurrentFragment() {
@@ -269,6 +351,7 @@ public class TrackActivity extends AppCompatActivity implements NavigationView.O
         mainContainer.setVisibility(View.GONE);
 
         if (currentFrag != null) {
+
             getSupportFragmentManager().popBackStack();
             transaction.remove(currentFrag);
         }

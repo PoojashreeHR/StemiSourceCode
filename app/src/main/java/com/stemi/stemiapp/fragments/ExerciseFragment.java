@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -11,6 +12,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -19,10 +21,15 @@ import android.widget.Toast;
 
 import com.stemi.stemiapp.R;
 import com.stemi.stemiapp.activity.TrackActivity;
+import com.stemi.stemiapp.customviews.CircleImageView;
 import com.stemi.stemiapp.databases.DBForTrackActivities;
+import com.stemi.stemiapp.model.MessageEvent;
 import com.stemi.stemiapp.model.UserEventDetails;
 import com.stemi.stemiapp.preference.AppSharedPreference;
 import com.stemi.stemiapp.utils.AppConstants;
+import com.stemi.stemiapp.utils.CommonUtils;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -32,11 +39,13 @@ import java.util.Date;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static android.content.ContentValues.TAG;
+
 /**
  * Created by Pooja on 26-07-2017.
  */
 
-public class ExerciseFragment extends Fragment implements View.OnClickListener {
+public class ExerciseFragment extends Fragment implements View.OnClickListener, TrackActivity.OnBackPressedListener {
 
 
     Boolean checkClicked = false;
@@ -58,7 +67,6 @@ public class ExerciseFragment extends Fragment implements View.OnClickListener {
     @BindView(R.id.tv_excercise_today)
     TextView tvExcerciseToday;
 
-    UserEventDetails userEventDetails;
     DBForTrackActivities dbForTrackActivities;
     AppSharedPreference appSharedPreference;
 
@@ -78,8 +86,7 @@ public class ExerciseFragment extends Fragment implements View.OnClickListener {
         View view = inflater.inflate(R.layout.fragment_exercise, container, false);
         ButterKnife.bind(this,view);
         ((TrackActivity) getActivity()).setActionBarTitle("Execise");
-        dbForTrackActivities = new DBForTrackActivities(getActivity());
-        userEventDetails = new UserEventDetails();
+        dbForTrackActivities = new DBForTrackActivities();
         appSharedPreference = new AppSharedPreference(getActivity());
 
         llWalking.setOnClickListener(this);
@@ -95,6 +102,7 @@ public class ExerciseFragment extends Fragment implements View.OnClickListener {
                 dialogfragment.show(getActivity().getFragmentManager(), "Date Picker Dialog");
             }
         });
+        ((TrackActivity) getActivity()).setOnBackPressedListener(this);
 
         return view;
     }
@@ -178,8 +186,15 @@ public class ExerciseFragment extends Fragment implements View.OnClickListener {
 
         public void onDateSet(DatePicker view, int year, int month, int day){
             Date parseDate = null;
-            String date1 = day + "-" + (month+1) + "-" + year;
-            SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+            Calendar cal=Calendar.getInstance();
+            SimpleDateFormat month_date = new SimpleDateFormat("MMM");
+            cal.set(Calendar.MONTH,(month));
+            String month_name = month_date.format(cal.getTime());
+
+            Log.e("",""+month_name);
+
+            String date1 = day + " " + month_name + " " + year;
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy");
             try {
                 parseDate = dateFormat.parse(date1);
             } catch (ParseException e) {
@@ -195,54 +210,70 @@ public class ExerciseFragment extends Fragment implements View.OnClickListener {
     public void storeData(){
 
         if(appSharedPreference.getProfileName(AppConstants.PROFILE_NAME)!= null){
-            userEventDetails.setUid(appSharedPreference.getProfileName(AppConstants.PROFILE_NAME));
+            TrackActivity.userEventDetails.setUid(appSharedPreference.getProfileName(AppConstants.PROFILE_NAME));
         }
         if (tvExcerciseToday.getText().equals("Today  ")){
             Date dt = new Date();
-            SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");// set format for date
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy");// set format for date
             String todaysDate = dateFormat.format(dt); // parse it like
-            userEventDetails.setDate(todaysDate);
+            TrackActivity.userEventDetails.setDate(todaysDate);
         }else {
-            userEventDetails.setDate(tvExcerciseToday.getText().toString());
+            TrackActivity.userEventDetails.setDate(tvExcerciseToday.getText().toString());
         }
-
         if(ivWalking.getTag().equals(R.drawable.ic_checked)){
-            userEventDetails.setIswalked("true");
+            TrackActivity. userEventDetails.setIswalked("true");
         }
         if(ivCycling.getTag().equals(R.drawable.ic_checked)){
-            userEventDetails.setIsCycled("true");
+            TrackActivity.userEventDetails.setIsCycled("true");
         }
         if(ivSwimming.getTag().equals(R.drawable.ic_checked)){
-            userEventDetails.setIsSwimmed("true");
+            TrackActivity.userEventDetails.setIsSwimmed("true");
         }
         if(ivAerobics.getTag().equals(R.drawable.ic_checked)){
-            userEventDetails.setDoneAerobics("true");
+            TrackActivity. userEventDetails.setDoneAerobics("true");
         }
         if(ivOthers.getTag().equals(R.drawable.ic_checked)){
-            userEventDetails.setOthers("true");
+            TrackActivity. userEventDetails.setOthers("true");
         }
 
-        dbForTrackActivities.addEntry(userEventDetails);
+      //  boolean count = dbForTrackActivities.isTableEmpty();
+        boolean date = dbForTrackActivities.getDate(TrackActivity.userEventDetails.getDate());
+            if (!date) {
+                dbForTrackActivities.addEntry(TrackActivity.userEventDetails);
+                EventBus.getDefault().post(new MessageEvent("Hello!"));
+            } else {
+                CommonUtils.buidDialog(this.getContext(),1);
+            }
     }
-    @Override
+  /*  @Override
     //Pressed return button - returns to the results menu
     public void onResume() {
         super.onResume();
         excerciseLayout.setFocusableInTouchMode(true);
-        excerciseLayout.setFocusableInTouchMode(true);
-        excerciseLayout.requestFocus();
         excerciseLayout.requestFocus();
         excerciseLayout.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if (event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK) {
                     storeData();
-                    ((TrackActivity) getActivity()).showFragment(new TrackFragment());
+                    //((TrackActivity) getActivity()).showFragment(new TrackFragment());
                     Toast.makeText(getActivity(), "You pressed Back", Toast.LENGTH_SHORT).show();
                 }
                 return false;
             }
         });
 
+    }*/
+    @Override
+    public void doBack() {
+        if(ivWalking.getTag().equals(R.drawable.ic_checked) || ivCycling.getTag().equals(R.drawable.ic_checked)
+                || ivSwimming.getTag().equals(R.drawable.ic_checked) || ivAerobics.getTag().equals(R.drawable.ic_checked)
+                || ivOthers.getTag().equals(R.drawable.ic_checked)){
+            storeData();
+        }else {
+            EventBus.getDefault().post(new MessageEvent("Hello!"));
+
+        }
     }
+
 }

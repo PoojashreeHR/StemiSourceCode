@@ -10,6 +10,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,7 +31,7 @@ import com.google.android.gms.location.places.ui.PlacePicker;
 import com.stemi.stemiapp.R;
 import com.stemi.stemiapp.activity.TrackActivity;
 import com.stemi.stemiapp.customviews.BetterSpinner;
-import com.stemi.stemiapp.databases.DBforUserDetails;
+import com.stemi.stemiapp.databases.UserDetailsTable;
 
 import java.util.ArrayList;
 
@@ -48,7 +50,7 @@ public class SOSFragment extends Fragment implements View.OnClickListener {
     @BindView(R.id.rl_call)RelativeLayout rlCall;
     @BindView(R.id.rl_locateMap)RelativeLayout rlLocateMap;
 
-    DBforUserDetails dBforUserDetails;
+    UserDetailsTable dBforUserDetails;
     BetterSpinner personSpinner;
     ArrayList<String> personName;
     private ImageView pick_location;
@@ -56,6 +58,7 @@ public class SOSFragment extends Fragment implements View.OnClickListener {
     private static final String TAG = "SOSFragment";
     int PLACE_PICKER_REQUEST = 1;
     private EditText etLocation;
+    String selectedPersonName;
 
     public SOSFragment() {
         // Required empty public constructor
@@ -75,11 +78,12 @@ public class SOSFragment extends Fragment implements View.OnClickListener {
 
         rlCall.setOnClickListener(this);
         rlLocateMap.setOnClickListener(this);
+        shateLocation.setOnClickListener(this);
 
         personSpinner = (BetterSpinner) view.findViewById(R.id.person_Spinner);
         //pick_location = (ImageView) view.findViewById(R.id.pick_location);
         etLocation = (EditText)view.findViewById(R.id.et_location);
-        dBforUserDetails = new DBforUserDetails(getActivity());
+        dBforUserDetails = new UserDetailsTable();
         personName = new ArrayList<>();
         personName = dBforUserDetails.getRecords();
 
@@ -93,7 +97,23 @@ public class SOSFragment extends Fragment implements View.OnClickListener {
 
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(getActivity(), R.layout.spinner_layout, personName );
         personSpinner.setAdapter(arrayAdapter);
+        personSpinner.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                selectedPersonName = personSpinner.getText().toString();
+                Log.e("TAG","Text is :"+ personSpinner.getText().toString());
+            }
+        });
         Log.e(TAG, "onCreateView: SOS Fragment"+ dBforUserDetails.getRecords() );
         return view;
     }
@@ -202,6 +222,13 @@ public class SOSFragment extends Fragment implements View.OnClickListener {
         int id = v.getId();
         switch (id){
             case R.id.bt_share_location:
+                Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+                sharingIntent.setType("text/plain");
+                String shareBodyText = "Hi "+ selectedPersonName + " is in emergency his/her location is "+etLocation.getText().toString();
+                sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT,"Subject here");
+                sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBodyText);
+                startActivity(Intent.createChooser(sharingIntent, "Shearing Option"));
+
                 break;
 
             case R.id.rl_call:

@@ -1,10 +1,10 @@
-package com.instinctcoder.sqlitedbmultitbl.app;
+package com.stemi.stemiapp.utils;
 
 import android.app.Application;
 import android.content.Context;
 
-import com.instinctcoder.sqlitedbmultitbl.data.DBHelper;
-import com.instinctcoder.sqlitedbmultitbl.data.DatabaseManager;
+import com.stemi.stemiapp.databases.DBHelper;
+import com.stemi.stemiapp.databases.DatabaseManager;
 
 /**
  * Created by Tan on 1/26/2016.
@@ -22,8 +22,6 @@ public class  App extends Application {
         DatabaseManager.initializeInstance(dbHelper);
 
     }
-
-
     public static Context getContext(){
         return context;
     }

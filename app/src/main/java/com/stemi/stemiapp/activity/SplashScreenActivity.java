@@ -2,23 +2,17 @@ package com.stemi.stemiapp.activity;
 
 import android.Manifest;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Handler;
-import android.preference.PreferenceManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.Menu;
 
 import com.stemi.stemiapp.R;
-import com.stemi.stemiapp.databases.DBforUserDetails;
+import com.stemi.stemiapp.databases.MedicineTable;
 import com.stemi.stemiapp.preference.AppSharedPreference;
 import com.stemi.stemiapp.utils.AppConstants;
-
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class SplashScreenActivity extends AppCompatActivity implements AppConstants {
 
@@ -26,7 +20,7 @@ public class SplashScreenActivity extends AppCompatActivity implements AppConsta
     private static final int MY_PERMISSIONS_REQUEST = 1234;
     boolean introScreensShown;
     AppSharedPreference sharedPreference;
-    DBforUserDetails dBforUserDetails;
+    MedicineTable dBforUserDetails;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +29,7 @@ public class SplashScreenActivity extends AppCompatActivity implements AppConsta
         sharedPreference = new AppSharedPreference(this);
         introScreensShown = sharedPreference.isFirstTimeLaunch(IS_FIRST_TIME_LAUNCH);
         checkAppPermission();
-        dBforUserDetails = new DBforUserDetails(this);
+        dBforUserDetails = new MedicineTable();
         dBforUserDetails.removeMedicalData();
     }
 
