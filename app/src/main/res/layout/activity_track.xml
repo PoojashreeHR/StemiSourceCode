@@ -15,7 +15,23 @@
            android:layout_width="match_parent"
            android:layout_height="?attr/actionBarSize"
            android:background="@color/white"
-           app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+           app:popupTheme="@style/ThemeOverlay.AppCompat.Light" >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+                <com.stemi.stemiapp.customviews.CircleImageView
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_alignParentRight="true"
+                    android:padding="5dp"
+                    android:layout_marginRight="10dp"
+                    android:id="@+id/profile_image"
+                />
+        </RelativeLayout>
+
+
+       </android.support.v7.widget.Toolbar>
     </android.support.design.widget.AppBarLayout>
 
  <!--   <include layout="@layout/custom_tab"

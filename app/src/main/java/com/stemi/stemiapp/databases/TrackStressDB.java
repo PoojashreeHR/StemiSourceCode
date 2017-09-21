@@ -27,12 +27,16 @@ public class TrackStressDB extends SQLiteOpenHelper{
     public static final String COLUMN_USER_ID = "_id";
     public static final String COLUMN_DATE_TIME = "datetime";
     public static final String COLUMN_STRESSED = "stressed";
+    public static final String COLUMN_MEDITATION_HRS = "meditationHrs";
+    public static final String COLUMN_YOGA_HRS = "yogaHrs";
 
     private static final String DATABASE_CREATE = "create table "
             + TABLE_STRESS + "( " + COLUMN_USER_ID
             + " text not null , " + COLUMN_DATE_TIME
             + " text not null , "+COLUMN_STRESSED
-            + " integer );";
+            + " integer ," +COLUMN_MEDITATION_HRS
+            +" REAL, "+ COLUMN_YOGA_HRS+" REAL"+
+            ");";
 
     public TrackStressDB(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -57,7 +61,8 @@ public class TrackStressDB extends SQLiteOpenHelper{
             cv.put(COLUMN_USER_ID, stress.getUserId());
             cv.put(COLUMN_DATE_TIME, simpleDateFormat.format(stress.getDateTime()));
             cv.put(COLUMN_STRESSED, stress.isStressed());
-
+            cv.put(COLUMN_MEDITATION_HRS, stress.getMeditationHrs());
+            cv.put(COLUMN_YOGA_HRS, stress.getYogaHrs());
             db.insert(TABLE_STRESS, null, cv);
         }
         catch(Exception e){
@@ -108,6 +113,12 @@ public class TrackStressDB extends SQLiteOpenHelper{
                 Date dateValue = simpleDateFormat.parse(timestamp);
                 stress.setDateTime(dateValue);
 
+                double medHrs = rows.getDouble(rows.getColumnIndex(COLUMN_MEDITATION_HRS));
+                stress.setMeditationHrs(medHrs);
+
+                double yogaHrs = rows.getDouble(rows.getColumnIndex(COLUMN_YOGA_HRS));
+                stress.setYogaHrs(yogaHrs);
+
                 stressList.add(stress);
                 rows.moveToNext();
             }
@@ -141,6 +152,12 @@ public class TrackStressDB extends SQLiteOpenHelper{
                 Date dateValue = simpleDateFormat.parse(timestamp);
                 stress.setDateTime(dateValue);
 
+                double medHrs = rows.getDouble(rows.getColumnIndex(COLUMN_MEDITATION_HRS));
+                stress.setMeditationHrs(medHrs);
+
+                double yogaHrs = rows.getDouble(rows.getColumnIndex(COLUMN_YOGA_HRS));
+                stress.setYogaHrs(yogaHrs);
+
                 stressList.add(stress);
                 rows.moveToNext();
             }
@@ -149,6 +166,25 @@ public class TrackStressDB extends SQLiteOpenHelper{
             e.printStackTrace();
         }
         return stressList;
+    }
+
+    public void createIfNotExists() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        try {
+            String query = "SELECT * FROM " + TABLE_STRESS;
+            Cursor cursor = db.rawQuery(query, null);
+            cursor.moveToFirst();
+
+            while (!cursor.isAfterLast()) {
+                cursor.moveToNext();
+            }
+
+            cursor.close();
+        } catch (Exception e) {
+            if (e.getLocalizedMessage().contains("no such table")) {
+                onCreate(db);
+            }
+        }
     }
 
 }

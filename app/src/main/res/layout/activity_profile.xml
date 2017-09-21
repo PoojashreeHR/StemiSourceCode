@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorBg"
+    tools:context="com.stemi.stemiapp.activity.ProfileActivity">
+
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/white"
+        app:theme="@style/ToolbarColoredBackArrow"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light" >
+
+    </android.support.v7.widget.Toolbar>
+
+    <android.support.v7.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/recyclerView"
+        android:layout_below="@+id/toolbar"
+
+
+       ></android.support.v7.widget.RecyclerView>
+
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/recyclerView"
+        android:layout_centerHorizontal="true"
+        android:text="+ Add Profile"
+        android:padding="20dp"
+        android:textColor="@color/appBackground"
+        android:background="@drawable/button_border"
+        android:id="@+id/btn_add_profile"
+        android:layout_marginTop="20dp"
+        />
+</RelativeLayout>

@@ -33,6 +33,7 @@ import com.stemi.stemiapp.databases.DBforUserDetails;
 import com.stemi.stemiapp.preference.AppSharedPreference;
 import com.stemi.stemiapp.utils.AppConstants;
 import com.stemi.stemiapp.utils.CommonUtils;
+import com.stemi.stemiapp.utils.GlobalClass;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -245,7 +246,12 @@ public class ProfilePhotoFragment extends Fragment implements AppConstants,View.
                     RegistrationActivity.registeredUserDetails.setUniqueId(deviceId);
                     appSharedPreference.addProfileName(PROFILE_NAME,RegistrationActivity.registeredUserDetails.getName());
                    // dBforUserDetails.removeNote(RegistrationActivity.registeredUserDetails.getName());
-                    dBforUserDetails.addEntry(RegistrationActivity.registeredUserDetails);
+                    String uid= dBforUserDetails.addEntry(RegistrationActivity.registeredUserDetails);
+                    if(appSharedPreference.getUserId() == null){
+                        //first user profile registartion
+                        appSharedPreference.setUserId(uid);
+                        GlobalClass.userID = uid;
+                    }
                     Log.e(TAG, "onClick: DB COUNT " + dBforUserDetails.getProfilesCount() );
                     Toast.makeText(getActivity(), "One row added successfully", Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(getActivity(), TrackActivity.class));

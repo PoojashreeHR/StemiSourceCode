@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import com.stemi.stemiapp.model.TrackExercise;
 import com.stemi.stemiapp.utils.GlobalClass;
@@ -149,5 +150,24 @@ public class TrackExerciseDB extends SQLiteOpenHelper {
             e.printStackTrace();
         }
         return exerciseList;
+    }
+
+    public void createIfNotExists() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        try {
+            String query = "SELECT * FROM " + TABLE_EXERCISE;
+            Cursor cursor = db.rawQuery(query, null);
+            cursor.moveToFirst();
+
+            while (!cursor.isAfterLast()) {
+                cursor.moveToNext();
+            }
+
+            cursor.close();
+        } catch (Exception e) {
+            if (e.getLocalizedMessage().contains("no such table")) {
+                onCreate(db);
+            }
+        }
     }
 }

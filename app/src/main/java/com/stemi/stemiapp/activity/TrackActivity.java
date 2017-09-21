@@ -2,6 +2,7 @@ package com.stemi.stemiapp.activity;
 
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -24,25 +25,50 @@ import android.widget.TextView;
 import android.support.design.widget.TabLayout;
 
 import com.stemi.stemiapp.R;
+import com.stemi.stemiapp.customviews.CircleImageView;
 import com.stemi.stemiapp.customviews.CustomViewPager;
+import com.stemi.stemiapp.databases.DBforUserDetails;
 import com.stemi.stemiapp.fragments.HospitalFragment;
 import com.stemi.stemiapp.fragments.LearnFragment;
 import com.stemi.stemiapp.fragments.SOSFragment;
 import com.stemi.stemiapp.fragments.StatusFragment;
 import com.stemi.stemiapp.fragments.TrackFragment;
+import com.stemi.stemiapp.model.RegisteredUserDetails;
 import com.stemi.stemiapp.preference.AppSharedPreference;
+import com.stemi.stemiapp.utils.GlobalClass;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class TrackActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
+    private static final String TAG = "TrackActivity";
     TabLayout tabLayout;
     Toolbar toolbar;
     CustomViewPager viewPager;
     private DrawerLayout drawer;
     RelativeLayout mainContainer;
     AppSharedPreference appSharedPreferences;
+    private CircleImageView profileImage;
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        DBforUserDetails dBforUserDetails = new DBforUserDetails(this);
+        RegisteredUserDetails registeredUserDetails = dBforUserDetails.getUserDetails(GlobalClass.userID);
+        Log.e(TAG,"GlobalClass.userID = " + GlobalClass.userID);
+        if(registeredUserDetails.getImgUrl() != null) {
+            profileImage.setImageURI(Uri.parse(registeredUserDetails.getImgUrl()));
+            profileImage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent i = new Intent(TrackActivity.this, ProfileActivity.class);
+                    startActivity(i);
+                }
+            });
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +85,9 @@ public class TrackActivity extends AppCompatActivity implements NavigationView.O
         viewPager = (CustomViewPager) findViewById(R.id.viewpager);
         viewPager.setPagingEnabled(true);
         mainContainer = (RelativeLayout) findViewById(R.id.mainContainer);
+        profileImage = (CircleImageView) findViewById(R.id.profile_image);
+
+
 
         if(viewPager.getVisibility() == View.VISIBLE) {
             mainContainer.setVisibility(View.GONE);
@@ -292,9 +321,9 @@ public class TrackActivity extends AppCompatActivity implements NavigationView.O
 
     private void removeSharedPreferenceData() {
         appSharedPreferences.removeAllSPData();
-        Intent intent = new Intent(this, MainActivity.class);
-        finish();
-        startActivity(intent);
+//        Intent intent = new Intent(this, MainActivity.class);
+//        finish();
+//        startActivity(intent);
     }
 
 }

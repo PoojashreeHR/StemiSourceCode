@@ -138,4 +138,25 @@ public class BloodTestDB extends SQLiteOpenHelper {
         }
         return bloodTestResult;
     }
+
+    public void createIfNotExists() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        try{
+            String query = "SELECT * FROM "+TABLE_BLOOD_TEST;
+            Cursor cursor = db.rawQuery(query, null);
+            cursor.moveToFirst();
+
+            while(!cursor.isAfterLast()){
+                cursor.moveToNext();
+            }
+
+            cursor.close();
+        }
+        catch(Exception e){
+            Log.e(TAG, e.getLocalizedMessage());
+            if(e.getLocalizedMessage().contains("no such table")){
+                onCreate(db);
+            }
+        }
+    }
 }

@@ -61,9 +61,10 @@ public class SignUpActivity extends AppCompatActivity implements AppConstants, V
                         CommonUtils.hideLoadingProgress();
                         SignUpResponseModel signUpResponseModel = response.body();
                         appSharedPreference.addUserToken(USER_TOKEN, "" + signUpResponseModel.getToken());
+                        appSharedPreference.addLoginId(etRegEmail.getText().toString());
                         Log.e("", "onResponse: Signup Response" + signUpResponseModel);
                         Toast.makeText(SignUpActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(SignUpActivity.this, TrackActivity.class));
+                        startActivity(new Intent(SignUpActivity.this, RegistrationActivity.class));
                         finish();
                     }else {
                         CommonUtils.hideLoadingProgress();

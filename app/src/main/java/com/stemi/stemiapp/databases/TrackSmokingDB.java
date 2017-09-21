@@ -150,4 +150,23 @@ public class TrackSmokingDB extends SQLiteOpenHelper{
         }
         return smokingList;
     }
+
+    public void createIfNotExists() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        try {
+            String query = "SELECT * FROM " + TABLE_SMOKING;
+            Cursor cursor = db.rawQuery(query, null);
+            cursor.moveToFirst();
+
+            while (!cursor.isAfterLast()) {
+                cursor.moveToNext();
+            }
+
+            cursor.close();
+        } catch (Exception e) {
+            if (e.getLocalizedMessage().contains("no such table")) {
+                onCreate(db);
+            }
+        }
+    }
 }

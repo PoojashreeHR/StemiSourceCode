@@ -4,12 +4,15 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.stemi.stemiapp.utils.AppConstants;
+import com.stemi.stemiapp.utils.GlobalClass;
 
 /**
  * Created by Pooja on 18-08-2017.
  */
 
 public class AppSharedPreference implements AppConstants {
+    private static final String USERID = "userid";
+    private static final String LOGINID = "loginId";
     private SharedPreferences sharedPreferences;
 
     public AppSharedPreference(Context context) {
@@ -37,6 +40,16 @@ public class AppSharedPreference implements AppConstants {
         return sharedPreferences.getString(key, null);
     }
 
+    public void setUserId(String userId){
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(USERID, userId);
+        editor.apply();
+    }
+
+    public String getUserId(){
+        return sharedPreferences.getString(USERID, null);
+    }
+
     public void setFirstTimeLaunch(String key , boolean isFirstTime) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putBoolean(key, isFirstTime);
@@ -51,7 +64,19 @@ public class AppSharedPreference implements AppConstants {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.remove(USER_TOKEN);
         editor.remove(PROFILE_NAME);
+        //editor.remove(LOGINID);
+        editor.remove(USERID);
         editor.apply();
+    }
+
+    public void addLoginId(String loginId) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(LOGINID, loginId);
+        editor.apply();
+    }
+
+    public String getLoginId(){
+        return sharedPreferences.getString(LOGINID,null);
     }
 }
 

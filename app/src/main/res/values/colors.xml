@@ -64,5 +64,8 @@
     <color name="btnColorRed">#D01421</color>
     <color name="statsFontColor">#FD715E</color>
     <color name="statsNameFontColor">#808080</color>
+    <color name="shadowColor">#cccccc</color>
+    <color name="colorBg">#F2F2F2</color>
+    <color name="selection_green">#34C085</color>
 </resources>
 
