@@ -28,24 +28,28 @@ public class MedicineTable {
     private static final String MED_KEY_ID = "id";
     private  static final String MED_MEDICINE_DETAILS = "medicineDetails";
     private  static final String RELATED_PERSON = "relatedPerson";
+    private static final String DATE = "medicineDate";
 
 
     public static final String CREATE_MEDICINE_TABLE = "CREATE TABLE " + MED_TABLE_NAME + "("
             + MED_KEY_ID + " INTEGER PRIMARY KEY,"
             + MED_MEDICINE_DETAILS + " TEXT,"
+            + DATE + " TEXT,"
             + RELATED_PERSON + " TEXT"
             + ")";
 
 
 
-    public void addMedicineDetails(String medicineDetails,String personName) {
+    public void addMedicineDetails(MedicineDetails medicineDetails,String personName) {
         SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
         ContentValues values = new ContentValues();
         //long count = getProfilesCount();
         //count = count+1;
         //   values.put(MED_KEY_ID,);
-        values.put(MED_MEDICINE_DETAILS, medicineDetails);
+        String MedicineString = new Gson().toJson(medicineDetails);
+        values.put(MED_MEDICINE_DETAILS, MedicineString);
         values.put(RELATED_PERSON, personName);
+        values.put(DATE,medicineDetails.getDate());
 
         long id = db.insert(MED_TABLE_NAME, null, values);
         Log.e("DATABASE VALUES", "addDataTODb: " + id);
@@ -182,12 +186,13 @@ public class MedicineTable {
 
 
     //Get single medicine Details
-    public void getMedicineToEdit(ArrayList<MedicineDetails> beforeEditData,String afterEdit){
+    public void getMedicineToEdit(ArrayList<MedicineDetails> beforeEditData,MedicineDetails afterEdit){
 
+        String MedicineString = new Gson().toJson(afterEdit);
         SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
         String old = new Gson().toJson(beforeEditData.get(0));
         ContentValues cv = new ContentValues();
-        cv.put(MED_MEDICINE_DETAILS, afterEdit);
+        cv.put(MED_MEDICINE_DETAILS, MedicineString);
 
         long count = db.update(MED_TABLE_NAME, cv, MED_MEDICINE_DETAILS + "='" + old + "'" ,null);
         Log.e(TAG, "getMedicineToEdit: " + count );

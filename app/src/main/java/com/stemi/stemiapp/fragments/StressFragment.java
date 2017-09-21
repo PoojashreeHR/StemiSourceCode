@@ -183,13 +183,14 @@ public class StressFragment extends Fragment implements AppConstants, TrackActiv
             TrackActivity.userEventDetails.setDate(tvFoodToday.getText().toString());
         }
         TrackActivity.userEventDetails.setStressCount(stressCount);
+
         boolean date = dbForTrackActivities.getDate(TrackActivity.userEventDetails.getDate());
         if (!date) {
             dbForTrackActivities.addEntry(TrackActivity.userEventDetails);
             ((TrackActivity) getActivity()).showFragment(new TrackFragment());
             EventBus.getDefault().post(new MessageEvent("Hello!"));
         } else {
-            CommonUtils.buidDialog(this.getContext(),2);
+            int c = dbForTrackActivities.isEntryExists(TrackActivity.userEventDetails,2,getActivity());
         }
     }
 

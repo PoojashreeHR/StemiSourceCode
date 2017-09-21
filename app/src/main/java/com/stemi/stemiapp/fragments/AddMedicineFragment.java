@@ -130,7 +130,6 @@ public class AddMedicineFragment extends Fragment implements View.OnClickListene
 
         appSharedPreference = new AppSharedPreference(getActivity());
         medicineDetails = new MedicineDetails();
-        gson = new Gson();
         medicineTable = new MedicineTable();
         Bundle args = getArguments();
         if (args != null) {
@@ -649,6 +648,7 @@ public class AddMedicineFragment extends Fragment implements View.OnClickListene
     }
 
     public void storeMedicalDetails() {
+        medicineDetails.setDate("");
         medicineDetails.setPersonName(appSharedPreference.getProfileName(PROFILE_NAME));
         medicineDetails.setMedicineName(medicineNamee.getText().toString());
         medicineDetails.setMedicineDays(medicineDays.getText().toString());
@@ -677,12 +677,12 @@ public class AddMedicineFragment extends Fragment implements View.OnClickListene
             medicineDetails.setMedicineNightTime("");
         }
 
-        String MedicineString = gson.toJson(medicineDetails);
+
 
         if (checkEditOrNot == 1) {
-            medicineTable.getMedicineToEdit(showReceivedData, MedicineString);
+            medicineTable.getMedicineToEdit(showReceivedData, medicineDetails);
         } else {
-            medicineTable.addMedicineDetails(MedicineString, medicineDetails.getPersonName());
+            medicineTable.addMedicineDetails(medicineDetails, medicineDetails.getPersonName());
             long getCount = medicineTable.getMedicineDetailsCount();
 
             Log.e(TAG, "onCreateView: Get Medicine Count " + getCount);

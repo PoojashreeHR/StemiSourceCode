@@ -41,7 +41,9 @@ import com.stemi.stemiapp.model.TrackMedication;
 import com.stemi.stemiapp.model.TrackSmoking;
 import com.stemi.stemiapp.model.TrackStress;
 import com.stemi.stemiapp.model.TrackWeight;
+import com.stemi.stemiapp.preference.AppSharedPreference;
 import com.stemi.stemiapp.samples.ChartSampleActivity;
+import com.stemi.stemiapp.utils.AppConstants;
 import com.stemi.stemiapp.utils.GlobalClass;
 
 import java.lang.reflect.Field;
@@ -72,6 +74,7 @@ public class StatusFragment extends Fragment {
     private int monthIndex = 0;
     private TextView dateText;
 
+    AppSharedPreference appSharedPreference;
     @BindView(R.id.txt_heamoglobin)
      TextView txtHeamoglobin;
 
@@ -117,6 +120,8 @@ public class StatusFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_status, container, false);
         ButterKnife.bind(this,view);
+
+        appSharedPreference = new AppSharedPreference(getActivity());
         tabs = (TabLayout) view.findViewById(R.id.tabs);
         healthLayout = (RelativeLayout) view.findViewById(R.id.health_layout);
         weightLayout = (RelativeLayout) view.findViewById(R.id.weight_layout);
@@ -206,8 +211,8 @@ public class StatusFragment extends Fragment {
     }
 
     private void loadStatsForDate(String dateStr) {
-        BloodTestDB bloodTestDB = new BloodTestDB(getActivity());
-        BloodTestResult bloodTestResult = bloodTestDB.getEntry(GlobalClass.userID, dateStr);
+        BloodTestDB bloodTestDB = new BloodTestDB();
+        BloodTestResult bloodTestResult = bloodTestDB.getEntry(appSharedPreference.getProfileName(AppConstants.PROFILE_NAME), dateStr);
 
         txtHeamoglobin.setText(String.format("%.1f",bloodTestResult.getHeamoglobin()));
         txtUreaCreatinine.setText(String.format("%.1f",bloodTestResult.getUreaCreatinine()));
@@ -395,7 +400,7 @@ public class StatusFragment extends Fragment {
     }
 
     private void populateDatapoints() {
-        TrackMedicationDB trackMedicationDB = new TrackMedicationDB(getActivity());
+        TrackMedicationDB trackMedicationDB = new TrackMedicationDB();
         List<TrackMedication> trackMedicationList = trackMedicationDB.getAllInfo(GlobalClass.userID);
         Log.e("StatsFragment", "trackMedicationList.size() = "+trackMedicationList.size());
         int i=0;
@@ -475,7 +480,7 @@ public class StatusFragment extends Fragment {
         trackWeight.setYear("2017");
         trackWeightDB.addEntry(trackWeight);
 
-        BloodTestDB bloodTestDB = new BloodTestDB(getActivity());
+       /* BloodTestDB bloodTestDB = new BloodTestDB(getActivity());
         BloodTestResult bloodTestResult = new BloodTestResult();
         bloodTestResult.setHeamoglobin(9);
         bloodTestResult.setUreaCreatinine(1.6);
@@ -486,7 +491,7 @@ public class StatusFragment extends Fragment {
         bloodTestResult.setRandomPlasmaGlucose(25);
         bloodTestResult.setFastingPlasmaGlucose(10);
         bloodTestResult.setPostPrandialPlasmaGlucose(12);
-        bloodTestDB.addEntry(GlobalClass.userID, "Sep 2017", bloodTestResult);
+        bloodTestDB.addEntry(GlobalClass.userID, "Sep 2017", bloodTestResult);*/
 //        TrackMedicationDB trackMedicationDB = new TrackMedicationDB(getActivity());
 //        TrackMedication trackMedication = new TrackMedication();
 //        trackMedication.setDateTime(new Date());

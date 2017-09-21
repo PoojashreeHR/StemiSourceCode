@@ -395,7 +395,7 @@
                 android:inputType="number"
                 android:padding="15dp"
                 android:singleLine="true"
-                android:text="3"
+                android:text=""
                 android:textColor="@color/appBackground"
                 android:textCursorDrawable="@drawable/cursor_drawable"
                 android:textSize="18sp" />

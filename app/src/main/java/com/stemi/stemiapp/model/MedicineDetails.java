@@ -9,6 +9,7 @@ import android.os.Parcelable;
 
 public class MedicineDetails implements Parcelable {
 
+    private String date;
     private String personName;
     private   String medicineName;
     private  String medicineType;
@@ -24,7 +25,23 @@ public class MedicineDetails implements Parcelable {
     private Boolean moringChecked;
     private Boolean afternoonChecked;
     private Boolean nightChecked;
+    private Boolean allChecked;
 
+    public Boolean getAllChecked() {
+        return allChecked;
+    }
+
+    public void setAllChecked(Boolean allChecked) {
+        this.allChecked = allChecked;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
 
     public Boolean getMoringChecked() {
         return moringChecked;

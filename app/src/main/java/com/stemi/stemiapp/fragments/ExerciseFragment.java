@@ -242,7 +242,8 @@ public class ExerciseFragment extends Fragment implements View.OnClickListener, 
                 dbForTrackActivities.addEntry(TrackActivity.userEventDetails);
                 EventBus.getDefault().post(new MessageEvent("Hello!"));
             } else {
-                CommonUtils.buidDialog(this.getContext(),1);
+                int c = dbForTrackActivities.isEntryExists(TrackActivity.userEventDetails,1,getActivity());
+
             }
     }
   /*  @Override
