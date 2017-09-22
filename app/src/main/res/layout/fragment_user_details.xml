@@ -71,7 +71,7 @@
                 android:layout_height="wrap_content"
                 android:text="  MALE"
                 android:checked="true"
-                android:buttonTint="@color/colorDarkGrey"
+                android:buttonTint="@color/colorPrimaryDark"
                 android:padding="10dp"
                 android:layout_marginTop="10dp"
                 android:drawableLeft="@drawable/ic_male"/>
@@ -85,7 +85,7 @@
                 android:text="  FEMALE"
                 android:padding="10dp"
                 android:layout_marginTop="10dp"
-                android:buttonTint="@color/colorDarkGrey"
+                android:buttonTint="@color/colorPrimaryDark"
                 android:drawableLeft="@drawable/ic_female"/>
             />
 

@@ -1,24 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#737373</color>
-    <color name="colorPrimaryDark">#808080</color>
-    <color name="colorAccent">#FFFFFF</color>
-    <color name="appBackground">#AA1F24</color>
+    <color name="colorPrimaryDark">#b3b3b3</color>
+    <color name="colorAccent">#b3b3b3</color>
+
+    <color name="appBackground">#d30e17</color>
     <color name="white">#FFFFFF</color>
     <color name="lightWhite">#dfdfdf</color>
-    <color name="black">#000</color>
+    <color name="black">#333333</color>
+
     <color name="colorGreen">#30AD63</color>
-    <color name="colorLightGrey">#B3B3B3</color>
+    <color name="colorLightGrey">#808080</color>
     <color name="colorCyan">#7cef8d</color>
     <color name="colorDarkGrey">#737373</color>
     <color name="transparent">#00000000</color>
     <color name="inactive_dots">#d9d5d5</color>
-    #B3B3B3
+
+
     <!-- Intro Screen color-->
-    <color name="blue">#3497DB</color>
-    <color name="orange">#FCBD56</color>
-    <color name="brickRed">#FF6F58</color>
-    <color name="purple">#958ACF</color>
+    <color name="blue">#3498db</color>
+    <color name="orange">#fdbe57</color>
+    <color name="brickRed">#ff7059</color>
+    <color name="purple">#968bcf</color>
 
     <array name="splash_screen_color">
         <item> @color/blue</item>

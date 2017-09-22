@@ -160,7 +160,7 @@ public class StatusFragment extends Fragment {
         populateWeightGraph();
         setupDate();
 
-        ((TrackActivity)getActivity()).getViewPager().setPagingEnabled(false);
+        ((TrackActivity)getActivity()).getViewPager().setPagingEnabled(true);
 
         tabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -400,7 +400,7 @@ public class StatusFragment extends Fragment {
     }
 
     private void populateDatapoints() {
-        TrackMedicationDB trackMedicationDB = new TrackMedicationDB();
+        TrackMedicationDB trackMedicationDB = new TrackMedicationDB(getActivity());
         List<TrackMedication> trackMedicationList = trackMedicationDB.getAllInfo(GlobalClass.userID);
         Log.e("StatsFragment", "trackMedicationList.size() = "+trackMedicationList.size());
         int i=0;

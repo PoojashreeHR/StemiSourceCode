@@ -124,7 +124,7 @@ public class MedicationFragment extends Fragment implements AppConstants, View.O
         ButterKnife.bind(this, view);
         initView();
         medicineDetails = new MedicineDetails();
-        trackMedicationDB = new TrackMedicationDB();
+        trackMedicationDB = new TrackMedicationDB(getActivity());
         ((TrackActivity) getActivity()).setOnBackPressedListener(this);
         ((TrackActivity) getActivity()).setOnBackPressedListener(this);
         ((TrackActivity) getActivity()).setActionBarTitle("Medication");
@@ -393,7 +393,6 @@ public class MedicationFragment extends Fragment implements AppConstants, View.O
     public void doBack() {
         Boolean checkedOrNot = false;
         TrackMedication med = new TrackMedication();
-
         for (int i = 0; i < m1.size(); i++) {
             if (m1.get(i).getMoringChecked() && m1.get(i).getAfternoonChecked() && m1.get(i).getNightChecked()) {
                 checkedOrNot = true;
@@ -432,7 +431,7 @@ public class MedicationFragment extends Fragment implements AppConstants, View.O
         trackMedicationDB.addEntry(med);
         Log.e(TAG, "doBack: " + checkedOrNot + "");
         EventBus.getDefault().post(new MessageEvent("Hello!"));
-
+        ((TrackActivity) getActivity()).setActionBarTitle("Track");
     }
 
     public class DatePickerDialogClass extends DialogFragment implements DatePickerDialog.OnDateSetListener {

@@ -71,7 +71,12 @@ public class MainActivity extends AppCompatActivity implements AppConstants,View
                         appSharedPreferences.addUserToken(USER_TOKEN, "" + signUpResponseModel.getToken());
                         Log.e(TAG, "onResponse: Signup Response" + signUpResponseModel);
                         Toast.makeText(MainActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(MainActivity.this, RegistrationActivity.class));
+                        if(appSharedPreferences.isFirstTimeLaunch(IS_FIRST_TIME_LAUNCH)){
+                            startActivity(new Intent(MainActivity.this, TrackActivity.class));
+                        }else {
+                            startActivity(new Intent(MainActivity.this, RegistrationActivity.class));
+                        }
+
                         finish();
                     }else {
                         CommonUtils.hideLoadingProgress();

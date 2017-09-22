@@ -57,6 +57,8 @@ public class LearnFragment extends Fragment implements AppConstants{
         appSharedPreference = new AppSharedPreference(getActivity());
         callGetTipOfTheDay();
 
+        ((TrackActivity) getActivity()).setActionBarTitle("Learn");
+
         tvExpandableSymptoms.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -91,14 +93,20 @@ public class LearnFragment extends Fragment implements AppConstants{
             }
         });
     }
+
     @Override
     public void setMenuVisibility(boolean menuVisible) {
         if(getActivity() != null){
             if(menuVisible){
                 ((TrackActivity) getActivity()).setActionBarTitle("Learn");
-
             }
         }
         super.setMenuVisibility(menuVisible);
+    }
+
+    @Override
+    public void onResume() {
+        ((TrackActivity) getActivity()).setActionBarTitle("Learn");
+        super.onResume();
     }
 }

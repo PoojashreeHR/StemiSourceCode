@@ -104,7 +104,6 @@ public class CommonUtils {
          public void onClick(DialogInterface dialog, int which) {
             dbForTrackActivities.updateUserTrack(TrackActivity.userEventDetails,value);
             EventBus.getDefault().post(new MessageEvent("Hello!"));
-            //Toast.makeText(getActivity(),"Yes button Clicked",Toast.LENGTH_LONG).show();
             Log.i("Code2care ", "Yes button Clicked!");
          }
       });
@@ -113,7 +112,6 @@ public class CommonUtils {
       builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
          @Override
          public void onClick(DialogInterface dialog, int which) {
-            // Toast.makeText(getActivity(),"No button Clicked",Toast.LENGTH_LONG).show();
             Log.i("Code2care ","No button Clicked!");
             dialog.dismiss();
             ((TrackActivity) mContext).showFragment(new TrackFragment());

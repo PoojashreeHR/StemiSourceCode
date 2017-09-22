@@ -28,14 +28,21 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static android.content.ContentValues.TAG;
+
 /**
  * Created by Pooja on 14-07-2017.
  */
 
 public class PhysicalDetailsFragment extends Fragment implements View.OnClickListener,AppConstants {
-    @BindView(R.id.et_height) EditText etHeight;
+    @BindView(R.id.et_inFt) EditText etHeightFt;
+    @BindView(R.id.et_inch)EditText etHeightInch;
+    @BindView(R.id.et_inCm)EditText et_HeightCm;
+
+    @BindView(R.id.et_waistInches) EditText etWaistInches;
+    @BindView(R.id.et_waistCm)EditText etWaistCm;
+
     @BindView(R.id.et_weight) EditText etWeight;
-    @BindView(R.id.et_waist) EditText etWaist;
     @BindView(R.id.et_address) EditText etAddress;
     @BindView(R.id.smoke_answerLayout) AnswerTemplateView smokeAnswer;
     @BindView(R.id.heart_attack) AnswerTemplateView heartAttack;
@@ -43,7 +50,9 @@ public class PhysicalDetailsFragment extends Fragment implements View.OnClickLis
     AppSharedPreference appSharedPreference;
     //  BetterSpinner gender_spinner;
     ArrayList<String> genderText;
-    String salutatioSelected = "";
+    String HeightInFeet = null;
+    String HeightIncm = null;
+    String Waist;
   //  BetterSpinner spinner;
     RegisteredUserDetails registeredUserDetails;
     public PhysicalDetailsFragment() {
@@ -63,27 +72,18 @@ public class PhysicalDetailsFragment extends Fragment implements View.OnClickLis
         genderText.add("Feet and In");
         genderText.add("CM");
         // genderText.add("Mrs");
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(getActivity(), R.layout.spinner_layout, genderText );
-        /*spinner.setAdapter(arrayAdapter);
-        spinner.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-            }
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
+        etHeightFt.addTextChangedListener(new GenericTextWatcher(etHeightFt));
+        etHeightInch.addTextChangedListener(new GenericTextWatcher(etHeightFt));
+        et_HeightCm.addTextChangedListener(new GenericTextWatcher(et_HeightCm));
 
-            }
-            @Override
-            public void afterTextChanged(Editable s) {
-                salutatioSelected = spinner.getText().toString();
-                Log.e("TAG","Text is :"+spinner.getText().toString());
-            }
-        });*/
+        etWaistCm.addTextChangedListener(new GenericTextWatcher(etWaistCm));
+        etWaistInches.addTextChangedListener(new GenericTextWatcher(etWaistInches));
+
         if (RegistrationActivity.registeredUserDetails != null) {
-            etHeight.setText(RegistrationActivity.registeredUserDetails.getHeight());
+            //etHeight.setText(RegistrationActivity.registeredUserDetails.getHeight());
             etWeight.setText(RegistrationActivity.registeredUserDetails.getWeight());
-            etWaist.setText(RegistrationActivity.registeredUserDetails.getWaist());
+           // etWaist.setText(RegistrationActivity.registeredUserDetails.getWaist());
             etAddress.setText(RegistrationActivity.registeredUserDetails.getAddress());
             if (RegistrationActivity.registeredUserDetails.getDo_you_smoke() != null) {
                 smokeAnswer.setResponse(RegistrationActivity.registeredUserDetails.getDo_you_smoke());
@@ -99,15 +99,35 @@ public class PhysicalDetailsFragment extends Fragment implements View.OnClickLis
     @Override
     public void onResume() {
         super.onResume();
-        saveDetails();
+        //saveDetails();
     }
 
 
 
    public void saveDetails(){
-       RegistrationActivity.registeredUserDetails.setHeight(etHeight.getText().toString());
+
+        if(et_HeightCm.getText().toString().isEmpty()){
+            String[] parts = HeightInFeet.split("-");
+            double part1 = Double.parseDouble(parts[0]); // 004
+            double part2 = Double.parseDouble(parts[1]); // 034556
+
+            part2 +=( part1 )* 12;
+            double s = Math.round(part2 * 2.54);
+            Log.e(TAG, "saveDetails: "+ s );
+            HeightIncm = String.valueOf(s);
+        }else {
+            HeightIncm = et_HeightCm.getText().toString();
+        }
+
+        if(etWaistInches.getText().toString().isEmpty()){
+            Waist= etWaistCm.getText().toString();
+        }else {
+            Waist = etWaistInches.getText().toString();
+        }
+
+       RegistrationActivity.registeredUserDetails.setHeight(HeightIncm);
        RegistrationActivity.registeredUserDetails.setWeight(etWeight.getText().toString());
-       RegistrationActivity.registeredUserDetails.setWaist(etWaist.getText().toString());
+       RegistrationActivity.registeredUserDetails.setWaist(Waist);
        RegistrationActivity.registeredUserDetails.setAddress(etAddress.getText().toString());
        RegistrationActivity.registeredUserDetails.setDo_you_smoke(smokeAnswer.getResponse());
        RegistrationActivity.registeredUserDetails.setHeart_attack(heartAttack.getResponse());
@@ -129,23 +149,12 @@ public class PhysicalDetailsFragment extends Fragment implements View.OnClickLis
 
     private boolean validateFields() {
         boolean valid = true;
-
-       /*    String gender = salutatioSelected;
-        if (TextUtils.isEmpty(gender)) {
-            spinner.setError("Required");
+        String address = etAddress.getText().toString();
+        if (TextUtils.isEmpty(address)) {
+            etAddress.setError("Required");
             valid = false;
         } else {
-            spinner.setError(null);
-    }*/
-        String height = etHeight.getText().toString();
-        if (TextUtils.isEmpty(height)) {
-            etHeight.setError("Required");
-            valid = false;
-        }else if (Integer.parseInt(height) < 20 || Integer.parseInt(height) > 200) {
-            etHeight.setError("Enter valid Height");
-            valid = false;
-        } else {
-            etHeight.setError(null);
+            etAddress.setError(null);
         }
 
         String weight = etWeight.getText().toString();
@@ -159,7 +168,61 @@ public class PhysicalDetailsFragment extends Fragment implements View.OnClickLis
             etWeight.setError(null);
         }
 
-        String waist = etWaist.getText().toString();
+
+        String heightFt = etHeightFt.getText().toString();
+        String heightIn = etHeightInch.getText().toString();
+        String heightCm = et_HeightCm.getText().toString();
+
+        if(etHeightFt.isEnabled() && et_HeightCm.isEnabled()){
+            Toast.makeText(getActivity(), "Please Enter Height", Toast.LENGTH_SHORT).show();
+            valid = false;
+        }else if(!etHeightFt.isEnabled() &&  TextUtils.isEmpty(heightCm)){
+            et_HeightCm.setError("Required");
+            valid = false;
+        }else if(etHeightFt.isEnabled()) {
+            if (TextUtils.isEmpty(heightFt) && (!TextUtils.isEmpty(heightIn) || TextUtils.isEmpty(heightIn))) {
+                etHeightFt.setError("Required");
+                valid = false;
+            } else if (!TextUtils.isEmpty(heightFt) && TextUtils.isEmpty(heightIn)) {
+                HeightInFeet = heightFt + "-00";
+                etHeightFt.setError(null);
+            } else if (!TextUtils.isEmpty(heightFt) && !TextUtils.isEmpty(heightIn)) {
+                HeightInFeet = heightFt + "-" + heightIn;
+                etHeightFt.setError(null);
+            }
+        }else {
+            et_HeightCm.setError(null);
+            etHeightFt.setError(null);
+        }
+
+        String waistIn = etWaistInches.getText().toString();
+        String waistCm = etWaistCm.getText().toString();
+
+        if(etWaistInches.isEnabled() && etWaistCm.isEnabled()){
+            Toast.makeText(getActivity(), "Please enter Waist", Toast.LENGTH_SHORT).show();
+        }else if(etWaistInches.isEnabled() && TextUtils.isEmpty(waistIn)){
+            etWaistInches.setError("Reqired");
+            valid = false;
+        }else if(et_HeightCm.isEnabled() && TextUtils.isEmpty(waistCm)){
+            etWaistCm.setError("Reqired");
+            valid = false;
+        }else {
+            etWaistCm.setError(null);
+            etWaistInches.setError(null);
+        }
+      /*  String height = etHeight.getText().toString();
+        if (TextUtils.isEmpty(height)) {
+            etHeight.setError("Required");
+            valid = false;
+        }else if (Integer.parseInt(height) < 20 || Integer.parseInt(height) > 200) {
+            etHeight.setError("Enter valid Height");
+            valid = false;
+        } else {
+            etHeight.setError(null);
+        }*/
+
+
+     /*   String waist = etWaist.getText().toString();
         if (TextUtils.isEmpty(waist)) {
             etWaist.setError("Required");
             valid = false;
@@ -168,24 +231,80 @@ public class PhysicalDetailsFragment extends Fragment implements View.OnClickLis
             valid = false;
         } else {
             etWaist.setError(null);
-        }
+        }*/
 
-        String address = etAddress.getText().toString();
-        if (TextUtils.isEmpty(address)) {
-            etAddress.setError("Required");
-            valid = false;
-        } else {
-            etAddress.setError(null);
-        }
         if(smokeAnswer.getResponse() == null){
             Toast.makeText(getActivity(), "You must select atleast one answer", Toast.LENGTH_SHORT).show();
             valid = false;
-        }
-
-        if(heartAttack.getResponse() == null){
+        } else if(heartAttack.getResponse() == null){
             Toast.makeText(getActivity(), "You must select atleast one answer", Toast.LENGTH_SHORT).show();
             valid = false;
         }
         return valid;
+    }
+
+
+
+    private class GenericTextWatcher implements TextWatcher {
+
+        private View view;
+
+        private GenericTextWatcher(View view) {
+            this.view = view;
+        }
+
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+        }
+
+        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+        }
+
+        public void afterTextChanged(Editable editable) {
+            String text = editable.toString();
+            switch (view.getId()) {
+                case R.id.et_inFt:
+                    if(editable.length() > 0 || etHeightInch.length() > 0){
+                        et_HeightCm.setEnabled(false);
+                        et_HeightCm.setAlpha(0.6f);
+                    }else if(etHeightFt.getText().toString().isEmpty() && etHeightInch.getText().toString().isEmpty()) {
+                        et_HeightCm.setEnabled(true);
+                        et_HeightCm.setAlpha(1f);
+                    }
+                    break;
+
+                case R.id.et_inCm:
+                    if(editable.length() > 0){
+                        etHeightFt.setEnabled(false);
+                        etHeightFt.setAlpha(0.6f);
+
+                        etHeightInch.setEnabled(false);
+                        etHeightInch.setAlpha(0.6f);
+                    }else {
+                        etHeightFt.setEnabled(true);
+                        etHeightFt.setAlpha(1f);
+
+                        etHeightInch.setEnabled(true);
+                        etHeightInch.setAlpha(1f);
+                    }
+                    break;
+                case R.id.et_waistCm:
+                    if(editable.length()>0){
+                        etWaistInches.setEnabled(false);
+                        etWaistInches.setAlpha(0.5f);
+                    }else {
+                        etWaistInches.setEnabled(true);
+                        etWaistInches.setAlpha(1f);
+                    }
+                    break;
+                case R.id.et_waistInches:
+                    if(editable.length()>0){
+                        etWaistCm.setEnabled(false);
+                        etWaistCm.setAlpha(0.5f);
+                    }else {
+                        etWaistCm.setEnabled(true);
+                        etWaistCm.setAlpha(1f);
+                    }
+            }
+        }
     }
 }

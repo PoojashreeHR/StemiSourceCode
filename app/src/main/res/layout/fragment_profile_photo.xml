@@ -12,9 +12,9 @@
             android:cropToPadding="true"
             android:layout_height="180dp"
             android:src="@drawable/ic_user"
+            android:layout_marginTop="101dp"
             android:layout_alignParentTop="true"
-            android:layout_marginTop="100dp"
-            android:layout_centerInParent="true"/>
+            android:layout_centerHorizontal="true" />
 
 
         <TextView
@@ -23,8 +23,9 @@
             android:layout_below="@+id/circleImg"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="40dp"
-            android:textSize="20sp"
-            android:text="Profile Picture"
+            android:textSize="16sp"
+            android:textColor="@color/black"
+            android:text="Add profile picture"
             android:id="@+id/textView" />
 
         <Button
@@ -42,6 +43,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_camera"
-            android:layout_above="@+id/textView"
-            android:layout_centerHorizontal="true" />
+            android:layout_alignBottom="@+id/textView"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="51dp" />
 </RelativeLayout>

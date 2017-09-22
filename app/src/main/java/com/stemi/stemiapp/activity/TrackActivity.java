@@ -1,17 +1,15 @@
 package com.stemi.stemiapp.activity;
 
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -21,26 +19,20 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.support.v7.widget.Toolbar;
 import android.widget.TextView;
-import android.support.design.widget.TabLayout;
-import android.widget.Toast;
 
 import com.stemi.stemiapp.R;
 import com.stemi.stemiapp.customviews.CircleImageView;
 import com.stemi.stemiapp.customviews.CustomViewPager;
 import com.stemi.stemiapp.fragments.AddMedicineFragment;
-import com.stemi.stemiapp.fragments.BloodTestFragment;
 import com.stemi.stemiapp.fragments.HospitalFragment;
 import com.stemi.stemiapp.fragments.LearnFragment;
-import com.stemi.stemiapp.fragments.MedicationFragment;
 import com.stemi.stemiapp.fragments.SOSFragment;
 import com.stemi.stemiapp.fragments.StatusFragment;
 import com.stemi.stemiapp.fragments.TrackFragment;
@@ -58,12 +50,11 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.BindView;
-
-public class TrackActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, DataPassListener{
+public class TrackActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, DataPassListener {
 
     TabLayout tabLayout;
     Toolbar toolbar;
+    TextView textView;
     CustomViewPager viewPager;
     private DrawerLayout drawer;
     RelativeLayout mainContainer;
@@ -79,6 +70,7 @@ public class TrackActivity extends AppCompatActivity implements NavigationView.O
 
         toolbar = (Toolbar) findViewById(R.id.track_toolbar);
         toolbar.setTitle("Learn");
+        textView = (TextView)findViewById(R.id.tv_toolbarText);
         toolbar.setTitleTextColor(getResources().getColor(R.color.colorPrimary));
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -90,17 +82,17 @@ public class TrackActivity extends AppCompatActivity implements NavigationView.O
         viewPager.setPagingEnabled(true);
         mainContainer = (RelativeLayout) findViewById(R.id.mainContainer);
 
-        if(viewPager.getVisibility() == View.VISIBLE) {
+        if (viewPager.getVisibility() == View.VISIBLE) {
             mainContainer.setVisibility(View.GONE);
             setupViewPager(viewPager);
-        }else {
+        } else {
             viewPager.setVisibility(View.VISIBLE);
             setupViewPager(viewPager);
         }
 
-        if(appSharedPreferences.getProfileUrl(AppConstants.PROFILE_URL).equals("")){
+        if (appSharedPreferences.getProfileUrl(AppConstants.PROFILE_URL).equals("")) {
             profileImg.setImageResource(R.drawable.ic_user);
-        }else {
+        } else {
             profileImg.setImageURI(Uri.parse(appSharedPreferences.getProfileUrl(AppConstants.PROFILE_URL)));
         }
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -113,22 +105,33 @@ public class TrackActivity extends AppCompatActivity implements NavigationView.O
         navigationView.setNavigationItemSelectedListener(this);
 
 
-        tabLayout = (TabLayout)findViewById(R.id.tab);
+        tabLayout = (TabLayout) findViewById(R.id.tab);
         tabLayout.setupWithViewPager(viewPager);
         setupTabIcons();
-        tabLayout.setTabTextColors(R.color.colorDarkGrey,R.color.appBackground);
+        tabLayout.setTabTextColors(R.color.colorDarkGrey, R.color.appBackground);
         tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 int position = tab.getPosition();
-                if(viewPager.getVisibility() == View.GONE) {
+                if (viewPager.getVisibility() == View.GONE) {
                     viewPager.setVisibility(View.VISIBLE);
                     mainContainer.setVisibility(View.GONE);
+                }
+
+                View v = tabLayout.getTabAt(position).getCustomView();
+                if (v instanceof TextView) {
+                    TextView textView = (TextView) v;
+                    textView.setTextColor(getResources().getColor(R.color.appBackground));
+                    for (Drawable drawable : textView.getCompoundDrawables()) {
+                        if (drawable != null) {
+                            drawable.setColorFilter(new PorterDuffColorFilter(getResources().getColor(R.color.appBackground), PorterDuff.Mode.SRC_IN));
+                        }
+                    }
                 }
 //                for(int i=0;i<tabLayout.getChildCount();i++)
 //                {
 
-              //  }
+                //  }
 
                     /*TabLayout.Tab tab = tabLayout.getTabAt(i);
                     Drawable icon = tab.getIcon();
@@ -141,11 +144,24 @@ public class TrackActivity extends AppCompatActivity implements NavigationView.O
 
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
-
+                for (int i = 0; i < tabLayout.getTabCount(); i++) {
+                    View v = tabLayout.getTabAt(i).getCustomView();
+                    if (v instanceof TextView) {
+                        TextView textView = (TextView) v;
+                        textView.setTextColor(getResources().getColor(R.color.colorLightGrey));
+                        for (Drawable drawable : textView.getCompoundDrawables()) {
+                            if (drawable != null) {
+                                drawable.clearColorFilter();
+                            }
+                            //drawable.setColorFilter(new PorterDuffColorFilter(getResources().getColor(R.color.appBackground), PorterDuff.Mode.SRC_IN));
+                        }
+                    }
+                }
             }
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
+
             }
         });
     }
@@ -159,8 +175,10 @@ public class TrackActivity extends AppCompatActivity implements NavigationView.O
     public void setOnBackPressedListener(OnBackPressedListener onBackPressedListener) {
         this.onBackPressedListener = onBackPressedListener;
     }
-    public void setActionBarTitle(String title){
-        toolbar.setTitle(title);
+
+    public void setActionBarTitle(String title) {
+        textView.setText(title);
+       // toolbar.setTitleTextColor(getResources().getColor(R.color.appBackground));
     }
 
     public void showFragment(Fragment fragment) {
@@ -177,20 +195,21 @@ public class TrackActivity extends AppCompatActivity implements NavigationView.O
 
     @Override
     public void passData(ArrayList<MedicineDetails> data) {
-        AddMedicineFragment addMedicineFragment = new AddMedicineFragment ();
+        AddMedicineFragment addMedicineFragment = new AddMedicineFragment();
         Bundle args = new Bundle();
-        args.putParcelableArrayList("RECIEVE DATA", data );
-       // args.putString(AddMedicineFragment.DATA_RECEIVE, data);
-        addMedicineFragment .setArguments(args);
+        args.putParcelableArrayList("RECIEVE DATA", data);
+        // args.putString(AddMedicineFragment.DATA_RECEIVE, data);
+        addMedicineFragment.setArguments(args);
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.mainContainer, addMedicineFragment).commit();
     }
 
     @Override
-    public void goBack(){
+    public void goBack() {
 
     }
-    public CustomViewPager getViewPager(){
+
+    public CustomViewPager getViewPager() {
         return (CustomViewPager) this.viewPager;
     }
 
@@ -211,6 +230,13 @@ public class TrackActivity extends AppCompatActivity implements NavigationView.O
      */
     private void setupTabIcons() {
 
+ /*           tabLayout.getTabAt(0).setIcon(R.drawable.ic_learn).setText("Learn");
+            tabLayout.getTabAt(1).setIcon(R.drawable.ic_track).setText("Tracks");
+            tabLayout.getTabAt(2).setIcon(R.drawable.ic_sos);
+            tabLayout.getTabAt(3).setIcon(R.drawable.ic_hospital);
+            tabLayout.getTabAt(4).setIcon(R.drawable.ic_stats);*/
+
+
         TextView tabOne = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
         tabOne.setText("Learn");
         tabOne.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_learn, 0, 0);
@@ -223,12 +249,12 @@ public class TrackActivity extends AppCompatActivity implements NavigationView.O
 
         TextView tabThree = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
         tabThree.setText("SOS");
-        tabThree.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_sos,0, 0);
+        tabThree.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_sos, 0, 0);
         tabLayout.getTabAt(2).setCustomView(tabThree);
 
         TextView tabfour = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
         tabfour.setText("Hospital");
-        tabfour.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_hospital,0, 0);
+        tabfour.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_hospital, 0, 0);
         tabLayout.getTabAt(3).setCustomView(tabfour);
 
         TextView tabFive = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
@@ -240,6 +266,7 @@ public class TrackActivity extends AppCompatActivity implements NavigationView.O
 
     /**
      * Adding fragments to ViewPager
+     *
      * @param viewPager
      */
     private void setupViewPager(ViewPager viewPager) {
@@ -257,7 +284,7 @@ public class TrackActivity extends AppCompatActivity implements NavigationView.O
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-            int id = menuItem.getItemId();
+        int id = menuItem.getItemId();
         switch (id) {
             case R.id.Registration:
                 startActivity(new Intent(TrackActivity.this, RegistrationActivity.class));
@@ -305,6 +332,7 @@ public class TrackActivity extends AppCompatActivity implements NavigationView.O
         getSupportFragmentManager().popBackStack();
         removeCurrentFragment();
     }
+
     @Override
     public void onBackPressed() {
         if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
@@ -318,7 +346,7 @@ public class TrackActivity extends AppCompatActivity implements NavigationView.O
                 }
             },1000);
         }*/
-        } else{
+        } else {
             super.onBackPressed();
         }
     }
@@ -339,7 +367,7 @@ public class TrackActivity extends AppCompatActivity implements NavigationView.O
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(MessageEvent event) {
         backstackFragment();
-       // Toast.makeText(this, event.message, Toast.LENGTH_SHORT).show();
+        // Toast.makeText(this, event.message, Toast.LENGTH_SHORT).show();
     }
 
     private void removeCurrentFragment() {

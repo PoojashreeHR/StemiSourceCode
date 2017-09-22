@@ -9,8 +9,6 @@
            android:id="@+id/appBarLayout"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
-
-
         <include android:id="@+id/track_toolbar"
             layout="@layout/custom_stemi_toolbar"/>
       <!-- <android.support.v7.widget.Toolbar
