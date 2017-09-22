@@ -5,6 +5,8 @@ package com.stemi.stemiapp.model;
  */
 
 public class BloodTestResult {
+    private String Date;
+    private String uid;
     private double heamoglobin;
     private double ureaCreatinine;
     private double totalCholestrol;
@@ -14,6 +16,22 @@ public class BloodTestResult {
     private double randomPlasmaGlucose;
     private double fastingPlasmaGlucose;
     private double postPrandialPlasmaGlucose;
+
+    public String getDate() {
+        return Date;
+    }
+
+    public void setDate(String date) {
+        Date = date;
+    }
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
 
     public double getHeamoglobin() {
         return heamoglobin;

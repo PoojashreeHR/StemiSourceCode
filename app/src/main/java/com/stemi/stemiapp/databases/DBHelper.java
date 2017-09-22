@@ -14,6 +14,7 @@ import com.stemi.stemiapp.StemiApplication;
 import com.stemi.stemiapp.activity.RegistrationActivity;
 import com.stemi.stemiapp.model.MedicineDetails;
 import com.stemi.stemiapp.model.RegisteredUserDetails;
+import com.stemi.stemiapp.model.TrackMedication;
 import com.stemi.stemiapp.preference.AppSharedPreference;
 import com.stemi.stemiapp.utils.App;
 import com.stemi.stemiapp.utils.AppConstants;
@@ -39,7 +40,8 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL(UserDetailsTable.CREATE_TABLE);
         db.execSQL(MedicineTable.CREATE_MEDICINE_TABLE);
         db.execSQL(DBForTrackActivities.CREATE_USER_ACTIVITY_TABLE);
-        db.execSQL(BloodTestTable.CREATE_BLOOD_TEST_TABLE);
+        db.execSQL(BloodTestDB.DATABASE_CREATE);
+        db.execSQL(TrackMedicationDB.DATABASE_CREATE);
     }
 
     @Override
@@ -47,7 +49,8 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + UserDetailsTable.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + MedicineTable.MED_TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + DBForTrackActivities.USER_ACTIVITIES);
-        db.execSQL("DROP TABLE IF EXISTS " + BloodTestTable.BLOOD_TEST_TABLE);
+        db.execSQL("DROP TABLE IF EXISTS " + BloodTestDB.TABLE_BLOOD_TEST);
+        db.execSQL("DROP TABLE IF EXISTS "+ TrackMedicationDB.TABLE_MEDICATION);
         onCreate(db);
     }
 

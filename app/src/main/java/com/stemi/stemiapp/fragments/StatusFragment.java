@@ -274,7 +274,7 @@ public class StatusFragment extends Fragment {
     }
 
     private void loadStatsForDate(String dateStr) {
-        BloodTestDB bloodTestDB = new BloodTestDB(getActivity());
+        BloodTestDB bloodTestDB = new BloodTestDB();
         BloodTestResult bloodTestResult = bloodTestDB.getEntry(GlobalClass.userID, dateStr);
 
         txtHeamoglobin.setText(String.format("%.1f",bloodTestResult.getHeamoglobin()));
@@ -463,7 +463,7 @@ public class StatusFragment extends Fragment {
     }
 
     private void populateDatapoints() {
-        TrackMedicationDB trackMedicationDB = new TrackMedicationDB(getActivity());
+        TrackMedicationDB trackMedicationDB = new TrackMedicationDB();
         List<TrackMedication> trackMedicationList = trackMedicationDB.getAllInfo(GlobalClass.userID);
         Log.e("StatsFragment", "trackMedicationList.size() = "+trackMedicationList.size());
         int i=0;
@@ -543,7 +543,7 @@ public class StatusFragment extends Fragment {
         trackWeight.setYear("2017");
         trackWeightDB.addEntry(trackWeight);
 
-        BloodTestDB bloodTestDB = new BloodTestDB(getActivity());
+       /* BloodTestDB bloodTestDB = new BloodTestDB(getActivity());
         BloodTestResult bloodTestResult = new BloodTestResult();
         bloodTestResult.setHeamoglobin(9);
         bloodTestResult.setUreaCreatinine(1.6);
@@ -554,7 +554,7 @@ public class StatusFragment extends Fragment {
         bloodTestResult.setRandomPlasmaGlucose(25);
         bloodTestResult.setFastingPlasmaGlucose(10);
         bloodTestResult.setPostPrandialPlasmaGlucose(12);
-        bloodTestDB.addEntry(GlobalClass.userID, "Sep 2017", bloodTestResult);
+        bloodTestDB.addEntry(GlobalClass.userID, "Sep 2017", bloodTestResult);*/
 
 
 

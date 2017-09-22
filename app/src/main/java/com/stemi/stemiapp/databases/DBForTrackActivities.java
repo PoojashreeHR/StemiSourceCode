@@ -6,8 +6,18 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+
+import com.google.gson.Gson;
+import com.stemi.stemiapp.activity.TrackActivity;
+import com.stemi.stemiapp.model.BloodTestResult;
+import com.stemi.stemiapp.model.MedicineDetails;
+import com.stemi.stemiapp.model.MessageEvent;
 import com.stemi.stemiapp.model.UserEventDetails;
+import com.stemi.stemiapp.utils.CommonUtils;
 import com.stemi.stemiapp.utils.GlobalClass;
+
+import org.greenrobot.eventbus.EventBus;
+
 import static android.content.ContentValues.TAG;
 
 /**
@@ -120,7 +130,6 @@ public class DBForTrackActivities {
     //update table
     public void updateUserTrack(UserEventDetails userEventDetails,int value) {
         SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
-
         ContentValues cv = new ContentValues();
         switch (value){
             case 1:
@@ -146,5 +155,59 @@ public class DBForTrackActivities {
                 + "' AND "+ UID + "='"+ userEventDetails.getUid() + "'",null);
         Log.e(TAG, "removeMedicine: "+l );
         DatabaseManager.getInstance().closeDatabase();
+    }
+
+
+    //get Stress count data
+    public int isEntryExists(UserEventDetails userEventDetails,int id,Context context) {
+        int count;
+        UserEventDetails userEventDetails1 = null;
+        String query = "SELECT * FROM " + USER_ACTIVITIES + " WHERE " + UID + " = '" + userEventDetails.getUid() + "' AND "
+                + DATE + " = '" + userEventDetails.getDate() + "'";
+        SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
+        Cursor c = db.rawQuery(query, null);
+        while (c.moveToNext()) {
+            //userEventDetails1 = new Gson().fromJson(valueJson, UserEventDetails.class);
+
+            switch (id){
+                case 1:
+                    if(c.getString(c.getColumnIndex(IS_WALKED)) !=null || c.getString(c.getColumnIndex(IS_CYCLED)) !=null
+                            || c.getString(c.getColumnIndex(IS_SWIMMED)) !=null || c.getString(c.getColumnIndex(DONE_AEROBICS)) !=null||c.getString(c.getColumnIndex(OTHERS)) !=null){
+                        CommonUtils.buidDialog(context,1);
+                    }else {
+                        updateUserTrack(TrackActivity.userEventDetails,1);
+                        EventBus.getDefault().post(new MessageEvent("Hello!"));
+
+                    }
+                    break;
+                case 2:
+                    String valueJson = c.getString(c.getColumnIndex(STRESS_COUNT));
+                    if(valueJson != null){
+                        CommonUtils.buidDialog(context,2);
+                    }else {
+                        updateUserTrack(TrackActivity.userEventDetails,2);
+                        EventBus.getDefault().post(new MessageEvent("Hello!"));
+
+                    }break;
+                case 3:
+                    if(c.getString(c.getColumnIndex(SMOKE_TODAY)) !=null){
+                        CommonUtils.buidDialog(context,3);
+                    }else {
+                        updateUserTrack(TrackActivity.userEventDetails,3);
+                        EventBus.getDefault().post(new MessageEvent("Hello!"));
+
+                    }break;
+                case 4:
+                    if(c.getString(c.getColumnIndex(TODAY_WEIGHT))!=null){
+                        CommonUtils.buidDialog(context,4);
+                    }else {
+                        updateUserTrack(TrackActivity.userEventDetails,4);
+                        EventBus.getDefault().post(new MessageEvent("Hello!"));
+                    }
+            }
+            c.close();
+           // return count > 0;
+        }
+        return count = 0;
     }
 }

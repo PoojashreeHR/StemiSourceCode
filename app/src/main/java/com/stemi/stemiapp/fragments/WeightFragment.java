@@ -197,7 +197,8 @@ public class WeightFragment  extends Fragment implements View.OnClickListener,Tr
             dbForTrackActivities.addEntry(TrackActivity.userEventDetails);
             ((TrackActivity) getActivity()).showFragment(new TrackFragment());
         } else {
-            CommonUtils.buidDialog(this.getContext(),4);
+            int c = dbForTrackActivities.isEntryExists(TrackActivity.userEventDetails,4,getActivity());
+
         }
     }
 

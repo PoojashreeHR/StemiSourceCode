@@ -23,6 +23,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.FrameLayout;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -32,10 +33,11 @@ import com.google.gson.Gson;
 import com.stemi.stemiapp.R;
 import com.stemi.stemiapp.activity.TrackActivity;
 import com.stemi.stemiapp.databases.MedicineTable;
+import com.stemi.stemiapp.databases.TrackMedicationDB;
 import com.stemi.stemiapp.model.DataPassListener;
 import com.stemi.stemiapp.model.MedicineDetails;
-import com.stemi.stemiapp.model.MedicineInfo;
 import com.stemi.stemiapp.model.MessageEvent;
+import com.stemi.stemiapp.model.TrackMedication;
 import com.stemi.stemiapp.preference.AppSharedPreference;
 import com.stemi.stemiapp.utils.AppConstants;
 
@@ -46,6 +48,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -56,26 +59,35 @@ import static android.content.ContentValues.TAG;
  * Created by Pooja on 26-07-2017.
  */
 
-public class MedicationFragment extends Fragment implements AppConstants,View.OnClickListener,TrackActivity.OnBackPressedListener {
+public class MedicationFragment extends Fragment implements AppConstants, View.OnClickListener, TrackActivity.OnBackPressedListener {
     @BindView(R.id.tv_medication_today)
     TextView tvMedicationToday;
     @BindView(R.id.bt_addNewMedicine)
     Button addNewMedicine;
-    ArrayList<MedicineInfo> Amedicines;
     MyDialogFragment infoDialogFragment;
 
-    @BindView(R.id.morningContainer)RelativeLayout morningContainer;
-    @BindView(R.id.noonContainer)RelativeLayout noonContainer;
-    @BindView(R.id.nightContainer)RelativeLayout nightContainer;
+    @BindView(R.id.morningContainer)
+    RelativeLayout morningContainer;
+    @BindView(R.id.noonContainer)
+    RelativeLayout noonContainer;
+    @BindView(R.id.nightContainer)
+    RelativeLayout nightContainer;
 
-    @BindView(R.id.ivInfo)ImageView morningMedicineInfo;
-    @BindView(R.id.ivInfo1)ImageView noonMedicineInfo;
-    @BindView(R.id.ivInfo2)ImageView nightMedicineInfo;
+    @BindView(R.id.ivInfo)
+    ImageView morningMedicineInfo;
+    @BindView(R.id.ivInfo1)
+    ImageView noonMedicineInfo;
+    @BindView(R.id.ivInfo2)
+    ImageView nightMedicineInfo;
 
     LinearLayout layout2;
     AppSharedPreference appSharedPreference;
     MedicineTable medicineTable;
     long getCount;
+
+    MedicineDetails medicineDetails;
+    TrackMedicationDB trackMedicationDB;
+
     Boolean checkedImg = false;
     DataPassListener mCallback;
 
@@ -111,6 +123,8 @@ public class MedicationFragment extends Fragment implements AppConstants,View.On
         View view = inflater.inflate(R.layout.fragment_medication, container, false);
         ButterKnife.bind(this, view);
         initView();
+        medicineDetails = new MedicineDetails();
+        trackMedicationDB = new TrackMedicationDB();
         ((TrackActivity) getActivity()).setOnBackPressedListener(this);
         ((TrackActivity) getActivity()).setOnBackPressedListener(this);
         ((TrackActivity) getActivity()).setActionBarTitle("Medication");
@@ -129,9 +143,9 @@ public class MedicationFragment extends Fragment implements AppConstants,View.On
         nightMedicineInfo.setOnClickListener(this);
 
         if (count > 0) {
-            getMedicineDetails("Morning",morningContainer);
-            getMedicineDetails("Afternoon",noonContainer);
-            getMedicineDetails("Night",nightContainer);
+            getMedicineDetails("Morning", morningContainer);
+            getMedicineDetails("Afternoon", noonContainer);
+            getMedicineDetails("Night", nightContainer);
         }
 
         tvMedicationToday.setOnClickListener(new View.OnClickListener() {
@@ -150,8 +164,9 @@ public class MedicationFragment extends Fragment implements AppConstants,View.On
         });
     }
 
+    ArrayList<MedicineDetails> m1 = new ArrayList<>();
 
-    public void getMedicineDetails(String time, final RelativeLayout layout){
+    public void getMedicineDetails(final String time, final RelativeLayout layout) {
         ArrayList<String> medicine = medicineTable.getMedicine(time);
         layout2 = (LinearLayout) layout.findViewById(R.id.imageTypeLayout);
         ImageView remove_img;
@@ -161,55 +176,68 @@ public class MedicationFragment extends Fragment implements AppConstants,View.On
             FrameLayout.LayoutParams params2 = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             frameLayout.setLayoutParams(params2);
 
-             remove_img = new ImageView(getActivity());
+            remove_img = new ImageView(getActivity());
             remove_img.setId(R.id.checkedImg);
 
             final RelativeLayout imgLayout = new RelativeLayout(getActivity());
             imgLayout.setGravity(Gravity.RIGHT);
             RelativeLayout.LayoutParams params3 = new RelativeLayout.LayoutParams(80, 80);
-            params3.setMargins(0,5,10,0);
+            params3.setMargins(0, 5, 10, 0);
             params3.addRule(RelativeLayout.ALIGN_RIGHT);
             imgLayout.setLayoutParams(params3);
-            if(checkedImg) {
-                remove_img.setImageResource(R.drawable.ic_unchecked);
-                remove_img.setTag(0);
-                imgLayout.addView(remove_img);
-            }else {
-                remove_img.setImageResource(R.drawable.ic_checked);
-                remove_img.setTag(R.drawable.ic_checked);
-                imgLayout.addView(remove_img);
-            }
+
             int colorOfMedicine;
 
             String s = medicine.get(i);
             Gson gsonObj = new Gson();
-            MedicineDetails medicineDetails = gsonObj.fromJson(s, MedicineDetails.class);
+            final MedicineDetails medicineDetails = gsonObj.fromJson(s, MedicineDetails.class);
+            m1.add(medicineDetails);
             Log.e(TAG, "onCreateView: " + medicineDetails);
 
-            colorOfMedicine = medicineDetails.getMedicineColor();
+            if (checkedImg) {
+                remove_img.setImageResource(R.drawable.ic_checked);
+                remove_img.setTag(0);
+                imgLayout.addView(remove_img);
+            } else {
+                remove_img.setImageResource(R.drawable.ic_unchecked);
+                remove_img.setTag(R.drawable.ic_checked);
+                imgLayout.addView(remove_img);
+
+                medicineDetails.setMoringChecked(false);
+                medicineDetails.setAfternoonChecked(false);
+                medicineDetails.setNightChecked(false);
+            }
 
             if (medicineDetails.getMedicineMorning().equals("Morning")) {
                 String medicineType = medicineDetails.getMedicineType();
                 colorOfMedicine = medicineDetails.getMedicineColor();
                 ImageView image = setMedicineColor(medicineType, colorOfMedicine);
+                if(medicineDetails.getMoringChecked()){
+                    remove_img.setImageDrawable(getResources().getDrawable(R.drawable.ic_checked));
+                }
                 frameLayout.addView(image);
                 frameLayout.addView(imgLayout);
                 layout2.addView(frameLayout);
                 //morningContainer.addView(child);
-            }else if (medicineDetails.getMedicineAfternoon().equals("Afternoon")) {
+            } else if (medicineDetails.getMedicineAfternoon().equals("Afternoon")) {
                 String medicineType = medicineDetails.getMedicineType();
                 colorOfMedicine = medicineDetails.getMedicineColor();
                 ImageView image = setMedicineColor(medicineType, colorOfMedicine);
+                if(medicineDetails.getAfternoonChecked()){
+                    remove_img.setImageDrawable(getResources().getDrawable(R.drawable.ic_checked));
+                }
                 frameLayout.addView(image);
                 frameLayout.addView(imgLayout);
                 layout2.addView(frameLayout);
                 //  noonContainer.addView(child);
 
-            }else if (medicineDetails.getMedicineNight().equals("Night")) {
+            } else if (medicineDetails.getMedicineNight().equals("Night")) {
                 String medicineType = medicineDetails.getMedicineType();
                 colorOfMedicine = medicineDetails.getMedicineColor();
-               // setMedicineColor(medicineType, colorOfMedicine);
                 ImageView image = setMedicineColor(medicineType, colorOfMedicine);
+                if(medicineDetails.getNightChecked()){
+                    remove_img.setImageDrawable(getResources().getDrawable(R.drawable.ic_checked));
+                }
                 frameLayout.addView(image);
                 frameLayout.addView(imgLayout);
                 layout2.addView(frameLayout);
@@ -219,29 +247,27 @@ public class MedicationFragment extends Fragment implements AppConstants,View.On
             frameLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(checkedImg){
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                            finalRemove_img.setImageDrawable(getResources().getDrawable(R.drawable.ic_checked));
-                        }
-                        finalRemove_img.setTag(0);
-                        checkedImg = false;
-                    }else {
+
+                    if (checkedImg) {
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
                             finalRemove_img.setImageDrawable(getResources().getDrawable(R.drawable.ic_unchecked));
                         }
                         finalRemove_img.setTag(R.drawable.ic_checked);
+                        checkedImg = false;
+                        medicineDetails.setMoringChecked(false);
+                        medicineDetails.setAfternoonChecked(false);
+                        medicineDetails.setNightChecked(false);
+                    } else {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                            finalRemove_img.setImageDrawable(getResources().getDrawable(R.drawable.ic_checked));
+                        }
+                        finalRemove_img.setTag(0);
                         checkedImg = true;
+                            medicineDetails.setMoringChecked(true);
+                            medicineDetails.setAfternoonChecked(true);
+                            medicineDetails.setNightChecked(true);
                     }
-
-                       /* if(remove_img.getTag().equals(R.drawable.ic_checked)){
-                            remove_img.getResources().getDrawable(R.drawable.ic_unchecked);
-                            remove_img.setTag(0);
-                        }else {
-                            remove_img.getResources().getDrawable(R.drawable.ic_checked);
-                            remove_img.setTag(R.drawable.ic_checked);
-
-                        }*/
-                    }
+                }
             });
         }
     }
@@ -249,7 +275,7 @@ public class MedicationFragment extends Fragment implements AppConstants,View.On
 
     public ImageView setMedicineColor(String medicineType, int colorOfMedicine) {
         ImageView image = new ImageView(getActivity());
-        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(60,60);
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(60, 60);
         params.setMargins(10, 20, 10, 20);
         image.setLayoutParams(params);
 
@@ -282,7 +308,7 @@ public class MedicationFragment extends Fragment implements AppConstants,View.On
 //            frameLayout.addView(image);
 //            frameLayout.addView(imgLayout);
 //            layout2.addView(frameLayout);
-          //  layout.addView(image);
+            //  layout.addView(image);
         }
 
         /*frameLayout.setOnClickListener(new View.OnClickListener() {
@@ -322,7 +348,7 @@ public class MedicationFragment extends Fragment implements AppConstants,View.On
                 break;
 
             case R.id.ivInfo1:
-                ArrayList<String> Amedicine =  medicineTable.getMedicine("Afternoon");
+                ArrayList<String> Amedicine = medicineTable.getMedicine("Afternoon");
                 ArrayList<MedicineDetails> Amedicines = new ArrayList<>();
                 for (int i = 0; i < Amedicine.size(); i++) {
                     MedicineDetails AmedicineInfo = new MedicineDetails();
@@ -335,14 +361,14 @@ public class MedicationFragment extends Fragment implements AppConstants,View.On
                     AmedicineInfo = medicineDetails;
                     Amedicines.add(AmedicineInfo);
                 }
-                infoDialogFragment = new MyDialogFragment(Amedicines,"AFTERNOON MEDICINES",2);
+                infoDialogFragment = new MyDialogFragment(Amedicines, "AFTERNOON MEDICINES", 2);
                 infoDialogFragment.setCancelable(false);
                 infoDialogFragment.show(getActivity().getFragmentManager(), "Medicine Info");
                 break;
 
             case R.id.ivInfo2:
-                ArrayList<String> Nmedicine =  medicineTable.getMedicine("Night");
-                if(Nmedicine.size() > 0) {
+                ArrayList<String> Nmedicine = medicineTable.getMedicine("Night");
+                if (Nmedicine.size() > 0) {
                     ArrayList<MedicineDetails> Nmedicines = new ArrayList<>();
                     for (int i = 0; i < Nmedicine.size(); i++) {
                         MedicineDetails NmedicineInfo = new MedicineDetails();
@@ -365,7 +391,48 @@ public class MedicationFragment extends Fragment implements AppConstants,View.On
 
     @Override
     public void doBack() {
+        Boolean checkedOrNot = false;
+        TrackMedication med = new TrackMedication();
+
+        for (int i = 0; i < m1.size(); i++) {
+            if (m1.get(i).getMoringChecked() && m1.get(i).getAfternoonChecked() && m1.get(i).getNightChecked()) {
+                checkedOrNot = true;
+            } else {
+                checkedOrNot = false;
+            }
+        }
+
+        if(checkedOrNot){
+            med.setHadAllMedicines(true);
+        }else {
+            med.setHadAllMedicines(false);
+        }
+        med.setUserId(appSharedPreference.getProfileName(AppConstants.PROFILE_NAME));
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy");// set format for date
+        if (tvMedicationToday.getText().equals("Today  ")) {
+            Date dt = new Date();
+            String todaysDate = dateFormat.format(dt);
+            Date date = null;// parse it like
+            try {
+               date = dateFormat.parse(todaysDate);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            med.setDateTime(date);
+        } else {
+            Date date = null;
+            try {
+                date = dateFormat.parse(tvMedicationToday.getText().toString());
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            med.setDateTime(date);
+        }
+        trackMedicationDB.addEntry(med);
+        Log.e(TAG, "doBack: " + checkedOrNot + "");
         EventBus.getDefault().post(new MessageEvent("Hello!"));
+
     }
 
     public class DatePickerDialogClass extends DialogFragment implements DatePickerDialog.OnDateSetListener {
@@ -385,12 +452,12 @@ public class MedicationFragment extends Fragment implements AppConstants,View.On
 
         public void onDateSet(DatePicker view, int year, int month, int day) {
             Date parseDate = null;
-            Calendar cal=Calendar.getInstance();
+            Calendar cal = Calendar.getInstance();
             SimpleDateFormat month_date = new SimpleDateFormat("MMM");
-            cal.set(Calendar.MONTH,(month));
+            cal.set(Calendar.MONTH, (month));
             String month_name = month_date.format(cal.getTime());
 
-            Log.e("",""+month_name);
+            Log.e("", "" + month_name);
 
             String date1 = day + " " + month_name + " " + year;
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy");
@@ -406,37 +473,40 @@ public class MedicationFragment extends Fragment implements AppConstants,View.On
     }
 
     Button saveButton;
+
     @SuppressLint("ValidFragment")
     public class MyDialogFragment extends DialogFragment {
         private RecyclerView mRecyclerView;
         ArrayList<MedicineDetails> info;
         String time;
         int id;
-      //  private MedicineInfoRecycler adapter;
+
+        //  private MedicineInfoRecycler adapter;
         // this method create view for your Dialog
-        MyDialogFragment(ArrayList<MedicineDetails> medicineInfo,String session,int id){
+        MyDialogFragment(ArrayList<MedicineDetails> medicineInfo, String session, int id) {
             this.info = medicineInfo;
             this.time = session;
             this.id = id;
         }
+
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             //inflate layout with recycler view
             View v = inflater.inflate(R.layout.custom_dialog_fragment, container, false);
             saveButton = (Button) v.findViewById(R.id.saveButton);
 
-            TextView heading = (TextView)v.findViewById(R.id.heading);
-            TextView noItems = (TextView)v.findViewById(R.id.ifNoItems);
+            TextView heading = (TextView) v.findViewById(R.id.heading);
+            TextView noItems = (TextView) v.findViewById(R.id.ifNoItems);
 
             Button closeButton = (Button) v.findViewById(R.id.closeButton);
             heading.setText(time);
-            final MedicineInfoRecycler adapter = new MedicineInfoRecycler(getActivity(),info);
+            final MedicineInfoRecycler adapter = new MedicineInfoRecycler(getActivity(), info);
 
             saveButton.setEnabled(false);
 
-            if(info.size() == 0){
+            if (info.size() == 0) {
                 noItems.setVisibility(View.VISIBLE);
-            }else {
+            } else {
                 noItems.setVisibility(View.GONE);
                 mRecyclerView = (RecyclerView) v.findViewById(R.id.infoRecycler);
                 mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -455,16 +525,16 @@ public class MedicationFragment extends Fragment implements AppConstants,View.On
                 @Override
                 public void onClick(View v) {
                     ArrayList<MedicineDetails> medDetails = adapter.getList();
-                    if(id == 1){
-                        medicineTable.updateMedicine(medDetails,getActivity(),1);
+                    if (id == 1) {
+                        medicineTable.updateMedicine(medDetails, getActivity(), 1);
                         infoDialogFragment.dismiss();
 
-                    }else if(id == 2){
-                        medicineTable.updateMedicine(medDetails,getActivity(),2);
+                    } else if (id == 2) {
+                        medicineTable.updateMedicine(medDetails, getActivity(), 2);
                         infoDialogFragment.dismiss();
 
-                    }else if(id==3){
-                        medicineTable.updateMedicine(medDetails,getActivity(),3);
+                    } else if (id == 3) {
+                        medicineTable.updateMedicine(medDetails, getActivity(), 3);
                         infoDialogFragment.dismiss();
                     }
                     infoDialogFragment.setCancelable(false);
@@ -523,41 +593,41 @@ public class MedicationFragment extends Fragment implements AppConstants,View.On
         public void onBindViewHolder(final MyViewHolder holder, final int position) {
 
 
-                ImageView imageView = setMedicineColor(medicineInfo.get(position).getMedicineType(),medicineInfo.get(position).getMedicineColor());
-                holder.img.addView(imageView);
-                holder.name.setText(medicineInfo.get(position).getMedicineName());
+            ImageView imageView = setMedicineColor(medicineInfo.get(position).getMedicineType(), medicineInfo.get(position).getMedicineColor());
+            holder.img.addView(imageView);
+            holder.name.setText(medicineInfo.get(position).getMedicineName());
 
-                holder.editImage.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        editData.add(medicineInfo.get(position));
-                        mCallback.passData(editData);
-                        infoDialogFragment.dismiss();
-                        //((TrackActivity) getActivity()).showFragment(new AddMedicineFragment());
+            holder.editImage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    editData.add(medicineInfo.get(position));
+                    mCallback.passData(editData);
+                    infoDialogFragment.dismiss();
+                    //((TrackActivity) getActivity()).showFragment(new AddMedicineFragment());
 
+                }
+            });
+            holder.deleteImage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (position == medicineInfo.size()) {
+                        deletedData.add(medicineInfo.get(position - 1));
+                        medicineInfo.remove(position - 1);
+                        notifyItemRemoved(position - 1);
+                        saveButton.setTextColor(getResources().getColor(R.color.appBackground));
+                        saveButton.setEnabled(true);
+                    } else {
+                        deletedData.add(medicineInfo.get(position));
+                        medicineInfo.remove(position);
+                        notifyItemRemoved(position);
+                        saveButton.setTextColor(getResources().getColor(R.color.appBackground));
+                        saveButton.setEnabled(true);
                     }
-                });
-                holder.deleteImage.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if(position == medicineInfo.size()){
-                            deletedData.add(medicineInfo.get(position-1));
-                            medicineInfo.remove(position-1);
-                            notifyItemRemoved(position-1);
-                            saveButton.setTextColor(getResources().getColor(R.color.appBackground));
-                            saveButton.setEnabled(true);
-                        }else {
-                            deletedData.add(medicineInfo.get(position));
-                            medicineInfo.remove(position);
-                            notifyItemRemoved(position);
-                            saveButton.setTextColor(getResources().getColor(R.color.appBackground));
-                            saveButton.setEnabled(true);
-                        }
-                    }
-                });
+                }
+            });
         }
 
-        public  ArrayList<MedicineDetails> getList(){
+        public ArrayList<MedicineDetails> getList() {
             return deletedData;
         }
 

@@ -170,7 +170,8 @@ public class SmokingFragment  extends Fragment implements TrackActivity.OnBackPr
             dbForTrackActivities.addEntry(TrackActivity.userEventDetails);
             ((TrackActivity) getActivity()).showFragment(new TrackFragment());
         } else {
-            CommonUtils.buidDialog(this.getContext(),3);
+            int c = dbForTrackActivities.isEntryExists(TrackActivity.userEventDetails,3,getActivity());
+
         }
     }
  /*   @Override
