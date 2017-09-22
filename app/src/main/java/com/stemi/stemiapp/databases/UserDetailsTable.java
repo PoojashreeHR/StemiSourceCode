@@ -25,6 +25,13 @@ import static android.content.ContentValues.TAG;
 
 public class UserDetailsTable {
     public static final String TABLE_NAME = "dbuserDetails";
+    private final String loginId;
+
+
+    public UserDetailsTable(Context ctx){
+        AppSharedPreference appSharedPreference = new AppSharedPreference(ctx);
+        loginId = appSharedPreference.getLoginId();
+    }
 
     //column names for User Details
     private static final String KEY_ID = "id";
@@ -163,7 +170,7 @@ public class UserDetailsTable {
 
     public RegisteredUserDetails getUserDetails(String userId){
         RegisteredUserDetails registeredUserDetails = new RegisteredUserDetails();
-        SQLiteDatabase db = this.getReadableDatabase();
+        SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
         try{
             String sql = "SELECT * FROM "+TABLE_NAME+" WHERE "+USER_UID+" ='"+userId+"'"
                     +" AND "+LOGIN_ID+" = '"+loginId+"'";
@@ -201,7 +208,7 @@ public class UserDetailsTable {
     }
 
     public void createIfNotExists() {
-        SQLiteDatabase db = this.getReadableDatabase();
+        SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
         try {
             String query = "SELECT * FROM " + TABLE_NAME;
             Cursor cursor = db.rawQuery(query, null);
@@ -214,14 +221,14 @@ public class UserDetailsTable {
             cursor.close();
         } catch (Exception e) {
             if (e.getLocalizedMessage().contains("no such table")) {
-                onCreate(db);
+               // onCreate(db);
             }
         }
     }
 
     public List<RegisteredUserDetails> getAllUsers() {
        List<RegisteredUserDetails> registeredUserDetailsList = new ArrayList<>();
-        SQLiteDatabase db = this.getReadableDatabase();
+        SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
         try{
             String sql = "SELECT * FROM "+TABLE_NAME+" WHERE "+LOGIN_ID+" = '"+loginId+"'";
             Cursor cursor = db.rawQuery(sql,null);

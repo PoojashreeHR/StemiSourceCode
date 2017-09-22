@@ -67,7 +67,7 @@ public class ProfilePhotoFragment extends Fragment implements AppConstants,View.
         View view = inflater.inflate(R.layout.fragment_profile_photo, container, false);
 
         appSharedPreference = new AppSharedPreference(getActivity());
-        dBforUserDetails = new UserDetailsTable();
+        dBforUserDetails = new UserDetailsTable(getActivity());
         img = (CircleImageView) view.findViewById(R.id.circleImg);
         imgOption = (ImageView) view.findViewById(R.id.bt_imgOption);
         imgOption.setOnClickListener(this);

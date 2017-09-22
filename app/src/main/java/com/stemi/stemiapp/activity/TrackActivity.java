@@ -36,6 +36,7 @@ import android.widget.Toast;
 import com.stemi.stemiapp.R;
 import com.stemi.stemiapp.customviews.CircleImageView;
 import com.stemi.stemiapp.customviews.CustomViewPager;
+import com.stemi.stemiapp.databases.UserDetailsTable;
 import com.stemi.stemiapp.fragments.AddMedicineFragment;
 import com.stemi.stemiapp.fragments.BloodTestFragment;
 import com.stemi.stemiapp.fragments.HospitalFragment;
@@ -55,7 +56,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import com.stemi.stemiapp.databases.DBforUserDetails;
+import com.stemi.stemiapp.databases.UserDetailsTable;
 import com.stemi.stemiapp.model.RegisteredUserDetails;
 import com.stemi.stemiapp.utils.GlobalClass;
 
@@ -81,7 +82,7 @@ public class TrackActivity extends AppCompatActivity implements NavigationView.O
     protected void onResume() {
         super.onResume();
 
-        DBforUserDetails dBforUserDetails = new DBforUserDetails(this);
+        UserDetailsTable dBforUserDetails = new UserDetailsTable(this);
         RegisteredUserDetails registeredUserDetails = dBforUserDetails.getUserDetails(GlobalClass.userID);
         Log.e(TAG,"GlobalClass.userID = " + GlobalClass.userID);
         if(registeredUserDetails.getImgUrl() != null) {

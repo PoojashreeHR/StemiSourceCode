@@ -21,7 +21,7 @@ import android.widget.TextView;
 
 import com.stemi.stemiapp.R;
 import com.stemi.stemiapp.customviews.CircleImageView;
-import com.stemi.stemiapp.databases.DBforUserDetails;
+import com.stemi.stemiapp.databases.UserDetailsTable;
 import com.stemi.stemiapp.model.RegisteredUserDetails;
 import com.stemi.stemiapp.preference.AppSharedPreference;
 import com.stemi.stemiapp.utils.GlobalClass;
@@ -70,7 +70,7 @@ public class ProfileActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        DBforUserDetails dBforUserDetails = new DBforUserDetails(this);
+        UserDetailsTable dBforUserDetails = new UserDetailsTable(this);
         List<RegisteredUserDetails> allUsers = dBforUserDetails.getAllUsers();
 
         recyclerView.setAdapter(new ProfileAdapter(allUsers));
