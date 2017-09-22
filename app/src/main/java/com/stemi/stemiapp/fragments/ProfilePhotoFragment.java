@@ -6,16 +6,12 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.MediaScannerConnection;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.StrictMode;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.FileProvider;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,23 +21,17 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.stemi.stemiapp.R;
-import com.stemi.stemiapp.activity.MainActivity;
 import com.stemi.stemiapp.activity.RegistrationActivity;
 import com.stemi.stemiapp.activity.TrackActivity;
 import com.stemi.stemiapp.customviews.CircleImageView;
-import com.stemi.stemiapp.databases.DBforUserDetails;
+import com.stemi.stemiapp.databases.UserDetailsTable;
 import com.stemi.stemiapp.preference.AppSharedPreference;
 import com.stemi.stemiapp.utils.AppConstants;
 import com.stemi.stemiapp.utils.CommonUtils;
 import com.stemi.stemiapp.utils.GlobalClass;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
-import java.lang.reflect.Method;
-import java.util.Calendar;
 
 import static android.app.Activity.RESULT_OK;
 import static android.content.ContentValues.TAG;
@@ -59,7 +49,7 @@ public class ProfilePhotoFragment extends Fragment implements AppConstants,View.
     private String selectedImagePath;
     private CircleImageView img;
     Button register;
-    DBforUserDetails dBforUserDetails;
+    UserDetailsTable dBforUserDetails;
 
     public ProfilePhotoFragment() {
         // Required empty public constructor
@@ -77,7 +67,7 @@ public class ProfilePhotoFragment extends Fragment implements AppConstants,View.
         View view = inflater.inflate(R.layout.fragment_profile_photo, container, false);
 
         appSharedPreference = new AppSharedPreference(getActivity());
-        dBforUserDetails = new DBforUserDetails(getActivity());
+        dBforUserDetails = new UserDetailsTable();
         img = (CircleImageView) view.findViewById(R.id.circleImg);
         imgOption = (ImageView) view.findViewById(R.id.bt_imgOption);
         imgOption.setOnClickListener(this);
@@ -243,8 +233,15 @@ public class ProfilePhotoFragment extends Fragment implements AppConstants,View.
             case R.id.bt_register:
                     String deviceId = Settings.Secure.getString(getActivity().getContentResolver(), Settings.Secure.ANDROID_ID);
                     Log.e(TAG, "onClick: "+ deviceId);
-                    RegistrationActivity.registeredUserDetails.setUniqueId(deviceId);
-                    appSharedPreference.addProfileName(PROFILE_NAME,RegistrationActivity.registeredUserDetails.getName());
+                    long count = dBforUserDetails.getProfilesCount();
+                    count = count+1;
+                    RegistrationActivity.registeredUserDetails.setUniqueId(deviceId+"_"+ count);
+                    if(RegistrationActivity.registeredUserDetails.getImgUrl() !=null){
+                        appSharedPreference.setprofileUrl(PROFILE_URL,RegistrationActivity.registeredUserDetails.getImgUrl());
+                    }else {
+                        appSharedPreference.setprofileUrl(PROFILE_URL,"");
+                    }
+                    appSharedPreference.addProfileName(PROFILE_NAME,RegistrationActivity.registeredUserDetails.getUniqueId());
                    // dBforUserDetails.removeNote(RegistrationActivity.registeredUserDetails.getName());
                     String uid= dBforUserDetails.addEntry(RegistrationActivity.registeredUserDetails);
                     if(appSharedPreference.getUserId() == null){

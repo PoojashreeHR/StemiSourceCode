@@ -2,14 +2,61 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
+    android:background="@color/lightWhite"
     android:layout_height="match_parent">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:id="@+id/rl_locate_hosp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:text="Hospital Fragment"
-        android:textSize="20dp"
-        android:textStyle="bold" />
+        android:background="@color/white"
+        android:layout_margin="20dp">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/ic_location"
+            android:padding="20dp"
+            android:layout_margin="10dp"
+            android:id="@+id/imageView" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/imageView"
+            android:layout_toEndOf="@+id/imageView"
+            android:layout_margin="20dp"
+            android:textSize="15sp"
+            android:text="Find nearest STEMI Hospital"
+            android:paddingLeft="20dp"/>
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:layout_margin="20dp"
+        android:layout_below="@+id/rl_locate_hosp">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/ic_upload"
+            android:padding="20dp"
+            android:layout_margin="10dp"
+            android:id="@+id/upload_data" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/upload_data"
+            android:layout_toEndOf="@+id/upload_data"
+            android:layout_margin="20dp"
+            android:textSize="15sp"
+            android:text="Upload my data"
+            android:paddingLeft="20dp"/>
+    </RelativeLayout>
+
 
 </RelativeLayout>

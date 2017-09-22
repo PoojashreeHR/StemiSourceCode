@@ -55,6 +55,7 @@
             android:layout_marginLeft="10dp"/>
 
         <RelativeLayout
+            android:id="@+id/morningContainer"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_toRightOf="@+id/textView5"
@@ -101,9 +102,11 @@
             android:layout_marginLeft="10dp"/>
 
         <RelativeLayout
+            android:id="@+id/noonContainer"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_alignParentRight="true"
+            android:layout_toRightOf="@+id/textView6"
+            android:layout_toEndOf="@+id/textView6"
             android:layout_toLeftOf="@+id/ivInfo1"
             android:layout_toStartOf="@+id/ivInfo1">
 
@@ -147,13 +150,15 @@
             android:layout_marginLeft="10dp"/>
 
         <RelativeLayout
+            android:id="@+id/nightContainer"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_alignParentRight="true"
+            android:layout_toRightOf="@+id/textView7"
+            android:layout_toEndOf="@+id/textView7"
             android:layout_toLeftOf="@+id/ivInfo2"
             android:layout_toStartOf="@+id/ivInfo2">
-            <include layout="@layout/medicine_layout"/>
 
+            <include layout="@layout/medicine_layout"/>
         </RelativeLayout>
         <ImageView
             android:id="@+id/ivInfo2"

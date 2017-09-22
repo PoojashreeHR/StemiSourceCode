@@ -15,7 +15,6 @@ import android.widget.Toast;
 import com.stemi.stemiapp.R;
 import com.stemi.stemiapp.activity.RegistrationActivity;
 import com.stemi.stemiapp.customviews.AnswerTemplateView;
-import com.stemi.stemiapp.databases.DBforUserDetails;
 import com.stemi.stemiapp.model.HealthAnswers;
 import com.stemi.stemiapp.model.HealthQuestions;
 
@@ -33,7 +32,6 @@ public class HealthDetailFragment_1 extends Fragment implements View.OnClickList
     private ArrayList<HealthAnswers> healthAnswers = new ArrayList<>();
     private HealthAdapter healthAdapter;
     Button registerButton;
-    DBforUserDetails dBforUserDetails;
     public HealthDetailFragment_1() {
     }
 
@@ -46,7 +44,6 @@ public class HealthDetailFragment_1 extends Fragment implements View.OnClickList
         healthQuestions = new ArrayList<>();
         registerButton = (Button) view.findViewById(R.id.bt_healthNext);
         registerButton.setOnClickListener(this);
-        dBforUserDetails = new DBforUserDetails(getActivity());
         healthAdapter = new HealthAdapter(healthQuestions, getActivity());
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         healthRecycler.setLayoutManager(mLayoutManager);

@@ -105,7 +105,7 @@ public class TrackFragment extends Fragment {
                             ((TrackActivity) getActivity()).showFragment(new ExerciseFragment());
                             break;
                         case 2:
-                            ((TrackActivity) getActivity()).showFragment(new FoodFragment());
+                            ((TrackActivity) getActivity()).showFragment(new StressFragment());
                             break;
                         case  3:
                             ((TrackActivity) getActivity()).showFragment(new SmokingFragment());
@@ -157,5 +157,6 @@ public class TrackFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        ((TrackActivity) getActivity()).setActionBarTitle("Track");
     }
 }

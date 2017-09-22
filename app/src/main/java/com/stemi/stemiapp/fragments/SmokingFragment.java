@@ -7,14 +7,25 @@ import android.app.DialogFragment;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.stemi.stemiapp.R;
 import com.stemi.stemiapp.activity.TrackActivity;
+import com.stemi.stemiapp.customviews.AnswerTemplateView;
+import com.stemi.stemiapp.databases.DBForTrackActivities;
+import com.stemi.stemiapp.model.MessageEvent;
+import com.stemi.stemiapp.preference.AppSharedPreference;
+import com.stemi.stemiapp.utils.AppConstants;
+import com.stemi.stemiapp.utils.CommonUtils;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -28,9 +39,17 @@ import butterknife.ButterKnife;
  * Created by Pooja on 26-07-2017.
  */
 
-public class SmokingFragment  extends Fragment {
-    @BindView(R.id.tv_smoke_today)
-    TextView tvSmokeToday;
+public class SmokingFragment  extends Fragment implements TrackActivity.OnBackPressedListener {
+    private static final String TAG = "SMOKE FRAGMENT";
+    @BindView(R.id.tv_smoke_today) TextView tvSmokeToday;
+    @BindView(R.id.smokeToday) AnswerTemplateView smokeToday;
+    @BindView(R.id.tv_howMany) EditText howMany;
+    AppSharedPreference appSharedPreference;
+
+    DBForTrackActivities dbForTrackActivities;
+
+    String responseChange;
+   // AnswerTemplateView answerTemplateView;
     public SmokingFragment() {
         // Required empty public constructor
     }
@@ -46,6 +65,25 @@ public class SmokingFragment  extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_smoke, container, false);
         ButterKnife.bind(this,view);
+        dbForTrackActivities = new DBForTrackActivities();
+        appSharedPreference = new AppSharedPreference(getActivity());
+
+        smokeToday.setResponseChangedListener(new AnswerTemplateView.ResponseChangedListener() {
+            @Override
+            public void onResponse(String response) {
+                responseChange = smokeToday.getResponse();
+                Log.e(TAG, "onResponse: "+response );
+                if(smokeToday.getResponse().equals("YES")){
+                    howMany.setEnabled(true);
+                    howMany.setAlpha(1f);
+                }else {
+                    howMany.setEnabled(false);
+                    howMany.setAlpha(.6f);
+                }
+            }
+        });
+
+
         tvSmokeToday.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -53,9 +91,22 @@ public class SmokingFragment  extends Fragment {
                 dialogfragment.show(getActivity().getFragmentManager(), "Date Picker Dialog");
             }
         });
-        ((TrackActivity) getActivity()).setActionBarTitle("Food");
+
+        ((TrackActivity) getActivity()).setOnBackPressedListener(this);
+        ((TrackActivity) getActivity()).setActionBarTitle("Smoking");
 
         return view;
+    }
+
+    @Override
+    public void doBack() {
+        if(smokeToday.getResponse()==null){
+            EventBus.getDefault().post(new MessageEvent("Hello!"));
+        }else if (howMany.isEnabled() && howMany.getText().toString().equals("")) {
+            Toast.makeText(getActivity(), "Please enter how many", Toast.LENGTH_LONG).show();
+        } else {
+            saveData();
+        }
     }
 
 
@@ -76,18 +127,99 @@ public class SmokingFragment  extends Fragment {
 
         public void onDateSet(DatePicker view, int year, int month, int day){
             Date parseDate = null;
-            String Date1 = day + "-" + (month+1) + "-" + year;
-            SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+            Calendar cal=Calendar.getInstance();
+            SimpleDateFormat month_date = new SimpleDateFormat("MMM");
+            cal.set(Calendar.MONTH,(month));
+            String month_name = month_date.format(cal.getTime());
+
+            Log.e("",""+month_name);
+
+            String date1 = day + " " + month_name + " " + year;
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy");
             try {
-                parseDate = dateFormat.parse(Date1);
+                parseDate = dateFormat.parse(date1);
             } catch (ParseException e) {
                 e.printStackTrace();
             }
             String stDate= dateFormat.format(parseDate); //2016/11/16 12:08:43
             Log.e("Comparing Date :"," Your date is correct");
             tvSmokeToday.setText(stDate);
-
         }
     }
+
+    public void saveData() {
+        TrackActivity.userEventDetails.setUid(appSharedPreference.getProfileName(AppConstants.PROFILE_NAME));
+        if (tvSmokeToday.getText().equals("Today  ")){
+            Date dt = new Date();
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy");// set format for date
+            String todaysDate = dateFormat.format(dt); // parse it like
+            TrackActivity.userEventDetails.setDate(todaysDate);
+        }else {
+            TrackActivity.userEventDetails.setDate(tvSmokeToday.getText().toString());
+        }
+        TrackActivity.userEventDetails.setSmokeToday(responseChange);
+
+        if(responseChange.equals("NO")){
+            TrackActivity.userEventDetails.setHowMany("0");
+        }else {
+            TrackActivity.userEventDetails.setHowMany(howMany.getText().toString());
+        }
+
+        boolean date = dbForTrackActivities.getDate(TrackActivity.userEventDetails.getDate());
+        if (!date) {
+            dbForTrackActivities.addEntry(TrackActivity.userEventDetails);
+            ((TrackActivity) getActivity()).showFragment(new TrackFragment());
+        } else {
+            CommonUtils.buidDialog(this.getContext(),3);
+        }
+    }
+ /*   @Override
+    //Pressed return button - returns to the results menu
+    public void onResume() {
+        super.onResume();
+        smokeToday.setFocusableInTouchMode(true);
+        howMany.setFocusableInTouchMode(true);
+
+        smokeToday.requestFocus();
+        howMany.requestFocus();
+
+        smokeToday.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK) {
+                    if(smokeToday.getResponse().equals("NO")) {
+                        saveData();
+                    }else if((smokeToday.getResponse().equals("YES"))) {
+                        if (howMany.isEnabled() && howMany.getText().toString().equals("")) {
+                            Toast.makeText(getActivity(), "Please enter how many", Toast.LENGTH_SHORT).show();
+                        } else {
+                            saveData();
+                        }
+                    }
+                    return true;
+                   // ((TrackActivity) getActivity()).showFragment(new TrackFragment());
+                    //Toast.makeText(getActivity(), "You pressed Back", Toast.LENGTH_SHORT).show();
+                }
+                return false;
+            }
+        });
+
+        howMany.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if(smokeToday.getResponse().equals("NO")) {
+                    saveData();
+
+                }else if((smokeToday.getResponse().equals("YES"))) {
+                    if (howMany.isEnabled() && howMany.getText().toString().equals("")) {
+                        Toast.makeText(getActivity(), "Please enter how many", Toast.LENGTH_SHORT).show();
+                    } else {
+                        saveData();
+                    }
+                }
+                return false;
+            }
+        });
+    }*/
 
 }

@@ -20,6 +20,8 @@ import com.stemi.stemiapp.customviews.AnswerTemplateView;
 import com.stemi.stemiapp.customviews.BetterSpinner;
 import com.stemi.stemiapp.customviews.MaterialSpinner;
 import com.stemi.stemiapp.model.RegisteredUserDetails;
+import com.stemi.stemiapp.preference.AppSharedPreference;
+import com.stemi.stemiapp.utils.AppConstants;
 
 import java.util.ArrayList;
 
@@ -30,7 +32,7 @@ import butterknife.ButterKnife;
  * Created by Pooja on 14-07-2017.
  */
 
-public class PhysicalDetailsFragment extends Fragment implements View.OnClickListener {
+public class PhysicalDetailsFragment extends Fragment implements View.OnClickListener,AppConstants {
     @BindView(R.id.et_height) EditText etHeight;
     @BindView(R.id.et_weight) EditText etWeight;
     @BindView(R.id.et_waist) EditText etWaist;
@@ -38,6 +40,7 @@ public class PhysicalDetailsFragment extends Fragment implements View.OnClickLis
     @BindView(R.id.smoke_answerLayout) AnswerTemplateView smokeAnswer;
     @BindView(R.id.heart_attack) AnswerTemplateView heartAttack;
 
+    AppSharedPreference appSharedPreference;
     //  BetterSpinner gender_spinner;
     ArrayList<String> genderText;
     String salutatioSelected = "";
@@ -54,6 +57,7 @@ public class PhysicalDetailsFragment extends Fragment implements View.OnClickLis
         ButterKnife.bind(this, view);
         view.findViewById(R.id.bt_physical_next).setOnClickListener(this);
 
+        appSharedPreference = new AppSharedPreference(getActivity());
        // spinner = (BetterSpinner) view.findViewById(R.id.spinner);
         genderText = new ArrayList<>();
         genderText.add("Feet and In");
@@ -77,7 +81,7 @@ public class PhysicalDetailsFragment extends Fragment implements View.OnClickLis
             }
         });*/
         if (RegistrationActivity.registeredUserDetails != null) {
-            etHeight.setText(RegistrationActivity.registeredUserDetails.getWeight());
+            etHeight.setText(RegistrationActivity.registeredUserDetails.getHeight());
             etWeight.setText(RegistrationActivity.registeredUserDetails.getWeight());
             etWaist.setText(RegistrationActivity.registeredUserDetails.getWaist());
             etAddress.setText(RegistrationActivity.registeredUserDetails.getAddress());
@@ -116,6 +120,7 @@ public class PhysicalDetailsFragment extends Fragment implements View.OnClickLis
                 //Move to Fragment 03
                 if(validateFields()) {
                     saveDetails();
+                    appSharedPreference.addUserHeight(USER_HEIGHT,RegistrationActivity.registeredUserDetails.getHeight());
                     ((RegistrationActivity) getActivity()).showFragment(new HealthDetailFragment_1());
                     break;
                 }

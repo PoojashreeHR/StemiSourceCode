@@ -39,32 +39,25 @@
         android:textColor="@color/black"
         android:textSize="20sp"
         android:gravity="center"
-        android:layout_margin="10dp"
-        android:text="Did you keep within your calorie limit?" />
+        android:layout_margin="15dp"
+        android:text="Rate your stress level" />
+
+    <SeekBar
+        android:id="@+id/seekbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_food_que"
+        android:layout_margin="20dp"
+        android:max="5"
+        android:thumbTint="@color/appBackground"
+        android:progressTint="@color/appBackground"/>
 
     <LinearLayout
+        android:id="@+id/ll_seekbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/tv_food_que">
-
-    <com.stemi.stemiapp.customviews.AnswerTemplateView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:colorView="@color/white"
-        android:layout_margin="10dp"
-        app:textColor="@color/colorPrimaryDark"
-        app:clickedColor="@color/colorPrimaryDark"
-        app:textBackground="@drawable/text_border_with_color">
-    </com.stemi.stemiapp.customviews.AnswerTemplateView>
-    </LinearLayout>
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="Save"
-        android:textSize="15dp"
-        android:textColor="@color/white"
-        android:background="@color/appBackground"
-        android:layout_alignParentBottom="true"
-        />
+        android:orientation="horizontal"
+        android:layout_marginLeft="35dp"
+        android:layout_marginRight="35dp"
+        android:layout_below="@+id/seekbar"/>
 </RelativeLayout>

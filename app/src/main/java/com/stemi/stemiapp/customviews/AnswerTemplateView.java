@@ -37,6 +37,9 @@ public class AnswerTemplateView extends LinearLayout implements View.OnClickList
     }
     private ResponseChangedListener responseChangedListener;
 
+    public AnswerTemplateView(Context context){
+        super(context);
+    }
     public AnswerTemplateView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
 

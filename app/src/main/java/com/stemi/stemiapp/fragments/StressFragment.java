@@ -4,22 +4,28 @@ import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.DatePicker;
-import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.stemi.stemiapp.R;
 import com.stemi.stemiapp.activity.TrackActivity;
+import com.stemi.stemiapp.customviews.AnimateHorizontalProgressBar;
 import com.stemi.stemiapp.databases.DBForTrackActivities;
+import com.stemi.stemiapp.model.DataPassListener;
 import com.stemi.stemiapp.model.MessageEvent;
 import com.stemi.stemiapp.preference.AppSharedPreference;
 import com.stemi.stemiapp.utils.AppConstants;
@@ -39,19 +45,17 @@ import butterknife.ButterKnife;
  * Created by Pooja on 26-07-2017.
  */
 
-public class WeightFragment  extends Fragment implements View.OnClickListener,TrackActivity.OnBackPressedListener {
-    @BindView(R.id.tv_weight_today) TextView tvWeightToday;
-    @BindView(R.id.bt_calculatebmi)Button btCalculateBmi;
-    @BindView(R.id.et_todayweight)EditText todaysWeight;
-    @BindView(R.id.bmiValue) TextView BmiValue;
-    @BindView(R.id.bmiResult) TextView bmiResult;
-    @BindView(R.id.learn_more)TextView learnMore;
-    String bmiCount = null;
+public class StressFragment extends Fragment implements AppConstants, TrackActivity.OnBackPressedListener {
+
+    @BindView(R.id.tv_food_today) TextView tvFoodToday;
+    @BindView(R.id.seekbar) SeekBar mSeekLin;
+    @BindView(R.id.ll_seekbar)LinearLayout seekbarText;
 
     AppSharedPreference appSharedPreference;
+    String stressCount = null;
     DBForTrackActivities dbForTrackActivities;
-
-    public WeightFragment() {
+    int progresValue;
+    public StressFragment() {
         // Required empty public constructor
     }
 
@@ -64,60 +68,52 @@ public class WeightFragment  extends Fragment implements View.OnClickListener,Tr
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_weight, container, false);
+        View view = inflater.inflate(R.layout.fragment_stress, container, false);
         ButterKnife.bind(this,view);
+
         appSharedPreference = new AppSharedPreference(getActivity());
         dbForTrackActivities = new DBForTrackActivities();
+        mSeekLin.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                progresValue = progress ;
+               //Toast.makeText(getActivity(),"seekbar progress: " + progress, Toast.LENGTH_SHORT).show();
+            }
 
-        btCalculateBmi.setOnClickListener(this);
-        tvWeightToday.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+               // Toast.makeText(getActivity(),"seekbar touch started!", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                stressCount = String.valueOf(progresValue);
+                Toast.makeText(getActivity(),"seekbar touch stopped! "+ progresValue + "/" + seekBar.getMax(), Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        addLabelsBelowSeekBar();
+        tvFoodToday.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 DialogFragment dialogfragment = new DatePickerDialogClass();
                 dialogfragment.show(getActivity().getFragmentManager(), "Date Picker Dialog");
             }
         });
-        ((TrackActivity) getActivity()).setActionBarTitle("Weight");
+        ((TrackActivity) getActivity()).setActionBarTitle("Stress");
         ((TrackActivity) getActivity()).setOnBackPressedListener(this);
 
         return view;
     }
 
-    //Calculate BMI
-    private float calculateBMI (String wt, String ht) {
-        float weight = Float.parseFloat(wt);
-        float height = (Float.parseFloat(ht))/100;
-        return (float) (weight / (height * height));
-    }
-
-    @Override
-    public void onClick(View v) {
-        int id = v.getId();
-        switch (id) {
-            case R.id.bt_calculatebmi:
-                if(!todaysWeight.getText().toString().equals("")) {
-                    float bmiValue = calculateBMI(todaysWeight.getText().toString(), appSharedPreference.getUserHeight(AppConstants.USER_HEIGHT));
-                    bmiCount = String.format("%.2f",bmiValue);
-                    String string = interpretBMI(bmiValue);
-                    BmiValue.setText("Your BMI is " + bmiCount);
-                    bmiResult.setText(string);
-                    learnMore.setVisibility(View.VISIBLE);
-                }else {
-                    Toast.makeText(getActivity(), "Please enter your weight!!", Toast.LENGTH_SHORT).show();
-                }
-        }
-    }
-
     @Override
     public void doBack() {
-        if(!todaysWeight.getText().toString().equals("")){
-            SaveData();
+        if(stressCount != null){
+            storeData();
         }else {
             EventBus.getDefault().post(new MessageEvent("Hello!"));
-
         }
     }
-
 
     public class DatePickerDialogClass extends DialogFragment implements DatePickerDialog.OnDateSetListener{
 
@@ -152,52 +148,48 @@ public class WeightFragment  extends Fragment implements View.OnClickListener,Tr
             }
             String stDate= dateFormat.format(parseDate); //2016/11/16 12:08:43
             Log.e("Comparing Date :"," Your date is correct");
-            tvWeightToday.setText(stDate);
+            tvFoodToday.setText(stDate);
 
         }
     }
 
-    // Interpret what BMI means
-    private String interpretBMI(float bmiValue) {
-
-        if (bmiValue < 16) {
-            return "Severely underweight";
-        } else if (bmiValue < 18.5) {
-
-            return "Which means you are underweight";
-        } else if (bmiValue < 25) {
-
-            return "Which means you are normal";
-        } else if (bmiValue < 30) {
-            return "Which means you are overweight";
-        } else {
-            return "Which means you are obese";
+    private void addLabelsBelowSeekBar() {
+        int maxCount = 6;
+        for (int count = 0; count < 6; count++) {
+            TextView textView = new TextView(getActivity());
+            textView.setText(String.valueOf(count));
+            textView.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
+            textView.setGravity(Gravity.LEFT);
+            seekbarText.addView(textView);
+            textView.setLayoutParams((count == maxCount - 1) ? getLayoutParams(0.0f) : getLayoutParams(1.0f));
         }
+
     }
 
-    public void SaveData(){
-        TrackActivity.userEventDetails.setUid(appSharedPreference.getProfileName(AppConstants.PROFILE_NAME));
-        if (tvWeightToday.getText().equals("Today  ")){
+    LinearLayout.LayoutParams getLayoutParams(float weight) {
+        return new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT, weight);
+    }
+
+    public void storeData(){
+        TrackActivity.userEventDetails.setUid(appSharedPreference.getProfileName(PROFILE_NAME));
+        if (tvFoodToday.getText().equals("Today  ")){
             Date dt = new Date();
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy");// set format for date
             String todaysDate = dateFormat.format(dt); // parse it like
             TrackActivity.userEventDetails.setDate(todaysDate);
         }else {
-            TrackActivity.userEventDetails.setDate(tvWeightToday.getText().toString());
+            TrackActivity.userEventDetails.setDate(tvFoodToday.getText().toString());
         }
-        TrackActivity.userEventDetails.setTodaysWeight(todaysWeight.getText().toString());
-        if(bmiCount == null){
-            float bmiValue = calculateBMI(todaysWeight.getText().toString(), appSharedPreference.getUserHeight(AppConstants.USER_HEIGHT));
-            bmiCount = String.format("%.2f",bmiValue);
-        }
-        TrackActivity.userEventDetails.setBmiValue(bmiCount);
-
+        TrackActivity.userEventDetails.setStressCount(stressCount);
         boolean date = dbForTrackActivities.getDate(TrackActivity.userEventDetails.getDate());
         if (!date) {
             dbForTrackActivities.addEntry(TrackActivity.userEventDetails);
             ((TrackActivity) getActivity()).showFragment(new TrackFragment());
+            EventBus.getDefault().post(new MessageEvent("Hello!"));
         } else {
-            CommonUtils.buidDialog(this.getContext(),4);
+            CommonUtils.buidDialog(this.getContext(),2);
         }
     }
 
@@ -205,25 +197,22 @@ public class WeightFragment  extends Fragment implements View.OnClickListener,Tr
     //Pressed return button - returns to the results menu
     public void onResume() {
         super.onResume();
-        todaysWeight.setFocusableInTouchMode(true);
-        todaysWeight.setFocusableInTouchMode(true);
-        todaysWeight.requestFocus();
-        todaysWeight.requestFocus();
-        todaysWeight.setOnKeyListener(new View.OnKeyListener() {
+        mSeekLin.setFocusableInTouchMode(true);
+        mSeekLin.requestFocus();
+        mSeekLin.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if (event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK) {
-                    if(todaysWeight.getText().toString().equals("")){
-                        ((TrackActivity) getActivity()).showFragment(new TrackFragment());
+                    if( mSeekLin.requestFocus()){
+                        storeData();
                     }else {
-                        SaveData();
-
+                        ((TrackActivity) getActivity()).showFragment(new TrackFragment());
                     }
-                   // ((TrackActivity) getActivity()).showFragment(new TrackFragment());
                     Toast.makeText(getActivity(), "You pressed Back", Toast.LENGTH_SHORT).show();
                 }
                 return false;
             }
         });
     }*/
+
 }

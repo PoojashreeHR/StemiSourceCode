@@ -53,7 +53,7 @@ public class TrackMedicationDB extends SQLiteOpenHelper {
     public void addEntry(TrackMedication stress){
         SQLiteDatabase db = this.getWritableDatabase();
         try{
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MMM-yyyy");
             ContentValues cv = new ContentValues();
             cv.put(COLUMN_USER_ID, stress.getUserId());
             cv.put(COLUMN_DATE_TIME, simpleDateFormat.format(stress.getDateTime()));
@@ -89,7 +89,7 @@ public class TrackMedicationDB extends SQLiteOpenHelper {
 
     public List<TrackMedication> getAllInfo(String userid){
         List<TrackMedication> medicationList = new ArrayList<>();
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MMM-yyyy");
         SQLiteDatabase db = this.getReadableDatabase();
         try {
             String query = "SELECT * FROM "+ TABLE_MEDICATION +" WHERE "+COLUMN_USER_ID+" = '"+userid+"' "
@@ -119,9 +119,10 @@ public class TrackMedicationDB extends SQLiteOpenHelper {
         }
         return medicationList;
     }
+
     public List<TrackMedication> getMedicationTrackingInfo(String userid, String date1, String date2){
         List<TrackMedication> medicationList = new ArrayList<>();
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MMM-yyyy");
         SQLiteDatabase db = this.getReadableDatabase();
         try {
             String query = "SELECT * FROM "+ TABLE_MEDICATION +" WHERE "+COLUMN_DATE_TIME

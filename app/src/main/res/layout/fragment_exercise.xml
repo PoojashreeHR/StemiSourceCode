@@ -1,14 +1,223 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:background="@color/lightWhite"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/textView3"
-        android:layout_width="match_parent"
+        android:id="@+id/tv_excercise_today"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
         android:gravity="center"
         android:textSize="20dp"
-        android:text="Exercise Frsgment" />
+        android:paddingLeft="10dp"
+        android:layout_marginTop="21dp"
+        android:drawableRight="@drawable/ic_spinner"
+        android:text="Today  "
+        android:textColor="@color/black"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
+    <View
+        android:id="@+id/view"
+        android:layout_width="wrap_content"
+        android:layout_height="1dp"
+        android:background="@color/black"
+        android:layout_marginTop="10dp"
+        android:layout_below="@+id/tv_excercise_today"
+        android:layout_alignLeft="@+id/tv_excercise_today"
+        android:layout_alignStart="@+id/tv_excercise_today"
+        android:layout_alignRight="@+id/tv_excercise_today"
+        android:layout_alignEnd="@+id/tv_excercise_today" />
+
+    <LinearLayout
+        android:id="@+id/excerciseLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/view"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="20dp"
+        android:background="@color/white"
+        android:orientation="horizontal"
+        android:weightSum="5">
+
+        <LinearLayout
+            android:id="@+id/ll_walking"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight="1">
+
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:background="@drawable/ic_walking"
+                    android:layout_margin="10dp"/>
+                <ImageView
+                    android:id="@+id/iv_walking"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="right"
+                    android:tag="null"
+                    android:background="@drawable/ic_unchecked"
+                    android:layout_marginTop="5dp" />
+            </FrameLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Walking"
+                android:layout_gravity="center"
+                android:textSize="10sp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="10dp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_cycling"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight="1">
+
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:background="@drawable/ic_cycling"
+                    android:layout_margin="10dp"/>
+                <ImageView
+                    android:id="@+id/iv_cycling"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="right"
+                    android:tag="null"
+                    android:background="@drawable/ic_unchecked"
+                    android:layout_marginTop="5dp" />
+            </FrameLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Cycling"
+                android:layout_gravity="center"
+                android:textSize="10sp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="10dp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_swimming"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight="1">
+
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:background="@drawable/ic_swimming"
+                    android:layout_margin="10dp"/>
+                <ImageView
+                    android:id="@+id/iv_swimming"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:tag="null"
+                    android:layout_gravity="right"
+                    android:background="@drawable/ic_unchecked"
+                    android:layout_marginTop="5dp" />
+            </FrameLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Swimming"
+                android:layout_gravity="center"
+                android:textSize="10sp"
+                android:singleLine="true"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="10dp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_aerobics"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight="1">
+
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:background="@drawable/ic_aerobics"
+                    android:layout_margin="10dp"/>
+                <ImageView
+                    android:id="@+id/iv_aerobics"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="right"
+                    android:tag="null"
+                    android:background="@drawable/ic_unchecked"
+                    android:layout_marginTop="5dp" />
+            </FrameLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Aerobics"
+                android:layout_gravity="center"
+                android:textSize="10sp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="10dp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_others"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight="1">
+
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:background="@drawable/ic_others"
+                    android:layout_margin="10dp"/>
+                <ImageView
+                    android:id="@+id/iv_others"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="right"
+                    android:tag="null"
+                    android:background="@drawable/ic_unchecked"
+                    android:layout_marginTop="5dp" />
+            </FrameLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Others"
+                android:layout_gravity="center"
+                android:textSize="10sp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="10dp"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
 </RelativeLayout>

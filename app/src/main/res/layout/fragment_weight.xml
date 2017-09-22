@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/tv_weight_today"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textSize="20dp"
+        android:paddingLeft="10dp"
+        android:layout_marginTop="21dp"
+        android:drawableRight="@drawable/sort_down_grey"
+        android:text="Today  "
+        android:textColor="@color/black"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
+    <View
+        android:id="@+id/view"
+        android:layout_width="wrap_content"
+        android:layout_height="2dp"
+        android:background="@color/black"
+        android:layout_marginTop="10dp"
+        android:layout_below="@+id/tv_weight_today"
+        android:layout_alignLeft="@+id/tv_weight_today"
+        android:layout_alignStart="@+id/tv_weight_today"
+        android:layout_alignRight="@+id/tv_weight_today"
+        android:layout_alignEnd="@+id/tv_weight_today" />
+
+    <TextView
+        android:id="@+id/tv_wt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/view"
+        android:layout_margin="20dp"
+        android:text="Your weight today"
+        android:gravity="center"
+        android:textSize="18sp"/>
+
+    <EditText
+        android:id="@+id/et_todayweight"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_wt"
+        android:background="@drawable/edittext_boundary"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:padding="10dp"
+        android:hint="Enter Weight"
+        android:inputType="number"
+        android:textColor="@color/appBackground"
+        android:gravity="center"/>
+
+    <Button
+        android:id="@+id/bt_calculatebmi"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/et_todayweight"
+        android:gravity="center"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="30dp"
+        android:background="@color/appBackground"
+        android:text="Calculate BMI"
+        android:textColor="@color/white"
+        android:padding="20dp"/>
+
+    <TextView
+        android:id="@+id/bmiValue"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/bt_calculatebmi"
+        android:layout_marginTop="25dp"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:gravity="center" />
+
+    <TextView
+        android:id="@+id/bmiResult"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/bmiValue"
+        android:gravity="center"
+        android:layout_marginTop="5dp"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/learn_more"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/bmiResult"
+        android:layout_marginTop="10dp"
+        android:textSize="18sp"
+        android:visibility="gone"
+        android:text="@string/learn_more"
+        android:gravity="center"
+        android:textColor="@color/appBackground"/>
+</RelativeLayout>

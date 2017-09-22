@@ -23,13 +23,8 @@ import static android.content.ContentValues.TAG;
  * Created by Pooja on 20-07-2017.
  */
 
-public class DBforUserDetails extends SQLiteOpenHelper {
-    private static final int DATABASE_VERSION = GlobalClass.DB_VERSION;
-
-    private static final String DATABASE_NAME = GlobalClass.DB_NAME;
-
-    private static final String TABLE_NAME = "dbuserDetails";
-    private static final String MED_TABLE_NAME = "dbMedicationDetails";
+public class UserDetailsTable {
+    public static final String TABLE_NAME = "dbuserDetails";
 
     //column names for User Details
     private static final String KEY_ID = "id";
@@ -54,24 +49,8 @@ public class DBforUserDetails extends SQLiteOpenHelper {
     private static final String FAMILY_HEALTH = "familyHealth";
     private static final  String USER_PROFILR_URL = "profileUrl";
 
-
-    //Column name for Medication
-    private static final String MED_KEY_ID = "id";
-    private  static final String MED_MEDICINE_DETAILS = "medicineDetails";
-    private  static final String RELATED_PERSON = "relatedPerson";
-  /*  private  static final String MED_MEDICINE_MORNING = "medicineMorning";
-    private  static final String MED_MORNING_TIME = "medicineMorningTime";
-    private  static final String MED_MEDICINE_AFTERNOON = "medicineAfternoon";
-    private  static final String MED_NOON_TIME = "medicineNoonTime";
-    private  static final String MED_MEDICINE_NIGHT = "medicineNight";
-    private  static final String MED_NIGHT_TIME = "medicineNightTime";
-    private  static final String MED_MEDICINE_KEY_ID = "id";
-    private  static final String MED_MEDICINE_DAYS = "medicineDays";
-    private  static final String MED_REMINDER = "medicineRemainder";
-*/
-
     //sql query to creating User Details table in database
-    private static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME + "("
+    public static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME + "("
             + KEY_ID + " INTEGER PRIMARY KEY,"
             + LOGIN_ID+" TEXT,"
             + USER_UID + " TEXT,"
@@ -95,52 +74,26 @@ public class DBforUserDetails extends SQLiteOpenHelper {
             + USER_PROFILR_URL + " TEXT"
             + ")";
 
-    //sql query to creating Medicine Details table in database
 
-    private static final String CREATE_MEDICINE_TABLE = "CREATE TABLE " + MED_TABLE_NAME + "("
-            + MED_KEY_ID + " INTEGER PRIMARY KEY,"
-            + MED_MEDICINE_DETAILS + " TEXT,"
-            + RELATED_PERSON + " TEXT"
-            + ")";
-    private  String loginId;
-
-    public DBforUserDetails(Context context) {super(context, DATABASE_NAME, null, DATABASE_VERSION);
-        AppSharedPreference appSharedPreference = new AppSharedPreference(context);
-        loginId = appSharedPreference.getLoginId();
-    }
-
-    @Override
-    public void onCreate(SQLiteDatabase db) {
-        db.execSQL(CREATE_TABLE);
-        db.execSQL(CREATE_MEDICINE_TABLE);
-    }
-
-    @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
-        db.execSQL("DROP TABLE IF EXISTS " + MED_TABLE_NAME);
-        onCreate(db);
-    }
-// For User Details
     public String isExist(String userName) {
-        SQLiteDatabase db = this.getReadableDatabase();
+        SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
         String string = null;
         Log.e(TAG, "isExist: " + "SELECT " + USER_NAME + " FROM " + TABLE_NAME + " WHERE " + USER_NAME + "=" + "'" + userName + "'", null);
         Cursor cur = db.rawQuery("SELECT " + USER_NAME + " FROM " + TABLE_NAME + " WHERE " + "UPPER("+ USER_NAME + ")" + "=" + "\"" + userName.toUpperCase() + "\"", null);
         if (cur.moveToFirst()){
             for (int i = 0; i < cur.getCount(); i++){
-             string = cur.getString(cur.getColumnIndex(USER_NAME));
-             cur.moveToNext();
+                string = cur.getString(cur.getColumnIndex(USER_NAME));
+                cur.moveToNext();
             }
         }
         cur.close();
-        db.close();
+        DatabaseManager.getInstance().closeDatabase();
         return string;
     }
 
     // To get Number of profile
     public long getProfilesCount() {
-       SQLiteDatabase db = this.getReadableDatabase();
+        SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
         long cnt  = DatabaseUtils.queryNumEntries(db, TABLE_NAME);
         //db.close();
         return cnt;
@@ -148,7 +101,7 @@ public class DBforUserDetails extends SQLiteOpenHelper {
 
     //function for adding the note to database
     public String addEntry(RegisteredUserDetails registeredUserDetails) {
-        SQLiteDatabase db = this.getWritableDatabase();
+        SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
         ContentValues values = new ContentValues();
         long count = getProfilesCount();
         count = count+1;
@@ -177,7 +130,7 @@ public class DBforUserDetails extends SQLiteOpenHelper {
         long id = db.insert(TABLE_NAME, null, values);
         Log.e("DATABASE VALUES", "addDataTODb: " + id);
         //closing the database connection
-        db.close();
+        DatabaseManager.getInstance().closeDatabase();
 
         //see that all database connection stuff is inside this method
         //so we don't need to open and close db connection outside this class
@@ -186,55 +139,17 @@ public class DBforUserDetails extends SQLiteOpenHelper {
     }
 
 
-    public void removeNote(String name) {
-        SQLiteDatabase db = getWritableDatabase();
+    public void removeUserDetails(String name) {
+        SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
         db.delete(TABLE_NAME, USER_NAME + " = ?", new String[] { name });
-        db.close();
+        DatabaseManager.getInstance().closeDatabase();
     }
 
 
     public ArrayList<String> getRecords(){
         ArrayList<String> data=new ArrayList<String>();
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.query(TABLE_NAME, new String[]{USER_NAME},LOGIN_ID+" = '"+loginId+"'", null, null, null, null);
-        String fieldToAdd=null;
-        while(cursor.moveToNext()){
-            fieldToAdd=cursor.getString(0);
-            data.add(fieldToAdd);
-        }
-        cursor.close();  // dont forget to close the cursor after operation done
-        return data;
-    }
-
-    public void addMedicineDetails(String medicineDetails,String personName) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        //long count = getProfilesCount();
-        //count = count+1;
-        //   values.put(MED_KEY_ID,);
-        values.put(MED_MEDICINE_DETAILS, medicineDetails);
-        values.put(RELATED_PERSON, personName);
-
-        long id = db.insert(MED_TABLE_NAME, null, values);
-        Log.e("DATABASE VALUES", "addDataTODb: " + id);
-        //closing the database connection
-        db.close();
-    }
-        //see that all database connection stuff is inside this method
-        //so we don't need to open and close db connection outside this class
-
-        // To get Number of profile
-        public long getMedicineDetailsCount() {
-            SQLiteDatabase db = this.getReadableDatabase();
-            long cnt  = DatabaseUtils.queryNumEntries(db, MED_TABLE_NAME);
-            //db.close();
-            return cnt;
-        }
-
-    public ArrayList<String> getMedicine(){
-        ArrayList<String> data=new ArrayList<String>();
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.query(MED_TABLE_NAME, new String[]{MED_MEDICINE_DETAILS},null, null, null, null, null);
+        SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
+        Cursor cursor = db.query(TABLE_NAME, new String[]{USER_NAME},null, null, null, null, null);
         String fieldToAdd=null;
         while(cursor.moveToNext()){
             fieldToAdd=cursor.getString(0);
@@ -245,11 +160,6 @@ public class DBforUserDetails extends SQLiteOpenHelper {
     }
 
 
-    public void removeMedicalDetails(String name) {
-        SQLiteDatabase db = getWritableDatabase();
-        db.delete(MED_TABLE_NAME, RELATED_PERSON + " = ?", new String[] { name });
-        db.close();
-    }
 
     public RegisteredUserDetails getUserDetails(String userId){
         RegisteredUserDetails registeredUserDetails = new RegisteredUserDetails();
