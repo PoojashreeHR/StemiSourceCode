@@ -124,7 +124,7 @@ public class BloodTestDB {
     }
 
     public void createIfNotExists() {
-        SQLiteDatabase db = this.getReadableDatabase();
+        SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
         try{
             String query = "SELECT * FROM "+TABLE_BLOOD_TEST;
             Cursor cursor = db.rawQuery(query, null);
@@ -139,7 +139,7 @@ public class BloodTestDB {
         catch(Exception e){
             Log.e(TAG, e.getLocalizedMessage());
             if(e.getLocalizedMessage().contains("no such table")){
-                onCreate(db);
+               // onCreate(db);
             }
         }
     }

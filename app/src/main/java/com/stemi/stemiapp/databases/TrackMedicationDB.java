@@ -206,7 +206,7 @@ public class TrackMedicationDB {
     }
 
     public void createIfNotExists() {
-        SQLiteDatabase db = this.getReadableDatabase();
+        SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
         try {
             String query = "SELECT * FROM " + TABLE_MEDICATION;
             Cursor cursor = db.rawQuery(query, null);
@@ -219,7 +219,7 @@ public class TrackMedicationDB {
             cursor.close();
         } catch (Exception e) {
             if (e.getLocalizedMessage().contains("no such table")) {
-                onCreate(db);
+               // onCreate(db);
             }
         }
     }

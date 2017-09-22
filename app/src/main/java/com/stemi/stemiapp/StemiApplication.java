@@ -60,22 +60,22 @@ public class StemiApplication extends Application {
     }
 
     public void createAllTables(){
-        BloodTestDB bloodTestDB = new BloodTestDB(this);
+        BloodTestDB bloodTestDB = new BloodTestDB();
         //DBforUserDetails dBforUserDetails = new DBforUserDetails(this);
-        TrackMedicationDB medicationDB = new TrackMedicationDB(this);
+        TrackMedicationDB medicationDB = new TrackMedicationDB();
         TrackSmokingDB smokingDB = new TrackSmokingDB(this);
         TrackExerciseDB exerciseDB = new TrackExerciseDB(this);
         TrackStressDB stressDB = new TrackStressDB(this);
         TrackWeightDB weightDB = new TrackWeightDB(this);
 
         bloodTestDB.createIfNotExists();
-        bloodTestDB.close();
+        //bloodTestDB.close();
 
         //dBforUserDetails.createIfNotExists();
         //dBforUserDetails.close();
 
         medicationDB.createIfNotExists();
-        medicationDB.close();
+        //medicationDB.close();
 
         smokingDB.createIfNotExists();
         smokingDB.close();
