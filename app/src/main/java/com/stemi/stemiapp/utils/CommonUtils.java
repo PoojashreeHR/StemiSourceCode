@@ -4,9 +4,16 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Typeface;
 import android.os.Environment;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.TypefaceSpan;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.stemi.stemiapp.R;
 import com.stemi.stemiapp.activity.TrackActivity;
@@ -126,4 +133,41 @@ public class CommonUtils {
       Button pbutton = alertDialog.getButton(DialogInterface.BUTTON_POSITIVE);
       pbutton.setTextColor(mContext.getResources().getColor(R.color.appBackground));
    }
+
+   /**
+    * Set Fonts and size, dynamically
+    */
+
+   public static void setRobotoLightFonts(Context context, TextView v) {
+      Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/font_roboto_light.ttf");
+      v.setTypeface(typeface);
+      // CommonUtils.passViewsToChangeTextSize(context, v, textSize);
+   }
+
+   public static void setRobotoMediumFonts(Context context, TextView v) {
+      Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/font_roboto_medium.ttf");
+      v.setTypeface(typeface);
+      // CommonUtils.passViewsToChangeTextSize(context, v, textSize);
+   }
+
+   public static void setRobotoRegularFonts(Context context, TextView v) {
+      Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/font_roboto_regular.ttf");
+      v.setTypeface(typeface);
+      //    CommonUtils.passViewsToChangeTextSize(context, v, textSize);
+   }
+
+   public static void setRobotoBoldFonts(Context context, TextView v) {
+      Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/roboto_bold.ttf");
+      v.setTypeface(typeface);
+      // CommonUtils.passViewsToChangeTextSize(context, v, textSize);
+   }
+
+   public static void setRalewaySemiBold(Context context, TextView v) {
+      Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/raleway_semibold.ttf");
+      v.setTypeface(typeface);
+      // CommonUtils.passViewsToChangeTextSize(context, v, textSize);
+   }
+
+
+
 }

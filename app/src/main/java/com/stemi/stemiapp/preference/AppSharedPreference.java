@@ -87,10 +87,10 @@ public class AppSharedPreference implements AppConstants {
     public void removeAllSPData() {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.remove(USER_TOKEN);
-        editor.remove(PROFILE_NAME);
-        editor.remove(USER_HEIGHT);
-        editor.remove(IS_FIRST_TIME_LAUNCH);
-        editor.remove(USERID);
+       // editor.remove(PROFILE_NAME);
+        // editor.remove(USER_HEIGHT);
+       //  editor.remove(IS_FIRST_TIME_LAUNCH);
+      //  editor.remove(USERID);
         editor.apply();
     }
 

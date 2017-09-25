@@ -28,11 +28,13 @@ import com.stemi.stemiapp.model.UserEventDetails;
 import com.stemi.stemiapp.preference.AppSharedPreference;
 import com.stemi.stemiapp.utils.AppConstants;
 import com.stemi.stemiapp.utils.CommonUtils;
+import com.stemi.stemiapp.utils.GlobalClass;
 
 import org.greenrobot.eventbus.EventBus;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -70,6 +72,7 @@ public class ExerciseFragment extends Fragment implements View.OnClickListener, 
     DBForTrackActivities dbForTrackActivities;
     AppSharedPreference appSharedPreference;
 
+    String savedDate;
     public ExerciseFragment() {
         // Required empty public constructor
     }
@@ -85,6 +88,9 @@ public class ExerciseFragment extends Fragment implements View.OnClickListener, 
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_exercise, container, false);
         ButterKnife.bind(this,view);
+
+        CommonUtils.setRobotoRegularFonts(getActivity(),tvExcerciseToday);
+
         ((TrackActivity) getActivity()).setActionBarTitle("Execise");
         dbForTrackActivities = new DBForTrackActivities();
         appSharedPreference = new AppSharedPreference(getActivity());
@@ -95,6 +101,7 @@ public class ExerciseFragment extends Fragment implements View.OnClickListener, 
         llAerobics.setOnClickListener(this);
         llOthers.setOnClickListener(this);
 
+        callSavedMethod();
         tvExcerciseToday.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -168,6 +175,77 @@ public class ExerciseFragment extends Fragment implements View.OnClickListener, 
         }
     }
 
+    public void callSavedMethod(){
+        if (tvExcerciseToday.getText().equals("Today  ")){
+            Date dt = new Date();
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy");// set format for date
+            String todaysDate = dateFormat.format(dt); // parse it like
+            savedDate = todaysDate;
+        }else {
+            savedDate = tvExcerciseToday.getText().toString();
+        }
+
+        if(dbForTrackActivities.getDate(savedDate)){
+            ArrayList<UserEventDetails> eventDetails = dbForTrackActivities.getDetails(appSharedPreference.getProfileName(AppConstants.PROFILE_NAME),savedDate,1);
+            if(eventDetails != null){
+                if(eventDetails.get(0).getIswalked().equals("true")){
+                    ivWalking.setBackgroundResource(R.drawable.ic_checked);
+                    ivWalking.setTag(R.drawable.ic_checked);
+                    checkClicked = true;
+                }else {
+                    ivWalking.setBackgroundResource(R.drawable.ic_unchecked);
+                    ivWalking.setTag(0);
+                    checkClicked = false;
+                }
+
+                if(eventDetails.get(0).getIsCycled().equals("true")){
+                    ivCycling.setBackgroundResource(R.drawable.ic_checked);
+                    ivCycling.setTag(R.drawable.ic_checked);
+                    checkClicked = true;
+                }else {
+                    ivCycling.setBackgroundResource(R.drawable.ic_unchecked);
+                    ivCycling.setTag(0);
+                    checkClicked = false;
+                }
+
+                if(eventDetails.get(0).getIsSwimmed().equals("true")){
+                    ivSwimming.setBackgroundResource(R.drawable.ic_checked);
+                    ivSwimming.setTag(R.drawable.ic_checked);
+                    checkClicked = true;
+                }else {
+                    ivSwimming.setBackgroundResource(R.drawable.ic_unchecked);
+                    ivSwimming.setTag(0);
+                    checkClicked = false;
+                }
+
+                if(eventDetails.get(0).getDoneAerobics().equals("true")){
+                    ivAerobics.setBackgroundResource(R.drawable.ic_checked);
+                    ivAerobics.setTag(R.drawable.ic_checked);
+                    checkClicked = true;
+                }else {
+                    ivAerobics.setBackgroundResource(R.drawable.ic_unchecked);
+                    ivAerobics.setTag(0);
+                    checkClicked = false;
+                }
+                if(eventDetails.get(0).getOthers().equals("true")){
+                    ivOthers.setBackgroundResource(R.drawable.ic_checked);
+                    ivWalking.setTag(R.drawable.ic_checked);
+                    checkClicked = true;
+                }else {
+                    ivOthers.setBackgroundResource(R.drawable.ic_unchecked);
+                    ivOthers.setTag(0);
+                    checkClicked = false;
+                }
+            }
+        }else {
+            ivWalking.setBackgroundResource(R.drawable.ic_unchecked);
+            ivCycling.setBackgroundResource(R.drawable.ic_unchecked);
+            ivSwimming.setBackgroundResource(R.drawable.ic_unchecked);
+            ivAerobics.setBackgroundResource(R.drawable.ic_unchecked);
+            ivOthers.setBackgroundResource(R.drawable.ic_unchecked);
+
+        }
+    }
 
     public class DatePickerDialogClass extends DialogFragment implements DatePickerDialog.OnDateSetListener{
 
@@ -203,6 +281,7 @@ public class ExerciseFragment extends Fragment implements View.OnClickListener, 
             String stDate= dateFormat.format(parseDate); //2016/11/16 12:08:43
             Log.e("Comparing Date :"," Your date is correct");
             tvExcerciseToday.setText(stDate);
+            callSavedMethod();
 
         }
     }
@@ -222,18 +301,33 @@ public class ExerciseFragment extends Fragment implements View.OnClickListener, 
         }
         if(ivWalking.getTag().equals(R.drawable.ic_checked)){
             TrackActivity. userEventDetails.setIswalked("true");
+        }else {
+            TrackActivity. userEventDetails.setIswalked("false");
+
         }
         if(ivCycling.getTag().equals(R.drawable.ic_checked)){
             TrackActivity.userEventDetails.setIsCycled("true");
+        }else {
+            TrackActivity.userEventDetails.setIsCycled("false");
+
         }
+
         if(ivSwimming.getTag().equals(R.drawable.ic_checked)){
             TrackActivity.userEventDetails.setIsSwimmed("true");
+        }else {
+            TrackActivity.userEventDetails.setIsSwimmed("false");
         }
+
         if(ivAerobics.getTag().equals(R.drawable.ic_checked)){
             TrackActivity. userEventDetails.setDoneAerobics("true");
+        }else {
+            TrackActivity. userEventDetails.setDoneAerobics("false");
         }
+
         if(ivOthers.getTag().equals(R.drawable.ic_checked)){
             TrackActivity. userEventDetails.setOthers("true");
+        }else {
+            TrackActivity. userEventDetails.setOthers("false");
         }
 
       //  boolean count = dbForTrackActivities.isTableEmpty();

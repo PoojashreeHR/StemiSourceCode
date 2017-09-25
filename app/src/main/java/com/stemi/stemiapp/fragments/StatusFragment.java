@@ -167,7 +167,7 @@ public class StatusFragment extends Fragment {
         populateWeightGraph();
         setupDate();
 
-        ((TrackActivity)getActivity()).getViewPager().setPagingEnabled(true);
+        ((TrackActivity)getActivity()).getViewPager().setPagingEnabled(false);
 
         tabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override

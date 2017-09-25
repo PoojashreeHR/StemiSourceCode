@@ -85,6 +85,7 @@ public class TrackMedicationDB {
 
                 long i = db.insertOrThrow(TABLE_MEDICATION, null, cv);
                 Log.e("StatsFragment", "i = " + i);
+                EventBus.getDefault().post(new MessageEvent("Hello!"));
             } catch (Exception e) {
                 Log.e("StatsFragment", "Exception e = " + e.getLocalizedMessage());
             }

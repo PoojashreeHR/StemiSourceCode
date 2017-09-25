@@ -50,6 +50,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import com.stemi.stemiapp.databases.UserDetailsTable;
 import com.stemi.stemiapp.model.RegisteredUserDetails;
+import com.stemi.stemiapp.utils.CommonUtils;
 import com.stemi.stemiapp.utils.GlobalClass;
 
 
@@ -101,7 +102,7 @@ public class TrackActivity extends AppCompatActivity implements NavigationView.O
          userEventDetails = new UserEventDetails();
         appSharedPreferences = new AppSharedPreference(this);
         viewPager = (CustomViewPager) findViewById(R.id.viewpager);
-        viewPager.setPagingEnabled(true);
+        viewPager.setPagingEnabled(false);
         mainContainer = (RelativeLayout) findViewById(R.id.mainContainer);
         profileImage = (CircleImageView) findViewById(R.id.profile_image);
 
@@ -250,26 +251,31 @@ public class TrackActivity extends AppCompatActivity implements NavigationView.O
     private void setupTabIcons() {
 
         TextView tabOne = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
+        CommonUtils.setRobotoLightFonts(this,tabOne);
         tabOne.setText("Learn");
         tabOne.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_learn, 0, 0);
         tabLayout.getTabAt(0).setCustomView(tabOne);
 
         TextView tabTwo = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
+        CommonUtils.setRobotoLightFonts(this,tabTwo);
         tabTwo.setText("Track");
         tabTwo.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_track, 0, 0);
         tabLayout.getTabAt(1).setCustomView(tabTwo);
 
         TextView tabThree = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
+        CommonUtils.setRobotoLightFonts(this,tabThree);
         tabThree.setText("SOS");
         tabThree.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_sos,0, 0);
         tabLayout.getTabAt(2).setCustomView(tabThree);
 
         TextView tabfour = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
+        CommonUtils.setRobotoLightFonts(this,tabfour);
         tabfour.setText("Hospital");
         tabfour.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_hospital,0, 0);
         tabLayout.getTabAt(3).setCustomView(tabfour);
 
         TextView tabFive = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
+        CommonUtils.setRobotoLightFonts(this,tabFive);
         tabFive.setText("Stats");
         tabFive.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_stats, 0, 0);
         tabLayout.getTabAt(4).setCustomView(tabFive);

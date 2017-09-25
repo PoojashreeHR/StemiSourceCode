@@ -21,6 +21,7 @@ import com.stemi.stemiapp.activity.TrackActivity;
 import com.stemi.stemiapp.customviews.AnswerTemplateView;
 import com.stemi.stemiapp.databases.DBForTrackActivities;
 import com.stemi.stemiapp.model.MessageEvent;
+import com.stemi.stemiapp.model.UserEventDetails;
 import com.stemi.stemiapp.preference.AppSharedPreference;
 import com.stemi.stemiapp.utils.AppConstants;
 import com.stemi.stemiapp.utils.CommonUtils;
@@ -29,6 +30,7 @@ import org.greenrobot.eventbus.EventBus;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -48,6 +50,7 @@ public class SmokingFragment  extends Fragment implements TrackActivity.OnBackPr
 
     DBForTrackActivities dbForTrackActivities;
 
+    String savedDate;
     String responseChange;
    // AnswerTemplateView answerTemplateView;
     public SmokingFragment() {
@@ -68,6 +71,7 @@ public class SmokingFragment  extends Fragment implements TrackActivity.OnBackPr
         dbForTrackActivities = new DBForTrackActivities();
         appSharedPreference = new AppSharedPreference(getActivity());
 
+        CommonUtils.setRobotoRegularFonts(getActivity(),tvSmokeToday);
         smokeToday.setResponseChangedListener(new AnswerTemplateView.ResponseChangedListener() {
             @Override
             public void onResponse(String response) {
@@ -144,6 +148,7 @@ public class SmokingFragment  extends Fragment implements TrackActivity.OnBackPr
             String stDate= dateFormat.format(parseDate); //2016/11/16 12:08:43
             Log.e("Comparing Date :"," Your date is correct");
             tvSmokeToday.setText(stDate);
+            callSavedMethod();
         }
     }
 
@@ -172,6 +177,32 @@ public class SmokingFragment  extends Fragment implements TrackActivity.OnBackPr
         } else {
             int c = dbForTrackActivities.isEntryExists(TrackActivity.userEventDetails,3,getActivity());
 
+        }
+    }
+
+    public void callSavedMethod(){
+        if (tvSmokeToday.getText().equals("Today  ")){
+            Date dt = new Date();
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy");// set format for date
+            String todaysDate = dateFormat.format(dt); // parse it like
+            savedDate = todaysDate;
+        }else {
+            savedDate = tvSmokeToday.getText().toString();
+        }
+
+        if(dbForTrackActivities.getDate(savedDate)) {
+            ArrayList<UserEventDetails> eventDetails = dbForTrackActivities.getDetails(appSharedPreference.getProfileName(AppConstants.PROFILE_NAME), savedDate, 3);
+            if (eventDetails.get(0).getSmokeToday() != null) {
+                smokeToday.setResponse(eventDetails.get(0).getSmokeToday());
+                if(eventDetails.get(0).getSmokeToday().equals("YES")){
+                    howMany.setText(eventDetails.get(0).getHowMany());
+                }else {
+                    howMany.setEnabled(false);
+                    howMany.setAlpha(.6f);
+                }
+            }
+        }else {
+            smokeToday.setResponse(null);
         }
     }
  /*   @Override

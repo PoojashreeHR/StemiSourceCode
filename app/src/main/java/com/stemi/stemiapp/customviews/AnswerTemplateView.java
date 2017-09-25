@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.stemi.stemiapp.R;
+import com.stemi.stemiapp.utils.CommonUtils;
 
 /**
  * Created by praburaam on 17/07/17.
@@ -59,20 +60,22 @@ public class AnswerTemplateView extends LinearLayout implements View.OnClickList
             a.recycle();
         }
 
-
         View v = LayoutInflater.from(context).inflate(R.layout.answer_layout, null);
 
         LinearLayout linearLayout = (LinearLayout) v.findViewById(R.id.layout_smoke);
 
         tv_yes = (TextView) v.findViewById(R.id.tv_yes);
+        CommonUtils.setRobotoRegularFonts(getContext(),tv_yes);
         tv_yes.setBackgroundDrawable(setBackground);
         tv_yes.setTextColor(clickedColor);
 
         tv_no = (TextView) v.findViewById(R.id.tv_no);
+        CommonUtils.setRobotoRegularFonts(getContext(),tv_no);
         tv_no.setBackgroundDrawable(setBackground);
         tv_no.setTextColor(clickedColor);
 
         tv_dont_know = (TextView) v.findViewById(R.id.tv_dont_know);
+        CommonUtils.setRobotoRegularFonts(getContext(),tv_dont_know);
         tv_dont_know.setBackgroundDrawable(setBackground);
         tv_dont_know.setTextColor(clickedColor);
 

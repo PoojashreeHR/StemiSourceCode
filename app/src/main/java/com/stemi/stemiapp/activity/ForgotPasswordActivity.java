@@ -3,6 +3,7 @@ package com.stemi.stemiapp.activity;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -37,6 +38,7 @@ public class ForgotPasswordActivity extends AppCompatActivity implements View.On
         setContentView(R.layout.activity_forgot_password);
         ButterKnife.bind(this);
 
+        CommonUtils.setRobotoRegularFonts(ForgotPasswordActivity.this,notRegistered);
         apiInterface = ApiClient.getClient().create(ApiInterface.class);
 
         btnSubmit.setOnClickListener(this);
@@ -75,12 +77,28 @@ public class ForgotPasswordActivity extends AppCompatActivity implements View.On
         int id = v.getId();
         switch (id) {
             case R.id.btn_submit:
-                callForgotPasswordApi();
+                if(Validate()) {
+                    callForgotPasswordApi();
+                }
                 break;
             case R.id.tv_forgot_not_registered:
                 startActivity(new Intent(ForgotPasswordActivity.this,SignUpActivity.class));
                 finish();
                 break;
         }
+    }
+
+    public boolean Validate() {
+        Boolean valid = true;
+
+        String emailId = forgotEmail.getText().toString();
+        if (TextUtils.isEmpty(emailId)) {
+            forgotEmail.setError("Required");
+            valid = false;
+        } else {
+            forgotEmail.setError(null);
+        }
+
+        return valid;
     }
 }

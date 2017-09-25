@@ -110,10 +110,10 @@ public class UserDetailsTable {
     public String addEntry(RegisteredUserDetails registeredUserDetails) {
         SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
         ContentValues values = new ContentValues();
-        long count = getProfilesCount();
+      /*  long count = getProfilesCount();
         count = count+1;
-        String uid = registeredUserDetails.getUniqueId()+"_"+ count;
-        values.put(USER_UID,uid);
+        String uid = registeredUserDetails.getUniqueId()+"_"+ count;*/
+        values.put(USER_UID,registeredUserDetails.getUniqueId());
         values.put(LOGIN_ID, loginId);
         values.put(USER_NAME,registeredUserDetails.getName());
         values.put(USER_AGE,registeredUserDetails.getAge());
@@ -141,7 +141,7 @@ public class UserDetailsTable {
 
         //see that all database connection stuff is inside this method
         //so we don't need to open and close db connection outside this class
-        return uid;
+        return registeredUserDetails.getUniqueId();
 
     }
 

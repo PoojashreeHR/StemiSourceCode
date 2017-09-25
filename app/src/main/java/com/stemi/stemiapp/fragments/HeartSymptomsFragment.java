@@ -14,6 +14,8 @@ import android.widget.TextView;
 import com.stemi.stemiapp.R;
 import com.stemi.stemiapp.customviews.CircleImageView;
 import com.stemi.stemiapp.model.HeartSymptomsModel;
+import com.stemi.stemiapp.utils.CommonUtils;
+import com.stemi.stemiapp.utils.TyprfaceUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -103,6 +105,7 @@ public class HeartSymptomsFragment extends Fragment {
         @SuppressLint("NewApi")
         @Override
         public void onBindViewHolder(final HeartSymptomsAdapter.MyViewHolder holder, final int position) {
+            CommonUtils.setRobotoRegularFonts(getActivity(),holder.symptoms);
             holder.symptomsImg.setBackground(getResources().getDrawable(heartAttackSymptoms.get(position).getSymptomsImg()));
             holder.symptoms.setText(heartAttackSymptoms.get(position).getSymptoms());
             holder.symptomsNumb.setText(heartAttackSymptoms.get(position).getSymptomNumb());

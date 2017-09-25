@@ -38,7 +38,7 @@
             android:id="@+id/et_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Name"
+            android:hint="NAME"
             android:imeOptions="actionNext"
             android:inputType="textPersonName" />
     </android.support.design.widget.TextInputLayout>
@@ -53,7 +53,7 @@
             android:id="@+id/et_age"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Age"
+            android:hint="AGE"
             android:imeOptions="actionGo"
             android:inputType="number"/>
     </android.support.design.widget.TextInputLayout>
@@ -100,7 +100,7 @@
                 android:id="@+id/et_phone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Phone"
+                android:hint="PHONE"
                 android:imeOptions="actionGo"
                 android:inputType="phone"/>
         </android.support.design.widget.TextInputLayout>
@@ -116,7 +116,7 @@
                 android:id="@+id/et_email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Email"
+                android:hint="EMAIL"
                 android:inputType="textEmailAddress"
                 android:imeOptions="actionGo"/>
         </android.support.design.widget.TextInputLayout>

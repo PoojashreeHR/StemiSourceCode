@@ -126,6 +126,8 @@ public class AddMedicineFragment extends Fragment implements View.OnClickListene
         formIsValid(color);
         formIsValid(medicineType);
 
+        //Setting fonts
+        CommonUtils.setRobotoRegularFonts(getActivity(),medicineNamee);
         ((TrackActivity) getActivity()).setOnBackPressedListener(this);
 
         appSharedPreference = new AppSharedPreference(getActivity());
@@ -457,7 +459,7 @@ public class AddMedicineFragment extends Fragment implements View.OnClickListene
             case R.id.morningMedicine:
                 if (!morningMedicine.isSelected()) {
                     morningMedicine.setBackground(getResources().getDrawable(R.drawable.button_transparent_oval_shape));
-                    morningMedicine.setTextColor(getResources().getColor(R.color.colorDarkGrey));
+                    morningMedicine.setTextColor(getResources().getColor(R.color.colorPrimary));
                     morningTime.setVisibility(View.GONE);
                     morningMedicine.setSelected(true);
                 } else {
@@ -475,7 +477,7 @@ public class AddMedicineFragment extends Fragment implements View.OnClickListene
                     noonMedicine.setSelected(true);
                 } else {
                     noonMedicine.setBackground(getResources().getDrawable(R.drawable.button_transparent_oval_shape));
-                    noonMedicine.setTextColor(getResources().getColor(R.color.colorDarkGrey));
+                    noonMedicine.setTextColor(getResources().getColor(R.color.colorPrimary));
                     noonTime.setVisibility(View.GONE);
                     noonMedicine.setSelected(false);
                 }
@@ -488,7 +490,7 @@ public class AddMedicineFragment extends Fragment implements View.OnClickListene
                     nightMedicine.setSelected(true);
                 } else {
                     nightMedicine.setBackground(getResources().getDrawable(R.drawable.button_transparent_oval_shape));
-                    nightMedicine.setTextColor(getResources().getColor(R.color.colorDarkGrey));
+                    nightMedicine.setTextColor(getResources().getColor(R.color.colorPrimary));
                     nightTime.setVisibility(View.GONE);
                     nightMedicine.setSelected(false);
                 }

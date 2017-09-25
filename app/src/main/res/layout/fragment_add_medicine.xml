@@ -19,8 +19,9 @@
                 android:layout_marginBottom="10dp"
                 android:layout_marginTop="20dp"
                 android:gravity="center"
+                android:typeface="serif"
                 android:text="MEDICINE NAME"
-                android:textSize="15sp" />
+                android:textSize="12sp" />
 
             <EditText
                 android:id="@+id/etMedicineName"
@@ -35,9 +36,9 @@
                 android:inputType="textCapSentences"
                 android:padding="15dp"
                 android:singleLine="true"
-                android:textColor="@color/appBackground"
+                android:textColor="@color/black"
                 android:textCursorDrawable="@drawable/cursor_drawable"
-                android:textSize="18sp" />
+                android:textSize="16sp" />
 
             <TextView
                 android:id="@+id/tvType"
@@ -291,7 +292,7 @@
                         android:gravity="center"
                         android:padding="5dp"
                         android:text="Morning"
-                        android:textSize="18sp" />
+                        android:textSize="14sp" />
 
                     <TextView
                         android:id="@+id/tvMorningTime"
@@ -323,7 +324,7 @@
                         android:gravity="center"
                         android:padding="5dp"
                         android:text="Afternoon"
-                        android:textSize="18sp" />
+                        android:textSize="14sp" />
 
                     <TextView
                         android:id="@+id/tvNoonTime"
@@ -355,7 +356,7 @@
                         android:gravity="center"
                         android:padding="5dp"
                         android:text="Night"
-                        android:textSize="18sp" />
+                        android:textSize="14sp" />
 
 
                     <TextView
@@ -396,9 +397,9 @@
                 android:padding="15dp"
                 android:singleLine="true"
                 android:text=""
-                android:textColor="@color/appBackground"
+                android:textColor="@color/black"
                 android:textCursorDrawable="@drawable/cursor_drawable"
-                android:textSize="18sp" />
+                android:textSize="16sp" />
 
             <CheckBox
                 android:id="@+id/medicineRemainder"

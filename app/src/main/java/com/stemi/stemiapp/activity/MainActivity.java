@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -44,6 +45,9 @@ public class MainActivity extends AppCompatActivity implements AppConstants,View
 
         apiInterface = ApiClient.getClient().create(ApiInterface.class);
         appSharedPreferences = new AppSharedPreference(this);
+
+        CommonUtils.setRobotoRegularFonts(MainActivity.this,tvForgotPassword);
+        CommonUtils.setRobotoRegularFonts(MainActivity.this,tvNotRegistered);
 
         if(appSharedPreferences.getUserToken(USER_TOKEN) != null){
             startActivity(new Intent(MainActivity.this,TrackActivity.class));
@@ -98,7 +102,9 @@ public class MainActivity extends AppCompatActivity implements AppConstants,View
         int id = v.getId();
         switch (id) {
             case R.id.btn_login:
-                callSignIn();
+                if(Validate()) {
+                    callSignIn();
+                }
                 break;
 
             case R.id.tv_not_registered:
@@ -112,4 +118,25 @@ public class MainActivity extends AppCompatActivity implements AppConstants,View
         }
     }
 
+    public boolean Validate(){
+        Boolean valid = true;
+
+        String emailId = etEmail.getText().toString();
+        if (TextUtils.isEmpty(emailId)) {
+            etEmail.setError("Required");
+            valid = false;
+        } else {
+            etEmail.setError(null);
+        }
+
+        String password = etPassword.getText().toString();
+        if (TextUtils.isEmpty(password)) {
+            etPassword.setError("Required");
+            valid = false;
+        } else {
+            etPassword.setError(null);
+        }
+        
+        return valid;
+    }
 }

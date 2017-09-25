@@ -21,6 +21,7 @@ import com.stemi.stemiapp.R;
 import com.stemi.stemiapp.activity.TrackActivity;
 import com.stemi.stemiapp.databases.DBForTrackActivities;
 import com.stemi.stemiapp.model.MessageEvent;
+import com.stemi.stemiapp.model.UserEventDetails;
 import com.stemi.stemiapp.preference.AppSharedPreference;
 import com.stemi.stemiapp.utils.AppConstants;
 import com.stemi.stemiapp.utils.CommonUtils;
@@ -29,6 +30,7 @@ import org.greenrobot.eventbus.EventBus;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -48,6 +50,7 @@ public class WeightFragment  extends Fragment implements View.OnClickListener,Tr
     @BindView(R.id.learn_more)TextView learnMore;
     String bmiCount = null;
 
+    String savedDate;
     AppSharedPreference appSharedPreference;
     DBForTrackActivities dbForTrackActivities;
 
@@ -69,6 +72,7 @@ public class WeightFragment  extends Fragment implements View.OnClickListener,Tr
         appSharedPreference = new AppSharedPreference(getActivity());
         dbForTrackActivities = new DBForTrackActivities();
 
+        CommonUtils.setRobotoRegularFonts(getActivity(),tvWeightToday);
         btCalculateBmi.setOnClickListener(this);
         tvWeightToday.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -118,7 +122,25 @@ public class WeightFragment  extends Fragment implements View.OnClickListener,Tr
         }
     }
 
+    public void callSavedMethod() {
+        if (tvWeightToday.getText().equals("Today  ")) {
+            Date dt = new Date();
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy");// set format for date
+            String todaysDate = dateFormat.format(dt); // parse it like
+            savedDate = todaysDate;
+        } else {
+            savedDate = tvWeightToday.getText().toString();
+        }
 
+        if (dbForTrackActivities.getDate(savedDate)) {
+            ArrayList<UserEventDetails> eventDetails = dbForTrackActivities.getDetails(appSharedPreference.getProfileName(AppConstants.PROFILE_NAME), savedDate, 4);
+            if (eventDetails.get(0).getTodaysWeight() != null) {
+                todaysWeight.setText(eventDetails.get(0).getTodaysWeight());
+            }
+        }else {
+            todaysWeight.setText("");
+        }
+    }
     public class DatePickerDialogClass extends DialogFragment implements DatePickerDialog.OnDateSetListener{
 
         @Override
@@ -153,7 +175,7 @@ public class WeightFragment  extends Fragment implements View.OnClickListener,Tr
             String stDate= dateFormat.format(parseDate); //2016/11/16 12:08:43
             Log.e("Comparing Date :"," Your date is correct");
             tvWeightToday.setText(stDate);
-
+            callSavedMethod();
         }
     }
 

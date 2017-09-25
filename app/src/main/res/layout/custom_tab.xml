@@ -7,5 +7,4 @@
         android:textColor="#808080"
         android:textSize="12sp"
         android:gravity="center"
-       android:fontFamily="serif"
     />
