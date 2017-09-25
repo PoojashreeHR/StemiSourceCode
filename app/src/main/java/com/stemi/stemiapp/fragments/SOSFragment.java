@@ -83,7 +83,7 @@ public class SOSFragment extends Fragment implements View.OnClickListener {
         personSpinner = (BetterSpinner) view.findViewById(R.id.person_Spinner);
         //pick_location = (ImageView) view.findViewById(R.id.pick_location);
         etLocation = (EditText)view.findViewById(R.id.et_location);
-        dBforUserDetails = new UserDetailsTable();
+        dBforUserDetails = new UserDetailsTable(getActivity());
         personName = new ArrayList<>();
         personName = dBforUserDetails.getRecords();
 

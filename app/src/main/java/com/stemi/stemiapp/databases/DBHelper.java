@@ -10,6 +10,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.stemi.stemiapp.StemiApplication;
 import com.stemi.stemiapp.activity.RegistrationActivity;
 import com.stemi.stemiapp.model.MedicineDetails;
 import com.stemi.stemiapp.model.RegisteredUserDetails;
@@ -32,7 +33,7 @@ public class DBHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = GlobalClass.DB_NAME;
 
 
-    public DBHelper() {super((App.getContext()), DATABASE_NAME, null, DATABASE_VERSION);}
+    public DBHelper() {super((StemiApplication.getContext()), DATABASE_NAME, null, DATABASE_VERSION);}
 
     @Override
     public void onCreate(SQLiteDatabase db) {

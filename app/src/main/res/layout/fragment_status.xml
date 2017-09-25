@@ -31,6 +31,23 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:id="@+id/stress_layout"
+        android:visibility="gone"
+        android:layout_below="@+id/tabs"
+        >
+
+        <com.jjoe64.graphview.GraphView
+            android:layout_width="match_parent"
+            android:layout_height="200dip"
+            android:id="@+id/stress_graph"
+            android:layout_marginTop="30dp"
+            />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:id="@+id/weight_layout"
         android:visibility="gone"
         android:layout_below="@+id/tabs"

@@ -20,6 +20,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.LegendRenderer;
 import com.jjoe64.graphview.helper.StaticLabelsFormatter;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.DataPointInterface;
@@ -34,6 +35,7 @@ import com.stemi.stemiapp.databases.TrackSmokingDB;
 import com.stemi.stemiapp.databases.TrackStressDB;
 import com.stemi.stemiapp.databases.TrackWeightDB;
 import com.stemi.stemiapp.graphs.FlaggedDataPoint;
+import com.stemi.stemiapp.graphs.XAxisDateFormatter;
 import com.stemi.stemiapp.graphs.YAxisValueFormatter;
 import com.stemi.stemiapp.model.BloodTestResult;
 import com.stemi.stemiapp.model.TrackExercise;
@@ -41,9 +43,7 @@ import com.stemi.stemiapp.model.TrackMedication;
 import com.stemi.stemiapp.model.TrackSmoking;
 import com.stemi.stemiapp.model.TrackStress;
 import com.stemi.stemiapp.model.TrackWeight;
-import com.stemi.stemiapp.preference.AppSharedPreference;
 import com.stemi.stemiapp.samples.ChartSampleActivity;
-import com.stemi.stemiapp.utils.AppConstants;
 import com.stemi.stemiapp.utils.GlobalClass;
 
 import java.lang.reflect.Field;
@@ -74,7 +74,6 @@ public class StatusFragment extends Fragment {
     private int monthIndex = 0;
     private TextView dateText;
 
-    AppSharedPreference appSharedPreference;
     @BindView(R.id.txt_heamoglobin)
      TextView txtHeamoglobin;
 
@@ -101,6 +100,9 @@ public class StatusFragment extends Fragment {
 
     @BindView(R.id.txt_post_prandial_plasma_glucose)
      TextView txtPostPrandialPlasmaGlucose;
+    private RelativeLayout stressLayout;
+    private GraphView stressGraph;
+    private final String TAG = "Graphs";
 
     public StatusFragment() {
         // Required empty public constructor
@@ -120,15 +122,15 @@ public class StatusFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_status, container, false);
         ButterKnife.bind(this,view);
-
-        appSharedPreference = new AppSharedPreference(getActivity());
         tabs = (TabLayout) view.findViewById(R.id.tabs);
         healthLayout = (RelativeLayout) view.findViewById(R.id.health_layout);
         weightLayout = (RelativeLayout) view.findViewById(R.id.weight_layout);
         bloodTestLayout = (RelativeLayout) view.findViewById(R.id.blood_test_layout);
+        stressLayout = (RelativeLayout) view.findViewById(R.id.stress_layout);
 
         healthGraph = (GraphView) view.findViewById(R.id.health_graph);
         weightGraph = (GraphView) view.findViewById(R.id.weight_graph);
+        stressGraph = (GraphView) view.findViewById(R.id.stress_graph);
         btnLeftArrow = (ImageView) view.findViewById(R.id.date_left_btn);
         btnRightArrow = (ImageView) view.findViewById(R.id.date_right_btn);
 
@@ -151,12 +153,17 @@ public class StatusFragment extends Fragment {
         });
 
         tabs.addTab(tabs.newTab().setText("Health"));
+        tabs.addTab(tabs.newTab().setText("Stress"));
         tabs.addTab(tabs.newTab().setText("Weight"));
         tabs.addTab(tabs.newTab().setText("Blood Test"));
 
+        tabs.setSelectedTabIndicatorColor(getResources().getColor(R.color.appBackground));
+        tabs.setTabTextColors(getResources().getColor(R.color.colorPrimaryDark), getResources().getColor(R.color.appBackground));
+
         //populateDummyData();
         populateHealthGraph();
-        //populateDummyData();
+       // populateDummyData();
+        populateStressGraph();
         populateWeightGraph();
         setupDate();
 
@@ -168,17 +175,26 @@ public class StatusFragment extends Fragment {
                 if(tab.getText().equals("Health")){
                     bloodTestLayout.setVisibility(View.GONE);
                     weightLayout.setVisibility(View.GONE);
+                    stressLayout.setVisibility(View.GONE);
                     healthLayout.setVisibility(View.VISIBLE);
                    // populateDummyData();
                    // populateHealthGraph();
                 }
+                else if(tab.getText().equals("Stress")){
+                    healthLayout.setVisibility(View.GONE);
+                    bloodTestLayout.setVisibility(View.GONE);
+                    weightLayout.setVisibility(View.GONE);
+                    stressLayout.setVisibility(View.VISIBLE);
+                }
                 else if(tab.getText().equals("Weight")){
                     healthLayout.setVisibility(View.GONE);
+                    stressLayout.setVisibility(View.GONE);
                     bloodTestLayout.setVisibility(View.GONE);
                     weightLayout.setVisibility(View.VISIBLE);
                 }
                 else{
                     healthLayout.setVisibility(View.GONE);
+                    stressLayout.setVisibility(View.GONE);
                     weightLayout.setVisibility(View.GONE);
                     bloodTestLayout.setVisibility(View.VISIBLE);
                 }
@@ -198,6 +214,53 @@ public class StatusFragment extends Fragment {
         return view;
     }
 
+    private void populateStressGraph() {
+        TrackStressDB trackStressDB = new TrackStressDB(getActivity());
+        List<TrackStress> trackStressList = trackStressDB.getAllInfo(GlobalClass.userID);
+        Log.e(TAG, "trackStressList.size() = "+trackStressList.size());
+        DataPointInterface[] meditationPoints = new DataPoint[trackStressList.size()];
+        DataPointInterface[] yogaPoints = new DataPoint[trackStressList.size()];
+
+        int i=0;
+        for(TrackStress trackStress : trackStressList){
+            meditationPoints[i] = new DataPoint(trackStress.getDateTime(), trackStress.getMeditationHrs());
+            yogaPoints[i] = new DataPoint(trackStress.getDateTime(), trackStress.getYogaHrs());
+            i++;
+        }
+
+        LineGraphSeries<DataPointInterface> meditationSeries = new LineGraphSeries<>(meditationPoints);
+        LineGraphSeries<DataPointInterface> yogaSeries = new LineGraphSeries<>(yogaPoints);
+
+        meditationSeries.setDrawDataPoints(true);
+        meditationSeries.setColor(getResources().getColor(R.color.appBackground));
+        //meditationSeries.setBackgroundColor(R.color.appBackground);
+        meditationSeries.setTitle("Meditation");
+        stressGraph.addSeries(meditationSeries);
+
+        yogaSeries.setDrawDataPoints(true);
+        yogaSeries.setColor(getResources().getColor(R.color.colorGreen));
+        yogaSeries.setTitle("Yoga");
+        stressGraph.addSeries(yogaSeries);
+
+        stressGraph.getLegendRenderer().setVisible(true);
+        stressGraph.getLegendRenderer().setAlign(LegendRenderer.LegendAlign.TOP);
+
+        stressGraph.getGridLabelRenderer().setLabelFormatter(new XAxisDateFormatter(getActivity()));
+        stressGraph.getGridLabelRenderer().setHumanRounding(false);
+        stressGraph.getGridLabelRenderer().setNumHorizontalLabels(5);
+
+        stressGraph.getViewport().setYAxisBoundsManual(true);
+        stressGraph.getViewport().setMinY(0);
+        stressGraph.getViewport().setMaxY(5);
+        stressGraph.getViewport().setXAxisBoundsManual(true);
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.DATE, -10);
+        stressGraph.getViewport().setMinX(cal.getTime().getTime());
+        cal.add(Calendar.DATE, 10);
+        stressGraph.getViewport().setMaxX(cal.getTime().getTime());
+        stressGraph.getViewport().setScrollable(true);
+    }
+
     private void setupDate() {
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.MONTH, monthIndex);
@@ -212,7 +275,7 @@ public class StatusFragment extends Fragment {
 
     private void loadStatsForDate(String dateStr) {
         BloodTestDB bloodTestDB = new BloodTestDB();
-        BloodTestResult bloodTestResult = bloodTestDB.getEntry(appSharedPreference.getProfileName(AppConstants.PROFILE_NAME), dateStr);
+        BloodTestResult bloodTestResult = bloodTestDB.getEntry(GlobalClass.userID, dateStr);
 
         txtHeamoglobin.setText(String.format("%.1f",bloodTestResult.getHeamoglobin()));
         txtUreaCreatinine.setText(String.format("%.1f",bloodTestResult.getUreaCreatinine()));
@@ -292,8 +355,8 @@ public class StatusFragment extends Fragment {
         exerSeries = new PointsGraphSeries<>(exerPoints);
         healthGraph.addSeries(exerSeries);
 
-        stressSeries = new PointsGraphSeries<>(stressPoints);
-        healthGraph.addSeries(stressSeries);
+       // stressSeries = new PointsGraphSeries<>(stressPoints);
+       // healthGraph.addSeries(stressSeries);
 
         smokingSeries = new PointsGraphSeries<>(smokingPoints);
         healthGraph.addSeries(smokingSeries);
@@ -342,7 +405,7 @@ public class StatusFragment extends Fragment {
             }
         });
 
-        stressSeries.setCustomShape(new PointsGraphSeries.CustomShape() {
+       /* stressSeries.setCustomShape(new PointsGraphSeries.CustomShape() {
             @Override
             public void draw(Canvas canvas, Paint paint, float x, float y, DataPointInterface dataPoint) {
                 paint.setStrokeWidth(10);
@@ -357,7 +420,7 @@ public class StatusFragment extends Fragment {
                 //canvas.drawLine(x-20, y-20, x+20, y+20, paint);
                 //canvas.drawLine(x+20, y-20, x-20, y+20, paint);
             }
-        });
+        });*/
 
         smokingSeries.setCustomShape(new PointsGraphSeries.CustomShape() {
             @Override
@@ -380,7 +443,7 @@ public class StatusFragment extends Fragment {
         yAxes.add("");
         yAxes.add("Medication");
         yAxes.add("Exercise");
-        yAxes.add("Stress");
+       // yAxes.add("Stress");
         yAxes.add("Smoking");
 
         healthGraph.getGridLabelRenderer().setLabelFormatter(new YAxisValueFormatter(getActivity(), yAxes));
@@ -389,7 +452,7 @@ public class StatusFragment extends Fragment {
 
         healthGraph.getViewport().setYAxisBoundsManual(true);
         healthGraph.getViewport().setMinY(0);
-        healthGraph.getViewport().setMaxY(4);
+        healthGraph.getViewport().setMaxY(3);
         healthGraph.getViewport().setXAxisBoundsManual(true);
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.DATE, -10);
@@ -492,6 +555,39 @@ public class StatusFragment extends Fragment {
         bloodTestResult.setFastingPlasmaGlucose(10);
         bloodTestResult.setPostPrandialPlasmaGlucose(12);
         bloodTestDB.addEntry(GlobalClass.userID, "Sep 2017", bloodTestResult);*/
+
+
+
+        TrackStressDB trackStressDB = new TrackStressDB(getActivity());
+        TrackStress trackStress = new TrackStress();
+        Calendar calendar = Calendar.getInstance();
+        trackStress.setUserId(GlobalClass.userID);
+        trackStress.setDateTime(calendar.getTime());
+        trackStress.setMeditationHrs(0.5);
+        trackStress.setYogaHrs(0.25);
+        trackStressDB.addEntry(trackStress);
+
+        calendar.add(Calendar.DATE, -1);
+        trackStress.setUserId(GlobalClass.userID);
+        trackStress.setDateTime(calendar.getTime());
+        trackStress.setMeditationHrs(1);
+        trackStress.setYogaHrs(0.5);
+        trackStressDB.addEntry(trackStress);
+
+        calendar.add(Calendar.DATE, -1);
+        trackStress.setUserId(GlobalClass.userID);
+        trackStress.setDateTime(calendar.getTime());
+        trackStress.setMeditationHrs(1);
+        trackStress.setYogaHrs(1.25);
+        trackStressDB.addEntry(trackStress);
+
+        calendar.add(Calendar.DATE, -1);
+        trackStress.setUserId(GlobalClass.userID);
+        trackStress.setDateTime(calendar.getTime());
+        trackStress.setMeditationHrs(2);
+        trackStress.setYogaHrs(3);
+        trackStressDB.addEntry(trackStress);
+
 //        TrackMedicationDB trackMedicationDB = new TrackMedicationDB(getActivity());
 //        TrackMedication trackMedication = new TrackMedication();
 //        trackMedication.setDateTime(new Date());

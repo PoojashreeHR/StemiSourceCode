@@ -252,4 +252,23 @@ public class TrackMedicationDB {
         Button pbutton = alertDialog.getButton(DialogInterface.BUTTON_POSITIVE);
         pbutton.setTextColor(mContext.getResources().getColor(R.color.appBackground));
     }
+
+    public void createIfNotExists() {
+        SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
+        try {
+            String query = "SELECT * FROM " + TABLE_MEDICATION;
+            Cursor cursor = db.rawQuery(query, null);
+            cursor.moveToFirst();
+
+            while (!cursor.isAfterLast()) {
+                cursor.moveToNext();
+            }
+
+            cursor.close();
+        } catch (Exception e) {
+            if (e.getLocalizedMessage().contains("no such table")) {
+               // onCreate(db);
+            }
+        }
+    }
 }

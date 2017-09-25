@@ -3,22 +3,36 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
     <android.support.design.widget.AppBarLayout
            android:layout_width="match_parent"
             android:layout_height="wrap_content"
            android:id="@+id/appBarLayout"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
-        <include android:id="@+id/track_toolbar"
-            layout="@layout/custom_stemi_toolbar"/>
-      <!-- <android.support.v7.widget.Toolbar
-           android:id="@+id/track_toolbar"
-           android:layout_width="match_parent"
-           android:layout_height="?attr/actionBarSize"
-           android:background="@color/white"
-           app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />-->
-    </android.support.design.widget.AppBarLayout>
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/track_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/white"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light" >
 
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <com.stemi.stemiapp.customviews.CircleImageView
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_alignParentRight="true"
+                    android:padding="5dp"
+                    android:layout_marginRight="10dp"
+                    android:id="@+id/profile_image"
+                    />
+            </RelativeLayout>
+
+
+        </android.support.v7.widget.Toolbar>
+    </android.support.design.widget.AppBarLayout>
 
  <!--   <include layout="@layout/custom_tab"
         android:id="@+id/tab"/>-->

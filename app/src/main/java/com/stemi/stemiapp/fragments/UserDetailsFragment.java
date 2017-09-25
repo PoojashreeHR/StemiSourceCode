@@ -52,7 +52,7 @@ public class UserDetailsFragment extends Fragment implements View.OnClickListene
         ButterKnife.bind(this,view);
 
         view.findViewById(R.id.userDetailButton).setOnClickListener(this);
-        dBforUserDetails = new UserDetailsTable();
+        dBforUserDetails = new UserDetailsTable(getActivity());
         genderRadiogroup = (RadioGroup) view.findViewById(R.id.radioGroup1);
         genderRadiogroup.clearCheck();
 

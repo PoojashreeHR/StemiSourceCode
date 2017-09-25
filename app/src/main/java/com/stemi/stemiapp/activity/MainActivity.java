@@ -69,6 +69,7 @@ public class MainActivity extends AppCompatActivity implements AppConstants,View
                         CommonUtils.hideLoadingProgress();
                         SignUpResponseModel signUpResponseModel = response.body();
                         appSharedPreferences.addUserToken(USER_TOKEN, "" + signUpResponseModel.getToken());
+                        appSharedPreferences.addLoginId(etEmail.getText().toString());
                         Log.e(TAG, "onResponse: Signup Response" + signUpResponseModel);
                         Toast.makeText(MainActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
                         if(appSharedPreferences.isFirstTimeLaunch(IS_FIRST_TIME_LAUNCH)){

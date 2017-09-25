@@ -30,6 +30,7 @@ import android.widget.TextView;
 import com.stemi.stemiapp.R;
 import com.stemi.stemiapp.customviews.CircleImageView;
 import com.stemi.stemiapp.customviews.CustomViewPager;
+import com.stemi.stemiapp.databases.UserDetailsTable;
 import com.stemi.stemiapp.fragments.AddMedicineFragment;
 import com.stemi.stemiapp.fragments.HospitalFragment;
 import com.stemi.stemiapp.fragments.LearnFragment;
@@ -47,21 +48,44 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import com.stemi.stemiapp.databases.UserDetailsTable;
+import com.stemi.stemiapp.model.RegisteredUserDetails;
+import com.stemi.stemiapp.utils.GlobalClass;
+
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class TrackActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, DataPassListener {
 
+    private static final String TAG = "TrackActivity";
     TabLayout tabLayout;
     Toolbar toolbar;
-    TextView textView;
     CustomViewPager viewPager;
     private DrawerLayout drawer;
     RelativeLayout mainContainer;
     AppSharedPreference appSharedPreferences;
+    private CircleImageView profileImage;
     public static UserEventDetails userEventDetails;
-    CircleImageView profileImg;
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        UserDetailsTable dBforUserDetails = new UserDetailsTable(this);
+        RegisteredUserDetails registeredUserDetails = dBforUserDetails.getUserDetails(GlobalClass.userID);
+        Log.e(TAG,"GlobalClass.userID = " + GlobalClass.userID);
+        if(registeredUserDetails.getImgUrl() != null) {
+            profileImage.setImageURI(Uri.parse(registeredUserDetails.getImgUrl()));
+            profileImage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent i = new Intent(TrackActivity.this, ProfileActivity.class);
+                    startActivity(i);
+                }
+            });
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,17 +94,18 @@ public class TrackActivity extends AppCompatActivity implements NavigationView.O
 
         toolbar = (Toolbar) findViewById(R.id.track_toolbar);
         toolbar.setTitle("Learn");
-        textView = (TextView)findViewById(R.id.tv_toolbarText);
         toolbar.setTitleTextColor(getResources().getColor(R.color.colorPrimary));
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        profileImg = (CircleImageView) findViewById(R.id.profileImg);
-        userEventDetails = new UserEventDetails();
+         userEventDetails = new UserEventDetails();
         appSharedPreferences = new AppSharedPreference(this);
         viewPager = (CustomViewPager) findViewById(R.id.viewpager);
         viewPager.setPagingEnabled(true);
         mainContainer = (RelativeLayout) findViewById(R.id.mainContainer);
+        profileImage = (CircleImageView) findViewById(R.id.profile_image);
+
+
 
         if (viewPager.getVisibility() == View.VISIBLE) {
             mainContainer.setVisibility(View.GONE);
@@ -90,11 +115,7 @@ public class TrackActivity extends AppCompatActivity implements NavigationView.O
             setupViewPager(viewPager);
         }
 
-        if (appSharedPreferences.getProfileUrl(AppConstants.PROFILE_URL).equals("")) {
-            profileImg.setImageResource(R.drawable.ic_user);
-        } else {
-            profileImg.setImageURI(Uri.parse(appSharedPreferences.getProfileUrl(AppConstants.PROFILE_URL)));
-        }
+
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -175,10 +196,8 @@ public class TrackActivity extends AppCompatActivity implements NavigationView.O
     public void setOnBackPressedListener(OnBackPressedListener onBackPressedListener) {
         this.onBackPressedListener = onBackPressedListener;
     }
-
-    public void setActionBarTitle(String title) {
-        textView.setText(title);
-       // toolbar.setTitleTextColor(getResources().getColor(R.color.appBackground));
+    public void setActionBarTitle(String title){
+        toolbar.setTitle(title);
     }
 
     public void showFragment(Fragment fragment) {
@@ -230,13 +249,6 @@ public class TrackActivity extends AppCompatActivity implements NavigationView.O
      */
     private void setupTabIcons() {
 
- /*           tabLayout.getTabAt(0).setIcon(R.drawable.ic_learn).setText("Learn");
-            tabLayout.getTabAt(1).setIcon(R.drawable.ic_track).setText("Tracks");
-            tabLayout.getTabAt(2).setIcon(R.drawable.ic_sos);
-            tabLayout.getTabAt(3).setIcon(R.drawable.ic_hospital);
-            tabLayout.getTabAt(4).setIcon(R.drawable.ic_stats);*/
-
-
         TextView tabOne = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
         tabOne.setText("Learn");
         tabOne.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_learn, 0, 0);
@@ -249,12 +261,12 @@ public class TrackActivity extends AppCompatActivity implements NavigationView.O
 
         TextView tabThree = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
         tabThree.setText("SOS");
-        tabThree.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_sos, 0, 0);
+        tabThree.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_sos,0, 0);
         tabLayout.getTabAt(2).setCustomView(tabThree);
 
         TextView tabfour = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
         tabfour.setText("Hospital");
-        tabfour.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_hospital, 0, 0);
+        tabfour.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_hospital,0, 0);
         tabLayout.getTabAt(3).setCustomView(tabfour);
 
         TextView tabFive = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
@@ -418,9 +430,9 @@ public class TrackActivity extends AppCompatActivity implements NavigationView.O
 
     private void removeSharedPreferenceData() {
         appSharedPreferences.removeAllSPData();
-        Intent intent = new Intent(this, MainActivity.class);
-        finish();
-        startActivity(intent);
+//        Intent intent = new Intent(this, MainActivity.class);
+//        finish();
+//        startActivity(intent);
     }
 
 }

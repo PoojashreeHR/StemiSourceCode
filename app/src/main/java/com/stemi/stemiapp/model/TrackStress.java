@@ -10,6 +10,8 @@ public class TrackStress {
     private String userId;
     private Date dateTime;
     private boolean stressed;
+    private double meditationHrs;
+    private double yogaHrs;
 
     public String getUserId() {
         return userId;
@@ -33,5 +35,21 @@ public class TrackStress {
 
     public void setStressed(boolean stressed) {
         this.stressed = stressed;
+    }
+
+    public double getMeditationHrs() {
+        return meditationHrs;
+    }
+
+    public void setMeditationHrs(double meditationHrs) {
+        this.meditationHrs = meditationHrs;
+    }
+
+    public double getYogaHrs() {
+        return yogaHrs;
+    }
+
+    public void setYogaHrs(double yogaHrs) {
+        this.yogaHrs = yogaHrs;
     }
 }

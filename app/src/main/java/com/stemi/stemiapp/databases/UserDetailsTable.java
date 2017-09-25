@@ -1,31 +1,47 @@
 package com.stemi.stemiapp.databases;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+import android.widget.Toast;
 
+import com.stemi.stemiapp.model.MedicineDetails;
 import com.stemi.stemiapp.model.RegisteredUserDetails;
+import com.stemi.stemiapp.preference.AppSharedPreference;
+import com.stemi.stemiapp.utils.GlobalClass;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static android.content.ContentValues.TAG;
 
 /**
- * Created by Pooja on 19-09-2017.
+ * Created by Pooja on 20-07-2017.
  */
 
 public class UserDetailsTable {
     public static final String TABLE_NAME = "dbuserDetails";
+    private final String loginId;
+
+
+    public UserDetailsTable(Context ctx){
+        AppSharedPreference appSharedPreference = new AppSharedPreference(ctx);
+        loginId = appSharedPreference.getLoginId();
+    }
 
     //column names for User Details
     private static final String KEY_ID = "id";
+    private static final String LOGIN_ID = "loginId";
     private static final String USER_UID = "uniqueId";
     private static final String USER_NAME = "name";
     private static final String USER_AGE = "age";
     private static final String USER_GENDER = "gender";
     private static final String USER_PHONE = "phone";
+    private static final String USER_EMAIL = "email";
     private static final String USER_ADDRESS = "address";
     private static final String USER_HEIGHT = "height";
     private static final String USER_WEIGHT = "weight";
@@ -43,11 +59,13 @@ public class UserDetailsTable {
     //sql query to creating User Details table in database
     public static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME + "("
             + KEY_ID + " INTEGER PRIMARY KEY,"
+            + LOGIN_ID+" TEXT,"
             + USER_UID + " TEXT,"
             + USER_NAME + " TEXT,"
             + USER_AGE + " TEXT,"
             + USER_GENDER + " TEXT,"
             + USER_PHONE + " TEXT,"
+            + USER_EMAIL + " TEXT,"
             + USER_ADDRESS + " REAL,"
             + USER_HEIGHT + " TEXT,"
             + USER_WEIGHT + " TEXT,"
@@ -89,15 +107,19 @@ public class UserDetailsTable {
     }
 
     //function for adding the note to database
-    public void addEntry(RegisteredUserDetails registeredUserDetails) {
+    public String addEntry(RegisteredUserDetails registeredUserDetails) {
         SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
         ContentValues values = new ContentValues();
-
-        values.put(USER_UID,registeredUserDetails.getUniqueId());
+        long count = getProfilesCount();
+        count = count+1;
+        String uid = registeredUserDetails.getUniqueId()+"_"+ count;
+        values.put(USER_UID,uid);
+        values.put(LOGIN_ID, loginId);
         values.put(USER_NAME,registeredUserDetails.getName());
         values.put(USER_AGE,registeredUserDetails.getAge());
         values.put(USER_GENDER,registeredUserDetails.getGender());
         values.put(USER_PHONE,registeredUserDetails.getPhone());
+        values.put(USER_EMAIL, registeredUserDetails.getEmail());
         values.put(USER_ADDRESS,registeredUserDetails.getAddress());
         values.put(USER_HEIGHT,registeredUserDetails.getHeight());
         values.put(USER_WEIGHT,registeredUserDetails.getWeight());
@@ -119,6 +141,7 @@ public class UserDetailsTable {
 
         //see that all database connection stuff is inside this method
         //so we don't need to open and close db connection outside this class
+        return uid;
 
     }
 
@@ -143,4 +166,103 @@ public class UserDetailsTable {
         return data;
     }
 
+
+
+    public RegisteredUserDetails getUserDetails(String userId){
+        RegisteredUserDetails registeredUserDetails = new RegisteredUserDetails();
+        SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
+        try{
+            String sql = "SELECT * FROM "+TABLE_NAME+" WHERE "+USER_UID+" ='"+userId+"'"
+                    +" AND "+LOGIN_ID+" = '"+loginId+"'";
+
+            Cursor cursor = db.rawQuery(sql,null);
+            cursor.moveToFirst();
+
+            while(!cursor.isAfterLast()){
+                registeredUserDetails.setAddress(cursor.getString(cursor.getColumnIndex(USER_ADDRESS)));
+                registeredUserDetails.setAge(cursor.getString(cursor.getColumnIndex(USER_AGE)));
+                registeredUserDetails.setBlood_pressure(cursor.getString(cursor.getColumnIndex(HIGH_BLOOD_PRESSURE)));
+                registeredUserDetails.setCholesterol(cursor.getString(cursor.getColumnIndex(HIGH_CHOLESTEROL)));
+                registeredUserDetails.setDiabetes(cursor.getString(cursor.getColumnIndex(HAVE_DIABETES)));
+                registeredUserDetails.setDo_you_smoke(cursor.getString(cursor.getColumnIndex(DO_YOU_SMOKE)));
+                registeredUserDetails.setEmail(cursor.getString(cursor.getColumnIndex(USER_EMAIL)));
+                registeredUserDetails.setFamily_had_heart_attack(cursor.getString(cursor.getColumnIndex(FAMILY_HEALTH)));
+                registeredUserDetails.setGender(cursor.getString(cursor.getColumnIndex(USER_GENDER)));
+                registeredUserDetails.setHad_paralytic_stroke(cursor.getString(cursor.getColumnIndex(HAD_STROKE)));
+                registeredUserDetails.setHave_asthma(cursor.getString(cursor.getColumnIndex(HAVE_ASTHMA)));
+                registeredUserDetails.setHeart_attack(cursor.getString(cursor.getColumnIndex(HAD_HEART_ATTACK)));
+                registeredUserDetails.setHeight(cursor.getString(cursor.getColumnIndex(USER_HEIGHT)));
+                registeredUserDetails.setImgUrl(cursor.getString(cursor.getColumnIndex(USER_PROFILR_URL)));
+                registeredUserDetails.setName(cursor.getString(cursor.getColumnIndex(USER_NAME)));
+                registeredUserDetails.setPhone(cursor.getString(cursor.getColumnIndex(USER_PHONE)));
+                registeredUserDetails.setUniqueId(cursor.getString(cursor.getColumnIndex(USER_UID)));
+                registeredUserDetails.setWaist(cursor.getString(cursor.getColumnIndex(USER_WAIST)));
+                registeredUserDetails.setWeight(cursor.getString(cursor.getColumnIndex(USER_WEIGHT)));
+                cursor.moveToNext();
+            }
+        }
+        catch(Exception e){
+
+        }
+        return registeredUserDetails;
+    }
+
+    public void createIfNotExists() {
+        SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
+        try {
+            String query = "SELECT * FROM " + TABLE_NAME;
+            Cursor cursor = db.rawQuery(query, null);
+            cursor.moveToFirst();
+
+            while (!cursor.isAfterLast()) {
+                cursor.moveToNext();
+            }
+
+            cursor.close();
+        } catch (Exception e) {
+            if (e.getLocalizedMessage().contains("no such table")) {
+               // onCreate(db);
+            }
+        }
+    }
+
+    public List<RegisteredUserDetails> getAllUsers() {
+       List<RegisteredUserDetails> registeredUserDetailsList = new ArrayList<>();
+        SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
+        try{
+            String sql = "SELECT * FROM "+TABLE_NAME+" WHERE "+LOGIN_ID+" = '"+loginId+"'";
+            Cursor cursor = db.rawQuery(sql,null);
+            cursor.moveToFirst();
+
+            while(!cursor.isAfterLast()){
+                RegisteredUserDetails registeredUserDetails = new RegisteredUserDetails();
+                registeredUserDetails.setAddress(cursor.getString(cursor.getColumnIndex(USER_ADDRESS)));
+                registeredUserDetails.setAge(cursor.getString(cursor.getColumnIndex(USER_AGE)));
+                registeredUserDetails.setBlood_pressure(cursor.getString(cursor.getColumnIndex(HIGH_BLOOD_PRESSURE)));
+                registeredUserDetails.setCholesterol(cursor.getString(cursor.getColumnIndex(HIGH_CHOLESTEROL)));
+                registeredUserDetails.setDiabetes(cursor.getString(cursor.getColumnIndex(HAVE_DIABETES)));
+                registeredUserDetails.setDo_you_smoke(cursor.getString(cursor.getColumnIndex(DO_YOU_SMOKE)));
+                registeredUserDetails.setEmail(cursor.getString(cursor.getColumnIndex(USER_EMAIL)));
+                registeredUserDetails.setFamily_had_heart_attack(cursor.getString(cursor.getColumnIndex(FAMILY_HEALTH)));
+                registeredUserDetails.setGender(cursor.getString(cursor.getColumnIndex(USER_GENDER)));
+                registeredUserDetails.setHad_paralytic_stroke(cursor.getString(cursor.getColumnIndex(HAD_STROKE)));
+                registeredUserDetails.setHave_asthma(cursor.getString(cursor.getColumnIndex(HAVE_ASTHMA)));
+                registeredUserDetails.setHeart_attack(cursor.getString(cursor.getColumnIndex(HAD_HEART_ATTACK)));
+                registeredUserDetails.setHeight(cursor.getString(cursor.getColumnIndex(USER_HEIGHT)));
+                registeredUserDetails.setImgUrl(cursor.getString(cursor.getColumnIndex(USER_PROFILR_URL)));
+                registeredUserDetails.setName(cursor.getString(cursor.getColumnIndex(USER_NAME)));
+                registeredUserDetails.setPhone(cursor.getString(cursor.getColumnIndex(USER_PHONE)));
+                registeredUserDetails.setUniqueId(cursor.getString(cursor.getColumnIndex(USER_UID)));
+                Log.e("TrackActivity",registeredUserDetails.getUniqueId());
+                registeredUserDetails.setWaist(cursor.getString(cursor.getColumnIndex(USER_WAIST)));
+                registeredUserDetails.setWeight(cursor.getString(cursor.getColumnIndex(USER_WEIGHT)));
+                registeredUserDetailsList.add(registeredUserDetails);
+                cursor.moveToNext();
+            }
+        }
+        catch(Exception e){
+
+        }
+        return registeredUserDetailsList;
+    }
 }
