@@ -29,6 +29,7 @@ import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
 import com.stemi.stemiapp.R;
+import com.stemi.stemiapp.activity.MapsActivity;
 import com.stemi.stemiapp.activity.TrackActivity;
 import com.stemi.stemiapp.customviews.BetterSpinner;
 import com.stemi.stemiapp.databases.UserDetailsTable;
@@ -59,6 +60,7 @@ public class SOSFragment extends Fragment implements View.OnClickListener {
     int PLACE_PICKER_REQUEST = 1;
     private EditText etLocation;
     String selectedPersonName;
+    private double latitude, longitude;
 
     public SOSFragment() {
         // Required empty public constructor
@@ -133,6 +135,8 @@ public class SOSFragment extends Fragment implements View.OnClickListener {
         if (requestCode == PLACE_PICKER_REQUEST) {
             if (resultCode == RESULT_OK) {
                 Place place = PlacePicker.getPlace(data, getActivity());
+                latitude = place.getLatLng().latitude;
+                longitude = place.getLatLng().longitude;
                 String toastMsg = String.format("Place: %s", place.getAddress());
                 etLocation.setText(place.getAddress());
             }
@@ -238,12 +242,16 @@ public class SOSFragment extends Fragment implements View.OnClickListener {
                 break;
 
             case R.id.rl_locateMap:
-                Uri gmmIntentUri = Uri.parse("https://goo.gl/maps/vfsSm2dbFXz");
-                Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
-                mapIntent.setPackage("com.google.android.apps.maps");
-                if (mapIntent.resolveActivity(getActivity().getPackageManager()) != null) {
-                    startActivity(mapIntent);
-                }
+//                Uri gmmIntentUri = Uri.parse("https://goo.gl/maps/vfsSm2dbFXz");
+//                Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+//                mapIntent.setPackage("com.google.android.apps.maps");
+//                if (mapIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+//                    startActivity(mapIntent);
+//                }
+                Intent mapIntent = new Intent(getActivity(), MapsActivity.class);
+                mapIntent.putExtra("lat", latitude);
+                mapIntent.putExtra("lon", longitude);
+                startActivity(mapIntent);
                 break;
         }
     }

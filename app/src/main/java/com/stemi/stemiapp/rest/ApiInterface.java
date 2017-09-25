@@ -1,7 +1,11 @@
 package com.stemi.stemiapp.rest;
 
+import com.stemi.stemiapp.model.apiModels.Hospital;
+import com.stemi.stemiapp.model.apiModels.NearestHospitalResponse;
 import com.stemi.stemiapp.model.apiModels.SignUpResponseModel;
 import com.stemi.stemiapp.model.apiModels.StatusMessageResponse;
+
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.Field;
@@ -29,4 +33,7 @@ public interface ApiInterface {
     @FormUrlEncoded
     @POST("forgetpassword")
     Call<StatusMessageResponse> callForgotPassword(@Field("email") String email);
+
+    @GET("getNearestStemiHospital")
+    Call<NearestHospitalResponse> callNearestHsopitalsApi(@Query("token") String token, @Query("lat") double latitude, @Query("lon") double longitude);
 }

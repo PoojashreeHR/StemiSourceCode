@@ -37,6 +37,7 @@
         android:layout_height="wrap_content"
         android:background="@color/white"
         android:layout_margin="20dp"
+        android:id="@+id/rl_upload_data"
         android:layout_below="@+id/rl_locate_hosp">
 
         <ImageView
