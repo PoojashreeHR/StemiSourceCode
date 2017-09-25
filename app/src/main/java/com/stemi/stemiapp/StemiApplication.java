@@ -17,6 +17,7 @@ import com.stemi.stemiapp.model.RegisteredUserDetails;
 import com.stemi.stemiapp.preference.AppSharedPreference;
 import com.stemi.stemiapp.utils.AppConstants;
 import com.stemi.stemiapp.utils.GlobalClass;
+import com.stemi.stemiapp.utils.TyprfaceUtils;
 
 import java.util.List;
 
@@ -37,6 +38,7 @@ public class StemiApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
+        setupFonts();
         context = this;
         dbHelper = new DBHelper();
         DatabaseManager.initializeInstance(dbHelper);
@@ -62,7 +64,7 @@ public class StemiApplication extends Application {
     public void createAllTables(){
         BloodTestDB bloodTestDB = new BloodTestDB();
         //DBforUserDetails dBforUserDetails = new DBforUserDetails(this);
-        TrackMedicationDB medicationDB = new TrackMedicationDB();
+        TrackMedicationDB medicationDB = new TrackMedicationDB(this);
         TrackSmokingDB smokingDB = new TrackSmokingDB(this);
         TrackExerciseDB exerciseDB = new TrackExerciseDB(this);
         TrackStressDB stressDB = new TrackStressDB(this);
@@ -88,5 +90,13 @@ public class StemiApplication extends Application {
 
         weightDB.createIfNotExists();
         weightDB.close();
+    }
+
+
+    private void setupFonts() {
+        TyprfaceUtils.setDefaultFont(this, "SANS", "fonts/font_roboto_regular.ttf");
+        TyprfaceUtils.setDefaultFont(this, "MONOSPASE", "fonts/raleway_semibold.ttf");
+        TyprfaceUtils.setDefaultFont(this, "SERIF", "fonts/font_roboto_medium.ttf");
+       // TyprfaceUtils.setDefaultFont(this, "NORMAL", "fonts/font_roboto_light.ttf");
     }
 }
