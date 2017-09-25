@@ -33,6 +33,8 @@ import android.widget.TextView;
 import android.support.design.widget.TabLayout;
 import android.widget.Toast;
 
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 import com.stemi.stemiapp.R;
 import com.stemi.stemiapp.customviews.CircleImageView;
 import com.stemi.stemiapp.customviews.CustomViewPager;
@@ -66,7 +68,8 @@ import java.util.List;
 
 import butterknife.BindView;
 
-public class TrackActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, DataPassListener{
+public class TrackActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
+        DataPassListener{
 
     private static final String TAG = "TrackActivity";
     TabLayout tabLayout;
@@ -77,6 +80,8 @@ public class TrackActivity extends AppCompatActivity implements NavigationView.O
     AppSharedPreference appSharedPreferences;
     private CircleImageView profileImage;
     public static UserEventDetails userEventDetails;
+    private Fragment hospitalFragment;
+    private OnScanCompletionListener onScanCompletedListener;
 
     @Override
     protected void onResume() {
@@ -115,7 +120,7 @@ public class TrackActivity extends AppCompatActivity implements NavigationView.O
         mainContainer = (RelativeLayout) findViewById(R.id.mainContainer);
         profileImage = (CircleImageView) findViewById(R.id.profile_image);
 
-
+        hospitalFragment = new HospitalFragment();
 
         if(viewPager.getVisibility() == View.VISIBLE) {
             mainContainer.setVisibility(View.GONE);
@@ -181,6 +186,15 @@ public class TrackActivity extends AppCompatActivity implements NavigationView.O
     public void setOnBackPressedListener(OnBackPressedListener onBackPressedListener) {
         this.onBackPressedListener = onBackPressedListener;
     }
+
+    public interface OnScanCompletionListener{
+        void scanCompleted(String contents);
+    }
+
+    public void setOnScanCompletedListener(OnScanCompletionListener onScanCompletionListener){
+        this.onScanCompletedListener = onScanCompletionListener;
+    }
+
     public void setActionBarTitle(String title){
         toolbar.setTitle(title);
     }
@@ -271,11 +285,21 @@ public class TrackActivity extends AppCompatActivity implements NavigationView.O
         adapter.addFrag(new LearnFragment(), "Learn");
         adapter.addFrag(new TrackFragment(), "Track");
         adapter.addFrag(new SOSFragment(), "SOS");
-        adapter.addFrag(new HospitalFragment(), "Hospital");
+        adapter.addFrag(hospitalFragment, "Hospital");
         adapter.addFrag(new StatusFragment(), "Status");
         viewPager.setAdapter(adapter);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+        if (result != null) {
+            onScanCompletedListener.scanCompleted(result.getContents());
+        }
+        else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
+    }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {

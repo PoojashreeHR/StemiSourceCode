@@ -36,4 +36,27 @@ public interface ApiInterface {
 
     @GET("getNearestStemiHospital")
     Call<NearestHospitalResponse> callNearestHsopitalsApi(@Query("token") String token, @Query("lat") double latitude, @Query("lon") double longitude);
+
+    @FormUrlEncoded
+    @POST("uploadUserData")
+    Call<StatusMessageResponse> callUploadDataApi(
+            @Field("token") String token,
+            @Field("id") String hospitalId,
+            @Field("name") String name,
+            @Field("age") String age,
+            @Field("gender") String gender,
+            @Field("phoneno") String phoneNo,
+            @Field("address") String address,
+            @Field("heightInCms") String heightInCms,
+            @Field("weightInKgs") String weightInKgs,
+            @Field("waistInch") String waistInch,
+            @Field("isSmoker") String isSmoker,
+            @Field("hadHeartAttackBefore") String hadHeartAttackBefore,
+            @Field("haveDiabetes") String haveDiabetes,
+            @Field("haveHighBP") String haveHighBP,
+            @Field("haveHighCholesterol") String haveHighCholesterol,
+            @Field("hadParalyticStroke") String hadParalyticStroke,
+            @Field("haveBronchialAsthma") String haveBronchialAsthma,
+            @Field("familyHadHeartAttack") String familyHadHeartAttack
+    );
 }
