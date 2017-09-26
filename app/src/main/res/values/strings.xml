@@ -50,4 +50,5 @@
 
 
     <string name="learn_more"><u>Learn More</u></string>
+    <string name="sync_stemi">Sync with nearest heart-attack ready (STEMI) Hospital</string>
 </resources>

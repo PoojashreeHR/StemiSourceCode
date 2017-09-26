@@ -41,7 +41,7 @@ public class TrackMedicationDB {
 
     public static final String TABLE_MEDICATION = "tbl_medication";
     public static final String COLUMN_USER_ID = "_id";
-    public static final String COLUMN_DATE_TIME = "datetime";
+    public static final String COLUMN_DATE_TIME = "_datetime";
     public static final String COLUMN_HAD_MEDICINES = "hadMedicines";
 
     public static final String DATABASE_CREATE = "create table "

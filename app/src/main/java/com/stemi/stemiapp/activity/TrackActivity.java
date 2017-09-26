@@ -28,6 +28,8 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 import com.stemi.stemiapp.R;
 import com.stemi.stemiapp.customviews.CircleImageView;
 import com.stemi.stemiapp.customviews.CustomViewPager;
@@ -68,6 +70,10 @@ public class TrackActivity extends AppCompatActivity implements NavigationView.O
     public static TextView tabOne, tabTwo, tabThree, tabFour, tabFive;
     public static TabLayout.Tab tab;
     TextView toolbarTitle;
+
+    private Fragment hospitalFragment;
+    private OnScanCompletionListener onScanCompletedListener;
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -106,6 +112,7 @@ public class TrackActivity extends AppCompatActivity implements NavigationView.O
         profileImage = (CircleImageView) findViewById(R.id.profile_image);
 
         toolbarTitle = (TextView) findViewById(R.id.toolbar_title);
+        hospitalFragment = new HospitalFragment();
 
         if (viewPager.getVisibility() == View.VISIBLE) {
             mainContainer.setVisibility(View.GONE);
@@ -148,6 +155,13 @@ public class TrackActivity extends AppCompatActivity implements NavigationView.O
 
     public void setActionBarTitle(String title) {
         toolbarTitle.setText(title);
+    }
+    public interface OnScanCompletionListener{
+        void scanCompleted(String contents);
+    }
+
+    public void setOnScanCompletedListener(OnScanCompletionListener onScanCompletionListener){
+        this.onScanCompletedListener = onScanCompletionListener;
     }
 
     public void showFragment(Fragment fragment) {
@@ -281,8 +295,7 @@ public class TrackActivity extends AppCompatActivity implements NavigationView.O
         tabTwo.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_track, 0, 0);
         tabLayout.getTabAt(1).setCustomView(tabTwo);
 
-        tabThree = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
-        CommonUtils.setRobotoLightFonts(this, tabThree);
+        TextView tabThree = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
         tabThree.setText("SOS");
         tabThree.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_sos, 0, 0);
         tabLayout.getTabAt(2).setCustomView(tabThree);
@@ -313,11 +326,20 @@ public class TrackActivity extends AppCompatActivity implements NavigationView.O
         adapter.addFrag(new LearnFragment(), "Learn");
         adapter.addFrag(new TrackFragment(), "Track");
         adapter.addFrag(new SOSFragment(), "SOS");
-        adapter.addFrag(new HospitalFragment(), "Hospital");
+        adapter.addFrag(hospitalFragment, "Hospital");
         adapter.addFrag(new StatusFragment(), "Status");
         viewPager.setAdapter(adapter);
     }
-
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+        if (result != null) {
+            onScanCompletedListener.scanCompleted(result.getContents());
+        }
+        else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
+    }
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         int id = menuItem.getItemId();

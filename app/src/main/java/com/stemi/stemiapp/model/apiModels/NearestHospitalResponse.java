@@ -14,9 +14,24 @@ import java.util.List;
 public class NearestHospitalResponse implements Parcelable{
     @SerializedName("hospitals")
     private List<Hospital> hospitalList;
+    @SerializedName("status")
+    private String status;
+
 
     protected NearestHospitalResponse(Parcel in) {
         hospitalList = in.createTypedArrayList(Hospital.CREATOR);
+        status = in.readString();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeTypedList(hospitalList);
+        dest.writeString(status);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
     public static final Creator<NearestHospitalResponse> CREATOR = new Creator<NearestHospitalResponse>() {
@@ -39,13 +54,12 @@ public class NearestHospitalResponse implements Parcelable{
         this.hospitalList = hospitalList;
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
+
+    public String getStatus() {
+        return status;
     }
 
-    @Override
-    public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeTypedList(hospitalList);
+    public void setStatus(String status) {
+        this.status = status;
     }
 }
