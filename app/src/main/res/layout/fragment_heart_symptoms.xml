@@ -52,6 +52,7 @@
             android:id="@+id/textView6" />
 
             <TextView
+                android:id="@+id/tv_ask_help"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/textView6"

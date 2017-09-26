@@ -43,6 +43,7 @@ import com.stemi.stemiapp.model.MessageEvent;
 import com.stemi.stemiapp.preference.AppSharedPreference;
 import com.stemi.stemiapp.utils.AppConstants;
 import com.stemi.stemiapp.utils.CommonUtils;
+import com.stemi.stemiapp.utils.GlobalClass;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -651,7 +652,7 @@ public class AddMedicineFragment extends Fragment implements View.OnClickListene
 
     public void storeMedicalDetails() {
         medicineDetails.setDate("");
-        medicineDetails.setPersonName(appSharedPreference.getProfileName(PROFILE_NAME));
+        medicineDetails.setPersonName(GlobalClass.userID);
         medicineDetails.setMedicineName(medicineNamee.getText().toString());
         medicineDetails.setMedicineDays(medicineDays.getText().toString());
         medicineDetails.setMedicineColor(colorOfMedicine);

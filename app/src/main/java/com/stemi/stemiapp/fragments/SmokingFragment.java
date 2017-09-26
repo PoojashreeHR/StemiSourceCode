@@ -25,6 +25,7 @@ import com.stemi.stemiapp.model.UserEventDetails;
 import com.stemi.stemiapp.preference.AppSharedPreference;
 import com.stemi.stemiapp.utils.AppConstants;
 import com.stemi.stemiapp.utils.CommonUtils;
+import com.stemi.stemiapp.utils.GlobalClass;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -106,6 +107,8 @@ public class SmokingFragment  extends Fragment implements TrackActivity.OnBackPr
     public void doBack() {
         if(smokeToday.getResponse()==null){
             EventBus.getDefault().post(new MessageEvent("Hello!"));
+            ((TrackActivity) getActivity()).setActionBarTitle("Track");
+
         }else if (howMany.isEnabled() && howMany.getText().toString().equals("")) {
             Toast.makeText(getActivity(), "Please enter how many", Toast.LENGTH_LONG).show();
         } else {
@@ -153,7 +156,7 @@ public class SmokingFragment  extends Fragment implements TrackActivity.OnBackPr
     }
 
     public void saveData() {
-        TrackActivity.userEventDetails.setUid(appSharedPreference.getProfileName(AppConstants.PROFILE_NAME));
+        TrackActivity.userEventDetails.setUid(GlobalClass.userID);
         if (tvSmokeToday.getText().equals("Today  ")){
             Date dt = new Date();
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy");// set format for date
@@ -173,9 +176,11 @@ public class SmokingFragment  extends Fragment implements TrackActivity.OnBackPr
         boolean date = dbForTrackActivities.getDate(TrackActivity.userEventDetails.getDate());
         if (!date) {
             dbForTrackActivities.addEntry(TrackActivity.userEventDetails);
-            ((TrackActivity) getActivity()).showFragment(new TrackFragment());
+             EventBus.getDefault().post(new MessageEvent("Hello!"));
+            ((TrackActivity) getActivity()).setActionBarTitle("Track");
         } else {
             int c = dbForTrackActivities.isEntryExists(TrackActivity.userEventDetails,3,getActivity());
+
 
         }
     }

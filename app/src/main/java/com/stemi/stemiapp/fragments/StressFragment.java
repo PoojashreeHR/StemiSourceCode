@@ -117,6 +117,7 @@ public class StressFragment extends Fragment implements AppConstants, TrackActiv
             storeData();
         }else {
             EventBus.getDefault().post(new MessageEvent("Hello!"));
+            ((TrackActivity) getActivity()).setActionBarTitle("Track");
         }
     }
 
@@ -213,10 +214,12 @@ public class StressFragment extends Fragment implements AppConstants, TrackActiv
         boolean date = dbForTrackActivities.getDate(TrackActivity.userEventDetails.getDate());
         if (!date) {
             dbForTrackActivities.addEntry(TrackActivity.userEventDetails);
-            ((TrackActivity) getActivity()).showFragment(new TrackFragment());
             EventBus.getDefault().post(new MessageEvent("Hello!"));
+            ((TrackActivity) getActivity()).setActionBarTitle("Track");
         } else {
             int c = dbForTrackActivities.isEntryExists(TrackActivity.userEventDetails,2,getActivity());
+            ((TrackActivity) getActivity()).setActionBarTitle("Track");
+
         }
     }
 

@@ -111,6 +111,7 @@ public class CommonUtils {
          public void onClick(DialogInterface dialog, int which) {
             dbForTrackActivities.updateUserTrack(TrackActivity.userEventDetails,value);
             EventBus.getDefault().post(new MessageEvent("Hello!"));
+            ((TrackActivity) mContext).setActionBarTitle("Track");
             Log.i("Code2care ", "Yes button Clicked!");
          }
       });
@@ -122,6 +123,7 @@ public class CommonUtils {
             Log.i("Code2care ","No button Clicked!");
             dialog.dismiss();
             ((TrackActivity) mContext).showFragment(new TrackFragment());
+            ((TrackActivity) mContext).setActionBarTitle("Track");
 
          }
       });

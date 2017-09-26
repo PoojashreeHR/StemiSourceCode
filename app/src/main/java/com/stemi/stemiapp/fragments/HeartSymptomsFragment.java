@@ -2,7 +2,11 @@ package com.stemi.stemiapp.fragments;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -12,23 +16,31 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.stemi.stemiapp.R;
+import com.stemi.stemiapp.activity.TrackActivity;
 import com.stemi.stemiapp.customviews.CircleImageView;
 import com.stemi.stemiapp.model.HeartSymptomsModel;
+import com.stemi.stemiapp.model.MessageEvent;
 import com.stemi.stemiapp.utils.CommonUtils;
 import com.stemi.stemiapp.utils.TyprfaceUtils;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.ArrayList;
 import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by Pooja on 28-08-2017.
  */
 
-public class HeartSymptomsFragment extends Fragment {
+public class HeartSymptomsFragment extends Fragment implements TrackActivity.OnBackPressedListener {
     RecyclerView heartSymptomsRecycler;
     HeartSymptomsAdapter heartSymptomsAdapter;
     private List<HeartSymptomsModel> heartSymptomsModel;
-
+    @BindView(R.id.tv_ask_help)TextView askHelp;
+    TrackActivity trackActivity;
 
     public HeartSymptomsFragment() {
         // Required empty public constructor
@@ -44,14 +56,26 @@ public class HeartSymptomsFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_heart_symptoms, container, false);
+        ButterKnife.bind(this,view);
+
+        trackActivity = new TrackActivity();
         heartSymptomsModel = new ArrayList<>();
         heartAttackSymptomsData();
 
+        ((TrackActivity) getActivity()).setOnBackPressedListener(this);
         heartSymptomsRecycler = (RecyclerView)view.findViewById(R.id.heartSymptomsRecycler);
         heartSymptomsAdapter = new HeartSymptomsAdapter(heartSymptomsModel, getActivity());
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         heartSymptomsRecycler.setLayoutManager(mLayoutManager);
         heartSymptomsRecycler.setAdapter(heartSymptomsAdapter);
+        askHelp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((TrackActivity)getActivity()).showFragment(new SOSFragment());
+                trackActivity.ubTateTab(2,getActivity());
+
+            }
+        });
         return view;
     }
 
@@ -70,6 +94,11 @@ public class HeartSymptomsFragment extends Fragment {
         heartAttackSymptoms(R.drawable.symptom_3,getResources().getString(R.string.shortnessOfBreath),"3");
         heartAttackSymptoms(R.drawable.symptom_4,getResources().getString(R.string.lightheadednes),"4");
         heartAttackSymptoms(R.drawable.symptom_5,getResources().getString(R.string.vomitting),"5");
+    }
+
+    @Override
+    public void doBack() {
+        EventBus.getDefault().post(new MessageEvent("Hello!"));
     }
 
     public class HeartSymptomsAdapter extends RecyclerView.Adapter<HeartSymptomsAdapter.MyViewHolder> {

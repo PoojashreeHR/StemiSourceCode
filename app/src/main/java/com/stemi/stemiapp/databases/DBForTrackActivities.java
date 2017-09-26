@@ -181,7 +181,7 @@ public class DBForTrackActivities {
                     }else {
                         updateUserTrack(TrackActivity.userEventDetails,1);
                         EventBus.getDefault().post(new MessageEvent("Hello!"));
-
+                        ((TrackActivity) context).setActionBarTitle("Track");
                     }
                     break;
                 case 2:
@@ -191,6 +191,7 @@ public class DBForTrackActivities {
                     }else {
                         updateUserTrack(TrackActivity.userEventDetails,2);
                         EventBus.getDefault().post(new MessageEvent("Hello!"));
+                        ((TrackActivity) context).setActionBarTitle("Track");
 
                     }break;
                 case 3:
@@ -199,6 +200,7 @@ public class DBForTrackActivities {
                     }else {
                         updateUserTrack(TrackActivity.userEventDetails,3);
                         EventBus.getDefault().post(new MessageEvent("Hello!"));
+                        ((TrackActivity) context).setActionBarTitle("Track");
 
                     }break;
                 case 4:
@@ -207,6 +209,7 @@ public class DBForTrackActivities {
                     }else {
                         updateUserTrack(TrackActivity.userEventDetails,4);
                         EventBus.getDefault().post(new MessageEvent("Hello!"));
+                        ((TrackActivity) context).setActionBarTitle("Track");
                     }
             }
             c.close();

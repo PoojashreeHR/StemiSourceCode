@@ -1,6 +1,7 @@
 package com.stemi.stemiapp.activity;
 
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
@@ -40,19 +41,15 @@ import com.stemi.stemiapp.fragments.TrackFragment;
 import com.stemi.stemiapp.model.DataPassListener;
 import com.stemi.stemiapp.model.MedicineDetails;
 import com.stemi.stemiapp.model.MessageEvent;
+import com.stemi.stemiapp.model.RegisteredUserDetails;
 import com.stemi.stemiapp.model.UserEventDetails;
 import com.stemi.stemiapp.preference.AppSharedPreference;
-import com.stemi.stemiapp.utils.AppConstants;
+import com.stemi.stemiapp.utils.CommonUtils;
+import com.stemi.stemiapp.utils.GlobalClass;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-
-import com.stemi.stemiapp.databases.UserDetailsTable;
-import com.stemi.stemiapp.model.RegisteredUserDetails;
-import com.stemi.stemiapp.utils.CommonUtils;
-import com.stemi.stemiapp.utils.GlobalClass;
-
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,7 +57,7 @@ import java.util.List;
 public class TrackActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, DataPassListener {
 
     private static final String TAG = "TrackActivity";
-    TabLayout tabLayout;
+    public static TabLayout tabLayout;
     Toolbar toolbar;
     CustomViewPager viewPager;
     private DrawerLayout drawer;
@@ -68,15 +65,17 @@ public class TrackActivity extends AppCompatActivity implements NavigationView.O
     AppSharedPreference appSharedPreferences;
     private CircleImageView profileImage;
     public static UserEventDetails userEventDetails;
-
+    public static TextView tabOne, tabTwo, tabThree, tabFour, tabFive;
+    public static TabLayout.Tab tab;
+    TextView toolbarTitle;
     @Override
     protected void onResume() {
         super.onResume();
 
         UserDetailsTable dBforUserDetails = new UserDetailsTable(this);
         RegisteredUserDetails registeredUserDetails = dBforUserDetails.getUserDetails(GlobalClass.userID);
-        Log.e(TAG,"GlobalClass.userID = " + GlobalClass.userID);
-        if(registeredUserDetails.getImgUrl() != null) {
+        Log.e(TAG, "GlobalClass.userID = " + GlobalClass.userID);
+        if (registeredUserDetails.getImgUrl() != null) {
             profileImage.setImageURI(Uri.parse(registeredUserDetails.getImgUrl()));
             profileImage.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -99,14 +98,14 @@ public class TrackActivity extends AppCompatActivity implements NavigationView.O
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-         userEventDetails = new UserEventDetails();
+        userEventDetails = new UserEventDetails();
         appSharedPreferences = new AppSharedPreference(this);
         viewPager = (CustomViewPager) findViewById(R.id.viewpager);
         viewPager.setPagingEnabled(false);
         mainContainer = (RelativeLayout) findViewById(R.id.mainContainer);
         profileImage = (CircleImageView) findViewById(R.id.profile_image);
 
-
+        toolbarTitle = (TextView) findViewById(R.id.toolbar_title);
 
         if (viewPager.getVisibility() == View.VISIBLE) {
             mainContainer.setVisibility(View.GONE);
@@ -131,62 +130,11 @@ public class TrackActivity extends AppCompatActivity implements NavigationView.O
         tabLayout.setupWithViewPager(viewPager);
         setupTabIcons();
         tabLayout.setTabTextColors(R.color.colorDarkGrey, R.color.appBackground);
-        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                int position = tab.getPosition();
-                if (viewPager.getVisibility() == View.GONE) {
-                    viewPager.setVisibility(View.VISIBLE);
-                    mainContainer.setVisibility(View.GONE);
-                }
+        tabLayout.setOnTabSelectedListener(new TabListener());
 
-                View v = tabLayout.getTabAt(position).getCustomView();
-                if (v instanceof TextView) {
-                    TextView textView = (TextView) v;
-                    textView.setTextColor(getResources().getColor(R.color.appBackground));
-                    for (Drawable drawable : textView.getCompoundDrawables()) {
-                        if (drawable != null) {
-                            drawable.setColorFilter(new PorterDuffColorFilter(getResources().getColor(R.color.appBackground), PorterDuff.Mode.SRC_IN));
-                        }
-                    }
-                }
-//                for(int i=0;i<tabLayout.getChildCount();i++)
-//                {
 
-                //  }
-
-                    /*TabLayout.Tab tab = tabLayout.getTabAt(i);
-                    Drawable icon = tab.getIcon();
-
-                    if (icon != null) {
-                        icon = DrawableCompat.wrap(icon);
-                        DrawableCompat.setTintList(icon, colors);
-                    }*/
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-                for (int i = 0; i < tabLayout.getTabCount(); i++) {
-                    View v = tabLayout.getTabAt(i).getCustomView();
-                    if (v instanceof TextView) {
-                        TextView textView = (TextView) v;
-                        textView.setTextColor(getResources().getColor(R.color.colorLightGrey));
-                        for (Drawable drawable : textView.getCompoundDrawables()) {
-                            if (drawable != null) {
-                                drawable.clearColorFilter();
-                            }
-                            //drawable.setColorFilter(new PorterDuffColorFilter(getResources().getColor(R.color.appBackground), PorterDuff.Mode.SRC_IN));
-                        }
-                    }
-                }
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-
-            }
-        });
     }
+
 
     protected OnBackPressedListener onBackPressedListener;
 
@@ -197,8 +145,9 @@ public class TrackActivity extends AppCompatActivity implements NavigationView.O
     public void setOnBackPressedListener(OnBackPressedListener onBackPressedListener) {
         this.onBackPressedListener = onBackPressedListener;
     }
-    public void setActionBarTitle(String title){
-        toolbar.setTitle(title);
+
+    public void setActionBarTitle(String title) {
+        toolbarTitle.setText(title);
     }
 
     public void showFragment(Fragment fragment) {
@@ -211,6 +160,72 @@ public class TrackActivity extends AppCompatActivity implements NavigationView.O
         fragmentTransaction.replace(R.id.mainContainer, fragment, TAG);
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commitAllowingStateLoss();
+    }
+
+    public void ubTateTab(int tabCount, Context context) {
+        tab = tabLayout.getTabAt(tabCount);
+        tab.select();
+
+        if (tab.isSelected()) {
+            View v = tabLayout.getTabAt(tabCount).getCustomView();
+            if (v instanceof TextView) {
+                TextView textView = (TextView) v;
+                textView.setTextColor(context.getResources().getColor(R.color.appBackground));
+                for (Drawable drawable : textView.getCompoundDrawables()) {
+                    if (drawable != null) {
+                        drawable.setColorFilter(new PorterDuffColorFilter(context.getResources().getColor(R.color.appBackground), PorterDuff.Mode.SRC_IN));
+                    }
+                }
+            }
+        }
+    }
+
+
+    public class TabListener implements TabLayout.OnTabSelectedListener {
+
+        @Override
+        public void onTabSelected(TabLayout.Tab tab) {
+            int position = tab.getPosition();
+            if (viewPager.getVisibility() == View.GONE) {
+                viewPager.setVisibility(View.VISIBLE);
+                mainContainer.setVisibility(View.GONE);
+            }
+
+            if (tab.isSelected()) {
+                View v = tabLayout.getTabAt(position).getCustomView();
+                if (v instanceof TextView) {
+                    TextView textView = (TextView) v;
+                    textView.setTextColor(getResources().getColor(R.color.appBackground));
+                    for (Drawable drawable : textView.getCompoundDrawables()) {
+                        if (drawable != null) {
+                            drawable.setColorFilter(new PorterDuffColorFilter(getResources().getColor(R.color.appBackground), PorterDuff.Mode.SRC_IN));
+                        }
+                    }
+                }
+            }
+        }
+
+        @Override
+        public void onTabUnselected(TabLayout.Tab tab) {
+            for (int i = 0; i < tabLayout.getTabCount(); i++) {
+                View v = tabLayout.getTabAt(i).getCustomView();
+                if (v instanceof TextView) {
+                    TextView textView = (TextView) v;
+                    textView.setTextColor(getResources().getColor(R.color.colorLightGrey));
+                    for (Drawable drawable : textView.getCompoundDrawables()) {
+                        if (drawable != null) {
+                            drawable.clearColorFilter();
+                        }
+                        //drawable.setColorFilter(new PorterDuffColorFilter(getResources().getColor(R.color.appBackground), PorterDuff.Mode.SRC_IN));
+                    }
+                }
+            }
+        }
+
+        @Override
+        public void onTabReselected(TabLayout.Tab tab) {
+
+        }
     }
 
     @Override
@@ -250,32 +265,36 @@ public class TrackActivity extends AppCompatActivity implements NavigationView.O
      */
     private void setupTabIcons() {
 
-        TextView tabOne = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
-        CommonUtils.setRobotoLightFonts(this,tabOne);
+        tabOne = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
+        CommonUtils.setRobotoLightFonts(this, tabOne);
         tabOne.setText("Learn");
         tabOne.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_learn, 0, 0);
         tabLayout.getTabAt(0).setCustomView(tabOne);
+        tab = tabLayout.getTabAt(0);
+        tab.select();
+        toolbarTitle.setText("Learn");
+        ubTateTab(0,TrackActivity.this);
 
-        TextView tabTwo = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
-        CommonUtils.setRobotoLightFonts(this,tabTwo);
+        tabTwo = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
+        CommonUtils.setRobotoLightFonts(this, tabTwo);
         tabTwo.setText("Track");
         tabTwo.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_track, 0, 0);
         tabLayout.getTabAt(1).setCustomView(tabTwo);
 
-        TextView tabThree = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
-        CommonUtils.setRobotoLightFonts(this,tabThree);
+        tabThree = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
+        CommonUtils.setRobotoLightFonts(this, tabThree);
         tabThree.setText("SOS");
-        tabThree.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_sos,0, 0);
+        tabThree.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_sos, 0, 0);
         tabLayout.getTabAt(2).setCustomView(tabThree);
 
-        TextView tabfour = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
-        CommonUtils.setRobotoLightFonts(this,tabfour);
-        tabfour.setText("Hospital");
-        tabfour.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_hospital,0, 0);
-        tabLayout.getTabAt(3).setCustomView(tabfour);
+        tabFour = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
+        CommonUtils.setRobotoLightFonts(this, tabFour);
+        tabFour.setText("Hospital");
+        tabFour.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_hospital, 0, 0);
+        tabLayout.getTabAt(3).setCustomView(tabFour);
 
-        TextView tabFive = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
-        CommonUtils.setRobotoLightFonts(this,tabFive);
+        tabFive = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
+        CommonUtils.setRobotoLightFonts(this, tabFive);
         tabFive.setText("Stats");
         tabFive.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_stats, 0, 0);
         tabLayout.getTabAt(4).setCustomView(tabFive);
@@ -298,7 +317,6 @@ public class TrackActivity extends AppCompatActivity implements NavigationView.O
         adapter.addFrag(new StatusFragment(), "Status");
         viewPager.setAdapter(adapter);
     }
-
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {

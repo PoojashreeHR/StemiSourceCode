@@ -86,6 +86,8 @@ public class TrackMedicationDB {
                 long i = db.insertOrThrow(TABLE_MEDICATION, null, cv);
                 Log.e("StatsFragment", "i = " + i);
                 EventBus.getDefault().post(new MessageEvent("Hello!"));
+                ((TrackActivity) mContext ).setActionBarTitle("Track");
+
             } catch (Exception e) {
                 Log.e("StatsFragment", "Exception e = " + e.getLocalizedMessage());
             }
@@ -242,6 +244,8 @@ public class TrackMedicationDB {
                 Log.i("Code2care ","No button Clicked!");
                 dialog.dismiss();
                 ((TrackActivity) mContext).showFragment(new TrackFragment());
+                ((TrackActivity) mContext).setActionBarTitle("Track");
+
 
             }
         });

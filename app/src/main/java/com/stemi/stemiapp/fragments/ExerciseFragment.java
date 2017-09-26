@@ -186,7 +186,7 @@ public class ExerciseFragment extends Fragment implements View.OnClickListener, 
         }
 
         if(dbForTrackActivities.getDate(savedDate)){
-            ArrayList<UserEventDetails> eventDetails = dbForTrackActivities.getDetails(appSharedPreference.getProfileName(AppConstants.PROFILE_NAME),savedDate,1);
+            ArrayList<UserEventDetails> eventDetails = dbForTrackActivities.getDetails(GlobalClass.userID,savedDate,1);
             if(eventDetails != null){
                 if(eventDetails.get(0).getIswalked().equals("true")){
                     ivWalking.setBackgroundResource(R.drawable.ic_checked);
@@ -335,6 +335,7 @@ public class ExerciseFragment extends Fragment implements View.OnClickListener, 
             if (!date) {
                 dbForTrackActivities.addEntry(TrackActivity.userEventDetails);
                 EventBus.getDefault().post(new MessageEvent("Hello!"));
+                ((TrackActivity) getActivity()).setActionBarTitle("Track");
             } else {
                 int c = dbForTrackActivities.isEntryExists(TrackActivity.userEventDetails,1,getActivity());
 
@@ -367,6 +368,7 @@ public class ExerciseFragment extends Fragment implements View.OnClickListener, 
             storeData();
         }else {
             EventBus.getDefault().post(new MessageEvent("Hello!"));
+            ((TrackActivity) getActivity()).setActionBarTitle("Track");
 
         }
     }

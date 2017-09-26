@@ -118,6 +118,7 @@ public class WeightFragment  extends Fragment implements View.OnClickListener,Tr
             SaveData();
         }else {
             EventBus.getDefault().post(new MessageEvent("Hello!"));
+            ((TrackActivity) getActivity()).setActionBarTitle("Track");
 
         }
     }
@@ -218,8 +219,11 @@ public class WeightFragment  extends Fragment implements View.OnClickListener,Tr
         if (!date) {
             dbForTrackActivities.addEntry(TrackActivity.userEventDetails);
             ((TrackActivity) getActivity()).showFragment(new TrackFragment());
+            ((TrackActivity) getActivity()).setActionBarTitle("Track");
+
         } else {
             int c = dbForTrackActivities.isEntryExists(TrackActivity.userEventDetails,4,getActivity());
+            ((TrackActivity) getActivity()).setActionBarTitle("Track");
 
         }
     }

@@ -11,6 +11,7 @@ import com.google.gson.Gson;
 import com.stemi.stemiapp.model.MedicineDetails;
 import com.stemi.stemiapp.preference.AppSharedPreference;
 import com.stemi.stemiapp.utils.AppConstants;
+import com.stemi.stemiapp.utils.GlobalClass;
 
 import java.util.ArrayList;
 
@@ -68,14 +69,15 @@ public class MedicineTable {
     }
 
     //Get all Medicine Details
-    public ArrayList<String> getMedicine(String time){
+    public ArrayList<String> getMedicine(String userId,String time){
         ArrayList<String> data=new ArrayList<String>();
         SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
-        Cursor cursor = db.query(MED_TABLE_NAME, new String[]{MED_MEDICINE_DETAILS},null, null, null, null, null);
+        String query = "SELECT * FROM "+ MED_TABLE_NAME +" WHERE "+ RELATED_PERSON +" = '"+userId+"'";
+        Cursor cursor = db.rawQuery(query,null);
+        //Cursor cursor = db.query(MED_TABLE_NAME, new String[]{MED_MEDICINE_DETAILS},null, null, null, null, null);
         String fieldToAdd = null;
         while(cursor.moveToNext()){
-
-            fieldToAdd = cursor.getString(0);
+            fieldToAdd = cursor.getString(1);
             Gson gsonObj = new Gson();
             MedicineDetails medicineDetails = gsonObj.fromJson(fieldToAdd , MedicineDetails.class);
 
@@ -98,15 +100,16 @@ public class MedicineTable {
     }
 
     //calling from splash screen to delete unwanted data from DB
-    public void removeMedicalData() {
+    public void removeMedicalData(String userId) {
         ArrayList<String> data=new ArrayList<String>();
         SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
         //SQLiteDatabase database = this.getWritableDatabase();
-        Cursor cursor = db.query(MED_TABLE_NAME, new String[]{MED_MEDICINE_DETAILS},null, null, null, null, null);
+        String query = "SELECT * FROM "+ MED_TABLE_NAME +" WHERE "+ RELATED_PERSON +" = '"+ userId+"'";
+        Cursor cursor = db.rawQuery(query,null);
         String fieldToAdd = null;
         while(cursor.moveToNext()) {
 
-            fieldToAdd = cursor.getString(0);
+            fieldToAdd = cursor.getString(1);
             Gson gsonObj = new Gson();
             MedicineDetails medicineDetails = gsonObj.fromJson(fieldToAdd, MedicineDetails.class);
 
@@ -135,8 +138,8 @@ public class MedicineTable {
         SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
         //SQLiteDatabase db = this.getWritableDatabase();
 
-        String selectQuery = "SELECT  * FROM " + MED_TABLE_NAME;
-        Cursor cursor = db.rawQuery(selectQuery,null);
+        String query = "SELECT * FROM "+ MED_TABLE_NAME +" WHERE "+ RELATED_PERSON +" = '"+ GlobalClass.userID +"'";
+        Cursor cursor = db.rawQuery(query,null);
         String fieldToAdd = null;
 
         for (int i = 0; i < deletedList.size(); i++) {
@@ -146,7 +149,7 @@ public class MedicineTable {
                 MedicineDetails medicineDetails = gsonObj.fromJson(fieldToAdd, MedicineDetails.class);
 
                 if (medicineDetails.equals(deletedList.get(i))
-                        && appSharedPreference.getProfileName(AppConstants.PROFILE_NAME).equals(deletedList.get(i).getPersonName())) {
+                        && GlobalClass.userID.equals(deletedList.get(i).getPersonName())) {
                     String old = new Gson().toJson(deletedList.get(i));
                     if(id == 1) {
                         for (int j = 0; j < deletedList.size(); j++) {

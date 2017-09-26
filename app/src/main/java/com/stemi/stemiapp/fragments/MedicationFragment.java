@@ -7,6 +7,7 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Context;
+import android.graphics.Point;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.Drawable;
@@ -16,6 +17,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,6 +42,7 @@ import com.stemi.stemiapp.model.TrackMedication;
 import com.stemi.stemiapp.preference.AppSharedPreference;
 import com.stemi.stemiapp.utils.AppConstants;
 import com.stemi.stemiapp.utils.CommonUtils;
+import com.stemi.stemiapp.utils.GlobalClass;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -169,22 +172,32 @@ public class MedicationFragment extends Fragment implements AppConstants, View.O
     ArrayList<MedicineDetails> m1 = new ArrayList<>();
 
     public void getMedicineDetails(final String time, final RelativeLayout layout) {
-        ArrayList<String> medicine = medicineTable.getMedicine(time);
+        ArrayList<String> medicine = medicineTable.getMedicine(appSharedPreference.getUserId(),time);
         layout2 = (LinearLayout) layout.findViewById(R.id.imageTypeLayout);
         ImageView remove_img;
         for (int i = 0; i < medicine.size(); i++) {
             final FrameLayout frameLayout = new FrameLayout(getActivity());
-            FrameLayout.LayoutParams params2 = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            FrameLayout.LayoutParams params2 = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+         //   params2.setMargins(10, 10, 10, 10);
+            params2.gravity = Gravity.RIGHT;
+            frameLayout.setPadding(10,30,10,20);
             frameLayout.setLayoutParams(params2);
 
             remove_img = new ImageView(getActivity());
+            remove_img.setMaxHeight(90);
+            remove_img.setMaxWidth(60);
             remove_img.setId(R.id.checkedImg);
 
+            //To get Screen size
+/*            final Display display = getActivity().getWindowManager().getDefaultDisplay();
+            final Point size = new Point();
+            display.getSize(size);
+            */
             final RelativeLayout imgLayout = new RelativeLayout(getActivity());
             imgLayout.setGravity(Gravity.RIGHT);
-            RelativeLayout.LayoutParams params3 = new RelativeLayout.LayoutParams(100, 40);
-            params3.setMargins(0, 5, 10, 0);
-            params3.addRule(RelativeLayout.ALIGN_RIGHT);
+            imgLayout.setPadding(20,0,0,0);
+            RelativeLayout.LayoutParams params3 = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, 40);
+            params3.addRule(RelativeLayout.ALIGN_RIGHT,Gravity.RIGHT);
             imgLayout.setLayoutParams(params3);
 
             int colorOfMedicine;
@@ -276,9 +289,12 @@ public class MedicationFragment extends Fragment implements AppConstants, View.O
 
     public ImageView setMedicineColor(String medicineType, int colorOfMedicine) {
         ImageView image = new ImageView(getActivity());
-        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(100, 100);
-        params.setMargins(10, 30, 10, 20);
-        image.setLayoutParams(params);
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        //params.setMargins(10, 30, 10, 20);
+        image.setMaxWidth(90);
+        image.setMaxHeight(90);
+      //  image.setPadding(10,20,10,20);
+        //image.setLayoutParams(params);
 
         if (medicineType.equals("Tablet")) {
             image.setBackgroundResource(0);
@@ -329,7 +345,7 @@ public class MedicationFragment extends Fragment implements AppConstants, View.O
         switch (id) {
             case R.id.ivInfo:
                 //dBforUserDetails.getMedicine("Morning");
-                ArrayList<String> Mmedicine = medicineTable.getMedicine("Morning");
+                ArrayList<String> Mmedicine = medicineTable.getMedicine(GlobalClass.userID,"Morning");
                 ArrayList<MedicineDetails> medicines = new ArrayList<>();
                 for (int i = 0; i < Mmedicine.size(); i++) {
                     MedicineDetails medicineInfo = new MedicineDetails();
@@ -349,7 +365,7 @@ public class MedicationFragment extends Fragment implements AppConstants, View.O
                 break;
 
             case R.id.ivInfo1:
-                ArrayList<String> Amedicine = medicineTable.getMedicine("Afternoon");
+                ArrayList<String> Amedicine = medicineTable.getMedicine(GlobalClass.userID,"Afternoon");
                 ArrayList<MedicineDetails> Amedicines = new ArrayList<>();
                 for (int i = 0; i < Amedicine.size(); i++) {
                     MedicineDetails AmedicineInfo = new MedicineDetails();
@@ -368,7 +384,7 @@ public class MedicationFragment extends Fragment implements AppConstants, View.O
                 break;
 
             case R.id.ivInfo2:
-                ArrayList<String> Nmedicine = medicineTable.getMedicine("Night");
+                ArrayList<String> Nmedicine = medicineTable.getMedicine(GlobalClass.userID,"Night");
                 if (Nmedicine.size() > 0) {
                     ArrayList<MedicineDetails> Nmedicines = new ArrayList<>();
                     for (int i = 0; i < Nmedicine.size(); i++) {
@@ -433,9 +449,9 @@ public class MedicationFragment extends Fragment implements AppConstants, View.O
             trackMedicationDB.addEntry(med);
             Log.e(TAG, "doBack: " + checkedOrNot + "");
            // EventBus.getDefault().post(new MessageEvent("Hello!"));
-            ((TrackActivity) getActivity()).setActionBarTitle("Track");
         } else {
             EventBus.getDefault().post(new MessageEvent("Hello!"));
+            ((TrackActivity) getActivity()).setActionBarTitle("Track");
         }
     }
 
