@@ -33,6 +33,7 @@ import com.stemi.stemiapp.R;
 import com.stemi.stemiapp.activity.FollowupActivity;
 import com.stemi.stemiapp.activity.MapsActivity;
 import com.stemi.stemiapp.activity.TrackActivity;
+import com.stemi.stemiapp.databases.DataUploadedDB;
 import com.stemi.stemiapp.databases.FollowupsDB;
 import com.stemi.stemiapp.databases.UserDetailsTable;
 import com.stemi.stemiapp.model.RegisteredUserDetails;
@@ -107,7 +108,14 @@ public class HospitalFragment extends Fragment implements TrackActivity.OnScanCo
         uploadDataLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                openQRScanningActivity();
+                DataUploadedDB dataUploadedDB = new DataUploadedDB(getActivity());
+                boolean uploadStatus = dataUploadedDB.getUploadStatus(GlobalClass.userID);
+                if(!uploadStatus) {
+                    openQRScanningActivity();
+                }
+                else{
+                    Toast.makeText(getActivity(), "You've already uploaded data !", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -274,6 +282,7 @@ public class HospitalFragment extends Fragment implements TrackActivity.OnScanCo
                 CommonUtils.hideLoadingProgress();
                 Toast.makeText(getActivity(), "User Data Uploaded !", Toast.LENGTH_SHORT).show();
                 setFollowupDates();
+                updateUserDataUploaded();
             }
 
             @Override
@@ -285,9 +294,22 @@ public class HospitalFragment extends Fragment implements TrackActivity.OnScanCo
         });
     }
 
+    private void updateUserDataUploaded() {
+        DataUploadedDB dataUploadedDB = new DataUploadedDB(getActivity());
+        dataUploadedDB.addEntry(GlobalClass.userID, true);
+    }
+
     private void showNextFollowupDate(){
-       Intent intent = new Intent(getActivity(), FollowupActivity.class);
-        startActivity(intent);
+        FollowupsDB followupsDB = new FollowupsDB(getActivity());
+        String nextDate = followupsDB.getNextFollowupDate(GlobalClass.userID);
+
+        if(nextDate == null){
+            Toast.makeText(getActivity(), "You've to upload your data first !!!", Toast.LENGTH_SHORT).show();
+        }
+        else{
+            Intent intent = new Intent(getActivity(), FollowupActivity.class);
+            startActivity(intent);
+        }
     }
 
     private void setFollowupDates() {

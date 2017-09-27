@@ -407,7 +407,7 @@ public class MedicationFragment extends Fragment implements AppConstants, View.O
         }else {
             med.setHadAllMedicines(false);
         }
-        med.setUserId(appSharedPreference.getProfileName(AppConstants.PROFILE_NAME));
+        med.setUserId(appSharedPreference.getUserId());
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy");// set format for date
         if (tvMedicationToday.getText().equals("Today  ")) {
