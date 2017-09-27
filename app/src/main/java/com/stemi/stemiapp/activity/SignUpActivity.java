@@ -42,6 +42,7 @@ public class SignUpActivity extends AppCompatActivity implements AppConstants, V
 
         ButterKnife.bind(this);
 
+        CommonUtils.setRobotoRegularFonts(SignUpActivity.this,tvAlreadyReg);
         apiInterface = ApiClient.getClient().create(ApiInterface.class);
         appSharedPreference = new AppSharedPreference(this);
 
@@ -75,7 +76,7 @@ public class SignUpActivity extends AppCompatActivity implements AppConstants, V
             @Override
             public void onFailure(Call<SignUpResponseModel> call, Throwable t) {
                 CommonUtils.hideLoadingProgress();
-                Toast.makeText(SignUpActivity.this, "Oops! Something wrong", Toast.LENGTH_SHORT).show();
+                Toast.makeText(SignUpActivity.this, "Something went wrong", Toast.LENGTH_SHORT).show();
             }
         });
     }

@@ -54,7 +54,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/password"
-            android:textColor="@color/colorDarkGrey"
             android:imeOptions="actionGo"
             android:inputType="textPassword"/>
     </android.support.design.widget.TextInputLayout>
@@ -73,7 +72,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/confirmPassword"
-            android:textColor="@color/colorDarkGrey"
             android:imeOptions="actionGo"
             android:inputType="textPassword"/>
     </android.support.design.widget.TextInputLayout>
@@ -84,7 +82,8 @@
         android:layout_height="wrap_content"
         android:text="SIGN UP"
         android:textColor="@color/white"
-        android:textSize="20sp"
+        android:textSize="14sp"
+        android:typeface="serif"
         android:layout_margin="20dp"
         android:layout_below="@id/tl_confirmPassword"
         android:background="@drawable/button_oval_shape" />
@@ -98,7 +97,7 @@
         android:text="@string/alreadyResitered"
         android:layout_margin="10dp"
         android:textColor="@color/black"
-        android:textSize="20sp"/>
+        android:textSize="14sp"/>
         </RelativeLayout>
     </ScrollView>
 </RelativeLayout>

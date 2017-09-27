@@ -1,24 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#737373</color>
-    <color name="colorPrimaryDark">#808080</color>
-    <color name="colorAccent">#FFFFFF</color>
-    <color name="appBackground">#AA1F24</color>
+    <color name="colorPrimary">#808080</color>
+    <color name="colorPrimaryDark">#b3b3b3</color>
+    <color name="colorAccent">#b3b3b3</color>
+
+    <color name="appBackground">#d30e17</color>
     <color name="white">#FFFFFF</color>
-    <color name="lightWhite">#dfdfdf</color>
-    <color name="black">#000</color>
+    <color name="lightWhite">#f2f2f2</color>
+    <color name="black">#333333</color>
+
     <color name="colorGreen">#30AD63</color>
-    <color name="colorLightGrey">#B3B3B3</color>
+    <color name="colorLightGrey">#808080</color>
     <color name="colorCyan">#7cef8d</color>
-    <color name="colorDarkGrey">#737373</color>
+    <color name="colorDarkGrey">#e6e6e6</color>
     <color name="transparent">#00000000</color>
     <color name="inactive_dots">#d9d5d5</color>
-    #B3B3B3
+
+
     <!-- Intro Screen color-->
-    <color name="blue">#3497DB</color>
-    <color name="orange">#FCBD56</color>
-    <color name="brickRed">#FF6F58</color>
-    <color name="purple">#958ACF</color>
+    <color name="blue">#3498db</color>
+    <color name="orange">#fdbe57</color>
+    <color name="brickRed">#ff7059</color>
+    <color name="purple">#968bcf</color>
 
     <array name="splash_screen_color">
         <item> @color/blue</item>
@@ -43,7 +46,7 @@
 
     <!-- Medicine color-->
     <array name="medicineColor">
-        <item>@color/white</item>
+        <item>@color/medicine</item>
         <item>@color/lightBlue</item>
         <item>@color/darkBlue</item>
         <item>@color/darkPurple</item>
@@ -53,13 +56,16 @@
         <item>@color/green</item>
     </array>
 
-    <color name="lightBlue">#30B7BA</color>
-    <color name="darkBlue">#3078B7</color>
-    <color name="darkPurple">#B14BA1</color>
-    <color name="red">#EC455E</color>
-    <color name="orange1">#F1884A</color>
-    <color name="yellow">#F9C33F</color>
-    <color name="green">#B3D45E</color>
+    <color name="medicine">#e6e8ed</color>
+    <color name="lightBlue">#00a9ac</color>
+    <color name="darkBlue">#005aa9</color>
+    <color name="darkPurple">#a2238d</color>
+    <color name="red">#ec1a3b</color>
+    <color name="orange1">#f26f21</color>
+    <color name="yellow">#fcb813</color>
+    <color name="green">#a5cd39</color>
+
+
     <color name="colorGrey">#737373</color>
     <color name="btnColorRed">#D01421</color>
     <color name="statsFontColor">#FD715E</color>

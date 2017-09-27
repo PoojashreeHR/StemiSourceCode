@@ -10,19 +10,19 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:textSize="20dp"
+        android:textSize="18sp"
         android:paddingLeft="10dp"
         android:layout_marginTop="21dp"
         android:drawableRight="@drawable/sort_down_48"
         android:text="Today  "
-        android:textColor="@color/black"
+        android:textColor="@color/appBackground"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" />
     <View
         android:id="@+id/view"
         android:layout_width="wrap_content"
         android:layout_height="1dp"
-        android:background="@color/black"
+        android:background="@color/colorAccent"
         android:layout_marginTop="10dp"
         android:layout_below="@+id/tv_medication_today"
         android:layout_alignLeft="@+id/tv_medication_today"
@@ -50,8 +50,9 @@
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
             android:text="Morning"
+            android:typeface="sans"
             android:layout_marginRight="10dp"
-            android:textSize="18sp"
+            android:textSize="16sp"
             android:layout_marginLeft="10dp"/>
 
         <RelativeLayout
@@ -98,7 +99,8 @@
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
             android:text="Afternoon"
-            android:textSize="18sp"
+            android:typeface="sans"
+            android:textSize="16sp"
             android:layout_marginLeft="10dp"/>
 
         <RelativeLayout
@@ -146,7 +148,8 @@
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
             android:text="Night"
-            android:textSize="18sp"
+            android:typeface="sans"
+            android:textSize="16sp"
             android:layout_marginLeft="10dp"/>
 
         <RelativeLayout
@@ -182,7 +185,8 @@
         android:text="+ ADD NEW MEDICINE"
         android:gravity="center"
         android:textColor="@color/appBackground"
-        android:textSize="20sp"
+        android:textSize="14sp"
+        android:typeface="serif"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true" />
 

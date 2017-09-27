@@ -1,16 +1,26 @@
 package com.stemi.stemiapp.databases;
 
+import android.app.AlertDialog;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+import android.widget.Button;
 
 import com.google.gson.Gson;
+import com.stemi.stemiapp.R;
+import com.stemi.stemiapp.activity.TrackActivity;
+import com.stemi.stemiapp.fragments.TrackFragment;
 import com.stemi.stemiapp.model.BloodTestResult;
+import com.stemi.stemiapp.model.MessageEvent;
 import com.stemi.stemiapp.model.TrackMedication;
+import com.stemi.stemiapp.utils.CommonUtils;
 import com.stemi.stemiapp.utils.GlobalClass;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -24,6 +34,7 @@ import static android.content.ContentValues.TAG;
  */
 
 public class TrackMedicationDB {
+    Context mContext;
 /*    private static final int DATABASE_VERSION = GlobalClass.DB_VERSION;
 
     private static final String DATABASE_NAME = GlobalClass.DB_NAME;*/
@@ -53,13 +64,16 @@ public class TrackMedicationDB {
 
         onCreate(sqLiteDatabase);
     }*/
+    public TrackMedicationDB(Context mContext){
+        this.mContext = mContext;
+    }
 
     public void addEntry(TrackMedication stress){
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MMM-yyyy");
         String dateTime = simpleDateFormat.format(stress.getDateTime());
         if(isEntryExists(stress.getUserId(), dateTime)){
             Log.e("Add Entry", "Updating entry");
-            updateEntry(stress.getUserId(), simpleDateFormat.format(stress.getDateTime()),stress);
+            buidDialog(mContext,stress.getUserId(), simpleDateFormat.format(stress.getDateTime()),stress);
         }else {
             SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
             try {
@@ -71,6 +85,9 @@ public class TrackMedicationDB {
 
                 long i = db.insertOrThrow(TABLE_MEDICATION, null, cv);
                 Log.e("StatsFragment", "i = " + i);
+                EventBus.getDefault().post(new MessageEvent("Hello!"));
+                ((TrackActivity) mContext ).setActionBarTitle("Track");
+
             } catch (Exception e) {
                 Log.e("StatsFragment", "Exception e = " + e.getLocalizedMessage());
             }
@@ -203,6 +220,42 @@ public class TrackMedicationDB {
             e.printStackTrace();
         }
         return medicationList;
+    }
+
+
+    public void buidDialog(final Context mContext, final String userId, final String date, final TrackMedication trackMedication){
+        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+        builder.setTitle("AlertDialog with No Buttons");
+        builder.setMessage("Old Entry Exist !! Do you want to save this?");
+        //Yes Button
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                updateEntry(userId, date,trackMedication);
+                EventBus.getDefault().post(new MessageEvent("Hello!"));
+                Log.i("Code2care ", "Yes button Clicked!");
+            }
+        });
+
+        //No Button
+        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Log.i("Code2care ","No button Clicked!");
+                dialog.dismiss();
+                ((TrackActivity) mContext).showFragment(new TrackFragment());
+                ((TrackActivity) mContext).setActionBarTitle("Track");
+
+
+            }
+        });
+
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+        Button nbutton = alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE);
+        nbutton.setTextColor(mContext.getResources().getColor(R.color.appBackground));
+        Button pbutton = alertDialog.getButton(DialogInterface.BUTTON_POSITIVE);
+        pbutton.setTextColor(mContext.getResources().getColor(R.color.appBackground));
     }
 
     public void createIfNotExists() {

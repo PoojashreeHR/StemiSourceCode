@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Build;
@@ -21,6 +22,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -33,6 +35,9 @@ import com.stemi.stemiapp.activity.MapsActivity;
 import com.stemi.stemiapp.activity.TrackActivity;
 import com.stemi.stemiapp.customviews.BetterSpinner;
 import com.stemi.stemiapp.databases.UserDetailsTable;
+import com.stemi.stemiapp.model.MessageEvent;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 
@@ -46,7 +51,7 @@ import static android.app.Activity.RESULT_OK;
  * Created by Pooja on 24-07-2017.
  */
 
-public class SOSFragment extends Fragment implements View.OnClickListener {
+public class SOSFragment extends Fragment implements View.OnClickListener,TrackActivity.OnBackPressedListener {
     @BindView(R.id.bt_share_location)Button shateLocation;
     @BindView(R.id.rl_call)RelativeLayout rlCall;
     @BindView(R.id.rl_locateMap)RelativeLayout rlLocateMap;
@@ -95,7 +100,9 @@ public class SOSFragment extends Fragment implements View.OnClickListener {
                 checkLocationServices();
             }
         });
-        ((TrackActivity)getActivity()).getViewPager().setPagingEnabled(true);
+        ((TrackActivity)getActivity()).getViewPager().setPagingEnabled(false);
+
+        ((TrackActivity) getActivity()).setOnBackPressedListener(this);
 
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(getActivity(), R.layout.spinner_layout, personName );
         personSpinner.setAdapter(arrayAdapter);
@@ -254,5 +261,23 @@ public class SOSFragment extends Fragment implements View.OnClickListener {
                 startActivity(mapIntent);
                 break;
         }
+    }
+
+    @Override
+    public void doBack() {
+        EventBus.getDefault().post(new MessageEvent("Hello!"));
+
+        View v = TrackActivity.tabLayout.getTabAt(2).getCustomView();
+        if (v instanceof TextView) {
+            TextView textView = (TextView) v;
+            textView.setTextColor(getResources().getColor(R.color.colorPrimary));
+            for (Drawable drawable : textView.getCompoundDrawables()) {
+                if (drawable != null) {
+                    drawable.clearColorFilter();
+                }
+                //drawable.setColorFilter(new PorterDuffColorFilter(getResources().getColor(R.color.appBackground), PorterDuff.Mode.SRC_IN));
+            }
+        }
+        getActivity().finish();
     }
 }

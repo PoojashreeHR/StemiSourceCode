@@ -4,9 +4,16 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Typeface;
 import android.os.Environment;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.TypefaceSpan;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.stemi.stemiapp.R;
 import com.stemi.stemiapp.activity.TrackActivity;
@@ -104,7 +111,7 @@ public class CommonUtils {
          public void onClick(DialogInterface dialog, int which) {
             dbForTrackActivities.updateUserTrack(TrackActivity.userEventDetails,value);
             EventBus.getDefault().post(new MessageEvent("Hello!"));
-            //Toast.makeText(getActivity(),"Yes button Clicked",Toast.LENGTH_LONG).show();
+            ((TrackActivity) mContext).setActionBarTitle("Track");
             Log.i("Code2care ", "Yes button Clicked!");
          }
       });
@@ -113,10 +120,10 @@ public class CommonUtils {
       builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
          @Override
          public void onClick(DialogInterface dialog, int which) {
-            // Toast.makeText(getActivity(),"No button Clicked",Toast.LENGTH_LONG).show();
             Log.i("Code2care ","No button Clicked!");
             dialog.dismiss();
             ((TrackActivity) mContext).showFragment(new TrackFragment());
+            ((TrackActivity) mContext).setActionBarTitle("Track");
 
          }
       });
@@ -128,4 +135,41 @@ public class CommonUtils {
       Button pbutton = alertDialog.getButton(DialogInterface.BUTTON_POSITIVE);
       pbutton.setTextColor(mContext.getResources().getColor(R.color.appBackground));
    }
+
+   /**
+    * Set Fonts and size, dynamically
+    */
+
+   public static void setRobotoLightFonts(Context context, TextView v) {
+      Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/font_roboto_light.ttf");
+      v.setTypeface(typeface);
+      // CommonUtils.passViewsToChangeTextSize(context, v, textSize);
+   }
+
+   public static void setRobotoMediumFonts(Context context, TextView v) {
+      Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/font_roboto_medium.ttf");
+      v.setTypeface(typeface);
+      // CommonUtils.passViewsToChangeTextSize(context, v, textSize);
+   }
+
+   public static void setRobotoRegularFonts(Context context, TextView v) {
+      Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/font_roboto_regular.ttf");
+      v.setTypeface(typeface);
+      //    CommonUtils.passViewsToChangeTextSize(context, v, textSize);
+   }
+
+   public static void setRobotoBoldFonts(Context context, TextView v) {
+      Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/roboto_bold.ttf");
+      v.setTypeface(typeface);
+      // CommonUtils.passViewsToChangeTextSize(context, v, textSize);
+   }
+
+   public static void setRalewaySemiBold(Context context, TextView v) {
+      Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/raleway_semibold.ttf");
+      v.setTypeface(typeface);
+      // CommonUtils.passViewsToChangeTextSize(context, v, textSize);
+   }
+
+
+
 }

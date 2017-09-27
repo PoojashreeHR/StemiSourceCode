@@ -27,7 +27,8 @@
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
         android:gravity="center"
-        android:textSize="15sp"/>
+        android:typeface="serif"
+        android:textSize="12sp"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/heartSymptomsRecycler"
@@ -43,12 +44,15 @@
             android:layout_height="wrap_content"
             android:text="Find any of these symptoms?"
             android:layout_below="@+id/rl_symptoms"
-            android:textSize="17sp"
+            android:textSize="15sp"
             android:layout_margin="10dp"
+            android:textColor="@color/colorPrimary"
+            android:typeface="serif"
             android:gravity="center"
             android:id="@+id/textView6" />
 
             <TextView
+                android:id="@+id/tv_ask_help"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/textView6"

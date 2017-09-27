@@ -27,6 +27,7 @@ import com.stemi.stemiapp.customviews.AnimateHorizontalProgressBar;
 import com.stemi.stemiapp.databases.DBForTrackActivities;
 import com.stemi.stemiapp.model.DataPassListener;
 import com.stemi.stemiapp.model.MessageEvent;
+import com.stemi.stemiapp.model.UserEventDetails;
 import com.stemi.stemiapp.preference.AppSharedPreference;
 import com.stemi.stemiapp.utils.AppConstants;
 import com.stemi.stemiapp.utils.CommonUtils;
@@ -35,6 +36,7 @@ import org.greenrobot.eventbus.EventBus;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -50,6 +52,8 @@ public class StressFragment extends Fragment implements AppConstants, TrackActiv
     @BindView(R.id.tv_food_today) TextView tvFoodToday;
     @BindView(R.id.seekbar) SeekBar mSeekLin;
     @BindView(R.id.ll_seekbar)LinearLayout seekbarText;
+
+    String savedDate;
 
     AppSharedPreference appSharedPreference;
     String stressCount = null;
@@ -71,6 +75,7 @@ public class StressFragment extends Fragment implements AppConstants, TrackActiv
         View view = inflater.inflate(R.layout.fragment_stress, container, false);
         ButterKnife.bind(this,view);
 
+        CommonUtils.setRobotoRegularFonts(getActivity(),tvFoodToday);
         appSharedPreference = new AppSharedPreference(getActivity());
         dbForTrackActivities = new DBForTrackActivities();
         mSeekLin.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -112,8 +117,30 @@ public class StressFragment extends Fragment implements AppConstants, TrackActiv
             storeData();
         }else {
             EventBus.getDefault().post(new MessageEvent("Hello!"));
+            ((TrackActivity) getActivity()).setActionBarTitle("Track");
         }
     }
+
+    public void callSavedMEthod(){
+        if (tvFoodToday.getText().equals("Today  ")){
+            Date dt = new Date();
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy");// set format for date
+            String todaysDate = dateFormat.format(dt); // parse it like
+            savedDate = todaysDate;
+        }else {
+            savedDate = tvFoodToday.getText().toString();
+        }
+
+        if(dbForTrackActivities.getDate(savedDate)) {
+            ArrayList<UserEventDetails> eventDetails = dbForTrackActivities.getDetails(appSharedPreference.getProfileName(AppConstants.PROFILE_NAME), savedDate, 2);
+            if (eventDetails.get(0).getStressCount() != null) {
+                mSeekLin.setProgress(Integer.parseInt(eventDetails.get(0).getStressCount()));
+            }
+        }else {
+            mSeekLin.setProgress(0);
+        }
+    }
+
 
     public class DatePickerDialogClass extends DialogFragment implements DatePickerDialog.OnDateSetListener{
 
@@ -149,7 +176,7 @@ public class StressFragment extends Fragment implements AppConstants, TrackActiv
             String stDate= dateFormat.format(parseDate); //2016/11/16 12:08:43
             Log.e("Comparing Date :"," Your date is correct");
             tvFoodToday.setText(stDate);
-
+            callSavedMEthod();
         }
     }
 
@@ -187,10 +214,12 @@ public class StressFragment extends Fragment implements AppConstants, TrackActiv
         boolean date = dbForTrackActivities.getDate(TrackActivity.userEventDetails.getDate());
         if (!date) {
             dbForTrackActivities.addEntry(TrackActivity.userEventDetails);
-            ((TrackActivity) getActivity()).showFragment(new TrackFragment());
             EventBus.getDefault().post(new MessageEvent("Hello!"));
+            ((TrackActivity) getActivity()).setActionBarTitle("Track");
         } else {
             int c = dbForTrackActivities.isEntryExists(TrackActivity.userEventDetails,2,getActivity());
+            ((TrackActivity) getActivity()).setActionBarTitle("Track");
+
         }
     }
 

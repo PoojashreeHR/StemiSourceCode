@@ -10,19 +10,19 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:textSize="20dp"
+        android:textSize="18sp"
         android:paddingLeft="10dp"
         android:layout_marginTop="21dp"
         android:drawableRight="@drawable/ic_spinner"
         android:text="Today  "
-        android:textColor="@color/black"
+        android:textColor="@color/appBackground"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" />
     <View
         android:id="@+id/view"
         android:layout_width="wrap_content"
         android:layout_height="1dp"
-        android:background="@color/black"
+        android:background="@color/colorAccent"
         android:layout_marginTop="10dp"
         android:layout_below="@+id/tv_excercise_today"
         android:layout_alignLeft="@+id/tv_excercise_today"
@@ -72,7 +72,9 @@
                 android:layout_height="wrap_content"
                 android:text="Walking"
                 android:layout_gravity="center"
+                android:textColor="@color/colorLightGrey"
                 android:textSize="10sp"
+                android:fontFamily="serif"
                 android:layout_marginTop="5dp"
                 android:layout_marginBottom="10dp"/>
         </LinearLayout>
@@ -108,6 +110,8 @@
                 android:text="Cycling"
                 android:layout_gravity="center"
                 android:textSize="10sp"
+                android:textColor="@color/colorLightGrey"
+                android:fontFamily="serif"
                 android:layout_marginTop="5dp"
                 android:layout_marginBottom="10dp"/>
         </LinearLayout>
@@ -141,6 +145,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Swimming"
+                android:textColor="@color/colorLightGrey"
+                android:fontFamily="serif"
                 android:layout_gravity="center"
                 android:textSize="10sp"
                 android:singleLine="true"
@@ -179,6 +185,8 @@
                 android:text="Aerobics"
                 android:layout_gravity="center"
                 android:textSize="10sp"
+                android:textColor="@color/colorLightGrey"
+                android:fontFamily="serif"
                 android:layout_marginTop="5dp"
                 android:layout_marginBottom="10dp"/>
         </LinearLayout>
@@ -214,6 +222,8 @@
                 android:text="Others"
                 android:layout_gravity="center"
                 android:textSize="10sp"
+                android:textColor="@color/colorLightGrey"
+                android:fontFamily="serif"
                 android:layout_marginTop="5dp"
                 android:layout_marginBottom="10dp"/>
         </LinearLayout>

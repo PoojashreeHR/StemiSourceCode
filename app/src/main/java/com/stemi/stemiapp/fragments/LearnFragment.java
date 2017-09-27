@@ -16,6 +16,7 @@ import com.stemi.stemiapp.preference.AppSharedPreference;
 import com.stemi.stemiapp.rest.ApiClient;
 import com.stemi.stemiapp.rest.ApiInterface;
 import com.stemi.stemiapp.utils.AppConstants;
+import com.stemi.stemiapp.utils.CommonUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -57,6 +58,10 @@ public class LearnFragment extends Fragment implements AppConstants{
         appSharedPreference = new AppSharedPreference(getActivity());
         callGetTipOfTheDay();
 
+        ((TrackActivity) getActivity()).setActionBarTitle("Learn");
+
+        CommonUtils.setRobotoLightFonts(getActivity(),tvTips);
+        CommonUtils.setRobotoRegularFonts(getActivity(),tvExpandableSymptoms);
         tvExpandableSymptoms.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -91,14 +96,20 @@ public class LearnFragment extends Fragment implements AppConstants{
             }
         });
     }
+
     @Override
     public void setMenuVisibility(boolean menuVisible) {
         if(getActivity() != null){
             if(menuVisible){
                 ((TrackActivity) getActivity()).setActionBarTitle("Learn");
-
             }
         }
         super.setMenuVisibility(menuVisible);
+    }
+
+    @Override
+    public void onResume() {
+        ((TrackActivity) getActivity()).setActionBarTitle("Learn");
+        super.onResume();
     }
 }

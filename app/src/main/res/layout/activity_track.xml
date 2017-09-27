@@ -10,28 +10,36 @@
            android:id="@+id/appBarLayout"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
-       <android.support.v7.widget.Toolbar
-           android:id="@+id/track_toolbar"
-           android:layout_width="match_parent"
-           android:layout_height="?attr/actionBarSize"
-           android:background="@color/white"
-           app:popupTheme="@style/ThemeOverlay.AppCompat.Light" >
-
-        <RelativeLayout
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/track_toolbar"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/white"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light" >
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
                 <com.stemi.stemiapp.customviews.CircleImageView
                     android:layout_width="48dp"
                     android:layout_height="48dp"
                     android:layout_alignParentRight="true"
                     android:padding="5dp"
                     android:layout_marginRight="10dp"
-                    android:id="@+id/profile_image"
-                />
-        </RelativeLayout>
+                    android:id="@+id/profile_image" />
+
+                <TextView
+                    android:id="@+id/toolbar_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="Learn"
+                    android:textSize="20sp"
+                    android:textColor="@color/appBackground"
+                    android:gravity="center_vertical"/>
+            </RelativeLayout>
 
 
-       </android.support.v7.widget.Toolbar>
+        </android.support.v7.widget.Toolbar>
     </android.support.design.widget.AppBarLayout>
 
  <!--   <include layout="@layout/custom_tab"
@@ -54,7 +62,7 @@
          android:layout_width="match_parent"
          android:layout_height="70dp"
          app:tabMode="fixed"
-         android:background="@color/white"
+         android:background="@color/colorDarkGrey"
          app:tabGravity="fill"
          android:layout_alignParentBottom="true"
          android:layout_alignParentLeft="true"

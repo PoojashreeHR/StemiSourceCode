@@ -2,7 +2,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:background="@color/white"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -10,9 +9,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="20dp"
+        android:layout_margin="10dp"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
+        android:layout_alignParentStart="true"
+        android:id="@+id/scrollView3">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -29,7 +29,7 @@
                 android:id="@+id/et_address"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Address"
+                android:hint="ADDRESS"
                 android:marqueeRepeatLimit="marquee_forever"
                 android:focusable="true"
                 android:inputType="textPostalAddress"
@@ -45,7 +45,7 @@
             style="@style/StyledTilEditText"
             app:met_floatingLabel="normal" />-->
 
-    <android.support.design.widget.TextInputLayout
+<!--    <android.support.design.widget.TextInputLayout
         android:id="@+id/tl_height"
         style="@style/StyledTilEditText"
         android:layout_width="match_parent"
@@ -58,7 +58,7 @@
             android:hint="Height (Cm)"
             android:inputType="number"
             android:imeOptions="actionNext" />
-    </android.support.design.widget.TextInputLayout>
+    </android.support.design.widget.TextInputLayout>-->
     <android.support.design.widget.TextInputLayout
         android:id="@+id/tl_weight"
         android:layout_width="match_parent"
@@ -69,11 +69,13 @@
             android:id="@+id/et_weight"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Weight (Kg)"
+            android:hint="WEIGHT (KGs)"
             android:inputType="number"
             android:imeOptions="actionGo" />
     </android.support.design.widget.TextInputLayout>
-    <android.support.design.widget.TextInputLayout
+
+
+   <!-- <android.support.design.widget.TextInputLayout
         android:id="@+id/tl_waist"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -87,13 +89,149 @@
             android:inputType="number"
             android:imeOptions="actionGo" />
     </android.support.design.widget.TextInputLayout>
+-->
+
+        <LinearLayout
+            android:id="@+id/ll_height"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:layout_weight="5">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Height"
+            android:textSize="15sp"
+            android:textColor="@color/black"
+            android:layout_marginTop="15dp"
+            android:layout_weight="1"/>
+
+            <EditText
+                android:id="@+id/et_inFt"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.5"
+                android:hint="ft"
+                android:singleLine="true"
+                android:inputType="number"
+                android:padding="10dp"
+                android:textColor="@color/black"
+                android:gravity="center"
+                android:textSize="14sp"
+                android:maxLength="2"
+                android:background="@drawable/edittext_boundary"
+                android:layout_marginTop="15dp"/>
+
+            <EditText
+                android:id="@+id/et_inch"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.5"
+                android:hint="in"
+                android:maxLength="2"
+                android:textColor="@color/black"
+                android:gravity="center"
+                android:padding="10dp"
+                android:singleLine="true"
+                android:inputType="number"
+                android:textSize="14sp"
+                android:background="@drawable/edittext_boundary"
+                android:layout_marginTop="15dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:text="or"
+                android:textSize="15sp"
+                android:gravity="center"
+                android:layout_marginTop="15dp"
+                android:layout_weight="1"/>
+
+            <EditText
+                android:id="@+id/et_inCm"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:hint="cm"
+                android:maxLength="3"
+                android:textSize="14sp"
+                android:singleLine="true"
+                android:inputType="number"
+                android:textColor="@color/black"
+                android:layout_marginTop="15dp"
+                android:padding="10dp"
+                android:background="@drawable/edittext_boundary"/>
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="15dp"
+            android:weightSum="4">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Waist"
+                android:textSize="15sp"
+                android:textColor="@color/black"
+                android:layout_marginTop="15dp"
+                android:layout_weight="1"/>
+
+            <EditText
+                android:id="@+id/et_waistInches"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="in"
+                android:maxLength="2"
+                style="@style/StyledTilEditText"
+                android:padding="10dp"
+                android:textColor="@color/black"
+                android:gravity="center"
+                android:singleLine="true"
+                android:inputType="number"
+                android:textSize="14sp"
+                android:background="@drawable/edittext_boundary"
+                android:layout_marginTop="15dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:text="or"
+                android:textSize="15sp"
+                android:gravity="center"
+                android:layout_marginTop="15dp"
+                android:layout_weight="1"/>
+
+            <EditText
+                android:id="@+id/et_waistCm"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="cm"
+                android:textColor="@color/black"
+                android:gravity="center"
+                android:padding="10dp"
+                android:singleLine="true"
+                android:maxLength="3"
+                android:inputType="number"
+                android:textSize="14sp"
+                android:background="@drawable/edittext_boundary"
+                android:layout_marginTop="15dp"/>
+        </LinearLayout>
 
     <TextView
         android:id="@+id/do_you_smoke"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Do you Smoke?"
-        android:textSize="20dp"
+        android:textSize="16sp"
         android:textColor="@color/black"
         android:layout_marginTop="20dp"/>
 
@@ -116,7 +254,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Did you had heart attack before?"
-            android:textSize="20dp"
+            android:textSize="16sp"
             android:textColor="@color/black"
             android:layout_marginTop="20dp"/>
 
@@ -132,7 +270,6 @@
             android:layout_marginBottom="10dp">
 
         </com.stemi.stemiapp.customviews.AnswerTemplateView>
-
 <!--
         <LinearLayout
             android:layout_width="match_parent"
@@ -190,4 +327,5 @@
         android:textColor="@color/white"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true" />
+
 </RelativeLayout>

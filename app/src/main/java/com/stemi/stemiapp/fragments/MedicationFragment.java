@@ -7,6 +7,7 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Context;
+import android.graphics.Point;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.Drawable;
@@ -16,6 +17,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,7 +25,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.FrameLayout;
-import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -40,6 +41,8 @@ import com.stemi.stemiapp.model.MessageEvent;
 import com.stemi.stemiapp.model.TrackMedication;
 import com.stemi.stemiapp.preference.AppSharedPreference;
 import com.stemi.stemiapp.utils.AppConstants;
+import com.stemi.stemiapp.utils.CommonUtils;
+import com.stemi.stemiapp.utils.GlobalClass;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -48,7 +51,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -124,7 +126,10 @@ public class MedicationFragment extends Fragment implements AppConstants, View.O
         ButterKnife.bind(this, view);
         initView();
         medicineDetails = new MedicineDetails();
-        trackMedicationDB = new TrackMedicationDB();
+
+        // Setting fonts
+        CommonUtils.setRobotoRegularFonts(getActivity(), tvMedicationToday);
+        trackMedicationDB = new TrackMedicationDB(getActivity());
         ((TrackActivity) getActivity()).setOnBackPressedListener(this);
         ((TrackActivity) getActivity()).setOnBackPressedListener(this);
         ((TrackActivity) getActivity()).setActionBarTitle("Medication");
@@ -167,23 +172,32 @@ public class MedicationFragment extends Fragment implements AppConstants, View.O
     ArrayList<MedicineDetails> m1 = new ArrayList<>();
 
     public void getMedicineDetails(final String time, final RelativeLayout layout) {
-        ArrayList<String> medicine = medicineTable.getMedicine(time);
+        ArrayList<String> medicine = medicineTable.getMedicine(appSharedPreference.getUserId(),time);
         layout2 = (LinearLayout) layout.findViewById(R.id.imageTypeLayout);
         ImageView remove_img;
         for (int i = 0; i < medicine.size(); i++) {
-
             final FrameLayout frameLayout = new FrameLayout(getActivity());
-            FrameLayout.LayoutParams params2 = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            FrameLayout.LayoutParams params2 = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+         //   params2.setMargins(10, 10, 10, 10);
+            params2.gravity = Gravity.RIGHT;
+            frameLayout.setPadding(10,30,10,20);
             frameLayout.setLayoutParams(params2);
 
             remove_img = new ImageView(getActivity());
+            remove_img.setMaxHeight(90);
+            remove_img.setMaxWidth(60);
             remove_img.setId(R.id.checkedImg);
 
+            //To get Screen size
+/*            final Display display = getActivity().getWindowManager().getDefaultDisplay();
+            final Point size = new Point();
+            display.getSize(size);
+            */
             final RelativeLayout imgLayout = new RelativeLayout(getActivity());
             imgLayout.setGravity(Gravity.RIGHT);
-            RelativeLayout.LayoutParams params3 = new RelativeLayout.LayoutParams(80, 80);
-            params3.setMargins(0, 5, 10, 0);
-            params3.addRule(RelativeLayout.ALIGN_RIGHT);
+            imgLayout.setPadding(20,0,0,0);
+            RelativeLayout.LayoutParams params3 = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, 40);
+            params3.addRule(RelativeLayout.ALIGN_RIGHT,Gravity.RIGHT);
             imgLayout.setLayoutParams(params3);
 
             int colorOfMedicine;
@@ -212,7 +226,7 @@ public class MedicationFragment extends Fragment implements AppConstants, View.O
                 String medicineType = medicineDetails.getMedicineType();
                 colorOfMedicine = medicineDetails.getMedicineColor();
                 ImageView image = setMedicineColor(medicineType, colorOfMedicine);
-                if(medicineDetails.getMoringChecked()){
+                if (medicineDetails.getMoringChecked()) {
                     remove_img.setImageDrawable(getResources().getDrawable(R.drawable.ic_checked));
                 }
                 frameLayout.addView(image);
@@ -223,7 +237,7 @@ public class MedicationFragment extends Fragment implements AppConstants, View.O
                 String medicineType = medicineDetails.getMedicineType();
                 colorOfMedicine = medicineDetails.getMedicineColor();
                 ImageView image = setMedicineColor(medicineType, colorOfMedicine);
-                if(medicineDetails.getAfternoonChecked()){
+                if (medicineDetails.getAfternoonChecked()) {
                     remove_img.setImageDrawable(getResources().getDrawable(R.drawable.ic_checked));
                 }
                 frameLayout.addView(image);
@@ -235,7 +249,7 @@ public class MedicationFragment extends Fragment implements AppConstants, View.O
                 String medicineType = medicineDetails.getMedicineType();
                 colorOfMedicine = medicineDetails.getMedicineColor();
                 ImageView image = setMedicineColor(medicineType, colorOfMedicine);
-                if(medicineDetails.getNightChecked()){
+                if (medicineDetails.getNightChecked()) {
                     remove_img.setImageDrawable(getResources().getDrawable(R.drawable.ic_checked));
                 }
                 frameLayout.addView(image);
@@ -263,9 +277,9 @@ public class MedicationFragment extends Fragment implements AppConstants, View.O
                         }
                         finalRemove_img.setTag(0);
                         checkedImg = true;
-                            medicineDetails.setMoringChecked(true);
-                            medicineDetails.setAfternoonChecked(true);
-                            medicineDetails.setNightChecked(true);
+                        medicineDetails.setMoringChecked(true);
+                        medicineDetails.setAfternoonChecked(true);
+                        medicineDetails.setNightChecked(true);
                     }
                 }
             });
@@ -275,9 +289,12 @@ public class MedicationFragment extends Fragment implements AppConstants, View.O
 
     public ImageView setMedicineColor(String medicineType, int colorOfMedicine) {
         ImageView image = new ImageView(getActivity());
-        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(60, 60);
-        params.setMargins(10, 20, 10, 20);
-        image.setLayoutParams(params);
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        //params.setMargins(10, 30, 10, 20);
+        image.setMaxWidth(90);
+        image.setMaxHeight(90);
+      //  image.setPadding(10,20,10,20);
+        //image.setLayoutParams(params);
 
         if (medicineType.equals("Tablet")) {
             image.setBackgroundResource(0);
@@ -328,7 +345,7 @@ public class MedicationFragment extends Fragment implements AppConstants, View.O
         switch (id) {
             case R.id.ivInfo:
                 //dBforUserDetails.getMedicine("Morning");
-                ArrayList<String> Mmedicine = medicineTable.getMedicine("Morning");
+                ArrayList<String> Mmedicine = medicineTable.getMedicine(GlobalClass.userID,"Morning");
                 ArrayList<MedicineDetails> medicines = new ArrayList<>();
                 for (int i = 0; i < Mmedicine.size(); i++) {
                     MedicineDetails medicineInfo = new MedicineDetails();
@@ -348,7 +365,7 @@ public class MedicationFragment extends Fragment implements AppConstants, View.O
                 break;
 
             case R.id.ivInfo1:
-                ArrayList<String> Amedicine = medicineTable.getMedicine("Afternoon");
+                ArrayList<String> Amedicine = medicineTable.getMedicine(GlobalClass.userID,"Afternoon");
                 ArrayList<MedicineDetails> Amedicines = new ArrayList<>();
                 for (int i = 0; i < Amedicine.size(); i++) {
                     MedicineDetails AmedicineInfo = new MedicineDetails();
@@ -367,7 +384,7 @@ public class MedicationFragment extends Fragment implements AppConstants, View.O
                 break;
 
             case R.id.ivInfo2:
-                ArrayList<String> Nmedicine = medicineTable.getMedicine("Night");
+                ArrayList<String> Nmedicine = medicineTable.getMedicine(GlobalClass.userID,"Night");
                 if (Nmedicine.size() > 0) {
                     ArrayList<MedicineDetails> Nmedicines = new ArrayList<>();
                     for (int i = 0; i < Nmedicine.size(); i++) {
@@ -391,48 +408,51 @@ public class MedicationFragment extends Fragment implements AppConstants, View.O
 
     @Override
     public void doBack() {
-        Boolean checkedOrNot = false;
-        TrackMedication med = new TrackMedication();
+        if (layout2 != null) {
+            Boolean checkedOrNot = false;
+            TrackMedication med = new TrackMedication();
+            for (int i = 0; i < m1.size(); i++) {
+                if (m1.get(i).getMoringChecked() && m1.get(i).getAfternoonChecked() && m1.get(i).getNightChecked()) {
+                    checkedOrNot = true;
+                } else {
+                    checkedOrNot = false;
+                }
+            }
 
-        for (int i = 0; i < m1.size(); i++) {
-            if (m1.get(i).getMoringChecked() && m1.get(i).getAfternoonChecked() && m1.get(i).getNightChecked()) {
-                checkedOrNot = true;
+            if (checkedOrNot) {
+                med.setHadAllMedicines(true);
             } else {
-                checkedOrNot = false;
+                med.setHadAllMedicines(false);
             }
-        }
+            med.setUserId(appSharedPreference.getProfileName(AppConstants.PROFILE_NAME));
 
-        if(checkedOrNot){
-            med.setHadAllMedicines(true);
-        }else {
-            med.setHadAllMedicines(false);
-        }
-        med.setUserId(appSharedPreference.getUserId());
-
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy");// set format for date
-        if (tvMedicationToday.getText().equals("Today  ")) {
-            Date dt = new Date();
-            String todaysDate = dateFormat.format(dt);
-            Date date = null;// parse it like
-            try {
-               date = dateFormat.parse(todaysDate);
-            } catch (ParseException e) {
-                e.printStackTrace();
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy");// set format for date
+            if (tvMedicationToday.getText().equals("Today  ")) {
+                Date dt = new Date();
+                String todaysDate = dateFormat.format(dt);
+                Date date = null;// parse it like
+                try {
+                    date = dateFormat.parse(todaysDate);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                med.setDateTime(date);
+            } else {
+                Date date = null;
+                try {
+                    date = dateFormat.parse(tvMedicationToday.getText().toString());
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                med.setDateTime(date);
             }
-            med.setDateTime(date);
+            trackMedicationDB.addEntry(med);
+            Log.e(TAG, "doBack: " + checkedOrNot + "");
+           // EventBus.getDefault().post(new MessageEvent("Hello!"));
         } else {
-            Date date = null;
-            try {
-                date = dateFormat.parse(tvMedicationToday.getText().toString());
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-            med.setDateTime(date);
+            EventBus.getDefault().post(new MessageEvent("Hello!"));
+            ((TrackActivity) getActivity()).setActionBarTitle("Track");
         }
-        trackMedicationDB.addEntry(med);
-        Log.e(TAG, "doBack: " + checkedOrNot + "");
-        EventBus.getDefault().post(new MessageEvent("Hello!"));
-
     }
 
     public class DatePickerDialogClass extends DialogFragment implements DatePickerDialog.OnDateSetListener {

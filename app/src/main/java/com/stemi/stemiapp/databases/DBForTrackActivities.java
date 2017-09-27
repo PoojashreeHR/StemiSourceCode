@@ -12,11 +12,15 @@ import com.stemi.stemiapp.activity.TrackActivity;
 import com.stemi.stemiapp.model.BloodTestResult;
 import com.stemi.stemiapp.model.MedicineDetails;
 import com.stemi.stemiapp.model.MessageEvent;
+import com.stemi.stemiapp.model.TrackMedication;
 import com.stemi.stemiapp.model.UserEventDetails;
 import com.stemi.stemiapp.utils.CommonUtils;
 import com.stemi.stemiapp.utils.GlobalClass;
 
 import org.greenrobot.eventbus.EventBus;
+
+import java.util.ArrayList;
+import java.util.Date;
 
 import static android.content.ContentValues.TAG;
 
@@ -177,7 +181,7 @@ public class DBForTrackActivities {
                     }else {
                         updateUserTrack(TrackActivity.userEventDetails,1);
                         EventBus.getDefault().post(new MessageEvent("Hello!"));
-
+                        ((TrackActivity) context).setActionBarTitle("Track");
                     }
                     break;
                 case 2:
@@ -187,6 +191,7 @@ public class DBForTrackActivities {
                     }else {
                         updateUserTrack(TrackActivity.userEventDetails,2);
                         EventBus.getDefault().post(new MessageEvent("Hello!"));
+                        ((TrackActivity) context).setActionBarTitle("Track");
 
                     }break;
                 case 3:
@@ -195,6 +200,7 @@ public class DBForTrackActivities {
                     }else {
                         updateUserTrack(TrackActivity.userEventDetails,3);
                         EventBus.getDefault().post(new MessageEvent("Hello!"));
+                        ((TrackActivity) context).setActionBarTitle("Track");
 
                     }break;
                 case 4:
@@ -203,11 +209,51 @@ public class DBForTrackActivities {
                     }else {
                         updateUserTrack(TrackActivity.userEventDetails,4);
                         EventBus.getDefault().post(new MessageEvent("Hello!"));
+                        ((TrackActivity) context).setActionBarTitle("Track");
                     }
             }
             c.close();
            // return count > 0;
         }
         return count = 0;
+    }
+
+    public ArrayList<UserEventDetails> getDetails(String uid, String date, int id){
+        ArrayList<UserEventDetails> userDetailsTables = new ArrayList<>();
+        String query = "SELECT * FROM " + USER_ACTIVITIES + " WHERE " + UID + " = '" + uid + "' AND "
+                + DATE + " = '" + date+ "'";
+        SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
+        Cursor c = db.rawQuery(query, null);
+        UserEventDetails userEventDetails = new UserEventDetails();
+        while (c.moveToNext()) {
+            switch (id){
+                case 1:
+                    userEventDetails.setIswalked(c.getString(c.getColumnIndex(IS_WALKED)));
+                    userEventDetails.setIsCycled(c.getString(c.getColumnIndex(IS_CYCLED)));
+                    userEventDetails.setIsSwimmed(c.getString(c.getColumnIndex(IS_SWIMMED)));
+                    userEventDetails.setDoneAerobics(c.getString(c.getColumnIndex(DONE_AEROBICS)));
+                    userEventDetails.setOthers(c.getString(c.getColumnIndex(OTHERS)));
+                    userDetailsTables.add(userEventDetails);
+                    c.moveToNext();
+                    break;
+                case 2:
+                    userEventDetails.setStressCount(c.getString(c.getColumnIndex(STRESS_COUNT)));
+                    userDetailsTables.add(userEventDetails);
+                    c.moveToNext();
+                    break;
+                case 3:
+                    userEventDetails.setSmokeToday(c.getString(c.getColumnIndex(SMOKE_TODAY)));
+                    userEventDetails.setHowMany(c.getString(c.getColumnIndex(HOW_MANY_SMOKE)));
+                    userDetailsTables.add(userEventDetails);
+                    c.moveToNext();
+                    break;
+                case 4:
+                    userEventDetails.setTodaysWeight(c.getString(c.getColumnIndex(TODAY_WEIGHT)));
+                    userDetailsTables.add(userEventDetails);
+                    c.moveToNext();
+                    break;
+            }
+        }
+        return userDetailsTables;
     }
 }
