@@ -6,6 +6,7 @@ import android.util.Log;
 
 import com.stemi.stemiapp.databases.BloodTestDB;
 import com.stemi.stemiapp.databases.DBHelper;
+import com.stemi.stemiapp.databases.DataUploadedDB;
 import com.stemi.stemiapp.databases.DatabaseManager;
 import com.stemi.stemiapp.databases.FollowupsDB;
 import com.stemi.stemiapp.databases.TrackExerciseDB;
@@ -71,6 +72,7 @@ public class StemiApplication extends Application {
         TrackStressDB stressDB = new TrackStressDB(this);
         TrackWeightDB weightDB = new TrackWeightDB(this);
         FollowupsDB followupsDB = new FollowupsDB(this);
+        DataUploadedDB dataUploadedDB = new DataUploadedDB(this);
 
         bloodTestDB.createIfNotExists();
         //bloodTestDB.close();
@@ -95,6 +97,9 @@ public class StemiApplication extends Application {
 
         followupsDB.createIfNotExists();
         followupsDB.close();
+
+        dataUploadedDB.createIfNotExists();
+        dataUploadedDB.close();
     }
 
 
