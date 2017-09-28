@@ -194,7 +194,8 @@ public class MedicationFragment extends Fragment implements AppConstants, View.O
             display.getSize(size);
             */
             final RelativeLayout imgLayout = new RelativeLayout(getActivity());
-            imgLayout.setGravity(Gravity.RIGHT);
+            layout2.setGravity(Gravity.RIGHT);
+            imgLayout.setGravity(Gravity.RIGHT|Gravity.BOTTOM);
             imgLayout.setPadding(20,0,0,0);
             RelativeLayout.LayoutParams params3 = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, 40);
             params3.addRule(RelativeLayout.ALIGN_RIGHT,Gravity.RIGHT);
@@ -209,12 +210,12 @@ public class MedicationFragment extends Fragment implements AppConstants, View.O
             Log.e(TAG, "onCreateView: " + medicineDetails);
 
             if (checkedImg) {
-                remove_img.setImageResource(R.drawable.ic_checked);
+                remove_img.setImageResource(R.drawable.ic_checked_1);
                 remove_img.setTag(0);
                 imgLayout.addView(remove_img);
             } else {
-                remove_img.setImageResource(R.drawable.ic_unchecked);
-                remove_img.setTag(R.drawable.ic_checked);
+                remove_img.setImageResource(R.drawable.ic_unchecked_1);
+                remove_img.setTag(R.drawable.ic_checked_1);
                 imgLayout.addView(remove_img);
 
                 medicineDetails.setMoringChecked(false);
@@ -227,10 +228,11 @@ public class MedicationFragment extends Fragment implements AppConstants, View.O
                 colorOfMedicine = medicineDetails.getMedicineColor();
                 ImageView image = setMedicineColor(medicineType, colorOfMedicine);
                 if (medicineDetails.getMoringChecked()) {
-                    remove_img.setImageDrawable(getResources().getDrawable(R.drawable.ic_checked));
+                    remove_img.setImageDrawable(getResources().getDrawable(R.drawable.ic_checked_1));
                 }
                 frameLayout.addView(image);
-                frameLayout.addView(imgLayout);
+               // frameLayout.addView(imgLayout);
+                layout2.addView(imgLayout);
                 layout2.addView(frameLayout);
                 //morningContainer.addView(child);
             } else if (medicineDetails.getMedicineAfternoon().equals("Afternoon")) {
@@ -238,10 +240,11 @@ public class MedicationFragment extends Fragment implements AppConstants, View.O
                 colorOfMedicine = medicineDetails.getMedicineColor();
                 ImageView image = setMedicineColor(medicineType, colorOfMedicine);
                 if (medicineDetails.getAfternoonChecked()) {
-                    remove_img.setImageDrawable(getResources().getDrawable(R.drawable.ic_checked));
+                    remove_img.setImageDrawable(getResources().getDrawable(R.drawable.ic_checked_1));
                 }
                 frameLayout.addView(image);
-                frameLayout.addView(imgLayout);
+                //frameLayout.addView(imgLayout);
+                layout2.addView(imgLayout);
                 layout2.addView(frameLayout);
                 //  noonContainer.addView(child);
 
@@ -250,10 +253,11 @@ public class MedicationFragment extends Fragment implements AppConstants, View.O
                 colorOfMedicine = medicineDetails.getMedicineColor();
                 ImageView image = setMedicineColor(medicineType, colorOfMedicine);
                 if (medicineDetails.getNightChecked()) {
-                    remove_img.setImageDrawable(getResources().getDrawable(R.drawable.ic_checked));
+                    remove_img.setImageDrawable(getResources().getDrawable(R.drawable.ic_checked_1));
                 }
                 frameLayout.addView(image);
-                frameLayout.addView(imgLayout);
+               // frameLayout.addView(imgLayout);
+                layout2.addView(imgLayout);
                 layout2.addView(frameLayout);
             }
 
@@ -264,16 +268,16 @@ public class MedicationFragment extends Fragment implements AppConstants, View.O
 
                     if (checkedImg) {
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                            finalRemove_img.setImageDrawable(getResources().getDrawable(R.drawable.ic_unchecked));
+                            finalRemove_img.setImageDrawable(getResources().getDrawable(R.drawable.ic_unchecked_1));
                         }
-                        finalRemove_img.setTag(R.drawable.ic_checked);
+                        finalRemove_img.setTag(R.drawable.ic_checked_1);
                         checkedImg = false;
                         medicineDetails.setMoringChecked(false);
                         medicineDetails.setAfternoonChecked(false);
                         medicineDetails.setNightChecked(false);
                     } else {
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                            finalRemove_img.setImageDrawable(getResources().getDrawable(R.drawable.ic_checked));
+                            finalRemove_img.setImageDrawable(getResources().getDrawable(R.drawable.ic_checked_1));
                         }
                         finalRemove_img.setTag(0);
                         checkedImg = true;
@@ -298,7 +302,7 @@ public class MedicationFragment extends Fragment implements AppConstants, View.O
 
         if (medicineType.equals("Tablet")) {
             image.setBackgroundResource(0);
-            image.setBackgroundResource(R.drawable.ic_tablet);
+            image.setBackgroundResource(R.drawable.ic_tablet_1);
             Drawable drawable = image.getBackground().mutate();
             drawable.clearColorFilter();
             drawable.setColorFilter(new PorterDuffColorFilter(colorOfMedicine, PorterDuff.Mode.SRC_IN));
@@ -310,7 +314,7 @@ public class MedicationFragment extends Fragment implements AppConstants, View.O
 
         if (medicineType.contains("Capsule")) {
             image.setBackgroundResource(0);
-            image.setBackgroundResource(R.drawable.ic_capsule);
+            image.setBackgroundResource(R.drawable.ic_capsule_1);
             Drawable drawable = image.getBackground().mutate();
             drawable.clearColorFilter();
             drawable.setColorFilter(new PorterDuffColorFilter(colorOfMedicine, PorterDuff.Mode.SRC_IN));
@@ -318,7 +322,7 @@ public class MedicationFragment extends Fragment implements AppConstants, View.O
         }
         if (medicineType.contains("Syrup")) {
             image.setBackgroundResource(0);
-            image.setBackgroundResource(R.drawable.ic_syrup);
+            image.setBackgroundResource(R.drawable.ic_syrup_1);
             Drawable drawable = image.getBackground().mutate();
             drawable.clearColorFilter();
             drawable.setColorFilter(new PorterDuffColorFilter(colorOfMedicine, PorterDuff.Mode.SRC_IN));

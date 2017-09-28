@@ -13,11 +13,38 @@ public class UserEventDetails {
     private String date;
     private String uid;
     private String stressCount;
+    private String yoga;
+    private String meditation;
+    private String hobbies;
     private String smokeToday;
     private String howMany;
     private String todaysWeight;
     private String bmiValue;
 
+
+    public String getYoga() {
+        return yoga;
+    }
+
+    public void setYoga(String yoga) {
+        this.yoga = yoga;
+    }
+
+    public String getMeditation() {
+        return meditation;
+    }
+
+    public void setMeditation(String meditation) {
+        this.meditation = meditation;
+    }
+
+    public String getHobbies() {
+        return hobbies;
+    }
+
+    public void setHobbies(String hobbies) {
+        this.hobbies = hobbies;
+    }
 
     public String getStressCount() {
         return stressCount;

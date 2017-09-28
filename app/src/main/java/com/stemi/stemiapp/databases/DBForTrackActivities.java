@@ -45,6 +45,9 @@ public class DBForTrackActivities {
     private static final String SMOKE_TODAY = "smokeToday";
     private static final String HOW_MANY_SMOKE = "howMany";
     private static final String STRESS_COUNT = "stressCount";
+    private static final String DONE_YOGA = "yoga";
+    private static final String DONE_MEDITATION = "meditation";
+    private static final String DONE_HOBBIES = "gobbies";
     private static final String TODAY_WEIGHT = "todaysWeight";
     private static final String BMI_VALUE = "bmiValue";
 
@@ -62,6 +65,9 @@ public class DBForTrackActivities {
             + SMOKE_TODAY + " TEXT,"
             + HOW_MANY_SMOKE + " TEXT,"
             + STRESS_COUNT + " TEXT,"
+            + DONE_YOGA + " TEXT,"
+            + DONE_MEDITATION + " TEXT,"
+            + DONE_HOBBIES + " TEXT,"
             + TODAY_WEIGHT + " TEXT,"
             + BMI_VALUE + " TEXT"
             + ")";
@@ -101,6 +107,9 @@ public class DBForTrackActivities {
         values.put(SMOKE_TODAY,userEventDetails.getSmokeToday());
         values.put(HOW_MANY_SMOKE,userEventDetails.getHowMany());
         values.put(STRESS_COUNT,userEventDetails.getStressCount());
+        values.put(DONE_YOGA,userEventDetails.getYoga());
+        values.put(DONE_MEDITATION,userEventDetails.getMeditation());
+        values.put(DONE_HOBBIES,userEventDetails.getHobbies());
         values.put(TODAY_WEIGHT,userEventDetails.getTodaysWeight());
         values.put(BMI_VALUE,userEventDetails.getBmiValue());
 
@@ -145,6 +154,9 @@ public class DBForTrackActivities {
                 break;
             case 2:
                 cv.put(STRESS_COUNT,userEventDetails.getStressCount());
+                cv.put(DONE_YOGA,userEventDetails.getYoga());
+                cv.put(DONE_MEDITATION,userEventDetails.getMeditation());
+                cv.put(DONE_HOBBIES,userEventDetails.getHobbies());
                 break;
             case 3:
                 cv.put(SMOKE_TODAY,userEventDetails.getSmokeToday());
@@ -238,6 +250,9 @@ public class DBForTrackActivities {
                     break;
                 case 2:
                     userEventDetails.setStressCount(c.getString(c.getColumnIndex(STRESS_COUNT)));
+                    userEventDetails.setYoga(c.getString(c.getColumnIndex(DONE_YOGA)));
+                    userEventDetails.setMeditation(c.getString(c.getColumnIndex(DONE_MEDITATION)));
+                    userEventDetails.setHobbies(c.getString(c.getColumnIndex(DONE_HOBBIES)));
                     userDetailsTables.add(userEventDetails);
                     c.moveToNext();
                     break;
