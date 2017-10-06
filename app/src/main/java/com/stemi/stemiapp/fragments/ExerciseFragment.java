@@ -358,7 +358,7 @@ public class ExerciseFragment extends Fragment implements View.OnClickListener, 
                 e.printStackTrace();
             }
         }
-        if(ivWalking.getTag().equals(R.drawable.ic_checked_1)){
+
 
         boolean isExercised = false;
 
