@@ -80,6 +80,7 @@ public class MainActivity extends AppCompatActivity implements AppConstants,View
                             startActivity(new Intent(MainActivity.this, TrackActivity.class));
                         }else {
                             startActivity(new Intent(MainActivity.this, RegistrationActivity.class));
+                            new AppSharedPreference(MainActivity.this).setFirstTimeLaunch(IS_FIRST_TIME_LAUNCH,true);
                         }
 
                         finish();
