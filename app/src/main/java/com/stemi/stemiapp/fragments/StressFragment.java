@@ -28,12 +28,15 @@ import com.stemi.stemiapp.customviews.AnimateHorizontalProgressBar;
 import com.stemi.stemiapp.databases.DBForTrackActivities;
 import com.stemi.stemiapp.model.DataPassListener;
 import com.stemi.stemiapp.model.MessageEvent;
+import com.stemi.stemiapp.model.SetTimeEvent;
 import com.stemi.stemiapp.model.UserEventDetails;
 import com.stemi.stemiapp.preference.AppSharedPreference;
 import com.stemi.stemiapp.utils.AppConstants;
 import com.stemi.stemiapp.utils.CommonUtils;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -226,7 +229,26 @@ public class StressFragment extends Fragment implements AppConstants, TrackActiv
         }
     }
 
-    public class DatePickerDialogClass extends DialogFragment implements DatePickerDialog.OnDateSetListener{
+    @Override
+    public void onStart() {
+        EventBus.getDefault().register(this);
+        super.onStart();
+    }
+
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onSetTimeEvent(SetTimeEvent event){
+        tvFoodToday.setText(event.getDate());
+        callSavedMEthod();
+    }
+
+
+    public static class DatePickerDialogClass extends DialogFragment implements DatePickerDialog.OnDateSetListener{
 
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState){
@@ -259,8 +281,8 @@ public class StressFragment extends Fragment implements AppConstants, TrackActiv
             }
             String stDate= dateFormat.format(parseDate); //2016/11/16 12:08:43
             Log.e("Comparing Date :"," Your date is correct");
-            tvFoodToday.setText(stDate);
-            callSavedMEthod();
+            EventBus.getDefault().post(new SetTimeEvent(0,stDate));
+//
         }
     }
 

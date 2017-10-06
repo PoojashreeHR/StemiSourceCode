@@ -40,12 +40,15 @@ import com.stemi.stemiapp.activity.TrackActivity;
 import com.stemi.stemiapp.databases.MedicineTable;
 import com.stemi.stemiapp.model.MedicineDetails;
 import com.stemi.stemiapp.model.MessageEvent;
+import com.stemi.stemiapp.model.SetTimeEvent;
 import com.stemi.stemiapp.preference.AppSharedPreference;
 import com.stemi.stemiapp.utils.AppConstants;
 import com.stemi.stemiapp.utils.CommonUtils;
 import com.stemi.stemiapp.utils.GlobalClass;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -80,11 +83,11 @@ public class AddMedicineFragment extends Fragment implements View.OnClickListene
     TextView nightMedicine;
 
     @BindView(R.id.tvMorningTime)
-    TextView morningTime;
+     TextView morningTime;
     @BindView(R.id.tvNoonTime)
-    TextView noonTime;
+     TextView noonTime;
     @BindView(R.id.tvNightTime)
-    TextView nightTime;
+     TextView nightTime;
 
     @BindView(R.id.medicineDays)
     EditText medicineDays;
@@ -94,14 +97,14 @@ public class AddMedicineFragment extends Fragment implements View.OnClickListene
     public final static String DATA_RECEIVE = "dataRecieve";
 
     MedicineDetails medicineDetails;
-    int setTime;
-    int timeHour, timeMinute;
+    static int setTime;
+    static int timeHour, timeMinute;
     long time;
     long endTime;
     String typeOfMedicine;
     int colorOfMedicine;
     String numberOfDays;
-    TimePickerDialog timepickerdialog1;
+    static TimePickerDialog timepickerdialog1;
     Gson gson;
     AppSharedPreference appSharedPreference;
     MedicineTable medicineTable;
@@ -110,6 +113,31 @@ public class AddMedicineFragment extends Fragment implements View.OnClickListene
 
     public AddMedicineFragment() {
         // Required empty public constructor
+    }
+
+    @Override
+    public void onStart() {
+        EventBus.getDefault().register(this);
+        super.onStart();
+    }
+
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onSetTimeEvent(SetTimeEvent event){
+        int setTime = event.getTime();
+        String msgDate = event.getDate();
+        if (setTime == 0) {
+            morningTime.setText(msgDate);
+        } else if (setTime == 1) {
+            noonTime.setText(msgDate);
+        } else if (setTime == 2) {
+            nightTime.setText(msgDate);
+        }
     }
 
     @Override
@@ -595,7 +623,7 @@ public class AddMedicineFragment extends Fragment implements View.OnClickListene
         }
     }
 
-    public class TimePickerTheme3class extends DialogFragment implements TimePickerDialog.OnTimeSetListener {
+    public static class TimePickerTheme3class extends DialogFragment implements TimePickerDialog.OnTimeSetListener {
 
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -636,13 +664,8 @@ public class AddMedicineFragment extends Fragment implements View.OnClickListene
                 final Date dateObj = sdf.parse(time);
                 String msgDate = (String) android.text.format.DateFormat.format("h:mm a", dateObj);
                 Log.e("TIME IN 12hr Format : ", " " + msgDate);
-                if (setTime == 0) {
-                    morningTime.setText(msgDate);
-                } else if (setTime == 1) {
-                    noonTime.setText(msgDate);
-                } else if (setTime == 2) {
-                    nightTime.setText(msgDate);
-                }
+                EventBus.getDefault().post(new SetTimeEvent(setTime, msgDate));
+
 
             } catch (final ParseException e) {
                 e.printStackTrace();

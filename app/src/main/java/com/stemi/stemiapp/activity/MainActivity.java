@@ -81,8 +81,12 @@ public class MainActivity extends AppCompatActivity implements AppConstants,View
                         }else {
                             startActivity(new Intent(MainActivity.this, TrackActivity.class));
                         }
-
-
+                        /*if(appSharedPreferences.isFirstTimeLaunch(IS_FIRST_TIME_LAUNCH)){
+                            startActivity(new Intent(MainActivity.this, TrackActivity.class));
+                        }else {
+                            startActivity(new Intent(MainActivity.this, RegistrationActivity.class));
+                            new AppSharedPreference(MainActivity.this).setFirstTimeLaunch(IS_FIRST_TIME_LAUNCH,true);
+                        }*/
                         finish();
                     }else {
                         CommonUtils.hideLoadingProgress();

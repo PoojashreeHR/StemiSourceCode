@@ -441,7 +441,7 @@ public class StatusFragment extends Fragment {
 
         List<String> yAxes = new ArrayList<>();
         yAxes.add("");
-        yAxes.add("Medication");
+        yAxes.add("Medicines");
         yAxes.add("Exercise");
        // yAxes.add("Stress");
         yAxes.add("Smoking");
@@ -449,6 +449,7 @@ public class StatusFragment extends Fragment {
         healthGraph.getGridLabelRenderer().setLabelFormatter(new YAxisValueFormatter(getActivity(), yAxes));
         healthGraph.getGridLabelRenderer().setHumanRounding(false);
         healthGraph.getGridLabelRenderer().setNumHorizontalLabels(5);
+        healthGraph.getGridLabelRenderer().setNumVerticalLabels(4);
 
         healthGraph.getViewport().setYAxisBoundsManual(true);
         healthGraph.getViewport().setMinY(0);
@@ -485,6 +486,7 @@ public class StatusFragment extends Fragment {
 
         TrackSmokingDB trackSmokingDB = new TrackSmokingDB(getActivity());
         List<TrackSmoking> trackSmokingList = trackSmokingDB.getAllInfo(GlobalClass.userID);
+        Log.e("StatsFragment","trackSmokingList.size() = "+trackSmokingList.size());
 
         int k=0;
         smokingPoints = new FlaggedDataPoint[trackSmokingList.size()];

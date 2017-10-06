@@ -23,7 +23,10 @@ import com.stemi.stemiapp.R;
 import com.stemi.stemiapp.activity.TrackActivity;
 import com.stemi.stemiapp.customviews.CircleImageView;
 import com.stemi.stemiapp.databases.DBForTrackActivities;
+import com.stemi.stemiapp.databases.TrackExerciseDB;
 import com.stemi.stemiapp.model.MessageEvent;
+import com.stemi.stemiapp.model.SetTimeEvent;
+import com.stemi.stemiapp.model.TrackExercise;
 import com.stemi.stemiapp.model.UserEventDetails;
 import com.stemi.stemiapp.preference.AppSharedPreference;
 import com.stemi.stemiapp.utils.AppConstants;
@@ -31,6 +34,8 @@ import com.stemi.stemiapp.utils.CommonUtils;
 import com.stemi.stemiapp.utils.GlobalClass;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -270,7 +275,25 @@ public class ExerciseFragment extends Fragment implements View.OnClickListener, 
         }
     }
 
-    public class DatePickerDialogClass extends DialogFragment implements DatePickerDialog.OnDateSetListener{
+    @Override
+    public void onStart() {
+        EventBus.getDefault().register(this);
+        super.onStart();
+    }
+
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onSetTimeEvent(SetTimeEvent event){
+        tvExcerciseToday.setText(event.getDate());
+        callSavedMethod();
+    }
+
+    public static class DatePickerDialogClass extends DialogFragment implements DatePickerDialog.OnDateSetListener{
 
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState){
@@ -284,6 +307,8 @@ public class ExerciseFragment extends Fragment implements View.OnClickListener, 
 
             return datepickerdialog;
         }
+
+
 
         public void onDateSet(DatePicker view, int year, int month, int day){
             Date parseDate = null;
@@ -303,55 +328,94 @@ public class ExerciseFragment extends Fragment implements View.OnClickListener, 
             }
             String stDate= dateFormat.format(parseDate); //2016/11/16 12:08:43
             Log.e("Comparing Date :"," Your date is correct");
-            tvExcerciseToday.setText(stDate);
-            callSavedMethod();
+            EventBus.getDefault().post(new SetTimeEvent(0,stDate));
+
 
         }
     }
 
     public void storeData(){
+        TrackExerciseDB trackExerciseDB = new TrackExerciseDB(getActivity());
+        TrackExercise trackExercise = new TrackExercise();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy");
 
+        trackExercise.setUserId(GlobalClass.userID);
         if(appSharedPreference.getProfileName(AppConstants.PROFILE_NAME)!= null){
             TrackActivity.userEventDetails.setUid(appSharedPreference.getProfileName(AppConstants.PROFILE_NAME));
         }
         if (tvExcerciseToday.getText().equals("Today  ")){
             Date dt = new Date();
-            SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy");// set format for date
+           // set format for date
             String todaysDate = dateFormat.format(dt); // parse it like
             TrackActivity.userEventDetails.setDate(todaysDate);
+            trackExercise.setDateTime(dt);
         }else {
             TrackActivity.userEventDetails.setDate(tvExcerciseToday.getText().toString());
+            try {
+                Date selectedDate = dateFormat.parse(tvExcerciseToday.getText().toString());
+                trackExercise.setDateTime(selectedDate);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
         }
-        if(ivWalking.getTag().equals(R.drawable.ic_checked_1)){
+
+
+        boolean isExercised = false;
+
+        boolean isWalking = false;
+        if(ivWalking.getTag().equals(R.drawable.ic_checked)){
             TrackActivity. userEventDetails.setIswalked("true");
+            isWalking = true;
+            Log.e(TAG,"isExercised = "+ isExercised );
         }else {
             TrackActivity. userEventDetails.setIswalked("false");
+            isWalking = false;
 
         }
+
+
+        boolean isCycling = false;
         if(ivCycling.getTag().equals(R.drawable.ic_checked_1)){
             TrackActivity.userEventDetails.setIsCycled("true");
+            isCycling = true;
         }else {
             TrackActivity.userEventDetails.setIsCycled("false");
+            isCycling = false;
 
         }
 
+
+        boolean isSwimming = false;
         if(ivSwimming.getTag().equals(R.drawable.ic_checked_1)){
             TrackActivity.userEventDetails.setIsSwimmed("true");
+            isSwimming = true;
         }else {
             TrackActivity.userEventDetails.setIsSwimmed("false");
+            isSwimming = false;
         }
 
+
+        boolean isAerobics = false;
         if(ivAerobics.getTag().equals(R.drawable.ic_checked_1)){
             TrackActivity. userEventDetails.setDoneAerobics("true");
+            isAerobics = true;
         }else {
             TrackActivity. userEventDetails.setDoneAerobics("false");
+            isAerobics = false;
         }
 
+        boolean isOthers = false;
         if(ivOthers.getTag().equals(R.drawable.ic_checked_1)){
             TrackActivity. userEventDetails.setOthers("true");
+            isOthers = true;
         }else {
             TrackActivity. userEventDetails.setOthers("false");
+            isOthers = false;
         }
+
+        isExercised = isWalking || isCycling || isSwimming || isAerobics || isOthers;
+        trackExercise.setExercised(isExercised);
+        Log.e(TAG,"isExercised = "+ isExercised );
 
       //  boolean count = dbForTrackActivities.isTableEmpty();
         boolean date = dbForTrackActivities.getDate(TrackActivity.userEventDetails.getDate());
@@ -363,6 +427,8 @@ public class ExerciseFragment extends Fragment implements View.OnClickListener, 
                 int c = dbForTrackActivities.isEntryExists(TrackActivity.userEventDetails,1,getActivity());
 
             }
+
+            trackExerciseDB.addEntry(trackExercise);
     }
   /*  @Override
     //Pressed return button - returns to the results menu

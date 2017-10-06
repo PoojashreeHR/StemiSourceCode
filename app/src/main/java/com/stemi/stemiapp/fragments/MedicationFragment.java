@@ -40,6 +40,7 @@ import com.stemi.stemiapp.databases.TrackMedicationDB;
 import com.stemi.stemiapp.model.DataPassListener;
 import com.stemi.stemiapp.model.MedicineDetails;
 import com.stemi.stemiapp.model.MessageEvent;
+import com.stemi.stemiapp.model.SetTimeEvent;
 import com.stemi.stemiapp.model.TrackMedication;
 import com.stemi.stemiapp.preference.AppSharedPreference;
 import com.stemi.stemiapp.utils.AppConstants;
@@ -47,6 +48,8 @@ import com.stemi.stemiapp.utils.CommonUtils;
 import com.stemi.stemiapp.utils.GlobalClass;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -417,6 +420,7 @@ public class MedicationFragment extends Fragment implements AppConstants, View.O
             Boolean checkedOrNot = false;
             TrackMedication med = new TrackMedication();
             for (int i = 0; i < m1.size(); i++) {
+                //if (m1.get(i).getMoringChecked() && m1.get(i).getAfternoonChecked() && m1.get(i).getNightChecked()) {
                 if (m1.get(i).getMoringChecked() && m1.get(i).getAfternoonChecked() && m1.get(i).getNightChecked()) {
                     checkedOrNot = true;
                 } else {
@@ -429,7 +433,7 @@ public class MedicationFragment extends Fragment implements AppConstants, View.O
             } else {
                 med.setHadAllMedicines(false);
             }
-            med.setUserId(appSharedPreference.getProfileName(AppConstants.PROFILE_NAME));
+            med.setUserId(appSharedPreference.getUserId());
 
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy");// set format for date
             if (tvMedicationToday.getText().equals("Today  ")) {
@@ -460,7 +464,25 @@ public class MedicationFragment extends Fragment implements AppConstants, View.O
         }
     }
 
-    public class DatePickerDialogClass extends DialogFragment implements DatePickerDialog.OnDateSetListener {
+    @Override
+    public void onStart() {
+        EventBus.getDefault().register(this);
+        super.onStart();
+    }
+
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onSetTimeEvent(SetTimeEvent event){
+        tvMedicationToday.setText(event.getDate());
+        //callSavedMethod();
+    }
+
+    public static class DatePickerDialogClass extends DialogFragment implements DatePickerDialog.OnDateSetListener {
 
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -493,7 +515,8 @@ public class MedicationFragment extends Fragment implements AppConstants, View.O
             }
             String stDate = dateFormat.format(parseDate); //2016/11/16 12:08:43
             Log.e("Comparing Date :", " Your date is correct");
-            tvMedicationToday.setText(stDate);
+            EventBus.getDefault().post(new SetTimeEvent(0, stDate));
+           // tvMedicationToday.setText(stDate);
         }
     }
 

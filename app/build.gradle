@@ -54,4 +54,5 @@ dependencies {
     compile 'com.journeyapps:zxing-android-embedded:3.4.0'
     testCompile 'junit:junit:4.12'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.7.0'
+    compile 'testfairy:testfairy-android-sdk:1.+@aar'
 }

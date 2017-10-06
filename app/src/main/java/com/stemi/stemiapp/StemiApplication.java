@@ -20,6 +20,7 @@ import com.stemi.stemiapp.preference.AppSharedPreference;
 import com.stemi.stemiapp.utils.AppConstants;
 import com.stemi.stemiapp.utils.GlobalClass;
 import com.stemi.stemiapp.utils.TyprfaceUtils;
+import com.testfairy.TestFairy;
 
 import java.util.List;
 
@@ -61,6 +62,8 @@ public class StemiApplication extends Application {
         if(!firstTimeLaunch){
             createAllTables();
         }
+
+        TestFairy.begin(this, "2077dc440588e99912fa2b124e87756f90295c5f");
     }
 
     public void createAllTables(){

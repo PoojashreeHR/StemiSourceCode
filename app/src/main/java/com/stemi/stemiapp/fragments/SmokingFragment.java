@@ -20,7 +20,10 @@ import com.stemi.stemiapp.R;
 import com.stemi.stemiapp.activity.TrackActivity;
 import com.stemi.stemiapp.customviews.AnswerTemplateView;
 import com.stemi.stemiapp.databases.DBForTrackActivities;
+import com.stemi.stemiapp.databases.TrackSmokingDB;
 import com.stemi.stemiapp.model.MessageEvent;
+import com.stemi.stemiapp.model.SetTimeEvent;
+import com.stemi.stemiapp.model.TrackSmoking;
 import com.stemi.stemiapp.model.UserEventDetails;
 import com.stemi.stemiapp.preference.AppSharedPreference;
 import com.stemi.stemiapp.utils.AppConstants;
@@ -28,6 +31,8 @@ import com.stemi.stemiapp.utils.CommonUtils;
 import com.stemi.stemiapp.utils.GlobalClass;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -116,8 +121,25 @@ public class SmokingFragment  extends Fragment implements TrackActivity.OnBackPr
         }
     }
 
+    @Override
+    public void onStart() {
+        EventBus.getDefault().register(this);
+        super.onStart();
+    }
 
-    public class DatePickerDialogClass extends DialogFragment implements DatePickerDialog.OnDateSetListener{
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onSetTimeEvent(SetTimeEvent event){
+        tvSmokeToday.setText(event.getDate());
+        callSavedMethod();
+    }
+
+    public static class DatePickerDialogClass extends DialogFragment implements DatePickerDialog.OnDateSetListener{
 
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState){
@@ -150,28 +172,45 @@ public class SmokingFragment  extends Fragment implements TrackActivity.OnBackPr
             }
             String stDate= dateFormat.format(parseDate); //2016/11/16 12:08:43
             Log.e("Comparing Date :"," Your date is correct");
-            tvSmokeToday.setText(stDate);
-            callSavedMethod();
+            EventBus.getDefault().post(new SetTimeEvent(0,stDate));
+//            tvSmokeToday.setText(stDate);
+//            callSavedMethod();
         }
     }
 
     public void saveData() {
         TrackActivity.userEventDetails.setUid(GlobalClass.userID);
+        TrackSmokingDB trackSmokingDB = new TrackSmokingDB(getActivity());
+        TrackSmoking trackSmoking = new TrackSmoking();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy");
+        trackSmoking.setUserId(GlobalClass.userID);
         if (tvSmokeToday.getText().equals("Today  ")){
             Date dt = new Date();
-            SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy");// set format for date
+            // set format for date
             String todaysDate = dateFormat.format(dt); // parse it like
             TrackActivity.userEventDetails.setDate(todaysDate);
+            trackSmoking.setDateTime(dt);
         }else {
+            try {
+                Date selectedDate = dateFormat.parse(tvSmokeToday.getText().toString());
+                trackSmoking.setDateTime(selectedDate);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
             TrackActivity.userEventDetails.setDate(tvSmokeToday.getText().toString());
         }
         TrackActivity.userEventDetails.setSmokeToday(responseChange);
 
+
         if(responseChange.equals("NO")){
             TrackActivity.userEventDetails.setHowMany("0");
+            trackSmoking.setSmoked(false);
         }else {
             TrackActivity.userEventDetails.setHowMany(howMany.getText().toString());
+            trackSmoking.setSmoked(true);
         }
+
+        trackSmokingDB.addEntry(trackSmoking);
 
         boolean date = dbForTrackActivities.getDate(TrackActivity.userEventDetails.getDate());
         if (!date) {
@@ -186,13 +225,23 @@ public class SmokingFragment  extends Fragment implements TrackActivity.OnBackPr
     }
 
     public void callSavedMethod(){
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy");// set format for date
+
+
         if (tvSmokeToday.getText().equals("Today  ")){
             Date dt = new Date();
-            SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy");// set format for date
+
             String todaysDate = dateFormat.format(dt); // parse it like
             savedDate = todaysDate;
+
         }else {
             savedDate = tvSmokeToday.getText().toString();
+            try {
+                Date selectedDate = dateFormat.parse(tvSmokeToday.getText().toString());
+
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
         }
 
         if(dbForTrackActivities.getDate(savedDate)) {

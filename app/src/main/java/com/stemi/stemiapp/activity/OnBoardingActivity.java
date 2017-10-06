@@ -126,7 +126,7 @@ public class OnBoardingActivity extends AppCompatActivity implements AppConstant
     }
 
     private void launchHomeScreen() {
-        prefManager.setFirstTimeLaunch(IS_FIRST_TIME_LAUNCH,true);
+       // prefManager.setFirstTimeLaunch(IS_FIRST_TIME_LAUNCH,true);
         startActivity(new Intent(OnBoardingActivity.this, MainActivity.class));
         finish();
     }

@@ -5,7 +5,9 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
+import com.google.gson.Gson;
 import com.stemi.stemiapp.model.TrackSmoking;
 import com.stemi.stemiapp.utils.GlobalClass;
 
@@ -57,11 +59,11 @@ public class TrackSmokingDB extends SQLiteOpenHelper{
             cv.put(COLUMN_USER_ID, stress.getUserId());
             cv.put(COLUMN_DATE_TIME, simpleDateFormat.format(stress.getDateTime()));
             cv.put(COLUMN_SMOKED, stress.isSmoked());
-
-            db.insert(TABLE_SMOKING, null, cv);
+            Log.e("StatsFragment", "Saving "+new Gson().toJson(stress));
+            db.insertOrThrow(TABLE_SMOKING, null, cv);
         }
         catch(Exception e){
-
+            Log.e("StatsFragment", "Exception "+e.getLocalizedMessage());
         }
         db.close();
     }
