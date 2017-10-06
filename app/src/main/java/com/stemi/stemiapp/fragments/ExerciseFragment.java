@@ -125,55 +125,55 @@ public class ExerciseFragment extends Fragment implements View.OnClickListener, 
         switch (id) {
             case R.id.ll_walking:
                 if(checkClicked){
-                    ivWalking.setBackgroundResource(R.drawable.ic_unchecked);
+                    ivWalking.setBackgroundResource(R.drawable.ic_unchecked_1);
                     ivWalking.setTag(0);
                     checkClicked = false;
                 }else {
-                    ivWalking.setBackgroundResource(R.drawable.ic_checked);
-                    ivWalking.setTag(R.drawable.ic_checked);
+                    ivWalking.setBackgroundResource(R.drawable.ic_checked_1);
+                    ivWalking.setTag(R.drawable.ic_checked_1);
                     checkClicked = true;
                 }break;
             case R.id.ll_cycling:
                 if(checkClicked){
-                    ivCycling.setBackgroundResource(R.drawable.ic_unchecked);
+                    ivCycling.setBackgroundResource(R.drawable.ic_unchecked_1);
                     ivCycling.setTag(0);
                     checkClicked = false;
                 }else {
-                    ivCycling.setBackgroundResource(R.drawable.ic_checked);
-                    ivCycling.setTag(R.drawable.ic_checked);
+                    ivCycling.setBackgroundResource(R.drawable.ic_checked_1);
+                    ivCycling.setTag(R.drawable.ic_checked_1);
                     checkClicked = true;
                 }
                 break;
             case R.id.ll_swimming:
                 if(checkClicked){
-                    ivSwimming.setBackgroundResource(R.drawable.ic_unchecked);
+                    ivSwimming.setBackgroundResource(R.drawable.ic_unchecked_1);
                     ivSwimming.setTag(0);
                     checkClicked = false;
                 }else {
-                    ivSwimming.setBackgroundResource(R.drawable.ic_checked);
-                    ivSwimming.setTag(R.drawable.ic_checked);
+                    ivSwimming.setBackgroundResource(R.drawable.ic_checked_1);
+                    ivSwimming.setTag(R.drawable.ic_checked_1);
                     checkClicked = true;
                 }
                 break;
             case R.id.ll_aerobics:
                 if(checkClicked){
-                    ivAerobics.setBackgroundResource(R.drawable.ic_unchecked);
+                    ivAerobics.setBackgroundResource(R.drawable.ic_unchecked_1);
                     ivAerobics.setTag(0);
                     checkClicked = false;
                 }else {
-                    ivAerobics.setBackgroundResource(R.drawable.ic_checked);
-                    ivAerobics.setTag(R.drawable.ic_checked);
+                    ivAerobics.setBackgroundResource(R.drawable.ic_checked_1);
+                    ivAerobics.setTag(R.drawable.ic_checked_1);
                     checkClicked = true;
                 }
                 break;
             case R.id.ll_others:
                 if(checkClicked){
-                    ivOthers.setBackgroundResource(R.drawable.ic_unchecked);
+                    ivOthers.setBackgroundResource(R.drawable.ic_unchecked_1);
                     ivOthers.setTag(0);
                     checkClicked = false;
                 }else {
-                    ivOthers.setBackgroundResource(R.drawable.ic_checked);
-                    ivOthers.setTag(R.drawable.ic_checked);
+                    ivOthers.setBackgroundResource(R.drawable.ic_checked_1);
+                    ivOthers.setTag(R.drawable.ic_checked_1);
                     checkClicked = true;
                 }
                 break;
@@ -192,52 +192,75 @@ public class ExerciseFragment extends Fragment implements View.OnClickListener, 
 
         if(dbForTrackActivities.getDate(savedDate)){
             ArrayList<UserEventDetails> eventDetails = dbForTrackActivities.getDetails(GlobalClass.userID,savedDate,1);
-            if(eventDetails != null && eventDetails.size() > 0){
-                if(eventDetails.get(0).getIswalked().equals("true")){
-                    ivWalking.setBackgroundResource(R.drawable.ic_checked);
-                    ivWalking.setTag(R.drawable.ic_checked);
+            if(eventDetails != null){
+                if(eventDetails.get(0).getIswalked() == null){
+                    ivWalking.setBackgroundResource(R.drawable.ic_unchecked_1);
+                    ivWalking.setTag(0);
+                    checkClicked = false;
+                } else if(eventDetails.get(0).getIswalked().equals("true")){
+                    ivWalking.setBackgroundResource(R.drawable.ic_checked_1);
+                    ivWalking.setTag(R.drawable.ic_checked_1);
                     checkClicked = true;
-                }else {
-                    ivWalking.setBackgroundResource(R.drawable.ic_unchecked);
+                }else  {
+                    ivWalking.setBackgroundResource(R.drawable.ic_unchecked_1);
                     ivWalking.setTag(0);
                     checkClicked = false;
                 }
 
-                if(eventDetails.get(0).getIsCycled().equals("true")){
-                    ivCycling.setBackgroundResource(R.drawable.ic_checked);
-                    ivCycling.setTag(R.drawable.ic_checked);
+                if(eventDetails.get(0).getIsCycled() == null){
+                    ivCycling.setBackgroundResource(R.drawable.ic_unchecked_1);
+                    ivCycling.setTag(0);
+                    checkClicked = false;
+                }else if(eventDetails.get(0).getIsCycled().equals("true")){
+                    ivCycling.setBackgroundResource(R.drawable.ic_checked_1);
+                    ivCycling.setTag(R.drawable.ic_checked_1);
                     checkClicked = true;
-                }else {
-                    ivCycling.setBackgroundResource(R.drawable.ic_unchecked);
+                }else  {
+                    ivCycling.setBackgroundResource(R.drawable.ic_unchecked_1);
                     ivCycling.setTag(0);
                     checkClicked = false;
                 }
 
-                if(eventDetails.get(0).getIsSwimmed().equals("true")){
-                    ivSwimming.setBackgroundResource(R.drawable.ic_checked);
-                    ivSwimming.setTag(R.drawable.ic_checked);
+                if(eventDetails.get(0).getIsSwimmed() == null){
+                    ivSwimming.setBackgroundResource(R.drawable.ic_unchecked_1);
+                    ivSwimming.setTag(0);
+                    checkClicked = false;
+                }
+                else if(eventDetails.get(0).getIsSwimmed().equals("true")){
+                    ivSwimming.setBackgroundResource(R.drawable.ic_checked_1);
+                    ivSwimming.setTag(R.drawable.ic_checked_1);
                     checkClicked = true;
-                }else {
-                    ivSwimming.setBackgroundResource(R.drawable.ic_unchecked);
+                }else  {
+                    ivSwimming.setBackgroundResource(R.drawable.ic_unchecked_1);
                     ivSwimming.setTag(0);
                     checkClicked = false;
                 }
 
-                if(eventDetails.get(0).getDoneAerobics().equals("true")){
-                    ivAerobics.setBackgroundResource(R.drawable.ic_checked);
-                    ivAerobics.setTag(R.drawable.ic_checked);
-                    checkClicked = true;
-                }else {
-                    ivAerobics.setBackgroundResource(R.drawable.ic_unchecked);
+                if(eventDetails.get(0).getDoneAerobics() == null){
+                    ivAerobics.setBackgroundResource(R.drawable.ic_unchecked_1);
                     ivAerobics.setTag(0);
                     checkClicked = false;
                 }
-                if(eventDetails.get(0).getOthers().equals("true")){
-                    ivOthers.setBackgroundResource(R.drawable.ic_checked);
-                    ivWalking.setTag(R.drawable.ic_checked);
+                else if(eventDetails.get(0).getDoneAerobics().equals("true")){
+                    ivAerobics.setBackgroundResource(R.drawable.ic_checked_1);
+                    ivAerobics.setTag(R.drawable.ic_checked_1);
                     checkClicked = true;
                 }else {
-                    ivOthers.setBackgroundResource(R.drawable.ic_unchecked);
+                    ivAerobics.setBackgroundResource(R.drawable.ic_unchecked_1);
+                    ivAerobics.setTag(0);
+                    checkClicked = false;
+                }
+
+                if(eventDetails.get(0).getOthers() == null){
+                    ivOthers.setBackgroundResource(R.drawable.ic_unchecked_1);
+                    ivOthers.setTag(0);
+                    checkClicked = false;
+                } else if(eventDetails.get(0).getOthers().equals("true")){
+                    ivOthers.setBackgroundResource(R.drawable.ic_checked_1);
+                    ivWalking.setTag(R.drawable.ic_checked_1);
+                    checkClicked = true;
+                }else {
+                    ivOthers.setBackgroundResource(R.drawable.ic_unchecked_1);
                     ivOthers.setTag(0);
                     checkClicked = false;
                 }
@@ -335,6 +358,7 @@ public class ExerciseFragment extends Fragment implements View.OnClickListener, 
                 e.printStackTrace();
             }
         }
+        if(ivWalking.getTag().equals(R.drawable.ic_checked_1)){
 
         boolean isExercised = false;
 
@@ -349,8 +373,9 @@ public class ExerciseFragment extends Fragment implements View.OnClickListener, 
 
         }
 
+
         boolean isCycling = false;
-        if(ivCycling.getTag().equals(R.drawable.ic_checked)){
+        if(ivCycling.getTag().equals(R.drawable.ic_checked_1)){
             TrackActivity.userEventDetails.setIsCycled("true");
             isCycling = true;
         }else {
@@ -359,8 +384,9 @@ public class ExerciseFragment extends Fragment implements View.OnClickListener, 
 
         }
 
+
         boolean isSwimming = false;
-        if(ivSwimming.getTag().equals(R.drawable.ic_checked)){
+        if(ivSwimming.getTag().equals(R.drawable.ic_checked_1)){
             TrackActivity.userEventDetails.setIsSwimmed("true");
             isSwimming = true;
         }else {
@@ -368,8 +394,9 @@ public class ExerciseFragment extends Fragment implements View.OnClickListener, 
             isSwimming = false;
         }
 
+
         boolean isAerobics = false;
-        if(ivAerobics.getTag().equals(R.drawable.ic_checked)){
+        if(ivAerobics.getTag().equals(R.drawable.ic_checked_1)){
             TrackActivity. userEventDetails.setDoneAerobics("true");
             isAerobics = true;
         }else {
@@ -378,7 +405,7 @@ public class ExerciseFragment extends Fragment implements View.OnClickListener, 
         }
 
         boolean isOthers = false;
-        if(ivOthers.getTag().equals(R.drawable.ic_checked)){
+        if(ivOthers.getTag().equals(R.drawable.ic_checked_1)){
             TrackActivity. userEventDetails.setOthers("true");
             isOthers = true;
         }else {
@@ -424,9 +451,9 @@ public class ExerciseFragment extends Fragment implements View.OnClickListener, 
     }*/
     @Override
     public void doBack() {
-        if(ivWalking.getTag().equals(R.drawable.ic_checked) || ivCycling.getTag().equals(R.drawable.ic_checked)
-                || ivSwimming.getTag().equals(R.drawable.ic_checked) || ivAerobics.getTag().equals(R.drawable.ic_checked)
-                || ivOthers.getTag().equals(R.drawable.ic_checked)){
+        if(ivWalking.getTag().equals(R.drawable.ic_checked_1) || ivCycling.getTag().equals(R.drawable.ic_checked_1)
+                || ivSwimming.getTag().equals(R.drawable.ic_checked_1) || ivAerobics.getTag().equals(R.drawable.ic_checked_1)
+                || ivOthers.getTag().equals(R.drawable.ic_checked_1)){
             storeData();
         }else {
             EventBus.getDefault().post(new MessageEvent("Hello!"));

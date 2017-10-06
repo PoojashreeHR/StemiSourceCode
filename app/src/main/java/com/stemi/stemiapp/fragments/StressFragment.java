@@ -16,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.DatePicker;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -50,13 +51,22 @@ import butterknife.ButterKnife;
  * Created by Pooja on 26-07-2017.
  */
 
-public class StressFragment extends Fragment implements AppConstants, TrackActivity.OnBackPressedListener {
+public class StressFragment extends Fragment implements AppConstants, TrackActivity.OnBackPressedListener, View.OnClickListener {
 
     @BindView(R.id.tv_food_today) TextView tvFoodToday;
     @BindView(R.id.seekbar) SeekBar mSeekLin;
     @BindView(R.id.ll_seekbar)LinearLayout seekbarText;
 
+
+    @BindView(R.id.ll_yoga)LinearLayout llYoga;
+    @BindView(R.id.ll_hobies)LinearLayout llHobies;
+    @BindView(R.id.ll_meditation)LinearLayout llMeditation;
+
+    @BindView(R.id.iv_yoga)ImageView ivYoga;
+    @BindView(R.id.iv_meditation)ImageView ivMeditation;
+    @BindView(R.id.iv_hobbies)ImageView ivHobbies;
     String savedDate;
+    Boolean checkClicked = false;
 
     AppSharedPreference appSharedPreference;
     String stressCount = null;
@@ -100,6 +110,10 @@ public class StressFragment extends Fragment implements AppConstants, TrackActiv
             }
         });
 
+        llYoga.setOnClickListener(this);
+        llMeditation.setOnClickListener(this);
+        llHobies.setOnClickListener(this);
+
         addLabelsBelowSeekBar();
         tvFoodToday.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -138,9 +152,79 @@ public class StressFragment extends Fragment implements AppConstants, TrackActiv
             ArrayList<UserEventDetails> eventDetails = dbForTrackActivities.getDetails(appSharedPreference.getProfileName(AppConstants.PROFILE_NAME), savedDate, 2);
             if (eventDetails.get(0).getStressCount() != null) {
                 mSeekLin.setProgress(Integer.parseInt(eventDetails.get(0).getStressCount()));
+                if(eventDetails.get(0).getYoga().equals("true")){
+                    ivYoga.setBackgroundResource(R.drawable.ic_checked_1);
+                    ivYoga.setTag(R.drawable.ic_checked_1);
+                    checkClicked = true;
+                }else {
+                    ivYoga.setBackgroundResource(R.drawable.ic_unchecked_1);
+                    ivYoga.setTag(0);
+                    checkClicked = false;
+                }
+
+                if(eventDetails.get(0).getMeditation().equals("true")){
+                    ivMeditation.setBackgroundResource(R.drawable.ic_checked_1);
+                    ivMeditation.setTag(R.drawable.ic_checked_1);
+                    checkClicked = true;
+                }else {
+                    ivMeditation.setBackgroundResource(R.drawable.ic_unchecked_1);
+                    ivMeditation.setTag(0);
+                    checkClicked = false;
+                }
+
+                if(eventDetails.get(0).getHobbies().equals("true")){
+                    ivHobbies.setBackgroundResource(R.drawable.ic_checked_1);
+                    ivHobbies.setTag(R.drawable.ic_checked_1);
+                    checkClicked = true;
+                }else {
+                    ivHobbies.setBackgroundResource(R.drawable.ic_unchecked_1);
+                    ivHobbies.setTag(0);
+                    checkClicked = false;
+                }
+
             }
         }else {
             mSeekLin.setProgress(0);
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        int id = v.getId();
+        switch (id) {
+            case R.id.ll_yoga:
+                if (checkClicked) {
+                    ivYoga.setBackgroundResource(R.drawable.ic_unchecked_1);
+                    ivYoga.setTag(0);
+                    checkClicked = false;
+                } else {
+                    ivYoga.setBackgroundResource(R.drawable.ic_checked_1);
+                    ivYoga.setTag(R.drawable.ic_checked_1);
+                    checkClicked = true;
+                }
+                break;
+            case R.id.ll_meditation:
+                if (checkClicked) {
+                    ivMeditation.setBackgroundResource(R.drawable.ic_unchecked_1);
+                    ivMeditation.setTag(0);
+                    checkClicked = false;
+                } else {
+                    ivMeditation.setBackgroundResource(R.drawable.ic_checked_1);
+                    ivMeditation.setTag(R.drawable.ic_checked_1);
+                    checkClicked = true;
+                }
+                break;
+            case R.id.ll_hobies:
+                if (checkClicked) {
+                    ivHobbies.setBackgroundResource(R.drawable.ic_unchecked_1);
+                    ivHobbies.setTag(0);
+                    checkClicked = false;
+                } else {
+                    ivHobbies.setBackgroundResource(R.drawable.ic_checked_1);
+                    ivHobbies.setTag(R.drawable.ic_checked_1);
+                    checkClicked = true;
+                }
+                break;
         }
     }
 
@@ -231,6 +315,25 @@ public class StressFragment extends Fragment implements AppConstants, TrackActiv
             TrackActivity.userEventDetails.setDate(tvFoodToday.getText().toString());
         }
         TrackActivity.userEventDetails.setStressCount(stressCount);
+
+        if(ivYoga.getTag().equals(R.drawable.ic_checked_1)){
+            TrackActivity. userEventDetails.setYoga("true");
+        }else {
+            TrackActivity. userEventDetails.setYoga("false");
+
+        }
+        if(ivMeditation.getTag().equals(R.drawable.ic_checked_1)){
+            TrackActivity.userEventDetails.setMeditation("true");
+        }else {
+            TrackActivity.userEventDetails.setMeditation("false");
+
+        }
+
+        if(ivHobbies.getTag().equals(R.drawable.ic_checked_1)){
+            TrackActivity.userEventDetails.setHobbies("true");
+        }else {
+            TrackActivity.userEventDetails.setHobbies("false");
+        }
 
         boolean date = dbForTrackActivities.getDate(TrackActivity.userEventDetails.getDate());
         if (!date) {
