@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <item name="checkedImg" type="id"/>
+    <item name="intervals" type="id"/>
+    <item name="fl_divider" type="id"/>
+    <item name="seekbar" type="id"/>
 </resources>

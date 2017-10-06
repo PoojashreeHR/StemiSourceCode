@@ -239,6 +239,7 @@ public class AddMedicineFragment extends Fragment implements View.OnClickListene
                 }
             }
         });
+        ((TrackActivity) getActivity()).setActionBarTitle("Add Medicine");
         return view;
     }
 

@@ -88,7 +88,7 @@ public class SmokingFragment  extends Fragment implements TrackActivity.OnBackPr
             }
         });
 
-
+        callSavedMethod();
         tvSmokeToday.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

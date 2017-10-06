@@ -18,7 +18,8 @@
 
     <!-- Forgot Password Strings -->
     <string name="regEmail">Enter registered email id </string>
-    <string name="forgot_password_subheading">We\’ll send a new password to this email id, using that you can then set a new password.</string>
+    <string name="forgot_password_subheading">We’ll send a new password to this email id, using that you can then set a new password.</string>
+    <string name="reset_password">We’ve sent a new password to your email id, enter it below and set a new password.</string>
 
     <!-- Intro screen Strings -->
     <string name="chest_pain">Recognise Chest Pain Symptoms</string>
@@ -51,4 +52,5 @@
 
     <string name="learn_more"><u>Learn More</u></string>
     <string name="sync_stemi">Sync with nearest heart-attack ready (STEMI) Hospital</string>
+    <string name="title_activity_reset_password">ResetPasswordActivity</string>
 </resources>

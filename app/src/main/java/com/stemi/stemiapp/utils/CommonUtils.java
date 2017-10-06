@@ -103,7 +103,7 @@ public class CommonUtils {
 
    public static void buidDialog(final Context mContext, final int value){
       AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-      builder.setTitle("AlertDialog with No Buttons");
+      //builder.setTitle("");
       builder.setMessage("Old Entry Exist !! Do you want to save this?");
       //Yes Button
       builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {

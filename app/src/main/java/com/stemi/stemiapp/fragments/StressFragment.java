@@ -52,7 +52,7 @@ public class StressFragment extends Fragment implements AppConstants, TrackActiv
 
     @BindView(R.id.tv_food_today) TextView tvFoodToday;
     @BindView(R.id.seekbar) SeekBar mSeekLin;
-    @BindView(R.id.ll_seekbar)LinearLayout seekbarText;
+    @BindView(R.id.seekbarText)LinearLayout seekbarText;
 
 
     @BindView(R.id.ll_yoga)LinearLayout llYoga;
@@ -107,6 +107,7 @@ public class StressFragment extends Fragment implements AppConstants, TrackActiv
             }
         });
 
+        callSavedMEthod();
         llYoga.setOnClickListener(this);
         llMeditation.setOnClickListener(this);
         llHobies.setOnClickListener(this);

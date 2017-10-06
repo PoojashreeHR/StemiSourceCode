@@ -1,7 +1,9 @@
 package com.stemi.stemiapp.activity;
 
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
@@ -21,10 +23,12 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -129,6 +133,14 @@ public class TrackActivity extends AppCompatActivity implements NavigationView.O
         drawer.addDrawerListener(toggle);
         toggle.syncState();
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+
+       /* //set full screen navigation drawer
+        DisplayMetrics metrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(metrics);
+        DrawerLayout.LayoutParams params = (DrawerLayout.LayoutParams) navigationView.getLayoutParams();
+        params.width = (metrics.widthPixels)/2;
+        navigationView.setLayoutParams(params);*/
+
         assert navigationView != null;
         navigationView.setNavigationItemSelectedListener(this);
 
@@ -156,11 +168,12 @@ public class TrackActivity extends AppCompatActivity implements NavigationView.O
     public void setActionBarTitle(String title) {
         toolbarTitle.setText(title);
     }
-    public interface OnScanCompletionListener{
+
+    public interface OnScanCompletionListener {
         void scanCompleted(String contents);
     }
 
-    public void setOnScanCompletedListener(OnScanCompletionListener onScanCompletionListener){
+    public void setOnScanCompletedListener(OnScanCompletionListener onScanCompletionListener) {
         this.onScanCompletedListener = onScanCompletionListener;
     }
 
@@ -242,6 +255,16 @@ public class TrackActivity extends AppCompatActivity implements NavigationView.O
         }
     }
 
+    public void clearTabColor(TextView textView) {
+        textView.setTextColor(getResources().getColor(R.color.colorPrimary));
+        for (Drawable drawable : textView.getCompoundDrawables()) {
+            if (drawable != null) {
+                drawable.clearColorFilter();
+//                drawable.setColorFilter(new PorterDuffColorFilter(getResources().getColor(R.color.appBackground), PorterDuff.Mode.SRC_IN));
+            }
+        }
+    }
+
     @Override
     public void passData(ArrayList<MedicineDetails> data) {
         AddMedicineFragment addMedicineFragment = new AddMedicineFragment();
@@ -287,30 +310,34 @@ public class TrackActivity extends AppCompatActivity implements NavigationView.O
         tab = tabLayout.getTabAt(0);
         tab.select();
         toolbarTitle.setText("Learn");
-        ubTateTab(0,TrackActivity.this);
+        ubTateTab(0, TrackActivity.this);
 
         tabTwo = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
         CommonUtils.setRobotoLightFonts(this, tabTwo);
         tabTwo.setText("Track");
         tabTwo.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_track, 0, 0);
         tabLayout.getTabAt(1).setCustomView(tabTwo);
+        clearTabColor(tabTwo);
 
-        TextView tabThree = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
+        tabThree = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
         tabThree.setText("SOS");
         tabThree.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_sos, 0, 0);
         tabLayout.getTabAt(2).setCustomView(tabThree);
+        clearTabColor(tabThree);
 
         tabFour = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
         CommonUtils.setRobotoLightFonts(this, tabFour);
         tabFour.setText("Hospital");
         tabFour.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_hospital, 0, 0);
         tabLayout.getTabAt(3).setCustomView(tabFour);
+        clearTabColor(tabFour);
 
         tabFive = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
         CommonUtils.setRobotoLightFonts(this, tabFive);
         tabFive.setText("Stats");
         tabFive.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_stats, 0, 0);
         tabLayout.getTabAt(4).setCustomView(tabFive);
+        clearTabColor(tabFive);
 
     }
 
@@ -330,16 +357,17 @@ public class TrackActivity extends AppCompatActivity implements NavigationView.O
         adapter.addFrag(new StatusFragment(), "Status");
         viewPager.setAdapter(adapter);
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
         if (result != null) {
             onScanCompletedListener.scanCompleted(result.getContents());
-        }
-        else {
+        } else {
             super.onActivityResult(requestCode, resultCode, data);
         }
     }
+
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         int id = menuItem.getItemId();
@@ -348,9 +376,8 @@ public class TrackActivity extends AppCompatActivity implements NavigationView.O
                 startActivity(new Intent(TrackActivity.this, RegistrationActivity.class));
                 break;
             case R.id.logout:
-                removeSharedPreferenceData();
-                startActivity(new Intent(TrackActivity.this, MainActivity.class));
-                finish();
+                createDialog();
+
 
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -380,6 +407,40 @@ public class TrackActivity extends AppCompatActivity implements NavigationView.O
         }
 
     }*/
+
+    public void createDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+       // builder.setTitle("AlertDialog with No Buttons");
+        builder.setMessage("Do you wish to logout?");
+        //Yes Button
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                removeSharedPreferenceData();
+                startActivity(new Intent(TrackActivity.this, MainActivity.class));
+                finish();
+                Log.i("Code2care ", "Yes button Clicked!");
+            }
+        });
+
+        //No Button
+        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Log.i("Code2care ", "No button Clicked!");
+                dialog.dismiss();
+
+            }
+        });
+
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+        Button nbutton = alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE);
+        nbutton.setTextColor(getResources().getColor(R.color.appBackground));
+        Button pbutton = alertDialog.getButton(DialogInterface.BUTTON_POSITIVE);
+        pbutton.setTextColor(getResources().getColor(R.color.appBackground));
+    }
+
 
     protected void backstackFragment() {
         Log.d("Stack count", getSupportFragmentManager().getBackStackEntryCount() + "");

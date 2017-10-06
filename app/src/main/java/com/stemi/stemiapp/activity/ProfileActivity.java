@@ -2,6 +2,7 @@ package com.stemi.stemiapp.activity;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.support.v7.app.AlertDialog;
@@ -133,6 +134,8 @@ public class ProfileActivity extends AppCompatActivity {
                                         GlobalClass.userID = user.getUniqueId();
                                         new AppSharedPreference(ProfileActivity.this)
                                                 .setUserId(user.getUniqueId());
+
+                                        startActivity(new Intent(ProfileActivity.this, TrackActivity.class));
                                         notifyDataSetChanged();
                                     }
                                 })
@@ -146,9 +149,6 @@ public class ProfileActivity extends AppCompatActivity {
                         AlertDialog alertDialog = builder.create();
                         alertDialog.show();
                     }
-
-
-
                 }
             });
         }

@@ -31,6 +31,12 @@ public interface ApiInterface {
     Call<StatusMessageResponse> callTipOfTheDAy(@Query("date") String date, @Query("token") String token);
 
     @FormUrlEncoded
+    @POST("changepassword")
+    Call<StatusMessageResponse> callResetPassword( @Query("token") String token,
+                                                    @Field("newPassword") String newPassword,
+                                                    @Field("oldPassword") String oldPassword );
+
+    @FormUrlEncoded
     @POST("forgetpassword")
     Call<StatusMessageResponse> callForgotPassword(@Field("email") String email);
 

@@ -7,6 +7,7 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Context;
+import android.drm.DrmStore;
 import android.graphics.Point;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
@@ -17,6 +18,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -178,28 +180,23 @@ public class MedicationFragment extends Fragment implements AppConstants, View.O
         for (int i = 0; i < medicine.size(); i++) {
             final FrameLayout frameLayout = new FrameLayout(getActivity());
             FrameLayout.LayoutParams params2 = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-         //   params2.setMargins(10, 10, 10, 10);
-            params2.gravity = Gravity.RIGHT;
-            frameLayout.setPadding(10,30,10,20);
+       //     params2.setMargins(10, 20, 10, 10);
+            params2.gravity = Gravity.CENTER_VERTICAL;
+          //  frameLayout.setPadding(10,20,10,20);
             frameLayout.setLayoutParams(params2);
 
             remove_img = new ImageView(getActivity());
-            remove_img.setMaxHeight(90);
-            remove_img.setMaxWidth(60);
-            remove_img.setId(R.id.checkedImg);
+            int height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 15, getResources().getDisplayMetrics());
+            int width = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 15, getResources().getDisplayMetrics());
 
-            //To get Screen size
-/*            final Display display = getActivity().getWindowManager().getDefaultDisplay();
-            final Point size = new Point();
-            display.getSize(size);
-            */
-            final RelativeLayout imgLayout = new RelativeLayout(getActivity());
-            layout2.setGravity(Gravity.RIGHT);
-            imgLayout.setGravity(Gravity.RIGHT|Gravity.BOTTOM);
-            imgLayout.setPadding(20,0,0,0);
-            RelativeLayout.LayoutParams params3 = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, 40);
-            params3.addRule(RelativeLayout.ALIGN_RIGHT,Gravity.RIGHT);
-            imgLayout.setLayoutParams(params3);
+            FrameLayout.LayoutParams params3 = new FrameLayout.LayoutParams(width, height);
+       //     params3.addRule(RelativeLayout.ALIGN_RIGHT,Gravity.RIGHT);
+            params3.gravity = Gravity.RIGHT;
+            params3.setMargins(10,15,0,0);
+            //params3.setMargins(40,0,0,0);
+            //remove_img.setPadding(10,0,0,0);
+            remove_img.setId(R.id.checkedImg);
+            remove_img.setLayoutParams(params3);
 
             int colorOfMedicine;
 
@@ -212,11 +209,11 @@ public class MedicationFragment extends Fragment implements AppConstants, View.O
             if (checkedImg) {
                 remove_img.setImageResource(R.drawable.ic_checked_1);
                 remove_img.setTag(0);
-                imgLayout.addView(remove_img);
+              //  frameLayout.addView(remove_img);
             } else {
                 remove_img.setImageResource(R.drawable.ic_unchecked_1);
                 remove_img.setTag(R.drawable.ic_checked_1);
-                imgLayout.addView(remove_img);
+                //frameLayout.addView(remove_img);
 
                 medicineDetails.setMoringChecked(false);
                 medicineDetails.setAfternoonChecked(false);
@@ -226,38 +223,40 @@ public class MedicationFragment extends Fragment implements AppConstants, View.O
             if (medicineDetails.getMedicineMorning().equals("Morning")) {
                 String medicineType = medicineDetails.getMedicineType();
                 colorOfMedicine = medicineDetails.getMedicineColor();
-                ImageView image = setMedicineColor(medicineType, colorOfMedicine);
+                ImageView image = setMedicineColor(medicineType, colorOfMedicine,frameLayout);
                 if (medicineDetails.getMoringChecked()) {
                     remove_img.setImageDrawable(getResources().getDrawable(R.drawable.ic_checked_1));
                 }
                 frameLayout.addView(image);
-               // frameLayout.addView(imgLayout);
-                layout2.addView(imgLayout);
+                frameLayout.addView(remove_img);
+               // layout2.addView(imgLayout);
                 layout2.addView(frameLayout);
                 //morningContainer.addView(child);
+
             } else if (medicineDetails.getMedicineAfternoon().equals("Afternoon")) {
                 String medicineType = medicineDetails.getMedicineType();
                 colorOfMedicine = medicineDetails.getMedicineColor();
-                ImageView image = setMedicineColor(medicineType, colorOfMedicine);
+                ImageView image = setMedicineColor(medicineType, colorOfMedicine,frameLayout);
                 if (medicineDetails.getAfternoonChecked()) {
                     remove_img.setImageDrawable(getResources().getDrawable(R.drawable.ic_checked_1));
                 }
+
                 frameLayout.addView(image);
-                //frameLayout.addView(imgLayout);
-                layout2.addView(imgLayout);
+                frameLayout.addView(remove_img);
+               // layout2.addView(imgLayout);
                 layout2.addView(frameLayout);
                 //  noonContainer.addView(child);
 
             } else if (medicineDetails.getMedicineNight().equals("Night")) {
                 String medicineType = medicineDetails.getMedicineType();
                 colorOfMedicine = medicineDetails.getMedicineColor();
-                ImageView image = setMedicineColor(medicineType, colorOfMedicine);
+                ImageView image = setMedicineColor(medicineType, colorOfMedicine,frameLayout);
                 if (medicineDetails.getNightChecked()) {
                     remove_img.setImageDrawable(getResources().getDrawable(R.drawable.ic_checked_1));
                 }
                 frameLayout.addView(image);
-               // frameLayout.addView(imgLayout);
-                layout2.addView(imgLayout);
+                frameLayout.addView(remove_img);
+                //   layout2.addView(imgLayout);
                 layout2.addView(frameLayout);
             }
 
@@ -291,14 +290,16 @@ public class MedicationFragment extends Fragment implements AppConstants, View.O
     }
 
 
-    public ImageView setMedicineColor(String medicineType, int colorOfMedicine) {
+    public ImageView setMedicineColor(String medicineType, int colorOfMedicine,FrameLayout frameLayout) {
         ImageView image = new ImageView(getActivity());
-        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        //params.setMargins(10, 30, 10, 20);
-        image.setMaxWidth(90);
-        image.setMaxHeight(90);
-      //  image.setPadding(10,20,10,20);
-        //image.setLayoutParams(params);
+        int height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 25, getResources().getDisplayMetrics());
+        int width = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 25, getResources().getDisplayMetrics());
+        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(width,height);
+        params.setMargins(15,0,15,0);
+        params.gravity = Gravity.CENTER_VERTICAL|Gravity.LEFT;
+        //RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(width,height);
+       // params.setMargins(15,20,15,0);
+        image.setLayoutParams(params);
 
         if (medicineType.equals("Tablet")) {
             image.setBackgroundResource(0);
@@ -574,6 +575,7 @@ public class MedicationFragment extends Fragment implements AppConstants, View.O
     @Override
     public void onResume() {
         super.onResume();
+//        notifyAll();
 
     }
 
@@ -617,7 +619,7 @@ public class MedicationFragment extends Fragment implements AppConstants, View.O
         public void onBindViewHolder(final MyViewHolder holder, final int position) {
 
 
-            ImageView imageView = setMedicineColor(medicineInfo.get(position).getMedicineType(), medicineInfo.get(position).getMedicineColor());
+            ImageView imageView = setMedicineColor(medicineInfo.get(position).getMedicineType(), medicineInfo.get(position).getMedicineColor(),null);
             holder.img.addView(imageView);
             holder.name.setText(medicineInfo.get(position).getMedicineName());
 

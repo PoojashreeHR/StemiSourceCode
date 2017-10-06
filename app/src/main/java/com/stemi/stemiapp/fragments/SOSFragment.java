@@ -266,7 +266,6 @@ public class SOSFragment extends Fragment implements View.OnClickListener,TrackA
     @Override
     public void doBack() {
         EventBus.getDefault().post(new MessageEvent("Hello!"));
-
         View v = TrackActivity.tabLayout.getTabAt(2).getCustomView();
         if (v instanceof TextView) {
             TextView textView = (TextView) v;

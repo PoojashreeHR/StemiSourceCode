@@ -61,7 +61,7 @@ public class TrackFragment extends Fragment {
         List<TrackElements> allItems = new ArrayList<>();
         allItems.add(new TrackElements("Medication", R.drawable.btn_medication));
         allItems.add(new TrackElements("Exercise", R.drawable.btn_exercise));
-        allItems.add(new TrackElements("Stress",  R.drawable.btn_stress));
+        allItems.add(new TrackElements("Stress",  R.drawable.btn_stress_new));
         allItems.add(new TrackElements("Smoking", R.drawable.btn_smoking));
         allItems.add(new TrackElements("Weight", R.drawable.btn_weight));
         allItems.add(new TrackElements("Blood Test Result", R.drawable.btn_blood_test));

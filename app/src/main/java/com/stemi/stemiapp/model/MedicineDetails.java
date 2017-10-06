@@ -68,8 +68,6 @@ public class MedicineDetails implements Parcelable {
     }
 
     public MedicineDetails(){
-
-
     }
     public MedicineDetails(Parcel in) {
         personName = in.readString();
