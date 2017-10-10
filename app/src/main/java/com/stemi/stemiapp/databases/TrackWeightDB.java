@@ -169,4 +169,29 @@ public class TrackWeightDB extends SQLiteOpenHelper {
             }
         }
     }
+
+    public int getLastKnownWeight(String userId){
+        SQLiteDatabase db = this.getReadableDatabase();
+        int weight = 0;
+        try {
+            String query = "SELECT * FROM " + TABLE_WEIGHT+ " WHERE "+COLUMN_USER_ID+" = '"+userId+"'"
+                    +" ORDER BY "+COLUMN_YEAR+" DESC , "
+                    +COLUMN_MONTH_INDEX+" DESC LIMIT 1"
+                    ;
+            Log.e("db","query = "+query);
+            Cursor cursor = db.rawQuery(query, null);
+            cursor.moveToFirst();
+
+
+            while (!cursor.isAfterLast()) {
+                weight = cursor.getInt(cursor.getColumnIndex(COLUMN_WEIGHT));
+                cursor.moveToNext();
+            }
+            Log.e("db","weight = "+weight);
+            cursor.close();
+        } catch (Exception e) {
+
+        }
+        return weight;
+    }
 }

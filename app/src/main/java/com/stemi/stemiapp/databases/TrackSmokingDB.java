@@ -171,4 +171,34 @@ public class TrackSmokingDB extends SQLiteOpenHelper{
             }
         }
     }
+
+    public int getNumberOfDays(String userId){
+        int dayCount = 0;
+        SQLiteDatabase db = this.getReadableDatabase();
+        try{
+            String query = "SELECT * FROM " + TABLE_SMOKING
+                    +" WHERE "+COLUMN_USER_ID+" = '"+userId+"'"
+                    +" ORDER BY "+COLUMN_DATE_TIME+" ASC";
+            Cursor cursor = db.rawQuery(query, null);
+            cursor.moveToFirst();
+            Log.e("db","query = "+query);
+            while (!cursor.isAfterLast()) {
+                int withinlimitValue = cursor.getInt(cursor.getColumnIndex(COLUMN_SMOKED));
+                if(withinlimitValue == 0){
+                    dayCount++;
+                }
+                else{
+                    dayCount = 0;
+                }
+                cursor.moveToNext();
+
+            }
+            Log.e("db","dayCount = "+dayCount);
+            cursor.close();
+        }
+        catch(Exception e){
+
+        }
+        return dayCount;
+    }
 }

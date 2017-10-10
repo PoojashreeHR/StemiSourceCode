@@ -12,6 +12,7 @@ import com.stemi.stemiapp.utils.GlobalClass;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -169,5 +170,59 @@ public class TrackExerciseDB extends SQLiteOpenHelper {
                 onCreate(db);
             }
         }
+    }
+
+    public int getNumberOfWeeks(String userId){
+        int dayCount = 0;
+        int weekCount = 0;
+        SQLiteDatabase db = this.getReadableDatabase();
+        try{
+            String query = "SELECT * FROM " + TABLE_EXERCISE
+                    +" WHERE "+COLUMN_USER_ID+" = '"+userId+"'"
+                    +" ORDER BY "+COLUMN_DATE_TIME+" ASC";
+            Log.e("db","query = "+query);
+            Cursor cursor = db.rawQuery(query, null);
+            cursor.moveToFirst();
+
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+            while (!cursor.isAfterLast()) {
+                int withinlimitValue = cursor.getInt(cursor.getColumnIndex(COLUMN_EXERCISED));
+                String dateStr = cursor.getString(cursor.getColumnIndex(COLUMN_DATE_TIME));
+                Date recordedDate = simpleDateFormat.parse(dateStr);
+
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(recordedDate);
+                int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
+
+                if(dayOfWeek == 1){
+
+                    if(withinlimitValue == 1){
+                        dayCount++;
+                    }
+
+                    if(dayCount >= 3){
+                        weekCount++;
+                    }
+
+                    dayCount = 0;
+                }
+                else{
+                    if(withinlimitValue == 1){
+                        dayCount++;
+                    }
+                }
+
+                cursor.moveToNext();
+
+            }
+            Log.e("db","weekcount = "+weekCount);
+
+            cursor.close();
+        }
+        catch(Exception e){
+
+        }
+        return weekCount;
     }
 }

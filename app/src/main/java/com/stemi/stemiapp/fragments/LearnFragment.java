@@ -11,12 +11,18 @@ import android.widget.TextView;
 import com.stemi.stemiapp.R;
 import com.stemi.stemiapp.activity.TrackActivity;
 
+import com.stemi.stemiapp.databases.TrackExerciseDB;
+import com.stemi.stemiapp.databases.TrackMedicationDB;
+import com.stemi.stemiapp.databases.TrackSmokingDB;
+import com.stemi.stemiapp.databases.TrackStressDB;
+import com.stemi.stemiapp.databases.TrackWeightDB;
 import com.stemi.stemiapp.model.apiModels.StatusMessageResponse;
 import com.stemi.stemiapp.preference.AppSharedPreference;
 import com.stemi.stemiapp.rest.ApiClient;
 import com.stemi.stemiapp.rest.ApiInterface;
 import com.stemi.stemiapp.utils.AppConstants;
 import com.stemi.stemiapp.utils.CommonUtils;
+import com.stemi.stemiapp.utils.GlobalClass;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -36,6 +42,14 @@ import static android.content.ContentValues.TAG;
 public class LearnFragment extends Fragment implements AppConstants{
     @BindView(R.id.tvTips) TextView tvTips;
     @BindView(R.id.tvExpandable) TextView tvExpandableSymptoms;
+
+    @BindView(R.id.desc_exercise) TextView tvDescExercise;
+    @BindView(R.id.desc_medication) TextView tvDescMedication;
+    @BindView(R.id.desc_smoking) TextView tvDescSmoking;
+    @BindView(R.id.desc_stress) TextView tvDescStress;
+    @BindView(R.id.desc_weight) TextView tvDescWeight;
+
+
     ApiInterface apiInterface;
     AppSharedPreference appSharedPreference;
     public LearnFragment() {
@@ -68,7 +82,53 @@ public class LearnFragment extends Fragment implements AppConstants{
                 ((TrackActivity) getActivity()).showFragment(new HeartSymptomsFragment());
             }
         });
+
+
+
         return view;
+    }
+
+    private void populatePerformanceTexts() {
+        TrackMedicationDB trackMedicationDB = new TrackMedicationDB(getActivity());
+        int medNoOfDays = trackMedicationDB.getNumberOfDays(GlobalClass.userID);
+        tvDescMedication.setText("You've been right on track for "+medNoOfDays+" days with your medication!");
+
+        TrackWeightDB trackWeightDB = new TrackWeightDB(getActivity());
+        int weight = trackWeightDB.getLastKnownWeight(GlobalClass.userID);
+        String weightStr;
+        if(weight >= getUpperWeight()){
+            weightStr = "Oh no! You're in the overweight weight range as per your BMI";
+        }
+        else if(weight <= getLowerWeight()){
+            weightStr = "Oh no! You're in the low weight range as per your BMI";
+        }
+        else{
+            weightStr = "You're in the ideal weight range as per your BMI";
+        }
+        tvDescWeight.setText(weightStr);
+
+        TrackSmokingDB trackSmokingDB = new TrackSmokingDB(getActivity());
+        int smokingNoDays = trackSmokingDB.getNumberOfDays(GlobalClass.userID);
+        String smokingText = "Bravo! "+smokingNoDays+" day(s) since you last smoked";
+        tvDescSmoking.setText(smokingText);
+
+        TrackExerciseDB trackExerciseDB = new TrackExerciseDB(getActivity());
+        int exerciseDays = trackExerciseDB.getNumberOfWeeks(GlobalClass.userID);
+        String exerciseText = "Amazing! You've been exercising regularly for "+exerciseDays+" weeks.";
+        tvDescExercise.setText(exerciseText);
+
+        TrackStressDB trackStressDB = new TrackStressDB(getActivity());
+        int stressCount = trackStressDB.getNumberOfDays(GlobalClass.userID);
+        String stressText = "Cool as a cucumber! Your stress levels haven't spiked in "+stressCount+" days";
+        tvDescStress.setText(stressText);
+    }
+
+    private double getUpperWeight() {
+        return 24.9 * (GlobalClass.heightInM * GlobalClass.heightInM);
+    }
+
+    private double getLowerWeight(){
+        return 18.5 * (GlobalClass.heightInM * GlobalClass.heightInM);
     }
 
     public void callGetTipOfTheDay(){
@@ -102,6 +162,7 @@ public class LearnFragment extends Fragment implements AppConstants{
         if(getActivity() != null){
             if(menuVisible){
                 ((TrackActivity) getActivity()).setActionBarTitle("Learn");
+                //populatePerformanceTexts();
             }
         }
         super.setMenuVisibility(menuVisible);
@@ -110,6 +171,7 @@ public class LearnFragment extends Fragment implements AppConstants{
     @Override
     public void onResume() {
         ((TrackActivity) getActivity()).setActionBarTitle("Learn");
+        populatePerformanceTexts();
         super.onResume();
     }
 }

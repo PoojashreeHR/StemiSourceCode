@@ -276,4 +276,35 @@ public class TrackMedicationDB {
             }
         }
     }
+
+    public int getNumberOfDays(String userId){
+        int dayCount = 0;
+        SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
+        try{
+            String query = "SELECT * FROM " + TABLE_MEDICATION
+                    +" WHERE "+COLUMN_USER_ID+" = '"+userId+"'"
+                    +" ORDER BY "+COLUMN_DATE_TIME+" ASC";
+            Cursor cursor = db.rawQuery(query, null);
+            Log.e("db","query = "+query);
+            cursor.moveToFirst();
+
+            while (!cursor.isAfterLast()) {
+                int withinlimitValue = cursor.getInt(cursor.getColumnIndex(COLUMN_HAD_MEDICINES));
+                if(withinlimitValue == 1){
+                    dayCount++;
+                }
+                else{
+                    dayCount = 0;
+                }
+                cursor.moveToNext();
+
+            }
+            Log.e("db","dayCount = "+dayCount);
+            cursor.close();
+        }
+        catch(Exception e){
+
+        }
+        return dayCount;
+    }
 }
