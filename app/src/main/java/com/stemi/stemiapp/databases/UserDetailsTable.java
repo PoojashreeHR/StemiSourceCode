@@ -107,7 +107,7 @@ public class UserDetailsTable {
     }
 
     //function for adding the note to database
-    public String addEntry(RegisteredUserDetails registeredUserDetails) {
+    public String addEntry(RegisteredUserDetails registeredUserDetails,Context context) {
         SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
         ContentValues values = new ContentValues();
       /*  long count = getProfilesCount();
@@ -138,6 +138,7 @@ public class UserDetailsTable {
         Log.e("DATABASE VALUES", "addDataTODb: " + id);
         //closing the database connection
         DatabaseManager.getInstance().closeDatabase();
+        Toast.makeText(context, "One row added successfully "+ id, Toast.LENGTH_SHORT).show();
 
         //see that all database connection stuff is inside this method
         //so we don't need to open and close db connection outside this class

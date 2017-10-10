@@ -33,6 +33,7 @@ import com.stemi.stemiapp.model.UserEventDetails;
 import com.stemi.stemiapp.preference.AppSharedPreference;
 import com.stemi.stemiapp.utils.AppConstants;
 import com.stemi.stemiapp.utils.CommonUtils;
+import com.stemi.stemiapp.utils.GlobalClass;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -149,7 +150,7 @@ public class StressFragment extends Fragment implements AppConstants, TrackActiv
             savedDate = tvFoodToday.getText().toString();
         }
 
-        if(dbForTrackActivities.getDate(savedDate)) {
+        if(dbForTrackActivities.getDate((savedDate),GlobalClass.userID)) {
             ArrayList<UserEventDetails> eventDetails = dbForTrackActivities.getDetails(appSharedPreference.getProfileName(AppConstants.PROFILE_NAME), savedDate, 2);
             if (eventDetails.get(0).getStressCount() != null) {
                 mSeekLin.setProgress(Integer.parseInt(eventDetails.get(0).getStressCount()));
@@ -306,7 +307,7 @@ public class StressFragment extends Fragment implements AppConstants, TrackActiv
     }
 
     public void storeData(){
-        TrackActivity.userEventDetails.setUid(appSharedPreference.getProfileName(PROFILE_NAME));
+        TrackActivity.userEventDetails.setUid(GlobalClass.userID);
         if (tvFoodToday.getText().equals("Today  ")){
             Date dt = new Date();
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy");// set format for date
@@ -336,7 +337,7 @@ public class StressFragment extends Fragment implements AppConstants, TrackActiv
             TrackActivity.userEventDetails.setHobbies("false");
         }
 
-        boolean date = dbForTrackActivities.getDate(TrackActivity.userEventDetails.getDate());
+        boolean date = dbForTrackActivities.getDate(TrackActivity.userEventDetails.getDate(),GlobalClass.userID);
         if (!date) {
             dbForTrackActivities.addEntry(TrackActivity.userEventDetails);
             EventBus.getDefault().post(new MessageEvent("Hello!"));

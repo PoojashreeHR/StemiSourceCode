@@ -76,17 +76,18 @@ public class MainActivity extends AppCompatActivity implements AppConstants,View
                         appSharedPreferences.addLoginId(etEmail.getText().toString());
                         Log.e(TAG, "onResponse: Signup Response" + signUpResponseModel);
                         Toast.makeText(MainActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
-/*                        if(appSharedPreferences.getUserId() == null){
+                        if(appSharedPreferences.getUserId() == null){
                             startActivity(new Intent(MainActivity.this, RegistrationActivity.class));
                         }else {
                             startActivity(new Intent(MainActivity.this, TrackActivity.class));
-                        }*/
-                        if(appSharedPreferences.isFirstTimeLaunch(IS_FIRST_TIME_LAUNCH)){
+                        }
+
+                        /*if(appSharedPreferences.isFirstTimeLaunch(IS_FIRST_TIME_LAUNCH)){
                             startActivity(new Intent(MainActivity.this, TrackActivity.class));
                         }else {
                             startActivity(new Intent(MainActivity.this, RegistrationActivity.class));
                             new AppSharedPreference(MainActivity.this).setFirstTimeLaunch(IS_FIRST_TIME_LAUNCH,true);
-                        }
+                        }*/
                         finish();
                     }else {
                         CommonUtils.hideLoadingProgress();

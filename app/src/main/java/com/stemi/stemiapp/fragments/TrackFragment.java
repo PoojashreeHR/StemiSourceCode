@@ -48,6 +48,8 @@ public class TrackFragment extends Fragment {
         rView.setHasFixedSize(true);
         rView.setLayoutManager(lLayout);
 
+      //  ((TrackActivity) getActivity()).setActionBarTitle("Track");
+
         RecyclerViewAdapter rcAdapter = new RecyclerViewAdapter(getActivity(), rowListItem);
         rView.setAdapter(rcAdapter);
         ((TrackActivity)getActivity()).getViewPager().setPagingEnabled(false);
@@ -147,7 +149,7 @@ public class TrackFragment extends Fragment {
     public void setMenuVisibility(boolean menuVisible) {
         if(getActivity() != null){
             if(menuVisible){
-                ((TrackActivity) getActivity()).setActionBarTitle("Track");
+                //((TrackActivity) getActivity()).setActionBarTitle("Track");
             }
         }
         super.setMenuVisibility(menuVisible);

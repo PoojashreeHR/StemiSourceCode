@@ -110,7 +110,13 @@ public class AnswerTemplateView extends LinearLayout implements View.OnClickList
             case "DON'T KNOW":
                 setDontKnow();
                 break;
+            case "NULL":
+                setNull();
+
         }
+    }
+    public void setNull(){
+        response = null;
     }
     public void setYes(){
         response = "YES";

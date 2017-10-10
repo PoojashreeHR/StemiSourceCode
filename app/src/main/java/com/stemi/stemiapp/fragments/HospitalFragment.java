@@ -146,7 +146,7 @@ public class HospitalFragment extends Fragment implements TrackActivity.OnScanCo
     public void setMenuVisibility(boolean menuVisible) {
         if (getActivity() != null) {
             if (menuVisible) {
-                ((TrackActivity) getActivity()).setActionBarTitle("Hospital");
+              //  ((TrackActivity) getActivity()).setActionBarTitle("Hospital");
 
             }
         }

@@ -119,8 +119,8 @@ public class DBForTrackActivities {
         DatabaseManager.getInstance().closeDatabase();
     }
 
-    public boolean getDate(String date1){
-        String query = "SELECT * FROM "+ USER_ACTIVITIES;
+    public boolean getDate(String date1,String userId){
+        String query = "SELECT * FROM " + USER_ACTIVITIES + " WHERE " + UID + " = '" + userId + "'";
         SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
         boolean count = false;
         try{

@@ -1,6 +1,7 @@
 package com.stemi.stemiapp.fragments;
 
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
@@ -10,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -93,6 +95,17 @@ public class PhysicalDetailsFragment extends Fragment implements View.OnClickLis
             }
 
         }
+        smokeAnswer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                InputMethodManager inputManager =
+                        (InputMethodManager) getActivity().
+                                getSystemService(Context.INPUT_METHOD_SERVICE);
+                inputManager.hideSoftInputFromWindow(
+                        smokeAnswer.getWindowToken(),
+                        InputMethodManager.HIDE_NOT_ALWAYS);
+            }
+        });
         return view;
     }
 
@@ -120,9 +133,9 @@ public class PhysicalDetailsFragment extends Fragment implements View.OnClickLis
         }
 
         if(etWaistInches.getText().toString().isEmpty()){
-            Waist= etWaistCm.getText().toString();
+            Waist= ""+etWaistCm.getText().toString()+" Cm";
         }else {
-            Waist = etWaistInches.getText().toString();
+            Waist = ""+etWaistInches.getText().toString() + " Inch";
         }
 
        RegistrationActivity.registeredUserDetails.setHeight(HeightIncm);
@@ -200,6 +213,7 @@ public class PhysicalDetailsFragment extends Fragment implements View.OnClickLis
 
         if(etWaistInches.isEnabled() && etWaistCm.isEnabled()){
             Toast.makeText(getActivity(), "Please enter Waist", Toast.LENGTH_SHORT).show();
+            valid = false;
         }else if(etWaistInches.isEnabled() && TextUtils.isEmpty(waistIn)){
             etWaistInches.setError("Reqired");
             valid = false;

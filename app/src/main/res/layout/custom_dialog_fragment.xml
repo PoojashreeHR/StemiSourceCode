@@ -1,72 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/dialog_layout"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/heading"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="Text"
-        android:layout_marginTop="20dp"
         android:layout_marginBottom="5dp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:textSize="18sp"/>
-
-    <TextView
-        android:id="@+id/ifNoItems"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:layout_centerInParent="true"
-        android:text="NO ITEMS"
         android:layout_marginTop="20dp"
-        android:textSize="18sp"
-        android:textColor="@color/colorLightGrey"
-        android:visibility="gone"/>
+        android:gravity="center"
+        android:text="Text"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        android:typeface="serif" />
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/infoRecycler"
-        android:layout_below="@+id/heading"
+    <RelativeLayout
+        android:id="@+id/rl_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/heading">
+
+        <TextView
+            android:id="@+id/ifNoItems"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="40dp"
+            android:gravity="center"
+            android:text="NO ITEMS"
+            android:textColor="@color/colorPrimary"
+            android:textSize="14sp"
+            android:visibility="gone" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/infoRecycler"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="5dp">
+        </android.support.v7.widget.RecyclerView>
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_buttons"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/ll_buttons"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="10dp">
-    </android.support.v7.widget.RecyclerView>
+        android:layout_below="@+id/rl_content"
+        android:layout_marginTop="20dp"
+        android:orientation="horizontal"
+        android:weightSum="2">
 
-<LinearLayout
-    android:id="@+id/ll_buttons"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_alignParentBottom="true"
-    android:orientation="horizontal"
-    android:layout_marginTop="20dp"
-    android:weightSum="2">
-
-    <Button
-        android:id="@+id/closeButton"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:background="@drawable/edittext_boundary"
-        android:text="CLOSE"
-        android:textColor="@color/appBackground"/>
+        <Button
+            android:id="@+id/closeButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/edittext_boundary"
+            android:text="CLOSE"
+            android:textColor="@color/appBackground" />
 
 
-    <Button
-        android:id="@+id/saveButton"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:background="@drawable/edittext_boundary"
-        android:text="SAVE"
-        android:textColor="@color/colorLightGrey"/>
-</LinearLayout>
-</LinearLayout>
+        <Button
+            android:id="@+id/saveButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/edittext_boundary"
+            android:text="SAVE"
+            android:textColor="@color/colorAccent" />
+    </LinearLayout>
+</RelativeLayout>

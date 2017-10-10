@@ -32,7 +32,7 @@ public interface ApiInterface {
 
     @FormUrlEncoded
     @POST("changepassword")
-    Call<StatusMessageResponse> callResetPassword( @Query("token") String token,
+    Call<StatusMessageResponse> callResetPassword( @Field("token") String token,
                                                     @Field("newPassword") String newPassword,
                                                     @Field("oldPassword") String oldPassword );
 

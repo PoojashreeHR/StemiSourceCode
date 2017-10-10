@@ -118,7 +118,7 @@
                 android:layout_height="wrap_content"
                 android:hint="EMAIL"
                 android:inputType="textEmailAddress"
-                android:imeOptions="actionGo"/>
+                android:imeOptions="actionDone"/>
         </android.support.design.widget.TextInputLayout>
     </LinearLayout>
     </ScrollView>

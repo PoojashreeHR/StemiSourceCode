@@ -25,6 +25,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -89,6 +90,7 @@ public class AddMedicineFragment extends Fragment implements View.OnClickListene
     @BindView(R.id.tvNightTime)
      TextView nightTime;
 
+    @BindView(R.id.add_medicine)Button addMedicine;
     @BindView(R.id.medicineDays)
     EditText medicineDays;
     @BindView(R.id.medicineRemainder)
@@ -267,6 +269,7 @@ public class AddMedicineFragment extends Fragment implements View.OnClickListene
                 }
             }
         });
+        addMedicine.setOnClickListener(this);
         ((TrackActivity) getActivity()).setActionBarTitle("Add Medicine");
         return view;
     }
@@ -556,6 +559,26 @@ public class AddMedicineFragment extends Fragment implements View.OnClickListene
                 } else {
                     medicineRemainder.setChecked(true);
                 }
+                break;
+            case R.id.add_medicine:
+                if (validatefields()) {
+                    if (GlobalClass.userID != null) {
+                        if (medicineRemainder.isChecked()) {
+                            syncWithCalender();
+                            medicineDetails.setMedicineRemainder(true);
+                        } else {
+                            medicineDetails.setMedicineRemainder(false);
+                        }
+                        storeMedicalDetails();
+                        ((TrackActivity) getActivity()).showFragment(new MedicationFragment());
+                        //  ((TrackActivity) getActivity()).showFragment(new MedicationFragment());
+                        //Toast.makeText(getActivity(), "You pressed Back", Toast.LENGTH_SHORT).show();
+                    }else {
+                        Toast.makeText(getActivity(),"Please add profile details first",Toast.LENGTH_LONG).show();
+                    }
+                }
+                break;
+
         }
     }
 
@@ -607,20 +630,7 @@ public class AddMedicineFragment extends Fragment implements View.OnClickListene
 
     @Override
     public void doBack() {
-        if (validatefields()) {
-            if (medicineRemainder.isChecked()) {
-                syncWithCalender();
-                medicineDetails.setMedicineRemainder(true);
-            } else {
-                medicineDetails.setMedicineRemainder(false);
-            }
-            storeMedicalDetails();
-            EventBus.getDefault().post(new MessageEvent("Hello!"));
-            //  ((TrackActivity) getActivity()).showFragment(new MedicationFragment());
-            //Toast.makeText(getActivity(), "You pressed Back", Toast.LENGTH_SHORT).show();
-        } else {
-
-        }
+        EventBus.getDefault().post(new MessageEvent("Hello!"));
     }
 
     public static class TimePickerTheme3class extends DialogFragment implements TimePickerDialog.OnTimeSetListener {
@@ -637,24 +647,6 @@ public class AddMedicineFragment extends Fragment implements View.OnClickListene
         @Override
         public void onResume() {
             super.onResume();
-
-            if (getView() == null) {
-                return;
-            }
-            getView().setFocusableInTouchMode(true);
-            getView().requestFocus();
-            getView().setOnKeyListener(new View.OnKeyListener() {
-
-                @Override
-                public boolean onKey(View v, int keyCode, KeyEvent event) {
-
-                    if (event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK) {
-                        Toast.makeText(getActivity(), "You pressed Back Button", Toast.LENGTH_SHORT).show();
-                        return true;
-                    }
-                    return false;
-                }
-            });
         }
 
         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
@@ -711,7 +703,6 @@ public class AddMedicineFragment extends Fragment implements View.OnClickListene
         } else {
             medicineTable.addMedicineDetails(medicineDetails, medicineDetails.getPersonName());
             long getCount = medicineTable.getMedicineDetailsCount();
-
             Log.e(TAG, "onCreateView: Get Medicine Count " + getCount);
         }
     }

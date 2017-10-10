@@ -28,6 +28,7 @@ import com.stemi.stemiapp.model.UserEventDetails;
 import com.stemi.stemiapp.preference.AppSharedPreference;
 import com.stemi.stemiapp.utils.AppConstants;
 import com.stemi.stemiapp.utils.CommonUtils;
+import com.stemi.stemiapp.utils.GlobalClass;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -142,7 +143,7 @@ public class WeightFragment  extends Fragment implements View.OnClickListener,Tr
             savedDate = tvWeightToday.getText().toString();
         }
 
-        if (dbForTrackActivities.getDate(savedDate)) {
+        if (dbForTrackActivities.getDate((savedDate), GlobalClass.userID)) {
             ArrayList<UserEventDetails> eventDetails = dbForTrackActivities.getDetails(appSharedPreference.getProfileName(AppConstants.PROFILE_NAME), savedDate, 4);
             if (eventDetails.get(0).getTodaysWeight() != null) {
                 todaysWeight.setText(eventDetails.get(0).getTodaysWeight());
@@ -227,7 +228,7 @@ public class WeightFragment  extends Fragment implements View.OnClickListener,Tr
     }
 
     public void SaveData(){
-        TrackActivity.userEventDetails.setUid(appSharedPreference.getProfileName(AppConstants.PROFILE_NAME));
+        TrackActivity.userEventDetails.setUid(GlobalClass.userID);
         if (tvWeightToday.getText().equals("Today  ")){
             Date dt = new Date();
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy");// set format for date
@@ -243,7 +244,7 @@ public class WeightFragment  extends Fragment implements View.OnClickListener,Tr
         }
         TrackActivity.userEventDetails.setBmiValue(bmiCount);
 
-        boolean date = dbForTrackActivities.getDate(TrackActivity.userEventDetails.getDate());
+        boolean date = dbForTrackActivities.getDate(TrackActivity.userEventDetails.getDate(),GlobalClass.userID);
         if (!date) {
             dbForTrackActivities.addEntry(TrackActivity.userEventDetails);
             ((TrackActivity) getActivity()).showFragment(new TrackFragment());

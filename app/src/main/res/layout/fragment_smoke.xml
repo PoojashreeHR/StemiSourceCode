@@ -82,6 +82,7 @@
         android:padding="10dp"
         android:enabled="false"
         android:alpha="0.6"
+        android:maxLength="2"
         android:hint="Enter how many"
         android:gravity="center"
         android:inputType="number"
