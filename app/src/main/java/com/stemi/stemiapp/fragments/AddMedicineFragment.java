@@ -570,6 +570,7 @@ public class AddMedicineFragment extends Fragment implements View.OnClickListene
                             medicineDetails.setMedicineRemainder(false);
                         }
                         storeMedicalDetails();
+
                         ((TrackActivity) getActivity()).showFragment(new MedicationFragment());
                         //  ((TrackActivity) getActivity()).showFragment(new MedicationFragment());
                         //Toast.makeText(getActivity(), "You pressed Back", Toast.LENGTH_SHORT).show();
@@ -630,6 +631,7 @@ public class AddMedicineFragment extends Fragment implements View.OnClickListene
 
     @Override
     public void doBack() {
+        ((TrackActivity) getActivity()).setActionBarTitle("Track");
         EventBus.getDefault().post(new MessageEvent("Hello!"));
     }
 
@@ -695,8 +697,6 @@ public class AddMedicineFragment extends Fragment implements View.OnClickListene
             medicineDetails.setMedicineNight("");
             medicineDetails.setMedicineNightTime("");
         }
-
-
 
         if (checkEditOrNot == 1) {
             medicineTable.getMedicineToEdit(showReceivedData, medicineDetails);
