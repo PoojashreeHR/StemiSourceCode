@@ -20,15 +20,18 @@ import com.stemi.stemiapp.activity.TrackActivity;
 import com.stemi.stemiapp.databases.BloodTestDB;
 import com.stemi.stemiapp.model.BloodTestResult;
 import com.stemi.stemiapp.model.MessageEvent;
+import com.stemi.stemiapp.model.UserEventDetails;
 import com.stemi.stemiapp.preference.AppSharedPreference;
 import com.stemi.stemiapp.utils.AppConstants;
 import com.stemi.stemiapp.utils.CommonUtils;
+import com.stemi.stemiapp.utils.GlobalClass;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -53,9 +56,11 @@ public class BloodTestFragment extends Fragment implements TrackActivity.OnBackP
     @BindView(R.id.et_FPG)EditText etFpg;
     @BindView(R.id.et_PPG)EditText etPpg;
 
+    @BindView(R.id.bloodSaveButton)Button bloodSaveButton;
     @BindView(R.id.date_left_btn)ImageView btLeftArrow;
     @BindView(R.id.date_right_btn)ImageView btRightArrow;
 
+    String empty;
     private int monthIndex = 0;
     BloodTestDB bloodTestDB;
     AppSharedPreference appSharedPreference;
@@ -82,7 +87,7 @@ public class BloodTestFragment extends Fragment implements TrackActivity.OnBackP
         bloodTestDB = new BloodTestDB();
         bloodTestResult = new BloodTestResult();
         ((TrackActivity) getActivity()).setOnBackPressedListener(this);
-        ((TrackActivity) getActivity()).setActionBarTitle("Food");
+        ((TrackActivity) getActivity()).setActionBarTitle("Blood Test Report");
         setupDate();
         btLeftArrow.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -91,12 +96,53 @@ public class BloodTestFragment extends Fragment implements TrackActivity.OnBackP
                 setupDate();
             }
         });
-
+        callSavedMethod();
         btRightArrow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 monthIndex++;
                 setupDate();
+            }
+        });
+
+        bloodSaveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                fieldsOK = validate(new EditText[]{etHaemoglobin, etUreaCreatinine, etCholesterol, etHdl,etLdl,etTriglycerides,etRpg,etFpg,etPpg});
+                if(!fieldsOK){
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    builder.setMessage("You entered some data!! You want to save?");
+                    //Yes Button
+                    builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            saveData();
+                            EventBus.getDefault().post(new MessageEvent("Hello!"));
+                            Log.i("Code2care ", "Yes button Clicked!");
+                        }
+                    });
+                    //No Button
+                    builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                            EventBus.getDefault().post(new MessageEvent("Hello!"));
+                            Log.i("Code2care ","No button Clicked!");
+
+                        }
+                    });
+
+
+                    AlertDialog alertDialog = builder.create();
+                    alertDialog.show();
+                    Button nbutton = alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE);
+                    nbutton.setTextColor(getActivity().getResources().getColor(R.color.appBackground));
+                    Button pbutton = alertDialog.getButton(DialogInterface.BUTTON_POSITIVE);
+                    pbutton.setTextColor(getActivity().getResources().getColor(R.color.appBackground));
+                }else {
+                    EventBus.getDefault().post(new MessageEvent("Hello!"));
+                }
             }
         });
         return view;
@@ -115,44 +161,44 @@ public class BloodTestFragment extends Fragment implements TrackActivity.OnBackP
     }
     @Override
     public void doBack() {
-        fieldsOK = validate(new EditText[]{etHaemoglobin, etUreaCreatinine, etCholesterol, etHdl,etLdl,etTriglycerides,etRpg,etFpg,etPpg});
-        if(!fieldsOK){
-               AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-              // builder.setTitle("Do you want to ");
-               builder.setMessage("You entered some data!! You want to save?");
-               //Yes Button
-               builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                   @Override
-                   public void onClick(DialogInterface dialog, int which) {
-                       saveData();
-                       EventBus.getDefault().post(new MessageEvent("Hello!"));
-                       Log.i("Code2care ", "Yes button Clicked!");
-                   }
-               });
-               //No Button
-               builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
-                   @Override
-                   public void onClick(DialogInterface dialog, int which) {
-                       dialog.dismiss();
-                       EventBus.getDefault().post(new MessageEvent("Hello!"));
-                       Log.i("Code2care ","No button Clicked!");
-
-                   }
-               });
-
-
-           AlertDialog alertDialog = builder.create();
-               alertDialog.show();
-               Button nbutton = alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE);
-               nbutton.setTextColor(getActivity().getResources().getColor(R.color.appBackground));
-               Button pbutton = alertDialog.getButton(DialogInterface.BUTTON_POSITIVE);
-               pbutton.setTextColor(getActivity().getResources().getColor(R.color.appBackground));
-       }else {
-            EventBus.getDefault().post(new MessageEvent("Hello!"));
-        }
-
+        EventBus.getDefault().post(new MessageEvent("Hello!"));
     }
 
+    public String CheckEmptyOrNot(String st){
+        if(st != null || !st.matches("0.0")){
+            return st;
+        }else{
+            return null;
+        }
+    }
+
+    public void callSavedMethod(){
+        if(bloodTestDB.isEntryExists(GlobalClass.userID, tvBloodTestDate.getText().toString())){
+            BloodTestResult bloodTestResults = bloodTestDB.getEntry(GlobalClass.userID, tvBloodTestDate.getText().toString());
+            if(bloodTestResults != null){
+                etHaemoglobin.setText(""+bloodTestResults.getHeamoglobin());
+                etUreaCreatinine.setText(""+bloodTestResults.getUreaCreatinine());
+                String st = CheckEmptyOrNot(""+bloodTestResults.getTotalCholestrol());
+                etCholesterol.setText(st);
+                etTriglycerides.setText(""+bloodTestResults.getTriglycerides());
+                etHdl.setText(""+bloodTestResults.getHighDensityLipoProtein());
+                etLdl.setText(""+bloodTestResults.getLowDensityLipoProtein());
+                etRpg.setText(""+bloodTestResults.getRandomPlasmaGlucose());
+                etFpg.setText(""+bloodTestResults.getFastingPlasmaGlucose());
+                etPpg.setText(""+bloodTestResults.getPostPrandialPlasmaGlucose());
+            }
+        }else {
+            etHaemoglobin.setText(null);
+            etUreaCreatinine.setText(null);
+            etCholesterol.setText(null);
+            etTriglycerides.setText(null);
+            etHdl.setText(null);
+            etLdl.setText(null);
+            etRpg.setText(null);
+            etFpg.setText(null);
+            etPpg.setText(null);
+        }
+    }
     private void setupDate() {
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.MONTH, monthIndex);
@@ -162,20 +208,31 @@ public class BloodTestFragment extends Fragment implements TrackActivity.OnBackP
         String dateStr = simpleDateFormat.format(date);
 
         tvBloodTestDate.setText(dateStr);
+        callSavedMethod();
        // loadStatsForDate(dateStr);
     }
 
+    double ParseDouble(String strNumber) {
+        if (strNumber != null && strNumber.length() > 0) {
+            try {
+                return Double.parseDouble(strNumber);
+            } catch(Exception e) {
+                return -1;   // or some value to mark this field is wrong. or make a function validates field first ...
+            }
+        }
+        else return 0;
+    }
     public void saveData(){
-        bloodTestResult.setHeamoglobin(Double.parseDouble(etHaemoglobin.getText().toString()));
-        bloodTestResult.setUreaCreatinine(Double.parseDouble(etUreaCreatinine.getText().toString()));
-        bloodTestResult.setTotalCholestrol(Double.parseDouble(etCholesterol.getText().toString()));
-        bloodTestResult.setHighDensityLipoProtein(Double.parseDouble(etHdl.getText().toString()));
-        bloodTestResult.setLowDensityLipoProtein(Double.parseDouble(etLdl.getText().toString()));
-        bloodTestResult.setTriglycerides(Double.parseDouble(etTriglycerides.getText().toString()));
-        bloodTestResult.setRandomPlasmaGlucose(Double.parseDouble(etRpg.getText().toString()));
-        bloodTestResult.setFastingPlasmaGlucose(Double.parseDouble(etFpg.getText().toString()));
-        bloodTestResult.setPostPrandialPlasmaGlucose(Double.parseDouble(etPpg.getText().toString()));
-        bloodTestResult.setUid(appSharedPreference.getProfileName(AppConstants.PROFILE_NAME));
+        bloodTestResult.setHeamoglobin(ParseDouble(etHaemoglobin.getText().toString()));
+        bloodTestResult.setUreaCreatinine(ParseDouble(etUreaCreatinine.getText().toString()));
+        bloodTestResult.setTotalCholestrol(ParseDouble(etCholesterol.getText().toString()));
+        bloodTestResult.setHighDensityLipoProtein(ParseDouble(etHdl.getText().toString()));
+        bloodTestResult.setLowDensityLipoProtein(ParseDouble(etLdl.getText().toString()));
+        bloodTestResult.setTriglycerides(ParseDouble(etTriglycerides.getText().toString()));
+        bloodTestResult.setRandomPlasmaGlucose(ParseDouble(etRpg.getText().toString()));
+        bloodTestResult.setFastingPlasmaGlucose(ParseDouble(etFpg.getText().toString()));
+        bloodTestResult.setPostPrandialPlasmaGlucose(ParseDouble(etPpg.getText().toString()));
+        bloodTestResult.setUid(GlobalClass.userID);
         bloodTestResult.setDate(tvBloodTestDate.getText().toString());
 
         bloodTestDB.addEntry(bloodTestResult.getUid(),bloodTestResult.getDate(), bloodTestResult);

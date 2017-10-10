@@ -86,6 +86,7 @@ public class SOSFragment extends Fragment implements View.OnClickListener,TrackA
         rlCall.setOnClickListener(this);
         rlLocateMap.setOnClickListener(this);
         shateLocation.setOnClickListener(this);
+       // ((TrackActivity) getActivity()).setActionBarTitle("SOS");
 
         personSpinner = (BetterSpinner) view.findViewById(R.id.person_Spinner);
         //pick_location = (ImageView) view.findViewById(R.id.pick_location);
@@ -131,7 +132,7 @@ public class SOSFragment extends Fragment implements View.OnClickListener,TrackA
     public void setMenuVisibility(boolean menuVisible) {
         if(getActivity() != null){
             if(menuVisible){
-                ((TrackActivity) getActivity()).setActionBarTitle("SOS");
+            //    ((TrackActivity) getActivity()).setActionBarTitle("SOS");
 
             }
         }
@@ -266,7 +267,6 @@ public class SOSFragment extends Fragment implements View.OnClickListener,TrackA
     @Override
     public void doBack() {
         EventBus.getDefault().post(new MessageEvent("Hello!"));
-
         View v = TrackActivity.tabLayout.getTabAt(2).getCustomView();
         if (v instanceof TextView) {
             TextView textView = (TextView) v;

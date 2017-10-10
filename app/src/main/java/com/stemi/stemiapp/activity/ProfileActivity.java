@@ -1,7 +1,10 @@
 package com.stemi.stemiapp.activity;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.support.v7.app.AlertDialog;
@@ -19,13 +22,16 @@ import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
 import com.stemi.stemiapp.R;
 import com.stemi.stemiapp.customviews.CircleImageView;
 import com.stemi.stemiapp.databases.UserDetailsTable;
 import com.stemi.stemiapp.model.RegisteredUserDetails;
 import com.stemi.stemiapp.preference.AppSharedPreference;
+import com.stemi.stemiapp.utils.CompressImageUtil;
 import com.stemi.stemiapp.utils.GlobalClass;
 
+import java.io.File;
 import java.util.List;
 
 import butterknife.BindView;
@@ -73,7 +79,7 @@ public class ProfileActivity extends AppCompatActivity {
         UserDetailsTable dBforUserDetails = new UserDetailsTable(this);
         List<RegisteredUserDetails> allUsers = dBforUserDetails.getAllUsers();
 
-        recyclerView.setAdapter(new ProfileAdapter(allUsers));
+        recyclerView.setAdapter(new ProfileAdapter(allUsers, this));
     }
 
     @OnClick(R.id.btn_add_profile)
@@ -85,9 +91,10 @@ public class ProfileActivity extends AppCompatActivity {
     private class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ProfileViewHolder>{
 
         private List<RegisteredUserDetails> registeredUsers;
-
-        public ProfileAdapter(List<RegisteredUserDetails> registeredUsers){
+        Context mContext;
+        public ProfileAdapter(List<RegisteredUserDetails> registeredUsers,Context context){
             this.registeredUsers = registeredUsers;
+            this.mContext = context;
         }
 
         @Override
@@ -103,7 +110,13 @@ public class ProfileActivity extends AppCompatActivity {
             profileViewHolder.profileName.setText(user.getName());
             profileViewHolder.profileGender.setText(user.getGender());
             profileViewHolder.profileAge.setText(user.getAge());
-            profileViewHolder.profileImage.setImageURI(Uri.parse(user.getImgUrl()));
+            if(user.getImgUrl() == null){
+                profileViewHolder.profileImage.setImageResource(R.drawable.ic_user);
+            }else {
+
+                Bitmap bitmap = new CompressImageUtil().compressImage(ProfileActivity.this,user.getImgUrl());
+                profileViewHolder.profileImage.setImageBitmap(bitmap);
+            }
             if(GlobalClass.userID.equals(user.getUniqueId())){
                 profileViewHolder.profileCheck.setChecked(true);
             }
@@ -139,6 +152,8 @@ public class ProfileActivity extends AppCompatActivity {
                                             int heightInCms = (int) Double.parseDouble(userDetails.getHeight());
                                             GlobalClass.heightInM = heightInCms / 100;
                                         }
+                                        startActivity(new Intent(ProfileActivity.this, TrackActivity.class));
+
 
 
                                         notifyDataSetChanged();

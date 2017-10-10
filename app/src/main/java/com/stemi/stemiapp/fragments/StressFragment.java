@@ -59,7 +59,7 @@ public class StressFragment extends Fragment implements AppConstants, TrackActiv
 
     @BindView(R.id.tv_food_today) TextView tvFoodToday;
     @BindView(R.id.seekbar) SeekBar mSeekLin;
-    @BindView(R.id.ll_seekbar)LinearLayout seekbarText;
+    @BindView(R.id.seekbarText)LinearLayout seekbarText;
 
 
     @BindView(R.id.ll_yoga)LinearLayout llYoga;
@@ -114,6 +114,7 @@ public class StressFragment extends Fragment implements AppConstants, TrackActiv
             }
         });
 
+        callSavedMEthod();
         llYoga.setOnClickListener(this);
         llMeditation.setOnClickListener(this);
         llHobies.setOnClickListener(this);
@@ -152,7 +153,7 @@ public class StressFragment extends Fragment implements AppConstants, TrackActiv
             savedDate = tvFoodToday.getText().toString();
         }
 
-        if(dbForTrackActivities.getDate(savedDate)) {
+        if(dbForTrackActivities.getDate((savedDate),GlobalClass.userID)) {
             ArrayList<UserEventDetails> eventDetails = dbForTrackActivities.getDetails(appSharedPreference.getProfileName(AppConstants.PROFILE_NAME), savedDate, 2);
             if (eventDetails.get(0).getStressCount() != null) {
                 mSeekLin.setProgress(Integer.parseInt(eventDetails.get(0).getStressCount()));
@@ -310,8 +311,7 @@ public class StressFragment extends Fragment implements AppConstants, TrackActiv
 
     public void storeData(){
         Log.e("db", "storeData() in StressFragment");
-        TrackActivity.userEventDetails.setUid(appSharedPreference.getProfileName(PROFILE_NAME));
-
+        TrackActivity.userEventDetails.setUid(GlobalClass.userID);
         TrackStressDB trackStressDB = new TrackStressDB(getActivity());
         TrackStress trackStress = new TrackStress();
         trackStress.setUserId(GlobalClass.userID);
@@ -370,7 +370,7 @@ public class StressFragment extends Fragment implements AppConstants, TrackActiv
 
         trackStressDB.addEntry(trackStress);
 
-        boolean date = dbForTrackActivities.getDate(TrackActivity.userEventDetails.getDate());
+        boolean date = dbForTrackActivities.getDate(TrackActivity.userEventDetails.getDate(),GlobalClass.userID);
         if (!date) {
             dbForTrackActivities.addEntry(TrackActivity.userEventDetails);
             EventBus.getDefault().post(new MessageEvent("Hello!"));

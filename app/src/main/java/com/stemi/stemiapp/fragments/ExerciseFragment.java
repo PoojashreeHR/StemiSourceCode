@@ -190,7 +190,7 @@ public class ExerciseFragment extends Fragment implements View.OnClickListener, 
             savedDate = tvExcerciseToday.getText().toString();
         }
 
-        if(dbForTrackActivities.getDate(savedDate)){
+        if(dbForTrackActivities.getDate((savedDate),GlobalClass.userID)){
             ArrayList<UserEventDetails> eventDetails = dbForTrackActivities.getDetails(GlobalClass.userID,savedDate,1);
             if(eventDetails != null){
                 if(eventDetails.get(0).getIswalked() == null){
@@ -418,7 +418,7 @@ public class ExerciseFragment extends Fragment implements View.OnClickListener, 
         Log.e(TAG,"isExercised = "+ isExercised );
 
       //  boolean count = dbForTrackActivities.isTableEmpty();
-        boolean date = dbForTrackActivities.getDate(TrackActivity.userEventDetails.getDate());
+        boolean date = dbForTrackActivities.getDate(TrackActivity.userEventDetails.getDate(),GlobalClass.userID);
             if (!date) {
                 dbForTrackActivities.addEntry(TrackActivity.userEventDetails);
                 EventBus.getDefault().post(new MessageEvent("Hello!"));

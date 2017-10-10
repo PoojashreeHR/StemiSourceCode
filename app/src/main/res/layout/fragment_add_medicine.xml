@@ -411,6 +411,15 @@
                 android:checked="true"
                 android:text=" Remind me for this Medicine"
                 android:textSize="18sp" />
+
+            <Button
+                android:id="@+id/add_medicine"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/medicineRemainder"
+                android:background="@color/appBackground"
+                android:text="SAVE"
+                android:textColor="@color/white"/>
         </RelativeLayout>
     </ScrollView>
 </RelativeLayout>

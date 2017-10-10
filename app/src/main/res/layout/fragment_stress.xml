@@ -30,7 +30,7 @@
         android:layout_alignStart="@+id/tv_food_today"
         android:layout_alignRight="@+id/tv_food_today"
         android:layout_alignEnd="@+id/tv_food_today" />
-
+<!--
     <TextView
         android:id="@+id/tv_food_que"
         android:layout_width="match_parent"
@@ -40,29 +40,108 @@
         android:textSize="20sp"
         android:gravity="center"
         android:layout_margin="15dp"
-        android:text="Rate your stress level" />
+        android:text="Rate your stress level" />-->
+<RelativeLayout
+    android:id="@+id/rl_stressCount"
+    android:layout_below="@+id/view"
+    android:layout_width="wrap_content"
+    android:background="@color/white"
+    android:layout_marginTop="20dp"
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="10dp"
+    android:layout_height="wrap_content">
 
-    <SeekBar
-        android:id="@+id/seekbar"
+    <TextView
+        android:id="@+id/tv_stress"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/tv_food_que"
-        android:layout_margin="20dp"
-        android:max="5"
-        android:thumbTint="@color/appBackground"
-        android:progressTint="@color/appBackground"/>
+        android:text="Rate your stress level today"
+        android:gravity="center"
+        android:typeface="serif"
+        android:layout_margin="10dp"
+        android:textSize="14sp"/>
 
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@drawable/ic_min"
+            android:layout_margin="10dp"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/tv_stress"
+            android:id="@+id/imageView2" />
+<!--
     <LinearLayout
         android:id="@+id/ll_seekbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_stress"
         android:orientation="horizontal"
-        android:layout_marginLeft="35dp"
-        android:layout_marginRight="35dp"
-        android:layout_below="@+id/seekbar"/>
+        android:weightSum="5">
+
+        <SeekBar
+            android:id="@+id/seekbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:max="5"
+            android:layout_weight="3"
+            android:thumbTint="@color/appBackground"
+            android:progressTint="@color/appBackground"/>
+
+        <LinearLayout
+            android:id="@+id/seekbarText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_below="@+id/seekbar"/>
+    </LinearLayout>
+-->
+
+    <ImageView
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="@drawable/ic_max"
+        android:layout_margin="10dp"
+        android:layout_alignParentRight="true"
+        android:id="@+id/img3"
+        android:layout_below="@+id/tv_stress" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_stress"
+        android:layout_toEndOf="@+id/imageView2"
+        android:layout_toRightOf="@+id/imageView2"
+        android:layout_toLeftOf="@+id/img3"
+        android:layout_toStartOf="@+id/img3"
+        android:orientation="vertical">
+
+        <SeekBar
+            android:id="@+id/seekbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:max="5"
+            android:layout_weight="3"
+            android:thumbTint="@color/appBackground"
+            android:progressTint="@color/appBackground"/>
+
+        <LinearLayout
+            android:id="@+id/seekbarText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginBottom="10dp"
+            android:layout_below="@+id/seekbar"/>
+
+    </LinearLayout>
+</RelativeLayout>
+
 
     <TextView
-        android:layout_below="@+id/ll_seekbar"
+        android:layout_below="@+id/rl_stressCount"
         android:id="@+id/tv_stress_health"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

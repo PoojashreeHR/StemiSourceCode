@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 
 import com.stemi.stemiapp.R;
 import com.stemi.stemiapp.activity.RegistrationActivity;
@@ -35,7 +36,7 @@ public class UserDetailsFragment extends Fragment implements View.OnClickListene
     @BindView(R.id.et_email) EditText etEmail;
 
     String emailPattern = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$";
-
+    String phonePatteren = "^[7-9][0-9]{9}$";
 
     //  EditText etEmail;
     UserDetailsTable dBforUserDetails;
@@ -62,6 +63,7 @@ public class UserDetailsFragment extends Fragment implements View.OnClickListene
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 gender = ((RadioButton) group.findViewById(checkedId)).getText().toString();
                 if(null!=gender && checkedId > -1){
+                    salutatioSelected = gender;
                     Log.e(TAG, "onCheckedChanged: User is :"+ gender );
                 }
 
@@ -77,12 +79,14 @@ public class UserDetailsFragment extends Fragment implements View.OnClickListene
     }
 
     public void saveUserDetails(){
-        String gender1 = gender;
-        RegistrationActivity.registeredUserDetails.setName(etName.getText().toString());
-        RegistrationActivity.registeredUserDetails.setAge(etAge.getText().toString());
-        RegistrationActivity.registeredUserDetails.setGender(gender1);
-        RegistrationActivity.registeredUserDetails.setPhone(etPhone.getText().toString());
-        RegistrationActivity.registeredUserDetails.setEmail(etEmail.getText().toString());
+        if(RegistrationActivity.registeredUserDetails != null) {
+            String gender1 = gender;
+            RegistrationActivity.registeredUserDetails.setName(etName.getText().toString());
+            RegistrationActivity.registeredUserDetails.setAge(etAge.getText().toString());
+            RegistrationActivity.registeredUserDetails.setGender(gender1);
+            RegistrationActivity.registeredUserDetails.setPhone(etPhone.getText().toString());
+            RegistrationActivity.registeredUserDetails.setEmail(etEmail.getText().toString());
+        }
     }
     @Override
     public void onClick(View v) {
@@ -132,11 +136,19 @@ public class UserDetailsFragment extends Fragment implements View.OnClickListene
             etAge.setError(null);
         }
 
+        if(salutatioSelected.equals("")){
+            Toast.makeText(getActivity(), "Please Select Gender", Toast.LENGTH_SHORT).show();
+            valid = false;
+        }
+
         String mobileNumber = etPhone.getText().toString();
         if (TextUtils.isEmpty(mobileNumber)) {
             etPhone.setError("Required");
             valid = false;
         } else if (mobileNumber.length() < 10 || mobileNumber.length() > 10) {
+            etPhone.setError("Enter Valid Mobile Number");
+            valid = false;
+        }else if(!etPhone.getText().toString().matches(phonePatteren)){
             etPhone.setError("Enter Valid Mobile Number");
             valid = false;
         } else {

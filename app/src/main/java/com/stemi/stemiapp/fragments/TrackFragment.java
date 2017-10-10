@@ -48,6 +48,8 @@ public class TrackFragment extends Fragment {
         rView.setHasFixedSize(true);
         rView.setLayoutManager(lLayout);
 
+      //  ((TrackActivity) getActivity()).setActionBarTitle("Track");
+
         RecyclerViewAdapter rcAdapter = new RecyclerViewAdapter(getActivity(), rowListItem);
         rView.setAdapter(rcAdapter);
         ((TrackActivity)getActivity()).getViewPager().setPagingEnabled(false);
@@ -61,7 +63,7 @@ public class TrackFragment extends Fragment {
         List<TrackElements> allItems = new ArrayList<>();
         allItems.add(new TrackElements("Medication", R.drawable.btn_medication));
         allItems.add(new TrackElements("Exercise", R.drawable.btn_exercise));
-        allItems.add(new TrackElements("Stress",  R.drawable.btn_stress));
+        allItems.add(new TrackElements("Stress",  R.drawable.btn_stress_new));
         allItems.add(new TrackElements("Smoking", R.drawable.btn_smoking));
         allItems.add(new TrackElements("Weight", R.drawable.btn_weight));
         allItems.add(new TrackElements("Blood Test Result", R.drawable.btn_blood_test));
@@ -147,7 +149,7 @@ public class TrackFragment extends Fragment {
     public void setMenuVisibility(boolean menuVisible) {
         if(getActivity() != null){
             if(menuVisible){
-                ((TrackActivity) getActivity()).setActionBarTitle("Track");
+                //((TrackActivity) getActivity()).setActionBarTitle("Track");
             }
         }
         super.setMenuVisibility(menuVisible);

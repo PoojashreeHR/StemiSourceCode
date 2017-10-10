@@ -1,81 +1,109 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal" android:layout_width="match_parent"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-
     android:padding="15dp">
-
-    <android.support.v7.widget.AppCompatRadioButton
-        android:id="@+id/profile_check"
-        android:layout_width="36dp"
-        android:layout_height="36dp"
-        android:layout_gravity="center_vertical"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        app:buttonTint="@color/selection_green"
-        />
-
-    <com.stemi.stemiapp.customviews.CircleImageView
-        android:layout_width="72dp"
-        android:layout_height="72dp"
-        android:layout_marginLeft="10dp"
-        android:id="@+id/profile_image"
-        />
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginLeft="10dp"
-        android:layout_gravity="center_vertical"
-        >
-        <TextView
+        android:orientation="horizontal"
+        android:id="@+id/linearLayout4">
+
+        <android.support.v7.widget.AppCompatRadioButton
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/profile_check"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_gravity="center_vertical"
+            app:buttonTint="@color/selection_green" />
+
+        <com.stemi.stemiapp.customviews.CircleImageView
+            android:id="@+id/profile_image"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:layout_marginLeft="10dp" />
+
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="top"
-            android:id="@+id/profile_name"
-            android:textColor="@color/black"
-            android:textStyle="bold"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Praburaam"
-            />
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="10dp"
+            android:orientation="vertical">
 
-                android:id="@+id/profile_age"
-                android:textColor="@color/statsNameFontColor"
-                android:textStyle="bold"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="36"
-                />
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-
-                android:id="@+id/seperator"
-                android:textColor="@color/statsNameFontColor"
-                android:textStyle="bold"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text=", "
-                android:layout_toRightOf="@+id/profile_age"
-                />
-            <TextView
-                android:layout_width="wrap_content"
+                android:id="@+id/profile_name"
+                android:layout_width="100dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="top"
-                android:id="@+id/profile_gender"
-                android:textColor="@color/statsNameFontColor"
-                android:textStyle="bold"
+                android:text="Praburaam"
+                android:singleLine="true"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="Male"
-                android:layout_toRightOf="@+id/seperator"
-                />
+                android:textColor="@color/black"
+                android:textStyle="bold" />
 
-        </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
 
+                <TextView
+                    android:id="@+id/profile_age"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="36"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="@color/statsNameFontColor"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/seperator"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/profile_age"
+                    android:text=", "
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="@color/statsNameFontColor"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/profile_gender"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="top"
+                    android:layout_toRightOf="@+id/seperator"
+                    android:text="Male"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="@color/statsNameFontColor"
+                    android:textStyle="bold" />
+            </RelativeLayout>
+        </LinearLayout>
     </LinearLayout>
 
-</LinearLayout>
+    <LinearLayout
+        android:id="@+id/ll_imgLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="right"
+        android:layout_alignParentRight="true"
+        android:layout_centerInParent="true"
+        android:layout_toEndOf="@+id/linearLayout4"
+        android:layout_toRightOf="@+id/linearLayout4"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginRight="5dp"
+            android:src="@drawable/ic_edit" />
+
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginRight="10dp"
+            android:src="@drawable/ic_delete" />
+    </LinearLayout>
+
+</RelativeLayout>

@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -11,6 +12,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -79,6 +81,7 @@ public class WeightFragment  extends Fragment implements View.OnClickListener,Tr
         appSharedPreference = new AppSharedPreference(getActivity());
         dbForTrackActivities = new DBForTrackActivities();
 
+        callSavedMethod();
         CommonUtils.setRobotoRegularFonts(getActivity(),tvWeightToday);
         btCalculateBmi.setOnClickListener(this);
         tvWeightToday.setOnClickListener(new View.OnClickListener() {
@@ -106,6 +109,9 @@ public class WeightFragment  extends Fragment implements View.OnClickListener,Tr
         int id = v.getId();
         switch (id) {
             case R.id.bt_calculatebmi:
+                InputMethodManager inputManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                inputManager.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
+
                 if(!todaysWeight.getText().toString().equals("")) {
                     float bmiValue = calculateBMI(todaysWeight.getText().toString(), appSharedPreference.getUserHeight(AppConstants.USER_HEIGHT));
                     bmiCount = String.format("%.2f",bmiValue);
@@ -140,7 +146,7 @@ public class WeightFragment  extends Fragment implements View.OnClickListener,Tr
             savedDate = tvWeightToday.getText().toString();
         }
 
-        if (dbForTrackActivities.getDate(savedDate)) {
+        if (dbForTrackActivities.getDate((savedDate), GlobalClass.userID)) {
             ArrayList<UserEventDetails> eventDetails = dbForTrackActivities.getDetails(appSharedPreference.getProfileName(AppConstants.PROFILE_NAME), savedDate, 4);
             if (eventDetails.get(0).getTodaysWeight() != null) {
                 todaysWeight.setText(eventDetails.get(0).getTodaysWeight());
@@ -225,8 +231,9 @@ public class WeightFragment  extends Fragment implements View.OnClickListener,Tr
     }
 
     public void SaveData(){
+
         Log.e("db", "SaveData() is called");
-        TrackActivity.userEventDetails.setUid(appSharedPreference.getProfileName(AppConstants.PROFILE_NAME));
+        TrackActivity.userEventDetails.setUid(GlobalClass.userID);
         TrackWeightDB trackWeightDB = new TrackWeightDB(getActivity());
 
         TrackWeight trackWeight = new TrackWeight();
@@ -265,7 +272,7 @@ public class WeightFragment  extends Fragment implements View.OnClickListener,Tr
         }
         TrackActivity.userEventDetails.setBmiValue(bmiCount);
 
-        boolean date = dbForTrackActivities.getDate(TrackActivity.userEventDetails.getDate());
+        boolean date = dbForTrackActivities.getDate(TrackActivity.userEventDetails.getDate(),GlobalClass.userID);
         if (!date) {
             dbForTrackActivities.addEntry(TrackActivity.userEventDetails);
             ((TrackActivity) getActivity()).showFragment(new TrackFragment());

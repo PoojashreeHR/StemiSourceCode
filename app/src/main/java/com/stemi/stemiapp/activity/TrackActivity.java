@@ -1,8 +1,11 @@
 package com.stemi.stemiapp.activity;
 
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.Drawable;
@@ -21,10 +24,14 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -47,6 +54,7 @@ import com.stemi.stemiapp.model.RegisteredUserDetails;
 import com.stemi.stemiapp.model.UserEventDetails;
 import com.stemi.stemiapp.preference.AppSharedPreference;
 import com.stemi.stemiapp.utils.CommonUtils;
+import com.stemi.stemiapp.utils.CompressImageUtil;
 import com.stemi.stemiapp.utils.GlobalClass;
 
 import org.greenrobot.eventbus.EventBus;
@@ -71,6 +79,9 @@ public class TrackActivity extends AppCompatActivity implements NavigationView.O
     public static TabLayout.Tab tab;
     TextView toolbarTitle;
 
+    RegisteredUserDetails registeredUserDetails;
+    CircleImageView nav_profile_pic;
+    TextView nav_header_userName, nav_header_email;
     private Fragment hospitalFragment;
     private OnScanCompletionListener onScanCompletedListener;
 
@@ -79,19 +90,29 @@ public class TrackActivity extends AppCompatActivity implements NavigationView.O
         super.onResume();
 
         UserDetailsTable dBforUserDetails = new UserDetailsTable(this);
-        RegisteredUserDetails registeredUserDetails = dBforUserDetails.getUserDetails(GlobalClass.userID);
+        registeredUserDetails = dBforUserDetails.getUserDetails(GlobalClass.userID);
         Log.e(TAG, "GlobalClass.userID = " + GlobalClass.userID);
+
         if (registeredUserDetails.getImgUrl() != null) {
-            profileImage.setImageURI(Uri.parse(registeredUserDetails.getImgUrl()));
-            profileImage.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent i = new Intent(TrackActivity.this, ProfileActivity.class);
-                    startActivity(i);
-                }
-            });
+            Bitmap bitmap = new CompressImageUtil().compressImage(this,registeredUserDetails.getImgUrl());
+            profileImage.setImageBitmap(bitmap);
+            nav_profile_pic.setImageBitmap(bitmap);
+        }else {
+            profileImage.setImageResource(R.drawable.ic_user);
+            nav_profile_pic.setImageResource(R.drawable.ic_user);
         }
+        nav_header_userName.setText(registeredUserDetails.getName());
+        nav_header_email.setText(registeredUserDetails.getEmail());
+
+        profileImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(TrackActivity.this, ProfileActivity.class);
+                startActivity(i);
+            }
+        });
     }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,7 +120,6 @@ public class TrackActivity extends AppCompatActivity implements NavigationView.O
         setContentView(R.layout.navigation_layout);
 
         toolbar = (Toolbar) findViewById(R.id.track_toolbar);
-        toolbar.setTitle("Learn");
         toolbar.setTitleTextColor(getResources().getColor(R.color.colorPrimary));
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -129,10 +149,28 @@ public class TrackActivity extends AppCompatActivity implements NavigationView.O
         drawer.addDrawerListener(toggle);
         toggle.syncState();
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+
+
+        LayoutInflater inflater = getLayoutInflater();
+        View headerView = inflater.inflate(R.layout.nav_header_main, null, false);
+        navigationView.addHeaderView(headerView);
+
+        nav_profile_pic = (CircleImageView) headerView.findViewById(R.id.iv_nav_profile_pic);
+        nav_header_email = (TextView) headerView.findViewById(R.id.tv_email);
+        nav_header_userName = (TextView) headerView.findViewById(R.id.tv_profile_user_name);
+
         assert navigationView != null;
         navigationView.setNavigationItemSelectedListener(this);
 
-
+     /*   if (registeredUserDetails.getImgUrl() != null) {
+            nav_header_userName.setText(registeredUserDetails.getName());
+            nav_header_email.setText(registeredUserDetails.getEmail());
+            Bitmap bitmap = new CompressImageUtil().compressImage(this,registeredUserDetails.getImgUrl());
+            nav_profile_pic.setImageBitmap(bitmap);
+        }else {
+            nav_profile_pic.setImageResource(R.drawable.ic_user);
+        }
+*/
         tabLayout = (TabLayout) findViewById(R.id.tab);
         tabLayout.setupWithViewPager(viewPager);
         setupTabIcons();
@@ -156,11 +194,12 @@ public class TrackActivity extends AppCompatActivity implements NavigationView.O
     public void setActionBarTitle(String title) {
         toolbarTitle.setText(title);
     }
-    public interface OnScanCompletionListener{
+
+    public interface OnScanCompletionListener {
         void scanCompleted(String contents);
     }
 
-    public void setOnScanCompletedListener(OnScanCompletionListener onScanCompletionListener){
+    public void setOnScanCompletedListener(OnScanCompletionListener onScanCompletionListener) {
         this.onScanCompletedListener = onScanCompletionListener;
     }
 
@@ -175,6 +214,13 @@ public class TrackActivity extends AppCompatActivity implements NavigationView.O
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commitAllowingStateLoss();
     }
+    String[] title = {
+            "Learn",
+            "Track",
+            "SOS",
+            "Hospital",
+            "Statistics"
+    };
 
     public void ubTateTab(int tabCount, Context context) {
         tab = tabLayout.getTabAt(tabCount);
@@ -206,14 +252,20 @@ public class TrackActivity extends AppCompatActivity implements NavigationView.O
             }
 
             if (tab.isSelected()) {
+                for (int i =0; i < tabLayout.getTabCount(); i ++){
+                    if(i == position){
+                        setActionBarTitle(title[i]);
+                    }
+                }
+
                 View v = tabLayout.getTabAt(position).getCustomView();
-                if (v instanceof TextView) {
-                    TextView textView = (TextView) v;
-                    textView.setTextColor(getResources().getColor(R.color.appBackground));
-                    for (Drawable drawable : textView.getCompoundDrawables()) {
-                        if (drawable != null) {
-                            drawable.setColorFilter(new PorterDuffColorFilter(getResources().getColor(R.color.appBackground), PorterDuff.Mode.SRC_IN));
-                        }
+                        if (v instanceof TextView) {
+                            TextView textView = (TextView) v;
+                            textView.setTextColor(getResources().getColor(R.color.appBackground));
+                            for (Drawable drawable : textView.getCompoundDrawables()) {
+                                if (drawable != null) {
+                                    drawable.setColorFilter(new PorterDuffColorFilter(getResources().getColor(R.color.appBackground), PorterDuff.Mode.SRC_IN));
+                                }
                     }
                 }
             }
@@ -239,6 +291,16 @@ public class TrackActivity extends AppCompatActivity implements NavigationView.O
         @Override
         public void onTabReselected(TabLayout.Tab tab) {
 
+        }
+    }
+
+    public void clearTabColor(TextView textView) {
+        textView.setTextColor(getResources().getColor(R.color.colorPrimary));
+        for (Drawable drawable : textView.getCompoundDrawables()) {
+            if (drawable != null) {
+                drawable.clearColorFilter();
+//                drawable.setColorFilter(new PorterDuffColorFilter(getResources().getColor(R.color.appBackground), PorterDuff.Mode.SRC_IN));
+            }
         }
     }
 
@@ -286,31 +348,35 @@ public class TrackActivity extends AppCompatActivity implements NavigationView.O
         tabLayout.getTabAt(0).setCustomView(tabOne);
         tab = tabLayout.getTabAt(0);
         tab.select();
-        toolbarTitle.setText("Learn");
-        ubTateTab(0,TrackActivity.this);
+//        toolbarTitle.setText("Learn");
+        ubTateTab(0, TrackActivity.this);
 
         tabTwo = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
         CommonUtils.setRobotoLightFonts(this, tabTwo);
         tabTwo.setText("Track");
         tabTwo.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_track, 0, 0);
         tabLayout.getTabAt(1).setCustomView(tabTwo);
+        clearTabColor(tabTwo);
 
-        TextView tabThree = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
+        tabThree = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
         tabThree.setText("SOS");
         tabThree.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_sos, 0, 0);
         tabLayout.getTabAt(2).setCustomView(tabThree);
+        clearTabColor(tabThree);
 
         tabFour = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
         CommonUtils.setRobotoLightFonts(this, tabFour);
         tabFour.setText("Hospital");
         tabFour.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_hospital, 0, 0);
         tabLayout.getTabAt(3).setCustomView(tabFour);
+        clearTabColor(tabFour);
 
         tabFive = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
         CommonUtils.setRobotoLightFonts(this, tabFive);
         tabFive.setText("Stats");
         tabFive.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_stats, 0, 0);
         tabLayout.getTabAt(4).setCustomView(tabFive);
+        clearTabColor(tabFive);
 
     }
 
@@ -330,27 +396,29 @@ public class TrackActivity extends AppCompatActivity implements NavigationView.O
         adapter.addFrag(new StatusFragment(), "Status");
         viewPager.setAdapter(adapter);
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
         if (result != null) {
             onScanCompletedListener.scanCompleted(result.getContents());
-        }
-        else {
+        } else {
             super.onActivityResult(requestCode, resultCode, data);
         }
     }
+
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         int id = menuItem.getItemId();
         switch (id) {
-            case R.id.Registration:
-                startActivity(new Intent(TrackActivity.this, RegistrationActivity.class));
+            case R.id.all_profiles:
+                startActivity(new Intent(TrackActivity.this, ProfileActivity.class));
                 break;
             case R.id.logout:
-                removeSharedPreferenceData();
-                startActivity(new Intent(TrackActivity.this, MainActivity.class));
-                finish();
+                createDialog();
+                break;
+            case R.id.change_password:
+                startActivity(new Intent(TrackActivity.this, ResetPasswordActivity.class));
 
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -380,6 +448,40 @@ public class TrackActivity extends AppCompatActivity implements NavigationView.O
         }
 
     }*/
+
+    public void createDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+       // builder.setTitle("AlertDialog with No Buttons");
+        builder.setMessage("Do you wish to logout?");
+        //Yes Button
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                removeSharedPreferenceData();
+                startActivity(new Intent(TrackActivity.this, MainActivity.class));
+                finish();
+                Log.i("Code2care ", "Yes button Clicked!");
+            }
+        });
+
+        //No Button
+        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Log.i("Code2care ", "No button Clicked!");
+                dialog.dismiss();
+
+            }
+        });
+
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+        Button nbutton = alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE);
+        nbutton.setTextColor(getResources().getColor(R.color.appBackground));
+        Button pbutton = alertDialog.getButton(DialogInterface.BUTTON_POSITIVE);
+        pbutton.setTextColor(getResources().getColor(R.color.appBackground));
+    }
+
 
     protected void backstackFragment() {
         Log.d("Stack count", getSupportFragmentManager().getBackStackEntryCount() + "");

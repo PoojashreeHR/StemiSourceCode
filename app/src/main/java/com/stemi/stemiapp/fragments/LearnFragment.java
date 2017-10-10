@@ -72,7 +72,7 @@ public class LearnFragment extends Fragment implements AppConstants{
         appSharedPreference = new AppSharedPreference(getActivity());
         callGetTipOfTheDay();
 
-        ((TrackActivity) getActivity()).setActionBarTitle("Learn");
+//        ((TrackActivity) getActivity()).setActionBarTitle("Learn");
 
         CommonUtils.setRobotoLightFonts(getActivity(),tvTips);
         CommonUtils.setRobotoRegularFonts(getActivity(),tvExpandableSymptoms);
@@ -161,8 +161,7 @@ public class LearnFragment extends Fragment implements AppConstants{
     public void setMenuVisibility(boolean menuVisible) {
         if(getActivity() != null){
             if(menuVisible){
-                ((TrackActivity) getActivity()).setActionBarTitle("Learn");
-                //populatePerformanceTexts();
+           //     ((TrackActivity) getActivity()).setActionBarTitle("Learn");
             }
         }
         super.setMenuVisibility(menuVisible);
@@ -170,7 +169,7 @@ public class LearnFragment extends Fragment implements AppConstants{
 
     @Override
     public void onResume() {
-        ((TrackActivity) getActivity()).setActionBarTitle("Learn");
+       // ((TrackActivity) getActivity()).setActionBarTitle("Learn");
         populatePerformanceTexts();
         super.onResume();
     }

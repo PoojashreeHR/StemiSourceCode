@@ -2,22 +2,22 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/Registration"
-            android:title="Registration" />
+            android:id="@+id/all_profiles"
+            android:title="All Profiles" />
         <item
 
-            android:id="@+id/logout"
-            android:title="Logout" />
+            android:id="@+id/change_password"
+            android:title="Change Password" />
         <item
             android:id="@+id/nav_privacy"
-            android:title="Element 3" />
+            android:title="Privacy Policy " />
         <item
             android:id="@+id/nav_terms_condition"
-            android:title="Element 4" />
+            android:title="Terms and Conditions" />
 
         <item
-            android:id="@+id/nav_contact_us"
-            android:title="Element 5" />
+            android:id="@+id/logout"
+            android:title="Logout" />
 
     </group>
     <!--  <group android:id="@+id/nav_footer">

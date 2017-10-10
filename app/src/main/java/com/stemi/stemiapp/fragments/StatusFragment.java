@@ -356,6 +356,7 @@ public class StatusFragment extends Fragment {
         txtPostPrandialPlasmaGlucose.setText(String.format("%.1f",bloodTestResult.getPostPrandialPlasmaGlucose()));
     }
 
+
     private void populateWeightGraph() {
 
         TrackWeightDB trackWeightDB = new TrackWeightDB(getActivity());

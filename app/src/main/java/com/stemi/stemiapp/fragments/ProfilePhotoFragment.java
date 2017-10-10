@@ -20,14 +20,17 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.squareup.picasso.Picasso;
 import com.stemi.stemiapp.R;
 import com.stemi.stemiapp.activity.RegistrationActivity;
 import com.stemi.stemiapp.activity.TrackActivity;
 import com.stemi.stemiapp.customviews.CircleImageView;
 import com.stemi.stemiapp.databases.UserDetailsTable;
+import com.stemi.stemiapp.model.RegisteredUserDetails;
 import com.stemi.stemiapp.preference.AppSharedPreference;
 import com.stemi.stemiapp.utils.AppConstants;
 import com.stemi.stemiapp.utils.CommonUtils;
+import com.stemi.stemiapp.utils.CompressImageUtil;
 import com.stemi.stemiapp.utils.GlobalClass;
 
 import java.io.File;
@@ -83,16 +86,21 @@ public class ProfilePhotoFragment extends Fragment implements AppConstants,View.
                 selectedImagePath = getPath(selectedImageUri);
                 Log.e(TAG, "Gallery Image Path : " + selectedImagePath);
                 RegistrationActivity.registeredUserDetails.setImgUrl(selectedImagePath);
-                img.setImageURI(selectedImageUri);
+                //img.setImageURI(selectedImageUri);
+                File f = new File(selectedImagePath);
+                // Picasso.with(getActivity()).load(f).into(imageView)
+                Bitmap bitmap =new  CompressImageUtil().compressImage(getActivity(),selectedImagePath);
+                img.setImageBitmap(bitmap);
+               // Picasso.with(getActivity()).load(f).into(img);
+
 
             } else if (requestCode == CAMERA) {
                 Bitmap photo = (Bitmap) data.getExtras().get("data");
                 File file = bitmapConvertToFile(photo,0);
                 img.setImageResource(0);
-               // selectedImagePath = getPath(Uri.parse(file.toString()));
-               // Log.e(TAG, "Camera Image Path : " + selectedImagePath);
                 RegistrationActivity.registeredUserDetails.setImgUrl(Uri.parse(file.toString()).toString());
-                img.setImageURI(Uri.parse(file.toString()));
+                Bitmap bitmap = new  CompressImageUtil().compressImage(getActivity(),file.toString().toString());
+                img.setImageBitmap(bitmap);
                 Log.e(TAG, "Camera Image Path : " + Uri.parse(file.toString()));
 
                 //previewCapturedImage();
@@ -132,11 +140,6 @@ public class ProfilePhotoFragment extends Fragment implements AppConstants,View.
     }
 
     private void choosePhotoFromGallary() {
-    /*    Intent intent = new Intent();
-        intent.setType("image*//*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent,"Select file to upload "), SELECT_PICTURE);
-*/
         Intent galleryIntent = new Intent(Intent.ACTION_PICK,
                 android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
 
@@ -243,14 +246,15 @@ public class ProfilePhotoFragment extends Fragment implements AppConstants,View.
                     }
                     appSharedPreference.addProfileName(PROFILE_NAME,RegistrationActivity.registeredUserDetails.getUniqueId());
                    // dBforUserDetails.removeNote(RegistrationActivity.registeredUserDetails.getName());
-                    String uid= dBforUserDetails.addEntry(RegistrationActivity.registeredUserDetails);
-                    if(appSharedPreference.getUserId() == null){
+                    String uid = dBforUserDetails.addEntry(RegistrationActivity.registeredUserDetails,getActivity());
+                   // if(appSharedPreference.getUserId() == null){
                         //first user profile registartion
                         appSharedPreference.setUserId(uid);
                         GlobalClass.userID = uid;
-                    }
-                    Log.e(TAG, "onClick: DB COUNT " + dBforUserDetails.getProfilesCount() );
-                    Toast.makeText(getActivity(), "One row added successfully", Toast.LENGTH_SHORT).show();
+                   // }
+                    RegistrationActivity.registeredUserDetails = new RegisteredUserDetails();
+                    Log.e(TAG, "onClick: DB COUNT " + dBforUserDetails.getProfilesCount());
+
                     startActivity(new Intent(getActivity(), TrackActivity.class));
                     getActivity().finish();
                     break;

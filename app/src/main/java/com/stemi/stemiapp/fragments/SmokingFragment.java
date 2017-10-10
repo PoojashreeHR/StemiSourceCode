@@ -93,7 +93,7 @@ public class SmokingFragment  extends Fragment implements TrackActivity.OnBackPr
             }
         });
 
-
+         callSavedMethod();
         tvSmokeToday.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -212,7 +212,7 @@ public class SmokingFragment  extends Fragment implements TrackActivity.OnBackPr
 
         trackSmokingDB.addEntry(trackSmoking);
 
-        boolean date = dbForTrackActivities.getDate(TrackActivity.userEventDetails.getDate());
+        boolean date = dbForTrackActivities.getDate(TrackActivity.userEventDetails.getDate(),GlobalClass.userID);
         if (!date) {
             dbForTrackActivities.addEntry(TrackActivity.userEventDetails);
              EventBus.getDefault().post(new MessageEvent("Hello!"));
@@ -244,8 +244,8 @@ public class SmokingFragment  extends Fragment implements TrackActivity.OnBackPr
             }
         }
 
-        if(dbForTrackActivities.getDate(savedDate)) {
-            ArrayList<UserEventDetails> eventDetails = dbForTrackActivities.getDetails(appSharedPreference.getProfileName(AppConstants.PROFILE_NAME), savedDate, 3);
+        if(dbForTrackActivities.getDate((savedDate),GlobalClass.userID)) {
+            ArrayList<UserEventDetails> eventDetails = dbForTrackActivities.getDetails(GlobalClass.userID, savedDate, 3);
             if (eventDetails.get(0).getSmokeToday() != null) {
                 smokeToday.setResponse(eventDetails.get(0).getSmokeToday());
                 if(eventDetails.get(0).getSmokeToday().equals("YES")){
@@ -256,56 +256,7 @@ public class SmokingFragment  extends Fragment implements TrackActivity.OnBackPr
                 }
             }
         }else {
-            smokeToday.setResponse(null);
+            smokeToday.setResponse("NULL");
         }
     }
- /*   @Override
-    //Pressed return button - returns to the results menu
-    public void onResume() {
-        super.onResume();
-        smokeToday.setFocusableInTouchMode(true);
-        howMany.setFocusableInTouchMode(true);
-
-        smokeToday.requestFocus();
-        howMany.requestFocus();
-
-        smokeToday.setOnKeyListener(new View.OnKeyListener() {
-            @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                if (event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK) {
-                    if(smokeToday.getResponse().equals("NO")) {
-                        saveData();
-                    }else if((smokeToday.getResponse().equals("YES"))) {
-                        if (howMany.isEnabled() && howMany.getText().toString().equals("")) {
-                            Toast.makeText(getActivity(), "Please enter how many", Toast.LENGTH_SHORT).show();
-                        } else {
-                            saveData();
-                        }
-                    }
-                    return true;
-                   // ((TrackActivity) getActivity()).showFragment(new TrackFragment());
-                    //Toast.makeText(getActivity(), "You pressed Back", Toast.LENGTH_SHORT).show();
-                }
-                return false;
-            }
-        });
-
-        howMany.setOnKeyListener(new View.OnKeyListener() {
-            @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                if(smokeToday.getResponse().equals("NO")) {
-                    saveData();
-
-                }else if((smokeToday.getResponse().equals("YES"))) {
-                    if (howMany.isEnabled() && howMany.getText().toString().equals("")) {
-                        Toast.makeText(getActivity(), "Please enter how many", Toast.LENGTH_SHORT).show();
-                    } else {
-                        saveData();
-                    }
-                }
-                return false;
-            }
-        });
-    }*/
-
 }
