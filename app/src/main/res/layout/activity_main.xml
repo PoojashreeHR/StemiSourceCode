@@ -8,11 +8,11 @@
     tools:context="com.stemi.stemiapp.activity.MainActivity">
 
     <ImageView
-        android:layout_width="150dp"
-        android:layout_height="150dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"
-        android:background="@drawable/ic_stemi_icon"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/logo"
         android:id="@+id/stemiIcon"/>
 
     <android.support.design.widget.TextInputLayout
@@ -22,6 +22,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/stemiIcon"
         android:layout_marginLeft="10dp"
+        android:layout_marginTop="20dp"
         android:layout_marginRight="10dp">
 
         <EditText

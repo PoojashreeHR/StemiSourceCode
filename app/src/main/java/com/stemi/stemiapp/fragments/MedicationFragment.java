@@ -16,6 +16,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Layout;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
@@ -34,6 +35,7 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.stemi.stemiapp.R;
 import com.stemi.stemiapp.activity.TrackActivity;
+import com.stemi.stemiapp.databases.MedicineDetailsTable;
 import com.stemi.stemiapp.databases.MedicineTable;
 import com.stemi.stemiapp.databases.TrackMedicationDB;
 import com.stemi.stemiapp.model.DataPassListener;
@@ -86,13 +88,14 @@ public class MedicationFragment extends Fragment implements AppConstants, View.O
     @BindView(R.id.ivInfo2)
     ImageView nightMedicineInfo;
 
+    String savedDate;
     LinearLayout layout2;
     AppSharedPreference appSharedPreference;
-    MedicineTable medicineTable;
     long getCount;
 
     MedicineDetails medicineDetails;
     TrackMedicationDB trackMedicationDB;
+    MedicineTable medicineTable;
 
     Boolean checkedImg = false;
     DataPassListener mCallback;
@@ -132,6 +135,7 @@ public class MedicationFragment extends Fragment implements AppConstants, View.O
         medicineDetails = new MedicineDetails();
 
         // Setting fonts
+        callSavedMethod();
         CommonUtils.setRobotoRegularFonts(getActivity(), tvMedicationToday);
         trackMedicationDB = new TrackMedicationDB(getActivity());
         ((TrackActivity) getActivity()).setOnBackPressedListener(this);
@@ -173,10 +177,24 @@ public class MedicationFragment extends Fragment implements AppConstants, View.O
         });
     }
 
+
+    public void callSavedMethod(){
+        if (tvMedicationToday.getText().equals("Today  ")){
+            Date dt = new Date();
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy");// set format for date
+            String todaysDate = dateFormat.format(dt); // parse it like
+            savedDate = todaysDate;
+        }else {
+            savedDate = tvMedicationToday.getText().toString();
+        }
+
+    }
+
     ArrayList<MedicineDetails> m1 = new ArrayList<>();
+    ArrayList<MedicineDetails> beforeAdd = new ArrayList<>();
 
     public void getMedicineDetails(final String time, final RelativeLayout layout) {
-        ArrayList<String> medicine = medicineTable.getMedicine(appSharedPreference.getUserId(), time);
+        final ArrayList<String> medicine = medicineTable.getMedicine(appSharedPreference.getUserId(), time);
         layout2 = (LinearLayout) layout.findViewById(R.id.imageTypeLayout);
         ImageView remove_img;
         for (int i = 0; i < medicine.size(); i++) {
@@ -217,6 +235,7 @@ public class MedicationFragment extends Fragment implements AppConstants, View.O
                 remove_img.setTag(R.drawable.ic_checked_1);
                 //frameLayout.addView(remove_img);
 
+                medicineDetails.setAllChecked(false);
                 medicineDetails.setMoringChecked(false);
                 medicineDetails.setAfternoonChecked(false);
                 medicineDetails.setNightChecked(false);
@@ -266,13 +285,14 @@ public class MedicationFragment extends Fragment implements AppConstants, View.O
             frameLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
                     if (checkedImg) {
+
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
                             finalRemove_img.setImageDrawable(getResources().getDrawable(R.drawable.ic_unchecked_1));
                         }
                         finalRemove_img.setTag(R.drawable.ic_checked_1);
                         checkedImg = false;
+
                         medicineDetails.setMoringChecked(false);
                         medicineDetails.setAfternoonChecked(false);
                         medicineDetails.setNightChecked(false);
@@ -282,6 +302,7 @@ public class MedicationFragment extends Fragment implements AppConstants, View.O
                         }
                         finalRemove_img.setTag(0);
                         checkedImg = true;
+
                         medicineDetails.setMoringChecked(true);
                         medicineDetails.setAfternoonChecked(true);
                         medicineDetails.setNightChecked(true);
@@ -412,12 +433,32 @@ public class MedicationFragment extends Fragment implements AppConstants, View.O
         }
     }
 
+    public void storeData(int position){
+        MedicineDetailsTable medicineDetailsTable = new MedicineDetailsTable();
+
+        if (tvMedicationToday.getText().equals("Today  ")){
+            Date dt = new Date();
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy");// set format for date
+            String todaysDate = dateFormat.format(dt); // parse it like
+            savedDate = todaysDate;
+        }else {
+            savedDate = tvMedicationToday.getText().toString();
+        }
+        boolean date = medicineDetailsTable.getDate(TrackActivity.userEventDetails.getDate(),GlobalClass.userID);
+        if (!date) {
+            medicineDetailsTable.addMedicineWithDate(savedDate, m1.get(position));
+            EventBus.getDefault().post(new MessageEvent("Hello!"));
+            ((TrackActivity) getActivity()).setActionBarTitle("Track");
+        }
+    }
+
     @Override
     public void doBack() {
         if (layout2 != null) {
             Boolean checkedOrNot = false;
             TrackMedication med = new TrackMedication();
             for (int i = 0; i < m1.size(); i++) {
+                storeData(i);
                 //if (m1.get(i).getMoringChecked() && m1.get(i).getAfternoonChecked() && m1.get(i).getNightChecked()) {
                 if (m1.get(i).getMoringChecked() && m1.get(i).getAfternoonChecked() && m1.get(i).getNightChecked()) {
                     checkedOrNot = true;
@@ -425,7 +466,6 @@ public class MedicationFragment extends Fragment implements AppConstants, View.O
                     checkedOrNot = false;
                 }
             }
-
             if (checkedOrNot) {
                 med.setHadAllMedicines(true);
             } else {

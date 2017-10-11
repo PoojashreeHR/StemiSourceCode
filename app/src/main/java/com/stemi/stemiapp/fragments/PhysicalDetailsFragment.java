@@ -175,7 +175,7 @@ public class PhysicalDetailsFragment extends Fragment implements View.OnClickLis
             etWeight.setError("Required");
             valid = false;
         } else if (Integer.parseInt(weight) < 20 || Integer.parseInt(weight) > 200) {
-            etWeight.setError("Enter valid weight");
+            etWeight.setError("Enter valid data");
             valid = false;
         } else {
             etWeight.setError(null);
