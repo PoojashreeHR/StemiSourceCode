@@ -20,11 +20,14 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.stemi.stemiapp.R;
 import com.stemi.stemiapp.activity.TrackActivity;
 import com.stemi.stemiapp.databases.DBForTrackActivities;
+import com.stemi.stemiapp.databases.TrackWeightDB;
 import com.stemi.stemiapp.model.MessageEvent;
 import com.stemi.stemiapp.model.SetTimeEvent;
+import com.stemi.stemiapp.model.TrackWeight;
 import com.stemi.stemiapp.model.UserEventDetails;
 import com.stemi.stemiapp.preference.AppSharedPreference;
 import com.stemi.stemiapp.utils.AppConstants;
@@ -246,15 +249,40 @@ public class WeightFragment  extends Fragment implements View.OnClickListener,Tr
     }
 
     public void SaveData(){
+
+        Log.e("db", "SaveData() is called");
         TrackActivity.userEventDetails.setUid(GlobalClass.userID);
+        TrackWeightDB trackWeightDB = new TrackWeightDB(getActivity());
+
+        TrackWeight trackWeight = new TrackWeight();
+        trackWeight.setUserId(GlobalClass.userID);
+        trackWeight.setWeight(Integer.parseInt(todaysWeight.getText().toString()));
+
         if (tvWeightToday.getText().equals("Today  ")){
             Date dt = new Date();
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy");// set format for date
             String todaysDate = dateFormat.format(dt); // parse it like
             TrackActivity.userEventDetails.setDate(todaysDate);
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(dt);
+            trackWeight.setYear(String.valueOf(calendar.get(Calendar.YEAR)));
+            trackWeight.setMonthIndex(calendar.get(Calendar.MONTH) + 1);
         }else {
             TrackActivity.userEventDetails.setDate(tvWeightToday.getText().toString());
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy");
+            try {
+                Date selectedDate = dateFormat.parse(tvWeightToday.getText().toString());
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(selectedDate);
+                trackWeight.setYear(String.valueOf(calendar.get(Calendar.YEAR)));
+                trackWeight.setMonthIndex(calendar.get(Calendar.MONTH) + 1);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
         }
+        Log.e("db", new Gson().toJson(trackWeight));
+        trackWeightDB.addEntry(trackWeight);
         TrackActivity.userEventDetails.setTodaysWeight(todaysWeight.getText().toString());
         if(bmiCount == null){
             float bmiValue = calculateBMI(todaysWeight.getText().toString(), appSharedPreference.getUserHeight(AppConstants.USER_HEIGHT));

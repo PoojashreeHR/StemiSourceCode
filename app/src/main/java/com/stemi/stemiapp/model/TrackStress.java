@@ -10,8 +10,9 @@ public class TrackStress {
     private String userId;
     private Date dateTime;
     private boolean stressed;
-    private double meditationHrs;
-    private double yogaHrs;
+    private boolean yoga;
+    private boolean meditation;
+    private boolean hobbies;
 
     public String getUserId() {
         return userId;
@@ -37,19 +38,27 @@ public class TrackStress {
         this.stressed = stressed;
     }
 
-    public double getMeditationHrs() {
-        return meditationHrs;
+    public boolean isYoga() {
+        return yoga;
     }
 
-    public void setMeditationHrs(double meditationHrs) {
-        this.meditationHrs = meditationHrs;
+    public void setYoga(boolean yoga) {
+        this.yoga = yoga;
     }
 
-    public double getYogaHrs() {
-        return yogaHrs;
+    public boolean isMeditation() {
+        return meditation;
     }
 
-    public void setYogaHrs(double yogaHrs) {
-        this.yogaHrs = yogaHrs;
+    public void setMeditation(boolean meditation) {
+        this.meditation = meditation;
+    }
+
+    public boolean isHobbies() {
+        return hobbies;
+    }
+
+    public void setHobbies(boolean hobbies) {
+        this.hobbies = hobbies;
     }
 }

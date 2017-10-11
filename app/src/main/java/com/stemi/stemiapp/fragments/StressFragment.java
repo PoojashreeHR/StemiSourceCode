@@ -22,13 +22,16 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.stemi.stemiapp.R;
 import com.stemi.stemiapp.activity.TrackActivity;
 import com.stemi.stemiapp.customviews.AnimateHorizontalProgressBar;
 import com.stemi.stemiapp.databases.DBForTrackActivities;
+import com.stemi.stemiapp.databases.TrackStressDB;
 import com.stemi.stemiapp.model.DataPassListener;
 import com.stemi.stemiapp.model.MessageEvent;
 import com.stemi.stemiapp.model.SetTimeEvent;
+import com.stemi.stemiapp.model.TrackStress;
 import com.stemi.stemiapp.model.UserEventDetails;
 import com.stemi.stemiapp.preference.AppSharedPreference;
 import com.stemi.stemiapp.utils.AppConstants;
@@ -307,35 +310,65 @@ public class StressFragment extends Fragment implements AppConstants, TrackActiv
     }
 
     public void storeData(){
+        Log.e("db", "storeData() in StressFragment");
         TrackActivity.userEventDetails.setUid(GlobalClass.userID);
+        TrackStressDB trackStressDB = new TrackStressDB(getActivity());
+        TrackStress trackStress = new TrackStress();
+        trackStress.setUserId(GlobalClass.userID);
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy");
+
         if (tvFoodToday.getText().equals("Today  ")){
             Date dt = new Date();
-            SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy");// set format for date
+            // set format for date
             String todaysDate = dateFormat.format(dt); // parse it like
             TrackActivity.userEventDetails.setDate(todaysDate);
-        }else {
+            trackStress.setDateTime(dt);
+        }
+        else {
             TrackActivity.userEventDetails.setDate(tvFoodToday.getText().toString());
+            try {
+                Date selectedDate = dateFormat.parse(tvFoodToday.getText().toString());
+                trackStress.setDateTime(selectedDate);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
         }
         TrackActivity.userEventDetails.setStressCount(stressCount);
 
         if(ivYoga.getTag().equals(R.drawable.ic_checked_1)){
             TrackActivity. userEventDetails.setYoga("true");
+            trackStress.setYoga(true);
         }else {
             TrackActivity. userEventDetails.setYoga("false");
-
+            trackStress.setYoga(false);
         }
+
         if(ivMeditation.getTag().equals(R.drawable.ic_checked_1)){
             TrackActivity.userEventDetails.setMeditation("true");
+            trackStress.setMeditation(true);
         }else {
             TrackActivity.userEventDetails.setMeditation("false");
-
+            trackStress.setMeditation(false);
         }
 
         if(ivHobbies.getTag().equals(R.drawable.ic_checked_1)){
             TrackActivity.userEventDetails.setHobbies("true");
+            trackStress.setHobbies(true);
         }else {
             TrackActivity.userEventDetails.setHobbies("false");
+            trackStress.setHobbies(false);
         }
+        Log.e("db", new Gson().toJson(trackStress));
+
+        if(trackStress.isHobbies() || trackStress.isMeditation() || trackStress.isYoga()){
+            trackStress.setStressed(false);
+        }
+        else{
+            trackStress.setStressed(true);
+        }
+
+        trackStressDB.addEntry(trackStress);
 
         boolean date = dbForTrackActivities.getDate(TrackActivity.userEventDetails.getDate(),GlobalClass.userID);
         if (!date) {

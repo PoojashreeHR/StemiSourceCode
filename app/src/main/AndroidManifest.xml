@@ -32,7 +32,9 @@
         <activity
             android:name=".activity.RegistrationActivity"
             android:windowSoftInputMode="adjustPan" />
-        <activity android:name=".activity.TrackActivity" />
+        <activity android:name=".activity.TrackActivity"
+            android:screenOrientation="portrait"
+            ></activity>
         <activity android:name=".samples.ChartSampleActivity">
 
             <!--

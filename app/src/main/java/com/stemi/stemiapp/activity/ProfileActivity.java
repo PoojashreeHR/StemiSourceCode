@@ -146,8 +146,16 @@ public class ProfileActivity extends AppCompatActivity {
                                         GlobalClass.userID = user.getUniqueId();
                                         new AppSharedPreference(ProfileActivity.this)
                                                 .setUserId(user.getUniqueId());
-
+                                        UserDetailsTable dBforUserDetails = new UserDetailsTable(ProfileActivity.this);
+                                        RegisteredUserDetails userDetails = dBforUserDetails.getUserDetails(GlobalClass.userID);
+                                        if(userDetails != null && userDetails.getHeight() != null) {
+                                            int heightInCms = (int) Double.parseDouble(userDetails.getHeight());
+                                            GlobalClass.heightInM = heightInCms / 100;
+                                        }
                                         startActivity(new Intent(ProfileActivity.this, TrackActivity.class));
+
+
+
                                         notifyDataSetChanged();
                                     }
                                 })
@@ -161,6 +169,9 @@ public class ProfileActivity extends AppCompatActivity {
                         AlertDialog alertDialog = builder.create();
                         alertDialog.show();
                     }
+
+
+
                 }
             });
         }

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import com.stemi.stemiapp.model.TrackStress;
 import com.stemi.stemiapp.utils.GlobalClass;
@@ -27,15 +28,18 @@ public class TrackStressDB extends SQLiteOpenHelper{
     public static final String COLUMN_USER_ID = "_id";
     public static final String COLUMN_DATE_TIME = "_datetime";
     public static final String COLUMN_STRESSED = "stressed";
-    public static final String COLUMN_MEDITATION_HRS = "meditationHrs";
-    public static final String COLUMN_YOGA_HRS = "yogaHrs";
+
+    public static final String COLUMN_YOGA = "yoga";
+    public static final String COLUMN_MEDITATION = "meditation";
+    public static final String COLUMN_HOBBIES = "hobbies";
 
     private static final String DATABASE_CREATE = "create table "
             + TABLE_STRESS + "( " + COLUMN_USER_ID
-            + " text not null , " + COLUMN_DATE_TIME
-            + " text not null , "+COLUMN_STRESSED
-            + " integer ," +COLUMN_MEDITATION_HRS
-            +" REAL, "+ COLUMN_YOGA_HRS+" REAL"+
+            + " text not null , "
+            + COLUMN_DATE_TIME + " text not null , "+COLUMN_STRESSED
+            + " integer ," +COLUMN_YOGA
+            +" integer , "+ COLUMN_MEDITATION+" integer , "+
+            COLUMN_HOBBIES+ " INTEGER " +
             ");";
 
     public TrackStressDB(Context context) {
@@ -44,6 +48,7 @@ public class TrackStressDB extends SQLiteOpenHelper{
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
+        Log.e("db", "DATABASE_CREATE = "+DATABASE_CREATE );
         sqLiteDatabase.execSQL(DATABASE_CREATE);
     }
 
@@ -61,8 +66,9 @@ public class TrackStressDB extends SQLiteOpenHelper{
             cv.put(COLUMN_USER_ID, stress.getUserId());
             cv.put(COLUMN_DATE_TIME, simpleDateFormat.format(stress.getDateTime()));
             cv.put(COLUMN_STRESSED, stress.isStressed());
-            cv.put(COLUMN_MEDITATION_HRS, stress.getMeditationHrs());
-            cv.put(COLUMN_YOGA_HRS, stress.getYogaHrs());
+            cv.put(COLUMN_YOGA, stress.isYoga());
+            cv.put(COLUMN_MEDITATION, stress.isMeditation());
+            cv.put(COLUMN_HOBBIES, stress.isHobbies());
             db.insert(TABLE_STRESS, null, cv);
         }
         catch(Exception e){
@@ -113,11 +119,14 @@ public class TrackStressDB extends SQLiteOpenHelper{
                 Date dateValue = simpleDateFormat.parse(timestamp);
                 stress.setDateTime(dateValue);
 
-                double medHrs = rows.getDouble(rows.getColumnIndex(COLUMN_MEDITATION_HRS));
-                stress.setMeditationHrs(medHrs);
+                int medHrs = rows.getInt(rows.getColumnIndex(COLUMN_MEDITATION));
+                stress.setMeditation(medHrs == 1);
 
-                double yogaHrs = rows.getDouble(rows.getColumnIndex(COLUMN_YOGA_HRS));
-                stress.setYogaHrs(yogaHrs);
+                int yogaHrs = rows.getInt(rows.getColumnIndex(COLUMN_YOGA));
+                stress.setYoga(yogaHrs == 1);
+
+                int hobbies = rows.getInt(rows.getColumnIndex(COLUMN_HOBBIES));
+                stress.setHobbies(hobbies == 1);
 
                 stressList.add(stress);
                 rows.moveToNext();
@@ -152,11 +161,14 @@ public class TrackStressDB extends SQLiteOpenHelper{
                 Date dateValue = simpleDateFormat.parse(timestamp);
                 stress.setDateTime(dateValue);
 
-                double medHrs = rows.getDouble(rows.getColumnIndex(COLUMN_MEDITATION_HRS));
-                stress.setMeditationHrs(medHrs);
+                int medHrs = rows.getInt(rows.getColumnIndex(COLUMN_MEDITATION));
+                stress.setMeditation(medHrs == 1);
 
-                double yogaHrs = rows.getDouble(rows.getColumnIndex(COLUMN_YOGA_HRS));
-                stress.setYogaHrs(yogaHrs);
+                int yogaHrs = rows.getInt(rows.getColumnIndex(COLUMN_YOGA));
+                stress.setYoga(yogaHrs == 1);
+
+                int hobbies = rows.getInt(rows.getColumnIndex(COLUMN_HOBBIES));
+                stress.setHobbies(hobbies == 1);
 
                 stressList.add(stress);
                 rows.moveToNext();
@@ -185,6 +197,36 @@ public class TrackStressDB extends SQLiteOpenHelper{
                 onCreate(db);
             }
         }
+    }
+
+    public int getNumberOfDays(String userId){
+        int dayCount = 0;
+        SQLiteDatabase db = this.getReadableDatabase();
+        try{
+            String query = "SELECT * FROM " + TABLE_STRESS
+                    +" WHERE "+COLUMN_USER_ID+" = '"+userId+"'"
+                    +" ORDER BY "+COLUMN_DATE_TIME+" ASC";
+            Cursor cursor = db.rawQuery(query, null);
+            cursor.moveToFirst();
+            Log.e("db","query = "+query);
+            while (!cursor.isAfterLast()) {
+                int withinlimitValue = cursor.getInt(cursor.getColumnIndex(COLUMN_STRESSED));
+                if(withinlimitValue == 0){
+                    dayCount++;
+                }
+                else{
+                    dayCount = 0;
+                }
+                cursor.moveToNext();
+
+            }
+            Log.e("db","dayCount = "+dayCount);
+            cursor.close();
+        }
+        catch(Exception e){
+
+        }
+        return dayCount;
     }
 
 }

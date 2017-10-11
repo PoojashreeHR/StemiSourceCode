@@ -19,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.LegendRenderer;
 import com.jjoe64.graphview.helper.StaticLabelsFormatter;
@@ -218,40 +219,107 @@ public class StatusFragment extends Fragment {
         TrackStressDB trackStressDB = new TrackStressDB(getActivity());
         List<TrackStress> trackStressList = trackStressDB.getAllInfo(GlobalClass.userID);
         Log.e(TAG, "trackStressList.size() = "+trackStressList.size());
-        DataPointInterface[] meditationPoints = new DataPoint[trackStressList.size()];
-        DataPointInterface[] yogaPoints = new DataPoint[trackStressList.size()];
+
+        DataPointInterface[] meditationPoints = new FlaggedDataPoint[trackStressList.size()];
+        DataPointInterface[] yogaPoints = new FlaggedDataPoint[trackStressList.size()];
+        DataPointInterface[] hobbyPoints = new FlaggedDataPoint[trackStressList.size()];
 
         int i=0;
         for(TrackStress trackStress : trackStressList){
-            meditationPoints[i] = new DataPoint(trackStress.getDateTime(), trackStress.getMeditationHrs());
-            yogaPoints[i] = new DataPoint(trackStress.getDateTime(), trackStress.getYogaHrs());
+            Log.e("db", new Gson().toJson(trackStress));
+            yogaPoints[i] = new FlaggedDataPoint(trackStress.getDateTime(), 1, trackStress.isYoga());
+            meditationPoints[i] = new FlaggedDataPoint(trackStress.getDateTime(), 2, trackStress.isMeditation());
+            hobbyPoints[i] = new FlaggedDataPoint(trackStress.getDateTime(), 3, trackStress.isHobbies());
             i++;
         }
 
-        LineGraphSeries<DataPointInterface> meditationSeries = new LineGraphSeries<>(meditationPoints);
-        LineGraphSeries<DataPointInterface> yogaSeries = new LineGraphSeries<>(yogaPoints);
+        PointsGraphSeries<DataPointInterface> meditationSeries = new PointsGraphSeries<>(meditationPoints);
+        PointsGraphSeries<DataPointInterface> yogaSeries = new PointsGraphSeries<>(yogaPoints);
+        PointsGraphSeries<DataPointInterface> hobbySeries = new PointsGraphSeries<>(hobbyPoints);
 
-        meditationSeries.setDrawDataPoints(true);
-        meditationSeries.setColor(getResources().getColor(R.color.appBackground));
+
+        //meditationSeries.setDrawDataPoints(true);
+        //meditationSeries.setColor(getResources().getColor(R.color.appBackground));
         //meditationSeries.setBackgroundColor(R.color.appBackground);
         meditationSeries.setTitle("Meditation");
         stressGraph.addSeries(meditationSeries);
 
-        yogaSeries.setDrawDataPoints(true);
-        yogaSeries.setColor(getResources().getColor(R.color.colorGreen));
+        meditationSeries.setCustomShape(new PointsGraphSeries.CustomShape() {
+            @Override
+            public void draw(Canvas canvas, Paint paint, float x, float y, DataPointInterface dataPoint) {
+                paint.setStrokeWidth(10);
+                FlaggedDataPoint flaggedDataPoint = (FlaggedDataPoint) dataPoint;
+                if(flaggedDataPoint.getFlag()) {
+                    paint.setColor(getResources().getColor(R.color.appBackground));
+                }
+                else{
+                    paint.setColor(Color.GRAY);
+                }
+                canvas.drawCircle(x,y,10,paint);
+            }
+        });
+
+
+        //yogaSeries.setDrawDataPoints(true);
+        //yogaSeries.setColor(getResources().getColor(R.color.colorGreen));
         yogaSeries.setTitle("Yoga");
+
+        yogaSeries.setCustomShape(new PointsGraphSeries.CustomShape() {
+            @Override
+            public void draw(Canvas canvas, Paint paint, float x, float y, DataPointInterface dataPoint) {
+                paint.setStrokeWidth(10);
+                FlaggedDataPoint flaggedDataPoint = (FlaggedDataPoint) dataPoint;
+                if(flaggedDataPoint.getFlag()) {
+                    paint.setColor(getResources().getColor(R.color.colorGreen));
+                }
+                else{
+                    paint.setColor(Color.GRAY);
+                }
+                canvas.drawCircle(x,y,10,paint);
+            }
+        });
+
         stressGraph.addSeries(yogaSeries);
 
-        stressGraph.getLegendRenderer().setVisible(true);
-        stressGraph.getLegendRenderer().setAlign(LegendRenderer.LegendAlign.TOP);
+        //hobbySeries.setColor(getResources().getColor(R.color.blue));
+        hobbySeries.setTitle("Hobbies");
 
-        stressGraph.getGridLabelRenderer().setLabelFormatter(new XAxisDateFormatter(getActivity()));
+        hobbySeries.setCustomShape(new PointsGraphSeries.CustomShape() {
+            @Override
+            public void draw(Canvas canvas, Paint paint, float x, float y, DataPointInterface dataPoint) {
+                paint.setStrokeWidth(10);
+                FlaggedDataPoint flaggedDataPoint = (FlaggedDataPoint) dataPoint;
+                if(flaggedDataPoint.getFlag()) {
+                    paint.setColor(getResources().getColor(R.color.blue));
+                }
+                else{
+                    paint.setColor(Color.GRAY);
+                }
+                canvas.drawCircle(x,y,10,paint);
+            }
+        });
+
+
+        stressGraph.addSeries(hobbySeries);
+
+//        stressGraph.getLegendRenderer().setVisible(true);
+//        stressGraph.getLegendRenderer().setAlign(LegendRenderer.LegendAlign.TOP);
+
+
+        List<String> yAxes = new ArrayList<>();
+        yAxes.add("");
+        yAxes.add("Yoga");
+        yAxes.add("Meditation");
+        yAxes.add("Hobbies");
+
+        stressGraph.getGridLabelRenderer().setLabelFormatter(new YAxisValueFormatter(getActivity(), yAxes));
         stressGraph.getGridLabelRenderer().setHumanRounding(false);
         stressGraph.getGridLabelRenderer().setNumHorizontalLabels(5);
+        stressGraph.getGridLabelRenderer().setNumVerticalLabels(4);
 
         stressGraph.getViewport().setYAxisBoundsManual(true);
         stressGraph.getViewport().setMinY(0);
-        stressGraph.getViewport().setMaxY(5);
+        stressGraph.getViewport().setMaxY(3);
         stressGraph.getViewport().setXAxisBoundsManual(true);
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.DATE, -10);
@@ -561,35 +629,35 @@ public class StatusFragment extends Fragment {
 
 
 
-        TrackStressDB trackStressDB = new TrackStressDB(getActivity());
-        TrackStress trackStress = new TrackStress();
-        Calendar calendar = Calendar.getInstance();
-        trackStress.setUserId(GlobalClass.userID);
-        trackStress.setDateTime(calendar.getTime());
-        trackStress.setMeditationHrs(0.5);
-        trackStress.setYogaHrs(0.25);
-        trackStressDB.addEntry(trackStress);
-
-        calendar.add(Calendar.DATE, -1);
-        trackStress.setUserId(GlobalClass.userID);
-        trackStress.setDateTime(calendar.getTime());
-        trackStress.setMeditationHrs(1);
-        trackStress.setYogaHrs(0.5);
-        trackStressDB.addEntry(trackStress);
-
-        calendar.add(Calendar.DATE, -1);
-        trackStress.setUserId(GlobalClass.userID);
-        trackStress.setDateTime(calendar.getTime());
-        trackStress.setMeditationHrs(1);
-        trackStress.setYogaHrs(1.25);
-        trackStressDB.addEntry(trackStress);
-
-        calendar.add(Calendar.DATE, -1);
-        trackStress.setUserId(GlobalClass.userID);
-        trackStress.setDateTime(calendar.getTime());
-        trackStress.setMeditationHrs(2);
-        trackStress.setYogaHrs(3);
-        trackStressDB.addEntry(trackStress);
+//        TrackStressDB trackStressDB = new TrackStressDB(getActivity());
+//        TrackStress trackStress = new TrackStress();
+//        Calendar calendar = Calendar.getInstance();
+//        trackStress.setUserId(GlobalClass.userID);
+//        trackStress.setDateTime(calendar.getTime());
+//        trackStress.setMeditationHrs(0.5);
+//        trackStress.setYogaHrs(0.25);
+//        trackStressDB.addEntry(trackStress);
+//
+//        calendar.add(Calendar.DATE, -1);
+//        trackStress.setUserId(GlobalClass.userID);
+//        trackStress.setDateTime(calendar.getTime());
+//        trackStress.setMeditationHrs(1);
+//        trackStress.setYogaHrs(0.5);
+//        trackStressDB.addEntry(trackStress);
+//
+//        calendar.add(Calendar.DATE, -1);
+//        trackStress.setUserId(GlobalClass.userID);
+//        trackStress.setDateTime(calendar.getTime());
+//        trackStress.setMeditationHrs(1);
+//        trackStress.setYogaHrs(1.25);
+//        trackStressDB.addEntry(trackStress);
+//
+//        calendar.add(Calendar.DATE, -1);
+//        trackStress.setUserId(GlobalClass.userID);
+//        trackStress.setDateTime(calendar.getTime());
+//        trackStress.setMeditationHrs(2);
+//        trackStress.setYogaHrs(3);
+//        trackStressDB.addEntry(trackStress);
 
 //        TrackMedicationDB trackMedicationDB = new TrackMedicationDB(getActivity());
 //        TrackMedication trackMedication = new TrackMedication();

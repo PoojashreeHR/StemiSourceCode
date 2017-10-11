@@ -48,14 +48,21 @@ public class StemiApplication extends Application {
         AppSharedPreference appSharedPreference = new AppSharedPreference(this);
         GlobalClass.userID = appSharedPreference.getUserId();
         Log.e("StemiApplication", " GlobalClass.userID = "+ GlobalClass.userID);
+        UserDetailsTable dBforUserDetails = new UserDetailsTable(this);
+
         if(GlobalClass.userID == null) {
-            UserDetailsTable dBforUserDetails = new UserDetailsTable(this);
             List<RegisteredUserDetails> allUsers = dBforUserDetails.getAllUsers();
             if(allUsers != null && allUsers.size()>0) {
                 GlobalClass.userID = allUsers.get(0).getUniqueId();
                 appSharedPreference.setUserId(GlobalClass.userID);
                 Log.e("StemiApplication", " GlobalClass.userID = " + GlobalClass.userID);
             }
+        }
+
+        RegisteredUserDetails userDetails = dBforUserDetails.getUserDetails(GlobalClass.userID);
+        if(userDetails != null && userDetails.getHeight() != null) {
+            int heightInCms = (int) Double.parseDouble(userDetails.getHeight());
+            GlobalClass.heightInM = heightInCms / 100;
         }
 
         boolean firstTimeLaunch = appSharedPreference.isFirstTimeLaunch(AppConstants.IS_FIRST_TIME_LAUNCH);

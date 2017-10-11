@@ -5,7 +5,7 @@ package com.stemi.stemiapp.utils;
  */
 
 public class GlobalClass {
-    public static final int DB_VERSION = 6;
+    public static final int DB_VERSION = 7;
     public static final String DB_NAME = "dbStemiapp";
 
 
