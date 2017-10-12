@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.stemi.stemiapp.R;
 import com.stemi.stemiapp.activity.RegistrationActivity;
 import com.stemi.stemiapp.databases.UserDetailsTable;
+import com.stemi.stemiapp.model.RegisteredUserDetails;
 
 
 import butterknife.BindView;
@@ -44,6 +45,9 @@ public class UserDetailsFragment extends Fragment implements View.OnClickListene
     RadioGroup genderRadiogroup;
     String salutatioSelected = "";
 
+    RegisteredUserDetails user;
+    private boolean editMode = false;
+
     public UserDetailsFragment() {
     }
     @Override
@@ -62,6 +66,7 @@ public class UserDetailsFragment extends Fragment implements View.OnClickListene
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 gender = ((RadioButton) group.findViewById(checkedId)).getText().toString();
+                gender = gender.trim();
                 if(null!=gender && checkedId > -1){
                     salutatioSelected = gender;
                     Log.e(TAG, "onCheckedChanged: User is :"+ gender );
@@ -69,6 +74,24 @@ public class UserDetailsFragment extends Fragment implements View.OnClickListene
 
             }
         });
+
+        user = this.getArguments().getParcelable("user");
+        if(user != null){
+            editMode = true;
+            etName.setText(user.getName());
+            etAge.setText(user.getAge());
+            etEmail.setText(user.getEmail());
+            etPhone.setText(user.getPhone());
+            if(user.getGender().trim().equalsIgnoreCase("male")){
+                ((RadioButton)genderRadiogroup.getChildAt(0)).setChecked(true);
+                gender = "male";
+            }
+            else{
+                ((RadioButton)genderRadiogroup.getChildAt(1)).setChecked(true);
+                gender = "female";
+            }
+        }
+
         return view;
     }
 
@@ -114,6 +137,7 @@ public class UserDetailsFragment extends Fragment implements View.OnClickListene
             etName.setError("Required");
             valid = false;
         } else if(userName != null)  {
+            if(!editMode) {
                 if (userName.equalsIgnoreCase(firstName)) {
                     Log.e(TAG, "validateAllFields: " + "True ");
                     etName.setError("Name already registered");
@@ -121,6 +145,7 @@ public class UserDetailsFragment extends Fragment implements View.OnClickListene
                 } else {
                     Log.e(TAG, "validateAllFields: " + "False ");
                 }
+            }
             }else {
             etName.setError(null);
         }

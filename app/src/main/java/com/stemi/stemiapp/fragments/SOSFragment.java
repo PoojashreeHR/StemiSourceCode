@@ -245,7 +245,7 @@ public class SOSFragment extends Fragment implements View.OnClickListener,TrackA
 
             case R.id.rl_call:
                 Intent intent = new Intent(Intent.ACTION_DIAL);
-                intent.setData(Uri.parse("tel:+91 108"));
+                intent.setData(Uri.parse("tel:108"));
                 startActivity(intent);
                 break;
 
