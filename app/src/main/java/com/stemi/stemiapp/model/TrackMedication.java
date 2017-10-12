@@ -10,6 +10,15 @@ public class TrackMedication {
     private String userId;
     private Date dateTime;
     private boolean hadAllMedicines;
+    private String medicines;
+
+    public String getMedicines() {
+        return medicines;
+    }
+
+    public void setMedicines(String medices) {
+        this.medicines = medices;
+    }
 
     public String getUserId() {
         return userId;

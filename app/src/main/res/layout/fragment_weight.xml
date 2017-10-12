@@ -48,6 +48,7 @@
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:padding="10dp"
+        android:maxLength="3"
         android:hint="Enter Weight"
         android:inputType="number"
         android:textColor="@color/appBackground"

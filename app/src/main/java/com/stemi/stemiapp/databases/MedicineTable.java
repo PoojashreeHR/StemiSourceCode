@@ -44,9 +44,6 @@ public class MedicineTable {
     public void addMedicineDetails(MedicineDetails medicineDetails,String personName) {
         SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
         ContentValues values = new ContentValues();
-        //long count = getProfilesCount();
-        //count = count+1;
-        //   values.put(MED_KEY_ID,);
         String MedicineString = new Gson().toJson(medicineDetails);
         values.put(MED_MEDICINE_DETAILS, MedicineString);
         values.put(RELATED_PERSON, personName);
@@ -57,8 +54,6 @@ public class MedicineTable {
         //closing the database connection
         DatabaseManager.getInstance().closeDatabase();
     }
-    //see that all database connection stuff is inside this method
-    //so we don't need to open and close db connection outside this class
 
     // To get Number of profile
     public long getMedicineDetailsCount() {
@@ -68,8 +63,30 @@ public class MedicineTable {
         return cnt;
     }
 
+    public boolean getDate(String date1,String userId){
+        String query = "SELECT * FROM " + MED_TABLE_NAME + " WHERE " + RELATED_PERSON + " = '" + userId + "'";
+        SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
+        boolean count = false;
+        try{
+            Cursor c = db.rawQuery(query, null);
+            c.moveToFirst();
+            while(!c.isAfterLast()){
+                String date = c.getString(2);
+                if(date.equals(date1)){
+                    count = true;
+                    break;
+                }else {
+                    c.moveToNext();
+                }
+            }
+        }
+        catch(Exception e){
+        }
+        return count;
+    }
+
     //Get all Medicine Details
-    public ArrayList<String> getMedicine(String userId,String time){
+    public ArrayList<String> getMedicine(String userId, String time){
         ArrayList<String> data=new ArrayList<String>();
         SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
         String query = "SELECT * FROM "+ MED_TABLE_NAME +" WHERE "+ RELATED_PERSON +" = '"+userId+"'";
@@ -121,6 +138,7 @@ public class MedicineTable {
         }
         DatabaseManager.getInstance().closeDatabase();
     }
+
 
     //Remove all medical details of particular person
     public void removeMedicalDetails(String name) {

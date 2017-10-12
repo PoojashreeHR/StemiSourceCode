@@ -71,6 +71,7 @@
             android:layout_height="wrap_content"
             android:hint="WEIGHT (KGs)"
             android:inputType="number"
+            android:maxLength="3"
             android:imeOptions="actionGo" />
     </android.support.design.widget.TextInputLayout>
 

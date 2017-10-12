@@ -7,6 +7,7 @@ import android.app.DialogFragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -112,13 +113,16 @@ public class WeightFragment  extends Fragment implements View.OnClickListener,Tr
                 InputMethodManager inputManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                 inputManager.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
 
+
                 if(!todaysWeight.getText().toString().equals("")) {
-                    float bmiValue = calculateBMI(todaysWeight.getText().toString(), appSharedPreference.getUserHeight(AppConstants.USER_HEIGHT));
-                    bmiCount = String.format("%.2f",bmiValue);
-                    String string = interpretBMI(bmiValue);
-                    BmiValue.setText("Your BMI is " + bmiCount);
-                    bmiResult.setText(string);
-                    learnMore.setVisibility(View.VISIBLE);
+                    if(validateField()) {
+                        float bmiValue = calculateBMI(todaysWeight.getText().toString(), appSharedPreference.getUserHeight(AppConstants.USER_HEIGHT));
+                        bmiCount = String.format("%.2f", bmiValue);
+                        String string = interpretBMI(bmiValue);
+                        BmiValue.setText("Your BMI is " + bmiCount);
+                        bmiResult.setText(string);
+                        learnMore.setVisibility(View.VISIBLE);
+                    }
                 }else {
                     Toast.makeText(getActivity(), "Please enter your weight!!", Toast.LENGTH_SHORT).show();
                 }
@@ -128,12 +132,26 @@ public class WeightFragment  extends Fragment implements View.OnClickListener,Tr
     @Override
     public void doBack() {
         if(!todaysWeight.getText().toString().equals("")){
-            SaveData();
+            if(validateField()) {
+                SaveData();
+            }
         }else {
             EventBus.getDefault().post(new MessageEvent("Hello!"));
             ((TrackActivity) getActivity()).setActionBarTitle("Track");
 
         }
+    }
+
+    public Boolean validateField(){
+        Boolean valid = true;
+        String weight = todaysWeight.getText().toString();
+        if (Integer.parseInt(weight) < 20 || Integer.parseInt(weight) > 200) {
+            todaysWeight.setError("Enter valid weight");
+            valid = false;
+        } else {
+            todaysWeight.setError(null);
+        }
+        return valid;
     }
 
     public void callSavedMethod() {
