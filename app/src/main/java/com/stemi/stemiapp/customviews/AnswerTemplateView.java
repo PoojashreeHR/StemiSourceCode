@@ -116,7 +116,13 @@ public class AnswerTemplateView extends LinearLayout implements View.OnClickList
         }
     }
     public void setNull(){
-        response = null;
+        response = "";
+
+        tv_no.setBackground(setBackground);
+        tv_no.setTextColor(Backgroundcolor);
+
+        tv_yes.setBackground(setBackground);
+        tv_yes.setTextColor(Backgroundcolor);
     }
     public void setYes(){
         response = "YES";

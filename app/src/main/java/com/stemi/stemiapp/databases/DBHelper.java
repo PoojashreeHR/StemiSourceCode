@@ -42,6 +42,7 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL(DBForTrackActivities.CREATE_USER_ACTIVITY_TABLE);
         db.execSQL(BloodTestDB.DATABASE_CREATE);
         db.execSQL(TrackMedicationDB.DATABASE_CREATE);
+        db.execSQL(MedicineDetailsTable.CREATE_MEDICINE_TABLE);
     }
 
     @Override
@@ -51,6 +52,7 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + DBForTrackActivities.USER_ACTIVITIES);
         db.execSQL("DROP TABLE IF EXISTS " + BloodTestDB.TABLE_BLOOD_TEST);
         db.execSQL("DROP TABLE IF EXISTS "+ TrackMedicationDB.TABLE_MEDICATION);
+        db.execSQL("DROP TABLE IF EXISTS "+ MedicineDetailsTable.TABLE_NAME);
         onCreate(db);
     }
 

@@ -21,7 +21,6 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,6 +39,7 @@ import com.stemi.stemiapp.R;
 import com.stemi.stemiapp.activity.TrackActivity;
 import com.stemi.stemiapp.databases.MedicineTable;
 import com.stemi.stemiapp.model.MedicineDetails;
+import com.stemi.stemiapp.model.MedicinesTakenOrNot;
 import com.stemi.stemiapp.model.MessageEvent;
 import com.stemi.stemiapp.model.SetTimeEvent;
 import com.stemi.stemiapp.preference.AppSharedPreference;
@@ -84,17 +84,19 @@ public class AddMedicineFragment extends Fragment implements View.OnClickListene
     TextView nightMedicine;
 
     @BindView(R.id.tvMorningTime)
-     TextView morningTime;
+    TextView morningTime;
     @BindView(R.id.tvNoonTime)
-     TextView noonTime;
+    TextView noonTime;
     @BindView(R.id.tvNightTime)
-     TextView nightTime;
+    TextView nightTime;
 
-    @BindView(R.id.add_medicine)Button addMedicine;
+    @BindView(R.id.add_medicine)
+    Button addMedicine;
     @BindView(R.id.medicineDays)
     EditText medicineDays;
     @BindView(R.id.medicineRemainder)
     CheckBox medicineRemainder;
+
 
     public final static String DATA_RECEIVE = "dataRecieve";
 
@@ -130,7 +132,7 @@ public class AddMedicineFragment extends Fragment implements View.OnClickListene
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onSetTimeEvent(SetTimeEvent event){
+    public void onSetTimeEvent(SetTimeEvent event) {
         int setTime = event.getTime();
         String msgDate = event.getDate();
         if (setTime == 0) {
@@ -158,9 +160,10 @@ public class AddMedicineFragment extends Fragment implements View.OnClickListene
         formIsValid(medicineType);
 
         //Setting fonts
-        CommonUtils.setRobotoRegularFonts(getActivity(),medicineNamee);
+        CommonUtils.setRobotoRegularFonts(getActivity(), medicineNamee);
         ((TrackActivity) getActivity()).setOnBackPressedListener(this);
 
+        //medicinesTakenOrNot = new MedicinesTakenOrNot();
         appSharedPreference = new AppSharedPreference(getActivity());
         medicineDetails = new MedicineDetails();
         medicineTable = new MedicineTable();
@@ -237,7 +240,7 @@ public class AddMedicineFragment extends Fragment implements View.OnClickListene
             }
 
             checkEditOrNot = 1;
-        }else {
+        } else {
             morningMedicine.setBackgroundResource(R.drawable.oval_shape_textview);
             morningMedicine.setTextColor(getResources().getColor(R.color.white));
             morningTime.setVisibility(View.VISIBLE);
@@ -570,12 +573,11 @@ public class AddMedicineFragment extends Fragment implements View.OnClickListene
                             medicineDetails.setMedicineRemainder(false);
                         }
                         storeMedicalDetails();
-
                         ((TrackActivity) getActivity()).showFragment(new MedicationFragment());
                         //  ((TrackActivity) getActivity()).showFragment(new MedicationFragment());
                         //Toast.makeText(getActivity(), "You pressed Back", Toast.LENGTH_SHORT).show();
-                    }else {
-                        Toast.makeText(getActivity(),"Please add profile details first",Toast.LENGTH_LONG).show();
+                    } else {
+                        Toast.makeText(getActivity(), "Please add profile details first", Toast.LENGTH_LONG).show();
                     }
                 }
                 break;
@@ -615,7 +617,7 @@ public class AddMedicineFragment extends Fragment implements View.OnClickListene
         }
         eventValues.put(Events.DTEND, startTime + (60 * 60 * 1000));
         //eventValues.put("allDay",1);
-        //  eventValues.put(Events.RRULE,"FREQ=DAILY;COUNT=5");
+        eventValues.put(Events.RRULE, "FREQ=DAILY;COUNT=" + medicineDays.getText().toString());
         eventValues.put(Events.EVENT_TIMEZONE, TimeZone.getDefault().toString());
         //   eventValues.put("eventStatus", 1); // This information is sufficient for most entries tentative (0), confirmed (1) or canceled (2):
         eventValues.put(Events.HAS_ALARM, 1); // 0 for false, 1 for true
@@ -631,7 +633,6 @@ public class AddMedicineFragment extends Fragment implements View.OnClickListene
 
     @Override
     public void doBack() {
-        ((TrackActivity) getActivity()).setActionBarTitle("Track");
         EventBus.getDefault().post(new MessageEvent("Hello!"));
     }
 
@@ -669,42 +670,134 @@ public class AddMedicineFragment extends Fragment implements View.OnClickListene
     }
 
     public void storeMedicalDetails() {
-        medicineDetails.setDate("");
-        medicineDetails.setPersonName(GlobalClass.userID);
-        medicineDetails.setMedicineName(medicineNamee.getText().toString());
-        medicineDetails.setMedicineDays(medicineDays.getText().toString());
-        medicineDetails.setMedicineColor(colorOfMedicine);
-        medicineDetails.setMedicineType(typeOfMedicine);
 
-        if (morningTime.getVisibility() == View.VISIBLE) {
-            medicineDetails.setMedicineMorning(morningMedicine.getText().toString());
-            medicineDetails.setMedicineMorningTime(morningTime.getText().toString());
-        } else {
-            medicineDetails.setMedicineMorning("");
-            medicineDetails.setMedicineMorningTime("");
+        String date = new SimpleDateFormat("dd MMM yyyy").format(new Date());
+        String incDate = new SimpleDateFormat("dd MMM yyyy").format(new Date());
+        SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy");
+        Calendar c = Calendar.getInstance();
+        //MedicinesTakenOrNot takenOrNot = new MedicinesTakenOrNot();
+        try {
+            c.setTime(sdf.parse(date));
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
-        if (noonTime.getVisibility() == View.VISIBLE) {
-            medicineDetails.setMedicineAfternoon(noonMedicine.getText().toString());
-            medicineDetails.setMedicineNoonTime(noonTime.getText().toString());
-        } else {
-            medicineDetails.setMedicineAfternoon("");
-            medicineDetails.setMedicineNoonTime("");
-        }
-        if (nightTime.getVisibility() == View.VISIBLE) {
-            medicineDetails.setMedicineNight(nightMedicine.getText().toString());
-            medicineDetails.setMedicineNightTime(nightTime.getText().toString());
-        } else {
-            medicineDetails.setMedicineNight("");
-            medicineDetails.setMedicineNightTime("");
+        ArrayList<MedicinesTakenOrNot> medicinesTakenOrNots = new ArrayList<>();
+        int maxDay = Integer.parseInt(numberOfDays);
+        for (int co = 0; co < maxDay; co++) {
+            MedicineDetails medicineDetails = new MedicineDetails();
+            // MedicineDetails medInformation = new MedicineDetails();
+            c.add(Calendar.DATE, 1);
+            medicineDetails.setDate(incDate);
+
+            medicineDetails.setPersonName(GlobalClass.userID);
+            medicineDetails.setMedicineName(medicineNamee.getText().toString());
+            medicineDetails.setMedicineDays(medicineDays.getText().toString());
+            //medicineDetails.setMedicineColor(colorOfMedicine);
+            //medicineDetails.setMedicineType(typeOfMedicine);
+            MedicinesTakenOrNot medicinesTakenOrNotMorning = new MedicinesTakenOrNot();
+            MedicinesTakenOrNot medicinesTakenOrNotAfternoon = new MedicinesTakenOrNot();
+            MedicinesTakenOrNot medicinesTakenOrNotNight = new MedicinesTakenOrNot();
+
+            if (morningTime.getVisibility() == View.VISIBLE) {
+                medicinesTakenOrNots = new ArrayList<>();
+                medicinesTakenOrNotMorning = new MedicinesTakenOrNot();
+                medicineDetails.setMorning("Morning");
+                medicinesTakenOrNotMorning.setMedName(medicineNamee.getText().toString());
+                medicinesTakenOrNotMorning.setDate(incDate);
+                medicinesTakenOrNotMorning.setMedTime(morningTime.getText().toString());
+                medicinesTakenOrNotMorning.setTakenorNot(false);
+                medicinesTakenOrNotMorning.setType(typeOfMedicine);
+                medicinesTakenOrNotMorning.setMedColor(colorOfMedicine);
+
+                medicinesTakenOrNots.add(medicinesTakenOrNotMorning);
+                medicineDetails.setMedicineMorning(medicinesTakenOrNots);
+                medicineDetails.setMedicineMorningTime(morningTime.getText().toString());
+            } else {
+                medicineDetails.setMorning("");
+            }
+            if (noonTime.getVisibility() == View.VISIBLE) {
+                medicinesTakenOrNots = new ArrayList<>();
+                medicinesTakenOrNotAfternoon = new MedicinesTakenOrNot();
+                medicineDetails.setAfternoon("Afternoon");
+                medicinesTakenOrNotAfternoon.setMedName(medicineNamee.getText().toString());
+                medicinesTakenOrNotAfternoon.setDate(incDate);
+                medicinesTakenOrNotAfternoon.setMedTime(noonTime.getText().toString());
+                medicinesTakenOrNotAfternoon.setTakenorNot(false);
+                medicinesTakenOrNotAfternoon.setType(typeOfMedicine);
+                medicinesTakenOrNotAfternoon.setMedColor(colorOfMedicine);
+
+                medicinesTakenOrNots.add(medicinesTakenOrNotAfternoon);
+                medicineDetails.setMedicineAfternoon(medicinesTakenOrNots);
+                medicineDetails.setMedicineNoonTime(noonTime.getText().toString());
+            } else {
+                medicineDetails.setAfternoon("");
+            }
+            if (nightTime.getVisibility() == View.VISIBLE) {
+                medicinesTakenOrNots = new ArrayList<>();
+                medicinesTakenOrNotNight = new MedicinesTakenOrNot();
+                medicineDetails.setNight("Night");
+                medicinesTakenOrNotNight.setMedName(medicineNamee.getText().toString());
+                medicinesTakenOrNotNight.setDate(incDate);
+                medicinesTakenOrNotNight.setMedTime(nightTime.getText().toString());
+                medicinesTakenOrNotNight.setTakenorNot(false);
+                medicinesTakenOrNotNight.setType(typeOfMedicine);
+                medicinesTakenOrNotNight.setMedColor(colorOfMedicine);
+
+
+                medicinesTakenOrNots.add(medicinesTakenOrNotNight);
+                medicineDetails.setMedicineNight(medicinesTakenOrNots);
+                medicineDetails.setMedicineNightTime(nightTime.getText().toString());
+            } else {
+                medicineDetails.setNight("");
+            }
+
+            Log.e(TAG, "storeMedicalDetails: " + incDate);
+            if (medicineTable.isMedicineExist(incDate)) {
+                MedicineDetails medDetails = new MedicineDetails();
+                ArrayList<String> oldEntry = medicineTable.getAllMedicineDEtails(GlobalClass.userID, incDate);
+                for (int i = 0; i < oldEntry.size(); i++) {
+                    String s = oldEntry.get(i);
+                    Gson gsonObj = new Gson();
+                    medDetails = gsonObj.fromJson(s, MedicineDetails.class);
+                    ArrayList<MedicinesTakenOrNot> medicineLists = null;
+                    if (medDetails.getMedicineMorning() != null) {
+                        medicineLists = medDetails.getMedicineMorning();
+                        medicineLists.add(medicinesTakenOrNotMorning);
+                        medDetails.setMedicineMorning(medicineLists);
+                        medicineLists.clear();
+                    } else if (medDetails.getMedicineAfternoon() != null) {
+                        medicineLists = medDetails.getMedicineAfternoon();
+                        medicineLists.add(medicinesTakenOrNotAfternoon);
+                        medDetails.setMedicineAfternoon(medicineLists);
+                        medicineLists.clear();
+                    } else if (medDetails.getMedicineNight() != null) {
+                        medicineLists = medDetails.getMedicineNight();
+                        medicineLists.add(medicinesTakenOrNotNight);
+                        medDetails.setMedicineNight(medicineLists);
+                        medicineLists.clear();
+                    }
+                }
+
+                medicineTable.updateDataWithDate(GlobalClass.userID, incDate, medDetails);
+                incDate = sdf.format(c.getTime());
+                //long getCount = medicineTable.getMedicineDetailsCount();
+                //incDate = sdf.format(c.getTime());
+                //Log.e(TAG, "onCreateView: Get Medicine Count " + getCount);
+            } else {
+                if (checkEditOrNot == 1) {
+                    medicineTable.getMedicineToEdit(showReceivedData, medicineDetails);
+                } else {
+                    medicineTable.addMedicineDetails(medicineDetails, medicineDetails.getPersonName());
+                    long getCount = medicineTable.getMedicineDetailsCount();
+                    incDate = sdf.format(c.getTime());
+                    Log.e(TAG, "onCreateView: Get Medicine Count " + getCount);
+                }
+            }
         }
 
-        if (checkEditOrNot == 1) {
-            medicineTable.getMedicineToEdit(showReceivedData, medicineDetails);
-        } else {
-            medicineTable.addMedicineDetails(medicineDetails, medicineDetails.getPersonName());
-            long getCount = medicineTable.getMedicineDetailsCount();
-            Log.e(TAG, "onCreateView: Get Medicine Count " + getCount);
-        }
+        //String date3 = new SimpleDateFormat("dd-MMM-yyyy").format(new Date());
+
+
     }
 
     public void syncWithCalender() {
@@ -783,9 +876,20 @@ public class AddMedicineFragment extends Fragment implements View.OnClickListene
         boolean valid = true;
 
         String medicineName = medicineNamee.getText().toString();
+        String userName = medicineTable.isExist(medicineDetails, medicineName);
+
         if (TextUtils.isEmpty(medicineName)) {
             medicineNamee.setError("Required");
             valid = false;
+        }
+        if (userName != null) {
+            if (userName.equalsIgnoreCase(medicineName)) {
+                Log.e(TAG, "validateAllFields: " + "True ");
+                medicineNamee.setError("Medicine is registered");
+                valid = false;
+            } else {
+                Log.e(TAG, "validateAllFields: " + "False ");
+            }
         } else {
             medicineNamee.setError(null);
         }
@@ -796,30 +900,18 @@ public class AddMedicineFragment extends Fragment implements View.OnClickListene
             valid = false;
         }
 
-      /*  String Mmedicine = morningMedicine.getText().toString();
-        if (TextUtils.isEmpty(medicineName)) {
-            morningMedicine.setError("Required");
+        if (morningTime.getVisibility() == View.GONE && noonTime.getVisibility() == View.GONE &&
+                nightTime.getVisibility() == View.GONE) {
+            Toast.makeText(getActivity(), "Select Medicine timings", Toast.LENGTH_SHORT).show();
             valid = false;
-        }else {
-            medicineNamee.setError(null);
-        }*/
+
+        }
 
         int medicineColor = colorOfMedicine;
         if (medicineColor == 0) {
             Toast.makeText(getActivity(), "Select medicine Color", Toast.LENGTH_SHORT).show();
             valid = false;
         }
-
-      /* // String medicineColor = med.getText().toString();
-        if (TextUtils.isEmpty(mobileNumber)) {
-            etPhone.setError("Required");
-            valid = false;
-        } else if (mobileNumber.length() < 10 || mobileNumber.length() > 10) {
-            etPhone.setError("Enter Valid Mobile Number");
-            valid = false;
-        } else {
-            etPhone.setError(null);
-        }*/
 
         String days = medicineDays.getText().toString();
         if (TextUtils.isEmpty(days)) {

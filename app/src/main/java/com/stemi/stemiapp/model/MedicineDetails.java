@@ -3,6 +3,8 @@ package com.stemi.stemiapp.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.ArrayList;
+
 /**
  * Created by Pooja on 06-09-2017.
  */
@@ -14,11 +16,14 @@ public class MedicineDetails implements Parcelable {
     private   String medicineName;
     private  String medicineType;
     private  Integer medicineColor;
-    private  String medicineMorning;
+    private String morning;
+    private String Afternoon;
+    private String night;
+    private ArrayList<MedicinesTakenOrNot> medicineMorning;
     private String medicineMorningTime;
-    private  String medicineAfternoon;
+    private  ArrayList<MedicinesTakenOrNot> medicineAfternoon;
     private   String medicineNoonTime;
-    private  String medicineNight;
+    private  ArrayList<MedicinesTakenOrNot> medicineNight;
     private  String medicineNightTime;
     private  String medicineDays;
     private  Boolean medicineRemainder;
@@ -26,6 +31,32 @@ public class MedicineDetails implements Parcelable {
     private Boolean afternoonChecked;
     private Boolean nightChecked;
     private Boolean allChecked;
+
+    private MedicineDetails medicineDetails;
+
+    public String getMorning() {
+        return morning;
+    }
+
+    public void setMorning(String morning) {
+        this.morning = morning;
+    }
+
+    public String getAfternoon() {
+        return Afternoon;
+    }
+
+    public void setAfternoon(String afternoon) {
+        Afternoon = afternoon;
+    }
+
+    public String getNight() {
+        return night;
+    }
+
+    public void setNight(String night) {
+        this.night = night;
+    }
 
     public Boolean getAllChecked() {
         return allChecked;
@@ -69,6 +100,10 @@ public class MedicineDetails implements Parcelable {
 
     public MedicineDetails(){
     }
+
+    public MedicineDetails(MedicineDetails medicineDetails){
+        this.medicineDetails = medicineDetails;
+    }
     public MedicineDetails(Parcel in) {
         personName = in.readString();
         medicineName = in.readString();
@@ -78,11 +113,11 @@ public class MedicineDetails implements Parcelable {
         } else {
             medicineColor = in.readInt();
         }
-        medicineMorning = in.readString();
+        medicineMorning = in.readArrayList(MedicinesTakenOrNot.class.getClassLoader());
         medicineMorningTime = in.readString();
-        medicineAfternoon = in.readString();
+        medicineAfternoon = in.readArrayList(MedicinesTakenOrNot.class.getClassLoader());
         medicineNoonTime = in.readString();
-        medicineNight = in.readString();
+        medicineNight = in.readArrayList(MedicinesTakenOrNot.class.getClassLoader());
         medicineNightTime = in.readString();
         medicineDays = in.readString();
         byte tmpMedicineRemainder = in.readByte();
@@ -133,11 +168,11 @@ public class MedicineDetails implements Parcelable {
         this.medicineColor = medicineColor;
     }
 
-    public String getMedicineMorning() {
+    public ArrayList<MedicinesTakenOrNot> getMedicineMorning() {
         return medicineMorning;
     }
 
-    public void setMedicineMorning(String medicineMorning) {
+    public void setMedicineMorning(ArrayList<MedicinesTakenOrNot> medicineMorning) {
         this.medicineMorning = medicineMorning;
     }
 
@@ -149,11 +184,11 @@ public class MedicineDetails implements Parcelable {
         this.medicineMorningTime = medicineMorningTime;
     }
 
-    public String getMedicineAfternoon() {
+    public ArrayList<MedicinesTakenOrNot> getMedicineAfternoon() {
         return medicineAfternoon;
     }
 
-    public void setMedicineAfternoon(String medicineAfternoon) {
+    public void setMedicineAfternoon(ArrayList<MedicinesTakenOrNot> medicineAfternoon) {
         this.medicineAfternoon = medicineAfternoon;
     }
 
@@ -165,11 +200,11 @@ public class MedicineDetails implements Parcelable {
         this.medicineNoonTime = medicineNoonTime;
     }
 
-    public String getMedicineNight() {
+    public ArrayList<MedicinesTakenOrNot> getMedicineNight() {
         return medicineNight;
     }
 
-    public void setMedicineNight(String medicineNight) {
+    public void setMedicineNight(ArrayList<MedicinesTakenOrNot> medicineNight) {
         this.medicineNight = medicineNight;
     }
 
@@ -246,11 +281,11 @@ public class MedicineDetails implements Parcelable {
             dest.writeByte((byte) 1);
             dest.writeInt(medicineColor);
         }
-        dest.writeString(medicineMorning);
+        dest.writeArray(new ArrayList[]{medicineMorning});
         dest.writeString(medicineMorningTime);
-        dest.writeString(medicineAfternoon);
+        dest.writeArray(new ArrayList[]{medicineAfternoon});
         dest.writeString(medicineNoonTime);
-        dest.writeString(medicineNight);
+        dest.writeArray(new ArrayList[]{medicineNight});
         dest.writeString(medicineNightTime);
         dest.writeString(medicineDays);
         dest.writeByte((byte) (medicineRemainder == null ? 0 : medicineRemainder ? 1 : 2));

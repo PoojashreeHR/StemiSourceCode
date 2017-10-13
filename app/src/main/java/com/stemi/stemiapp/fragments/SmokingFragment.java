@@ -108,17 +108,21 @@ public class SmokingFragment  extends Fragment implements TrackActivity.OnBackPr
         return view;
     }
 
+
     @Override
     public void doBack() {
-        if(smokeToday.getResponse()==null){
+        if (GlobalClass.userID != null) {
+        if (smokeToday.getResponse() == null || smokeToday.getResponse().equals("")) {
             EventBus.getDefault().post(new MessageEvent("Hello!"));
             ((TrackActivity) getActivity()).setActionBarTitle("Track");
-
-        }else if (howMany.isEnabled() && howMany.getText().toString().equals("")) {
+        } else if (howMany.isEnabled() && howMany.getText().toString().equals("")) {
             Toast.makeText(getActivity(), "Please enter how many", Toast.LENGTH_LONG).show();
         } else {
             saveData();
         }
+    }else {
+        Toast.makeText(getActivity(), "Please add profile details first", Toast.LENGTH_SHORT).show();
+    }
     }
 
     @Override
@@ -150,7 +154,7 @@ public class SmokingFragment  extends Fragment implements TrackActivity.OnBackPr
 
             DatePickerDialog datepickerdialog = new DatePickerDialog(getActivity(),
                     AlertDialog.THEME_DEVICE_DEFAULT_LIGHT,this,year,month,day);
-
+            datepickerdialog.getDatePicker().setMaxDate(System.currentTimeMillis());
             return datepickerdialog;
         }
 
@@ -251,11 +255,13 @@ public class SmokingFragment  extends Fragment implements TrackActivity.OnBackPr
                 if(eventDetails.get(0).getSmokeToday().equals("YES")){
                     howMany.setText(eventDetails.get(0).getHowMany());
                 }else {
+                    howMany.setText(null);
                     howMany.setEnabled(false);
                     howMany.setAlpha(.6f);
                 }
             }
         }else {
+            howMany.setText(null);
             smokeToday.setResponse("NULL");
         }
     }

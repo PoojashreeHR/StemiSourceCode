@@ -15,6 +15,7 @@ import com.stemi.stemiapp.R;
 import com.stemi.stemiapp.activity.TrackActivity;
 import com.stemi.stemiapp.fragments.TrackFragment;
 import com.stemi.stemiapp.model.BloodTestResult;
+import com.stemi.stemiapp.model.MedicineDetails;
 import com.stemi.stemiapp.model.MessageEvent;
 import com.stemi.stemiapp.model.TrackMedication;
 import com.stemi.stemiapp.utils.CommonUtils;
@@ -126,6 +127,7 @@ public class TrackMedicationDB {
             cv.put(COLUMN_USER_ID, userId);
             cv.put(COLUMN_DATE_TIME, dateTag);
             cv.put(COLUMN_HAD_MEDICINES, stress.isHadAllMedicines());
+
             String whereClause = COLUMN_USER_ID+" = '"+userId+"' AND "+COLUMN_DATE_TIME+" = '"+dateTag+"'";
             db.update(TABLE_MEDICATION, cv, whereClause, null);
         }
@@ -276,6 +278,24 @@ public class TrackMedicationDB {
                // onCreate(db);
             }
         }
+    }
+
+    public ArrayList<String> getAllMedicineDEtails(String userId, String date){
+        ArrayList<String> data=new ArrayList<String>();
+        SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
+        String query = "SELECT * FROM " + TABLE_MEDICATION + " WHERE " + COLUMN_USER_ID + " = '" + userId + "' AND "
+                + COLUMN_DATE_TIME + " = '" + date+ "'";
+        Cursor cursor = db.rawQuery(query,null);
+        //Cursor cursor = db.query(MED_TABLE_NAME, new String[]{MED_MEDICINE_DETAILS},null, null, null, null, null);
+        String fieldToAdd = null;
+        while(cursor.moveToNext()) {
+            fieldToAdd = cursor.getString(1);
+            Gson gsonObj = new Gson();
+            MedicineDetails medicineDetails = gsonObj.fromJson(fieldToAdd, MedicineDetails.class);
+            String MedicineString = gsonObj.toJson(medicineDetails);
+            data.add(MedicineString);
+        }
+        return data;
     }
 
     public int getNumberOfDays(String userId){

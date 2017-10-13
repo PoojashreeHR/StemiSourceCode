@@ -67,11 +67,17 @@
         android:textColor="@color/white"
         android:padding="20dp"/>
 
+    <LinearLayout
+        android:id="@+id/ll_bmiCalculation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/bt_calculatebmi"
+        android:visibility="gone"
+        android:orientation="vertical">
     <TextView
         android:id="@+id/bmiValue"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/bt_calculatebmi"
         android:layout_marginTop="25dp"
         android:textSize="18sp"
         android:textStyle="bold"
@@ -93,8 +99,8 @@
         android:layout_below="@+id/bmiResult"
         android:layout_marginTop="10dp"
         android:textSize="18sp"
-        android:visibility="gone"
         android:text="@string/learn_more"
         android:gravity="center"
         android:textColor="@color/appBackground"/>
+    </LinearLayout>
 </RelativeLayout>

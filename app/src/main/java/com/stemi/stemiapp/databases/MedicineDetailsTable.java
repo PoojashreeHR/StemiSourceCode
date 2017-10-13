@@ -21,12 +21,10 @@ public class MedicineDetailsTable {
     private static final String MED_KEY_ID = "id";
     private  static final String USER_ID = "uid";
     private static final String DATE = "medicineDate";
-    private  static final String MEDICINE_TAKEN = "medicineTaken";
     private static final String MEDICINE_DETAILS = "medicineDetails";
 
     public static final String CREATE_MEDICINE_TABLE = "CREATE TABLE " + TABLE_NAME + "("
             + MED_KEY_ID + " INTEGER PRIMARY KEY,"
-            + MEDICINE_TAKEN + " TEXT,"
             + MEDICINE_DETAILS + " TEXT,"
             + DATE + " TEXT,"
             + USER_ID + " TEXT"
@@ -36,7 +34,8 @@ public class MedicineDetailsTable {
         ArrayList<String> data=new ArrayList<String>();
         SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
         String query = "SELECT * FROM " + TABLE_NAME + " WHERE " + USER_ID + " = '" + userId + "' AND "
-                + DATE + " = '" + date+ "'";        Cursor cursor = db.rawQuery(query,null);
+                + DATE + " = '" + date+ "'";
+        Cursor cursor = db.rawQuery(query,null);
         //Cursor cursor = db.query(MED_TABLE_NAME, new String[]{MED_MEDICINE_DETAILS},null, null, null, null, null);
         String fieldToAdd = null;
         while(cursor.moveToNext()) {
@@ -84,12 +83,20 @@ public class MedicineDetailsTable {
         Log.e("DATABASE VALUES", "addDataTODb: " + id);
         //closing the database connection
         DatabaseManager.getInstance().closeDatabase();
-/*
 
-            long count = db.update(MED_TABLE_NAME, cv, MED_MEDICINE_DETAILS + "='" + old + "'" ,null);
-            Log.e(TAG, "getMedicineToEdit: " + count );
-*/
+    }
+    public void updateMedicineWithDate(String date,MedicineDetails medicineDetails){
+        SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
 
+        ContentValues cv = new ContentValues();
+        String MedicineString = new Gson().toJson(medicineDetails);
+        cv.put(MEDICINE_DETAILS, MedicineString);
+        cv.put(DATE, date);
+        cv.put(USER_ID, GlobalClass.userID);
+
+        String whereClause = USER_ID +" = '"+GlobalClass.userID+"' AND "+DATE+" = '"+date+"'";
+        db.update(CREATE_MEDICINE_TABLE, cv, whereClause, null);
+        DatabaseManager.getInstance().closeDatabase();
     }
 
 }

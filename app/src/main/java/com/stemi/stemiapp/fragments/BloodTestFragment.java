@@ -1,6 +1,7 @@
 package com.stemi.stemiapp.fragments;
 
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -120,6 +121,8 @@ public class BloodTestFragment extends Fragment implements TrackActivity.OnBackP
                             saveData();
                             EventBus.getDefault().post(new MessageEvent("Hello!"));
                             Log.i("Code2care ", "Yes button Clicked!");
+                            ((TrackActivity) getActivity()).setActionBarTitle("Track");
+
                         }
                     });
                     //No Button
@@ -129,6 +132,8 @@ public class BloodTestFragment extends Fragment implements TrackActivity.OnBackP
                             dialog.dismiss();
                             EventBus.getDefault().post(new MessageEvent("Hello!"));
                             Log.i("Code2care ","No button Clicked!");
+                            ((TrackActivity) getActivity()).setActionBarTitle("Track");
+
 
                         }
                     });
@@ -142,6 +147,7 @@ public class BloodTestFragment extends Fragment implements TrackActivity.OnBackP
                     pbutton.setTextColor(getActivity().getResources().getColor(R.color.appBackground));
                 }else {
                     EventBus.getDefault().post(new MessageEvent("Hello!"));
+                    ((TrackActivity) getActivity()).setActionBarTitle("Track");
                 }
             }
         });
@@ -162,6 +168,8 @@ public class BloodTestFragment extends Fragment implements TrackActivity.OnBackP
     @Override
     public void doBack() {
         EventBus.getDefault().post(new MessageEvent("Hello!"));
+        ((TrackActivity) getActivity()).setActionBarTitle("Track");
+
     }
 
     public String CheckEmptyOrNot(String st){
@@ -206,6 +214,9 @@ public class BloodTestFragment extends Fragment implements TrackActivity.OnBackP
         Date date = calendar.getTime();
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMM yyyy");
         String dateStr = simpleDateFormat.format(date);
+
+        Date date1 = new Date();
+        String currentDate = simpleDateFormat.format(date1);
 
         tvBloodTestDate.setText(dateStr);
         callSavedMethod();
