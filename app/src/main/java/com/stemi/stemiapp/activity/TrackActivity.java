@@ -9,6 +9,7 @@ import android.graphics.Bitmap;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -23,11 +24,14 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -103,7 +107,7 @@ public class TrackActivity extends AppCompatActivity implements NavigationView.O
             Bitmap bitmap = new CompressImageUtil().compressImage(this,registeredUserDetails.getImgUrl());
             profileImage.setImageBitmap(bitmap);
             nav_profile_pic.setImageBitmap(bitmap);
-        }else {
+        } else {
             profileImage.setImageResource(R.drawable.ic_user);
             nav_profile_pic.setImageResource(R.drawable.ic_user);
         }
@@ -252,6 +256,7 @@ public class TrackActivity extends AppCompatActivity implements NavigationView.O
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commitAllowingStateLoss();
     }
+
     String[] title = {
             "Learn",
             "Track",
@@ -290,20 +295,20 @@ public class TrackActivity extends AppCompatActivity implements NavigationView.O
             }
 
             if (tab.isSelected()) {
-                for (int i =0; i < tabLayout.getTabCount(); i ++){
-                    if(i == position){
+                for (int i = 0; i < tabLayout.getTabCount(); i++) {
+                    if (i == position) {
                         setActionBarTitle(title[i]);
                     }
                 }
 
                 View v = tabLayout.getTabAt(position).getCustomView();
-                        if (v instanceof TextView) {
-                            TextView textView = (TextView) v;
-                            textView.setTextColor(getResources().getColor(R.color.appBackground));
-                            for (Drawable drawable : textView.getCompoundDrawables()) {
-                                if (drawable != null) {
-                                    drawable.setColorFilter(new PorterDuffColorFilter(getResources().getColor(R.color.appBackground), PorterDuff.Mode.SRC_IN));
-                                }
+                if (v instanceof TextView) {
+                    TextView textView = (TextView) v;
+                    textView.setTextColor(getResources().getColor(R.color.appBackground));
+                    for (Drawable drawable : textView.getCompoundDrawables()) {
+                        if (drawable != null) {
+                            drawable.setColorFilter(new PorterDuffColorFilter(getResources().getColor(R.color.appBackground), PorterDuff.Mode.SRC_IN));
+                        }
                     }
                 }
             }
@@ -507,7 +512,7 @@ public class TrackActivity extends AppCompatActivity implements NavigationView.O
 
     public void createDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-       // builder.setTitle("AlertDialog with No Buttons");
+        // builder.setTitle("AlertDialog with No Buttons");
         builder.setMessage("Do you wish to logout?");
         //Yes Button
         builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
@@ -554,7 +559,6 @@ public class TrackActivity extends AppCompatActivity implements NavigationView.O
         if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
             onBackPressedListener.doBack();
 
-
            /* new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -578,15 +582,12 @@ public class TrackActivity extends AppCompatActivity implements NavigationView.O
         EventBus.getDefault().unregister(this);
         super.onStop();
     }
-// This method will be called when a SomeOtherEvent is posted
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(MessageEvent event) {
         backstackFragment();
         // Toast.makeText(this, event.message, Toast.LENGTH_SHORT).show();
     }
-
-
 
     private void removeCurrentFragment() {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -615,7 +616,6 @@ public class TrackActivity extends AppCompatActivity implements NavigationView.O
 
         @Override
         public Fragment getItem(int position) {
-
             return mFragmentList.get(position);
         }
 

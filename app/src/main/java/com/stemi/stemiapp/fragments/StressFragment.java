@@ -52,6 +52,8 @@ import java.util.Date;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static android.content.ContentValues.TAG;
+
 /**
  * Created by Pooja on 26-07-2017.
  */
@@ -113,7 +115,7 @@ public class StressFragment extends Fragment implements AppConstants, TrackActiv
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
                 stressCount = String.valueOf(progresValue);
-                Toast.makeText(getActivity(),"seekbar touch stopped! "+ progresValue + "/" + seekBar.getMax(), Toast.LENGTH_SHORT).show();
+            //    Toast.makeText(getActivity(),"seekbar touch stopped! "+ progresValue + "/" + seekBar.getMax(), Toast.LENGTH_SHORT).show();
             }
         });
         alreadySaved = false;
@@ -138,11 +140,15 @@ public class StressFragment extends Fragment implements AppConstants, TrackActiv
 
     @Override
     public void doBack() {
-        if(stressCount != null){
-            storeData();
+        if (GlobalClass.userID != null) {
+            if (stressCount != null) {
+                storeData();
+            } else {
+                EventBus.getDefault().post(new MessageEvent("Hello!"));
+                ((TrackActivity) getActivity()).setActionBarTitle("Track");
+            }
         }else {
-            EventBus.getDefault().post(new MessageEvent("Hello!"));
-            ((TrackActivity) getActivity()).setActionBarTitle("Track");
+            Toast.makeText(getActivity(), "Please add profile details first", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -160,6 +166,7 @@ public class StressFragment extends Fragment implements AppConstants, TrackActiv
             ArrayList<UserEventDetails> eventDetails = dbForTrackActivities.getDetails(appSharedPreference.getProfileName(AppConstants.PROFILE_NAME), savedDate, 2);
             if (eventDetails.get(0).getStressCount() != null) {
                 mSeekLin.setProgress(Integer.parseInt(eventDetails.get(0).getStressCount()));
+                stressCount = eventDetails.get(0).getStressCount();
                 if(eventDetails.get(0).getYoga().equals("true")){
                     ivYoga.setBackgroundResource(R.drawable.ic_checked_1);
                     ivYoga.setTag(R.drawable.ic_checked_1);
@@ -190,8 +197,18 @@ public class StressFragment extends Fragment implements AppConstants, TrackActiv
                     checkClicked = false;
                 }
 
+            }else {
+                ivYoga.setBackgroundResource(R.drawable.ic_unchecked_1);
+                ivHobbies.setBackgroundResource(R.drawable.ic_unchecked_1);
+                ivMeditation.setBackgroundResource(R.drawable.ic_unchecked_1);
+
+                mSeekLin.setProgress(0);
             }
         }else {
+            ivYoga.setBackgroundResource(R.drawable.ic_unchecked_1);
+            ivHobbies.setBackgroundResource(R.drawable.ic_unchecked_1);
+            ivMeditation.setBackgroundResource(R.drawable.ic_unchecked_1);
+
             mSeekLin.setProgress(0);
         }
     }
@@ -246,6 +263,7 @@ public class StressFragment extends Fragment implements AppConstants, TrackActiv
     public void onStop() {
         EventBus.getDefault().unregister(this);
         super.onStop();
+        Log.e(TAG, "setMenuVisibility: StressFragment : Stop");
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -274,6 +292,8 @@ public class StressFragment extends Fragment implements AppConstants, TrackActiv
 
             DatePickerDialog datepickerdialog = new DatePickerDialog(getActivity(),
                     AlertDialog.THEME_DEVICE_DEFAULT_LIGHT,this,year,month,day);
+
+            datepickerdialog.getDatePicker().setMaxDate(System.currentTimeMillis());
 
             return datepickerdialog;
         }
@@ -313,7 +333,6 @@ public class StressFragment extends Fragment implements AppConstants, TrackActiv
         }
 
     }
-
     LinearLayout.LayoutParams getLayoutParams(float weight) {
         return new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,

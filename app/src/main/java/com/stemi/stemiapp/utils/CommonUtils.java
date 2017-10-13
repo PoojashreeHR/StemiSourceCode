@@ -101,6 +101,7 @@ public class CommonUtils {
    }
 
 
+
    public static void buidDialog(final Context mContext, final int value){
       AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
       //builder.setTitle("");

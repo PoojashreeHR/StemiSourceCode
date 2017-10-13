@@ -114,7 +114,7 @@ public class TrackFragment extends Fragment {
                     Log.e(TAG, "onClick: You clicked on " + position);
                     switch (i) {
                         case 0:
-                            ((TrackActivity) getActivity()).showFragment(new MedicationFragment());
+                        //    ((TrackActivity) getActivity()).showFragment(new AddMedicineFragment());
                             break;
                         case 1:
                             ((TrackActivity) getActivity()).showFragment(new ExerciseFragment());

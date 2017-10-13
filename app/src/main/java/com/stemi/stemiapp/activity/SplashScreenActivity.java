@@ -43,6 +43,8 @@ public class SplashScreenActivity extends AppCompatActivity implements AppConsta
                 /* Create an Intent that will start the Menu-Activity. */
                     Intent mainIntent = new Intent(SplashScreenActivity.this, OnBoardingActivity.class);
                     startActivity(mainIntent);
+                    sharedPreference.setFirstTimeLaunch(IS_FIRST_TIME_LAUNCH,true);
+                   // introScreensShown =  sharedPreference.isFirstTimeLaunch(IS_FIRST_TIME_LAUNCH);
                     finish();
                 } else {
                     Intent mainIntent = new Intent(SplashScreenActivity.this, MainActivity.class);

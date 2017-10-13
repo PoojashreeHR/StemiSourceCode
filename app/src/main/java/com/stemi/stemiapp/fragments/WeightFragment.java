@@ -13,16 +13,20 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.webkit.WebViewFragment;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.stemi.stemiapp.R;
 import com.stemi.stemiapp.activity.TrackActivity;
+import com.stemi.stemiapp.customviews.TabSelectedListener;
 import com.stemi.stemiapp.databases.DBForTrackActivities;
 import com.stemi.stemiapp.databases.TrackWeightDB;
 import com.stemi.stemiapp.model.DataSavedEvent;
@@ -61,11 +65,13 @@ public class WeightFragment  extends Fragment implements View.OnClickListener,Tr
     @BindView(R.id.learn_more)TextView learnMore;
     String bmiCount = null;
 
+    @BindView(R.id.ll_bmiCalculation)LinearLayout bmiLayout;
     String savedDate;
     AppSharedPreference appSharedPreference;
     DBForTrackActivities dbForTrackActivities;
     private boolean alreadySaved;
 
+    TabSelectedListener tabSelectedListener;
     public WeightFragment() {
         // Required empty public constructor
     }
@@ -98,6 +104,8 @@ public class WeightFragment  extends Fragment implements View.OnClickListener,Tr
         ((TrackActivity) getActivity()).setOnBackPressedListener(this);
 
         alreadySaved = false;
+        tabSelectedListener =  new TabSelectedListener(getActivity(),new WebViewFragment());
+
         return view;
     }
 
@@ -113,9 +121,9 @@ public class WeightFragment  extends Fragment implements View.OnClickListener,Tr
         int id = v.getId();
         switch (id) {
             case R.id.bt_calculatebmi:
-                InputMethodManager inputManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                inputManager.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
 
+                InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
 
                 if(!todaysWeight.getText().toString().equals("")) {
                     if(validateField()) {
@@ -124,7 +132,7 @@ public class WeightFragment  extends Fragment implements View.OnClickListener,Tr
                         String string = interpretBMI(bmiValue);
                         BmiValue.setText("Your BMI is " + bmiCount);
                         bmiResult.setText(string);
-                        learnMore.setVisibility(View.VISIBLE);
+                        bmiLayout.setVisibility(View.VISIBLE);
                     }
                 }else {
                     Toast.makeText(getActivity(), "Please enter your weight!!", Toast.LENGTH_SHORT).show();
@@ -140,7 +148,6 @@ public class WeightFragment  extends Fragment implements View.OnClickListener,Tr
             }
         }else {
             EventBus.getDefault().post(new MessageEvent("Hello!"));
-            ((TrackActivity) getActivity()).setActionBarTitle("Track");
 
         }
     }
@@ -171,9 +178,15 @@ public class WeightFragment  extends Fragment implements View.OnClickListener,Tr
             ArrayList<UserEventDetails> eventDetails = dbForTrackActivities.getDetails(appSharedPreference.getProfileName(AppConstants.PROFILE_NAME), savedDate, 4);
             if (eventDetails.get(0).getTodaysWeight() != null) {
                 todaysWeight.setText(eventDetails.get(0).getTodaysWeight());
+                bmiLayout.setVisibility(View.GONE);
+            }
+            else {
+                todaysWeight.setText(null);
+                bmiLayout.setVisibility(View.GONE);
             }
         }else {
-            todaysWeight.setText("");
+            bmiLayout.setVisibility(View.GONE);
+            todaysWeight.setText(null);
         }
     }
 
@@ -215,6 +228,8 @@ public class WeightFragment  extends Fragment implements View.OnClickListener,Tr
             DatePickerDialog datepickerdialog = new DatePickerDialog(getActivity(),
                     AlertDialog.THEME_DEVICE_DEFAULT_LIGHT,this,year,month,day);
 
+            datepickerdialog.getDatePicker().setMaxDate(System.currentTimeMillis());
+
             return datepickerdialog;
         }
 
@@ -237,7 +252,6 @@ public class WeightFragment  extends Fragment implements View.OnClickListener,Tr
             String stDate= dateFormat.format(parseDate); //2016/11/16 12:08:43
             Log.e("Comparing Date :"," Your date is correct");
             EventBus.getDefault().post(new SetTimeEvent(0,stDate));
-
         }
     }
 

@@ -39,6 +39,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="NAME"
+            android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ "
             android:imeOptions="actionNext"
             android:inputType="textPersonName" />
     </android.support.design.widget.TextInputLayout>
