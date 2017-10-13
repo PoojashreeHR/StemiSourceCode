@@ -25,6 +25,7 @@ import com.stemi.stemiapp.R;
 import com.stemi.stemiapp.activity.TrackActivity;
 import com.stemi.stemiapp.databases.DBForTrackActivities;
 import com.stemi.stemiapp.databases.TrackWeightDB;
+import com.stemi.stemiapp.model.DataSavedEvent;
 import com.stemi.stemiapp.model.MessageEvent;
 import com.stemi.stemiapp.model.SetTimeEvent;
 import com.stemi.stemiapp.model.TrackWeight;
@@ -63,6 +64,7 @@ public class WeightFragment  extends Fragment implements View.OnClickListener,Tr
     String savedDate;
     AppSharedPreference appSharedPreference;
     DBForTrackActivities dbForTrackActivities;
+    private boolean alreadySaved;
 
     public WeightFragment() {
         // Required empty public constructor
@@ -95,6 +97,7 @@ public class WeightFragment  extends Fragment implements View.OnClickListener,Tr
         ((TrackActivity) getActivity()).setActionBarTitle("Weight");
         ((TrackActivity) getActivity()).setOnBackPressedListener(this);
 
+        alreadySaved = false;
         return view;
     }
 
@@ -192,6 +195,14 @@ public class WeightFragment  extends Fragment implements View.OnClickListener,Tr
         callSavedMethod();
     }
 
+    public void saveAllData() {
+        if(!alreadySaved) {
+            Log.e("fragment", "WeightFragment saveAllData()");
+            SaveData();
+            alreadySaved = true;
+        }
+    }
+
     public static class DatePickerDialogClass extends DialogFragment implements DatePickerDialog.OnDateSetListener{
 
         @Override
@@ -283,6 +294,7 @@ public class WeightFragment  extends Fragment implements View.OnClickListener,Tr
         }
         Log.e("db", new Gson().toJson(trackWeight));
         trackWeightDB.addEntry(trackWeight);
+        EventBus.getDefault().post(new DataSavedEvent(""));
         TrackActivity.userEventDetails.setTodaysWeight(todaysWeight.getText().toString());
         if(bmiCount == null){
             float bmiValue = calculateBMI(todaysWeight.getText().toString(), appSharedPreference.getUserHeight(AppConstants.USER_HEIGHT));

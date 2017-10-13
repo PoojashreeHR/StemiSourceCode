@@ -24,6 +24,7 @@ import com.stemi.stemiapp.activity.TrackActivity;
 import com.stemi.stemiapp.customviews.CircleImageView;
 import com.stemi.stemiapp.databases.DBForTrackActivities;
 import com.stemi.stemiapp.databases.TrackExerciseDB;
+import com.stemi.stemiapp.model.DataSavedEvent;
 import com.stemi.stemiapp.model.MessageEvent;
 import com.stemi.stemiapp.model.SetTimeEvent;
 import com.stemi.stemiapp.model.TrackExercise;
@@ -78,6 +79,8 @@ public class ExerciseFragment extends Fragment implements View.OnClickListener, 
     AppSharedPreference appSharedPreference;
 
     String savedDate;
+    private boolean alreadySaved;
+
     public ExerciseFragment() {
         // Required empty public constructor
     }
@@ -115,7 +118,7 @@ public class ExerciseFragment extends Fragment implements View.OnClickListener, 
             }
         });
         ((TrackActivity) getActivity()).setOnBackPressedListener(this);
-
+        alreadySaved = false;
         return view;
     }
 
@@ -293,6 +296,14 @@ public class ExerciseFragment extends Fragment implements View.OnClickListener, 
         callSavedMethod();
     }
 
+    public void saveAllData() {
+        if(!alreadySaved) {
+            Log.e("fragment", "ExerciseFragment saveAllData()");
+            storeData();
+            alreadySaved = true;
+        }
+    }
+
     public static class DatePickerDialogClass extends DialogFragment implements DatePickerDialog.OnDateSetListener{
 
         @Override
@@ -429,6 +440,7 @@ public class ExerciseFragment extends Fragment implements View.OnClickListener, 
             }
 
             trackExerciseDB.addEntry(trackExercise);
+        EventBus.getDefault().post(new DataSavedEvent(""));
     }
   /*  @Override
     //Pressed return button - returns to the results menu

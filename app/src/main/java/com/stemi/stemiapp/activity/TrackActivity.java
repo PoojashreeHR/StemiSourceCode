@@ -9,7 +9,6 @@ import android.graphics.Bitmap;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -24,14 +23,11 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -42,15 +38,21 @@ import com.stemi.stemiapp.customviews.CircleImageView;
 import com.stemi.stemiapp.customviews.CustomViewPager;
 import com.stemi.stemiapp.databases.UserDetailsTable;
 import com.stemi.stemiapp.fragments.AddMedicineFragment;
+import com.stemi.stemiapp.fragments.ExerciseFragment;
 import com.stemi.stemiapp.fragments.HospitalFragment;
 import com.stemi.stemiapp.fragments.LearnFragment;
+import com.stemi.stemiapp.fragments.MedicationFragment;
 import com.stemi.stemiapp.fragments.SOSFragment;
+import com.stemi.stemiapp.fragments.SmokingFragment;
 import com.stemi.stemiapp.fragments.StatusFragment;
+import com.stemi.stemiapp.fragments.StressFragment;
 import com.stemi.stemiapp.fragments.TrackFragment;
+import com.stemi.stemiapp.fragments.WeightFragment;
 import com.stemi.stemiapp.model.DataPassListener;
 import com.stemi.stemiapp.model.MedicineDetails;
 import com.stemi.stemiapp.model.MessageEvent;
 import com.stemi.stemiapp.model.RegisteredUserDetails;
+import com.stemi.stemiapp.model.SaveCurrentDataEvent;
 import com.stemi.stemiapp.model.UserEventDetails;
 import com.stemi.stemiapp.preference.AppSharedPreference;
 import com.stemi.stemiapp.utils.CommonUtils;
@@ -84,6 +86,10 @@ public class TrackActivity extends AppCompatActivity implements NavigationView.O
     TextView nav_header_userName, nav_header_email;
     private Fragment hospitalFragment;
     private OnScanCompletionListener onScanCompletedListener;
+    private String currentFragmentName;
+    private Fragment currentFragment;
+    private ViewPagerAdapter adapter;
+    private boolean updateEvent;
 
     @Override
     protected void onResume() {
@@ -93,7 +99,7 @@ public class TrackActivity extends AppCompatActivity implements NavigationView.O
         registeredUserDetails = dBforUserDetails.getUserDetails(GlobalClass.userID);
         Log.e(TAG, "GlobalClass.userID = " + GlobalClass.userID);
 
-        if (registeredUserDetails.getImgUrl() != null) {
+        if (registeredUserDetails != null &&  registeredUserDetails.getImgUrl() != null) {
             Bitmap bitmap = new CompressImageUtil().compressImage(this,registeredUserDetails.getImgUrl());
             profileImage.setImageBitmap(bitmap);
             nav_profile_pic.setImageBitmap(bitmap);
@@ -101,8 +107,11 @@ public class TrackActivity extends AppCompatActivity implements NavigationView.O
             profileImage.setImageResource(R.drawable.ic_user);
             nav_profile_pic.setImageResource(R.drawable.ic_user);
         }
-        nav_header_userName.setText(registeredUserDetails.getName());
-        nav_header_email.setText(registeredUserDetails.getEmail());
+
+        if(registeredUserDetails != null) {
+            nav_header_userName.setText(registeredUserDetails.getName());
+            nav_header_email.setText(registeredUserDetails.getEmail());
+        }
 
         profileImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -203,9 +212,38 @@ public class TrackActivity extends AppCompatActivity implements NavigationView.O
         this.onScanCompletedListener = onScanCompletionListener;
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onSaveDataEvent(SaveCurrentDataEvent event){
+        Log.e("fragment", "event = "+event.message);
+
+
+
+
+        if(currentFragmentName.equalsIgnoreCase("MedicationFragment")){
+            ((MedicationFragment) currentFragment).saveAllData();
+        }
+        else if(currentFragmentName.equalsIgnoreCase("ExerciseFragment")){
+            ((ExerciseFragment) currentFragment).saveAllData();
+        }
+        else if(currentFragmentName.equalsIgnoreCase("StressFragment")){
+            ((StressFragment) currentFragment).saveAllData();
+        }
+        else if(currentFragmentName.equalsIgnoreCase("SmokingFragment")){
+            ((SmokingFragment) currentFragment).saveAllData();
+        }
+        else if(currentFragmentName.equalsIgnoreCase("WeightFragment")){
+            ((WeightFragment) currentFragment).saveAllData();
+        }
+        else{
+            //ignore
+        }
+    }
+
     public void showFragment(Fragment fragment) {
 
         String TAG = fragment.getClass().getSimpleName();
+        currentFragmentName = TAG;
+        currentFragment = fragment;
         viewPager.setVisibility(View.GONE);
         mainContainer.setVisibility(View.VISIBLE);
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
@@ -387,7 +425,7 @@ public class TrackActivity extends AppCompatActivity implements NavigationView.O
      */
     private void setupViewPager(ViewPager viewPager) {
 
-        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
+         adapter = new ViewPagerAdapter(getSupportFragmentManager());
 
         adapter.addFrag(new LearnFragment(), "Learn");
         adapter.addFrag(new TrackFragment(), "Track");
@@ -395,6 +433,24 @@ public class TrackActivity extends AppCompatActivity implements NavigationView.O
         adapter.addFrag(hospitalFragment, "Hospital");
         adapter.addFrag(new StatusFragment(), "Status");
         viewPager.setAdapter(adapter);
+        viewPager.setOffscreenPageLimit(0);
+        viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int i, float v, int i1) {
+
+            }
+
+            @Override
+            public void onPageSelected(int i) {
+                EventBus.getDefault().post(new SaveCurrentDataEvent("" + i));
+                //adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int i) {
+
+            }
+        });
     }
 
     @Override
@@ -530,6 +586,8 @@ public class TrackActivity extends AppCompatActivity implements NavigationView.O
         // Toast.makeText(this, event.message, Toast.LENGTH_SHORT).show();
     }
 
+
+
     private void removeCurrentFragment() {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 
@@ -557,6 +615,7 @@ public class TrackActivity extends AppCompatActivity implements NavigationView.O
 
         @Override
         public Fragment getItem(int position) {
+
             return mFragmentList.get(position);
         }
 
@@ -573,6 +632,21 @@ public class TrackActivity extends AppCompatActivity implements NavigationView.O
         @Override
         public CharSequence getPageTitle(int position) {
             return mFragmentTitleList.get(position);
+        }
+
+
+        public void update(){
+            notifyDataSetChanged();
+            setupTabIcons();
+        }
+
+        @Override
+        public int getItemPosition(Object object) {
+//            if (object instanceof UpdateableFragment) {
+//                ((UpdateableFragment) object).updateSelf();
+//            }
+//            return super.getItemPosition(object);
+            return POSITION_NONE;
         }
     }
 

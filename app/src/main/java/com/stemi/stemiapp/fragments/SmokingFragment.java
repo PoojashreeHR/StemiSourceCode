@@ -21,6 +21,7 @@ import com.stemi.stemiapp.activity.TrackActivity;
 import com.stemi.stemiapp.customviews.AnswerTemplateView;
 import com.stemi.stemiapp.databases.DBForTrackActivities;
 import com.stemi.stemiapp.databases.TrackSmokingDB;
+import com.stemi.stemiapp.model.DataSavedEvent;
 import com.stemi.stemiapp.model.MessageEvent;
 import com.stemi.stemiapp.model.SetTimeEvent;
 import com.stemi.stemiapp.model.TrackSmoking;
@@ -58,7 +59,9 @@ public class SmokingFragment  extends Fragment implements TrackActivity.OnBackPr
 
     String savedDate;
     String responseChange;
-   // AnswerTemplateView answerTemplateView;
+    private boolean alreadySaved;
+
+    // AnswerTemplateView answerTemplateView;
     public SmokingFragment() {
         // Required empty public constructor
     }
@@ -105,6 +108,8 @@ public class SmokingFragment  extends Fragment implements TrackActivity.OnBackPr
         ((TrackActivity) getActivity()).setOnBackPressedListener(this);
         ((TrackActivity) getActivity()).setActionBarTitle("Smoking");
 
+        alreadySaved = false;
+
         return view;
     }
 
@@ -130,13 +135,28 @@ public class SmokingFragment  extends Fragment implements TrackActivity.OnBackPr
     @Override
     public void onStop() {
         EventBus.getDefault().unregister(this);
+        Log.e("fragment", "SmokingFragment onStop()");
         super.onStop();
+    }
+
+    @Override
+    public void onDestroy() {
+        Log.e("fragment", "SmokingFragment onDestroy()");
+        super.onDestroy();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSetTimeEvent(SetTimeEvent event){
         tvSmokeToday.setText(event.getDate());
         callSavedMethod();
+    }
+
+    public void saveAllData() {
+        if(!alreadySaved) {
+            Log.e("fragment", "SmokingFragment saveAllData()");
+            saveData();
+            alreadySaved = true;
+        }
     }
 
     public static class DatePickerDialogClass extends DialogFragment implements DatePickerDialog.OnDateSetListener{
@@ -211,6 +231,7 @@ public class SmokingFragment  extends Fragment implements TrackActivity.OnBackPr
         }
 
         trackSmokingDB.addEntry(trackSmoking);
+        EventBus.getDefault().post(new DataSavedEvent(""));
 
         boolean date = dbForTrackActivities.getDate(TrackActivity.userEventDetails.getDate(),GlobalClass.userID);
         if (!date) {
@@ -223,6 +244,7 @@ public class SmokingFragment  extends Fragment implements TrackActivity.OnBackPr
 
         }
     }
+
 
     public void callSavedMethod(){
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy");// set format for date

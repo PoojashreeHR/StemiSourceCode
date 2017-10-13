@@ -78,6 +78,7 @@ public class MainActivity extends AppCompatActivity implements AppConstants,View
                         Toast.makeText(MainActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
                         if(appSharedPreferences.getUserId() == null){
                             startActivity(new Intent(MainActivity.this, RegistrationActivity.class));
+                            new AppSharedPreference(MainActivity.this).setFirstTimeLaunch(IS_FIRST_TIME_LAUNCH,true);
                         }else {
                             startActivity(new Intent(MainActivity.this, TrackActivity.class));
                         }

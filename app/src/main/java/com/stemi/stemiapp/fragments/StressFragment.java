@@ -29,6 +29,7 @@ import com.stemi.stemiapp.customviews.AnimateHorizontalProgressBar;
 import com.stemi.stemiapp.databases.DBForTrackActivities;
 import com.stemi.stemiapp.databases.TrackStressDB;
 import com.stemi.stemiapp.model.DataPassListener;
+import com.stemi.stemiapp.model.DataSavedEvent;
 import com.stemi.stemiapp.model.MessageEvent;
 import com.stemi.stemiapp.model.SetTimeEvent;
 import com.stemi.stemiapp.model.TrackStress;
@@ -76,6 +77,8 @@ public class StressFragment extends Fragment implements AppConstants, TrackActiv
     String stressCount = null;
     DBForTrackActivities dbForTrackActivities;
     int progresValue;
+    private boolean alreadySaved;
+
     public StressFragment() {
         // Required empty public constructor
     }
@@ -113,7 +116,7 @@ public class StressFragment extends Fragment implements AppConstants, TrackActiv
                 Toast.makeText(getActivity(),"seekbar touch stopped! "+ progresValue + "/" + seekBar.getMax(), Toast.LENGTH_SHORT).show();
             }
         });
-
+        alreadySaved = false;
         callSavedMEthod();
         llYoga.setOnClickListener(this);
         llMeditation.setOnClickListener(this);
@@ -251,6 +254,14 @@ public class StressFragment extends Fragment implements AppConstants, TrackActiv
         callSavedMEthod();
     }
 
+    public void saveAllData() {
+        if(!alreadySaved) {
+            Log.e("fragment", "StressFragment saveAllData()");
+            storeData();
+            alreadySaved = true;
+        }
+    }
+
 
     public static class DatePickerDialogClass extends DialogFragment implements DatePickerDialog.OnDateSetListener{
 
@@ -369,6 +380,7 @@ public class StressFragment extends Fragment implements AppConstants, TrackActiv
         }
 
         trackStressDB.addEntry(trackStress);
+        EventBus.getDefault().post(new DataSavedEvent(""));
 
         boolean date = dbForTrackActivities.getDate(TrackActivity.userEventDetails.getDate(),GlobalClass.userID);
         if (!date) {

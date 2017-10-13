@@ -31,6 +31,19 @@ public class TrackFragment extends Fragment {
         // Required empty public constructor
     }
 
+
+    @Override
+    public void onStop() {
+        Log.e("fragment", "TrackFragment onStop()");
+        super.onStop();
+    }
+
+    @Override
+    public void onDestroy() {
+        Log.e("fragment", "TrackFragment onDestroy()");
+        super.onDestroy();
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -149,7 +162,7 @@ public class TrackFragment extends Fragment {
     public void setMenuVisibility(boolean menuVisible) {
         if(getActivity() != null){
             if(menuVisible){
-                //((TrackActivity) getActivity()).setActionBarTitle("Track");
+                ((TrackActivity) getActivity()).setActionBarTitle("Track");
             }
         }
         super.setMenuVisibility(menuVisible);

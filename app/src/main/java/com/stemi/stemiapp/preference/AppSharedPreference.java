@@ -13,6 +13,7 @@ import com.stemi.stemiapp.utils.GlobalClass;
 public class AppSharedPreference implements AppConstants {
     private static final String USERID = "userid";
     private static final String LOGINID = "loginId";
+    private static final String LAST_TIP = "lastTip";
     private SharedPreferences sharedPreferences;
 
     public AppSharedPreference(Context context) {
@@ -72,6 +73,16 @@ public class AppSharedPreference implements AppConstants {
 
     public String getUserId(){
         return sharedPreferences.getString(USERID, null);
+    }
+
+    public void setLastTip(String tip){
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(LAST_TIP, tip);
+        editor.apply();
+    }
+
+    public String getLastTip(){
+        return sharedPreferences.getString(LAST_TIP, null);
     }
 
     public void setFirstTimeLaunch(String key , boolean isFirstTime) {

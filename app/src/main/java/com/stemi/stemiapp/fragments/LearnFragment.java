@@ -2,6 +2,7 @@ package com.stemi.stemiapp.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,11 +12,13 @@ import android.widget.TextView;
 import com.stemi.stemiapp.R;
 import com.stemi.stemiapp.activity.TrackActivity;
 
+import com.stemi.stemiapp.activity.UpdateableFragment;
 import com.stemi.stemiapp.databases.TrackExerciseDB;
 import com.stemi.stemiapp.databases.TrackMedicationDB;
 import com.stemi.stemiapp.databases.TrackSmokingDB;
 import com.stemi.stemiapp.databases.TrackStressDB;
 import com.stemi.stemiapp.databases.TrackWeightDB;
+import com.stemi.stemiapp.model.DataSavedEvent;
 import com.stemi.stemiapp.model.apiModels.StatusMessageResponse;
 import com.stemi.stemiapp.preference.AppSharedPreference;
 import com.stemi.stemiapp.rest.ApiClient;
@@ -23,6 +26,10 @@ import com.stemi.stemiapp.rest.ApiInterface;
 import com.stemi.stemiapp.utils.AppConstants;
 import com.stemi.stemiapp.utils.CommonUtils;
 import com.stemi.stemiapp.utils.GlobalClass;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -39,7 +46,7 @@ import static android.content.ContentValues.TAG;
  * Created by Pooja on 24-07-2017.
  */
 
-public class LearnFragment extends Fragment implements AppConstants{
+public class LearnFragment extends Fragment implements AppConstants, UpdateableFragment{
     @BindView(R.id.tvTips) TextView tvTips;
     @BindView(R.id.tvExpandable) TextView tvExpandableSymptoms;
 
@@ -55,6 +62,24 @@ public class LearnFragment extends Fragment implements AppConstants{
     public LearnFragment() {
         // Required empty public constructor
     }
+
+    @Override
+    public void onStart() {
+        EventBus.getDefault().register(this);
+        super.onStart();
+    }
+
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onDataSaved(DataSavedEvent event){
+        updateSelf();
+    }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -144,15 +169,21 @@ public class LearnFragment extends Fragment implements AppConstants{
             @Override
             public void onResponse(Call<StatusMessageResponse> call, Response<StatusMessageResponse> response) {
                 if(response.isSuccessful()){
-                    tvTips.setText(response.body().getMessage());
+
+                    if(response.body().getMessage() != null &&  !TextUtils.isEmpty(response.body().getMessage() )){
+                        appSharedPreference.setLastTip(response.body().getMessage());
+                    }
+
+                    tvTips.setText(appSharedPreference.getLastTip());
                 }else {
                     Log.e(TAG, "onResponse: SOMETHING WRONG" );
+                    tvTips.setText(appSharedPreference.getLastTip());
                 }
             }
 
             @Override
             public void onFailure(Call<StatusMessageResponse> call, Throwable t) {
-
+                tvTips.setText(appSharedPreference.getLastTip());
             }
         });
     }
@@ -162,6 +193,7 @@ public class LearnFragment extends Fragment implements AppConstants{
         if(getActivity() != null){
             if(menuVisible){
            //     ((TrackActivity) getActivity()).setActionBarTitle("Learn");
+                updateSelf();
             }
         }
         super.setMenuVisibility(menuVisible);
@@ -172,5 +204,10 @@ public class LearnFragment extends Fragment implements AppConstants{
        // ((TrackActivity) getActivity()).setActionBarTitle("Learn");
         populatePerformanceTexts();
         super.onResume();
+    }
+
+    @Override
+    public void updateSelf() {
+        populatePerformanceTexts();
     }
 }

@@ -60,12 +60,44 @@ public class TrackExerciseDB extends SQLiteOpenHelper {
             cv.put(COLUMN_DATE_TIME, simpleDateFormat.format(stress.getDateTime()));
             cv.put(COLUMN_EXERCISED, stress.isExercised());
 
-            db.insert(TABLE_EXERCISE, null, cv);
+            if(entryExists(stress.getUserId(), simpleDateFormat.format(stress.getDateTime()))){
+                String whereClause = COLUMN_USER_ID+" = '"+stress.getUserId()+"' AND "
+                        +COLUMN_DATE_TIME+" = '"+simpleDateFormat.format(stress.getDateTime())+"'";
+                Log.e("db", "Updating TABLE_EXERCISE with whereClause = "+ whereClause);
+                db.update(TABLE_EXERCISE,cv,whereClause,null);
+            }
+            else{
+                db.insert(TABLE_EXERCISE, null, cv);
+            }
+
         }
         catch(Exception e){
 
         }
         db.close();
+    }
+
+    private boolean entryExists(String userId, String datetime) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        boolean isEntryExists = false;
+        try{
+            String sql = "SELECT * FROM "+TABLE_EXERCISE+" WHERE"
+                    +COLUMN_USER_ID+" = '"+userId+"' AND "
+                    +COLUMN_DATE_TIME+" = '"+datetime+"'";
+
+            Cursor cursor = db.rawQuery(sql,null);
+            cursor.moveToFirst();
+
+            while(!cursor.isAfterLast()){
+                String user = cursor.getString(cursor.getColumnIndex(COLUMN_USER_ID));
+                isEntryExists = true;
+                cursor.moveToNext();
+            }
+        }
+        catch (Exception e){
+
+        }
+        return isEntryExists;
     }
 
     public boolean isTableEmpty(){

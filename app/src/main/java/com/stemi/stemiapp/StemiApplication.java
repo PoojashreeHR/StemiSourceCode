@@ -62,7 +62,9 @@ public class StemiApplication extends Application {
         RegisteredUserDetails userDetails = dBforUserDetails.getUserDetails(GlobalClass.userID);
         if(userDetails != null && userDetails.getHeight() != null) {
             int heightInCms = (int) Double.parseDouble(userDetails.getHeight());
-            GlobalClass.heightInM = heightInCms / 100;
+            Log.e("db", "  heightInCms  = "+   heightInCms);
+            GlobalClass.heightInM = (double)heightInCms / 100;
+            Log.e("db", "  GlobalClass.heightInM  = "+   GlobalClass.heightInM );
         }
 
         boolean firstTimeLaunch = appSharedPreference.isFirstTimeLaunch(AppConstants.IS_FIRST_TIME_LAUNCH);

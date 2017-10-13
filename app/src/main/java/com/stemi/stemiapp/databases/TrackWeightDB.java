@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import com.google.gson.Gson;
 import com.stemi.stemiapp.model.TrackWeight;
 import com.stemi.stemiapp.utils.GlobalClass;
 
@@ -33,7 +34,7 @@ public class TrackWeightDB extends SQLiteOpenHelper {
     private static final String DATABASE_CREATE = "create table "
             + TABLE_WEIGHT + "( " + COLUMN_USER_ID
             + " text not null , " + COLUMN_MONTH_INDEX
-            + " text not null , " + COLUMN_YEAR
+            + " integer not null , " + COLUMN_YEAR
             + " text not null , "+ COLUMN_WEIGHT
             + " integer );";
 
@@ -126,6 +127,7 @@ public class TrackWeightDB extends SQLiteOpenHelper {
         String year = String.valueOf(calendar.get(Calendar.YEAR));
         String query = "SELECT * FROM "+TABLE_WEIGHT+" WHERE " +COLUMN_USER_ID+" = '"+userId+"'"
                 +" AND "+COLUMN_YEAR+" = '"+year+"'"
+                +" ORDER BY "+COLUMN_MONTH_INDEX+" ASC"
                 ;
         SQLiteDatabase db = this.getReadableDatabase();
         try {
@@ -148,6 +150,7 @@ public class TrackWeightDB extends SQLiteOpenHelper {
                 onCreate(db);
             }
         }
+        Log.e("db", new Gson().toJson(trackWeightList));
         return trackWeightList;
     }
 

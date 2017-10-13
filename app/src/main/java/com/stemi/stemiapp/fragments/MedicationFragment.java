@@ -39,6 +39,7 @@ import com.stemi.stemiapp.databases.MedicineDetailsTable;
 import com.stemi.stemiapp.databases.MedicineTable;
 import com.stemi.stemiapp.databases.TrackMedicationDB;
 import com.stemi.stemiapp.model.DataPassListener;
+import com.stemi.stemiapp.model.DataSavedEvent;
 import com.stemi.stemiapp.model.MedicineDetails;
 import com.stemi.stemiapp.model.MessageEvent;
 import com.stemi.stemiapp.model.SetTimeEvent;
@@ -99,6 +100,7 @@ public class MedicationFragment extends Fragment implements AppConstants, View.O
 
     Boolean checkedImg = false;
     DataPassListener mCallback;
+    private boolean alreadySaved;
 
     public MedicationFragment() {
         // Required empty public constructor
@@ -141,6 +143,8 @@ public class MedicationFragment extends Fragment implements AppConstants, View.O
         ((TrackActivity) getActivity()).setOnBackPressedListener(this);
         ((TrackActivity) getActivity()).setOnBackPressedListener(this);
         ((TrackActivity) getActivity()).setActionBarTitle("Medication");
+
+        alreadySaved = false;
         return view;
     }
 
@@ -494,6 +498,7 @@ public class MedicationFragment extends Fragment implements AppConstants, View.O
                 med.setDateTime(date);
             }
             trackMedicationDB.addEntry(med);
+            EventBus.getDefault().post(new DataSavedEvent(""));
             Log.e(TAG, "doBack: " + checkedOrNot + "");
             // EventBus.getDefault().post(new MessageEvent("Hello!"));
         } else {
@@ -518,6 +523,13 @@ public class MedicationFragment extends Fragment implements AppConstants, View.O
     public void onSetTimeEvent(SetTimeEvent event) {
         tvMedicationToday.setText(event.getDate());
         //callSavedMethod();
+    }
+
+    public void saveAllData() {
+        if(!alreadySaved) {
+            Log.e("fragment", "MedicationFragment saveAllData()");
+            alreadySaved = true;
+        }
     }
 
     public static class DatePickerDialogClass extends DialogFragment implements DatePickerDialog.OnDateSetListener {
