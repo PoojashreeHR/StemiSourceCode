@@ -57,6 +57,8 @@ public class PhysicalDetailsFragment extends Fragment implements View.OnClickLis
     String Waist;
   //  BetterSpinner spinner;
     RegisteredUserDetails registeredUserDetails;
+    private RegisteredUserDetails user;
+
     public PhysicalDetailsFragment() {
     }
 
@@ -106,6 +108,29 @@ public class PhysicalDetailsFragment extends Fragment implements View.OnClickLis
                         InputMethodManager.HIDE_NOT_ALWAYS);
             }
         });
+
+
+        user = this.getArguments().getParcelable("user");
+        if(user != null){
+            etAddress.setText(user.getAddress());
+            etWeight.setText(user.getWeight());
+            et_HeightCm.setText(user.getHeight());
+
+            double heightInInches = Double.parseDouble(user.getHeight()) / 2.54;
+            int feet = (int) (heightInInches / 12);
+            int inches = (int) (heightInInches % 12);
+            etHeightFt.setText(""+feet);
+            etHeightInch.setText(""+inches);
+
+            etWaistInches.setText(user.getWaist());
+            int waistCms = (int) (Double.parseDouble(user.getWaist()) / 0.393701);
+            etWaistCm.setText(""+waistCms);
+
+            smokeAnswer.setResponse(user.getDo_you_smoke());
+            heartAttack.setResponse(user.getHeart_attack());
+
+        }
+
         return view;
     }
 
@@ -133,9 +158,11 @@ public class PhysicalDetailsFragment extends Fragment implements View.OnClickLis
         }
 
         if(etWaistInches.getText().toString().isEmpty()){
-            Waist= ""+etWaistCm.getText().toString()+" Cm";
+            int waistInCms = Integer.parseInt(etWaistCm.getText().toString());
+            double waistInInches = waistInCms * 0.393701;
+            Waist= ""+waistInInches;
         }else {
-            Waist = ""+etWaistInches.getText().toString() + " Inch";
+            Waist = ""+etWaistInches.getText().toString();
         }
 
        RegistrationActivity.registeredUserDetails.setHeight(HeightIncm);

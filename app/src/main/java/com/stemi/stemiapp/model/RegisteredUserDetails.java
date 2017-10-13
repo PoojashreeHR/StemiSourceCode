@@ -1,12 +1,15 @@
 package com.stemi.stemiapp.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.List;
 
 /**
  * Created by Pooja on 18-07-2017.
  */
 
-public class RegisteredUserDetails {
+public class RegisteredUserDetails implements Parcelable{
     String uniqueId;
     String name;
     String age;
@@ -26,8 +29,47 @@ public class RegisteredUserDetails {
     String had_paralytic_stroke;
     String have_asthma;
     String family_had_heart_attack;
-    Boolean isClicked;
+    //Boolean isClicked;
     String imgUrl;
+
+    public RegisteredUserDetails(){
+
+    }
+
+    protected RegisteredUserDetails(Parcel in) {
+        uniqueId = in.readString();
+        name = in.readString();
+        age = in.readString();
+        gender = in.readString();
+        phone = in.readString();
+        email = in.readString();
+        address = in.readString();
+        height = in.readString();
+        weight = in.readString();
+        waist = in.readString();
+        do_you_smoke = in.readString();
+        heart_attack = in.readString();
+        //healthQuestions = in.createTypedArrayList(HealthQuestions.CREATOR);
+        diabetes = in.readString();
+        blood_pressure = in.readString();
+        cholesterol = in.readString();
+        had_paralytic_stroke = in.readString();
+        have_asthma = in.readString();
+        family_had_heart_attack = in.readString();
+        imgUrl = in.readString();
+    }
+
+    public static final Creator<RegisteredUserDetails> CREATOR = new Creator<RegisteredUserDetails>() {
+        @Override
+        public RegisteredUserDetails createFromParcel(Parcel in) {
+            return new RegisteredUserDetails(in);
+        }
+
+        @Override
+        public RegisteredUserDetails[] newArray(int size) {
+            return new RegisteredUserDetails[size];
+        }
+    };
 
     public String getEmail() {
         return email;
@@ -61,13 +103,13 @@ public class RegisteredUserDetails {
         this.healthQuestions = healthQuestions;
     }
 
-    public Boolean getClicked() {
-        return isClicked;
-    }
-
-    public void setClicked(Boolean clicked) {
-        isClicked = clicked;
-    }
+//    public Boolean getClicked() {
+//        return isClicked;
+//    }
+//
+//    public void setClicked(Boolean clicked) {
+//        isClicked = clicked;
+//    }
 /*
     public String getQuestions() {
         return questions;
@@ -204,5 +246,34 @@ public class RegisteredUserDetails {
 
     public void setFamily_had_heart_attack(String family_had_heart_attack) {
         this.family_had_heart_attack = family_had_heart_attack;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(uniqueId);
+        parcel.writeString(name);
+        parcel.writeString(age);
+        parcel.writeString(gender);
+        parcel.writeString(phone);
+        parcel.writeString(email);
+        parcel.writeString(address);
+        parcel.writeString(height);
+        parcel.writeString(weight);
+        parcel.writeString(waist);
+        parcel.writeString(do_you_smoke);
+        parcel.writeString(heart_attack);
+        //parcel.writeTypedList(healthQuestions);
+        parcel.writeString(diabetes);
+        parcel.writeString(blood_pressure);
+        parcel.writeString(cholesterol);
+        parcel.writeString(had_paralytic_stroke);
+        parcel.writeString(have_asthma);
+        parcel.writeString(family_had_heart_attack);
+        parcel.writeString(imgUrl);
     }
 }

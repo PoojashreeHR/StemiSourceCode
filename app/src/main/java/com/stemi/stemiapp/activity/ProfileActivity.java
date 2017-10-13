@@ -19,8 +19,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 import com.stemi.stemiapp.R;
@@ -174,6 +176,59 @@ public class ProfileActivity extends AppCompatActivity {
 
                 }
             });
+            profileViewHolder.profileEdit.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    String userId = user.getUniqueId();
+                    Intent intent = new Intent(ProfileActivity.this, RegistrationActivity.class);
+                    intent.putExtra("userid", userId);
+                    startActivity(intent);
+                }
+            });
+
+            profileViewHolder.profileDelete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if(user.getUniqueId().equalsIgnoreCase(GlobalClass.userID)){
+                        Toast.makeText(ProfileActivity.this, "Currrent active profile can't be deleted !", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    AlertDialog.Builder builder;
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        builder = new AlertDialog.Builder(ProfileActivity.this, android.R.style.Theme_Material_Light_Dialog_Alert);
+                    } else {
+                        builder = new AlertDialog.Builder(ProfileActivity.this);
+                    }
+
+                    builder.setTitle("Delete User");
+                    builder.setMessage("Do you really want to delete this user ? ")
+                            .setCancelable(false)
+                            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    UserDetailsTable userDetailsTable = new UserDetailsTable(ProfileActivity.this);
+                                    userDetailsTable.deleteEntry(user.getUniqueId());
+
+                                    registeredUsers = userDetailsTable.getAllUsers();
+
+                                    notifyDataSetChanged();
+                                }
+                            })
+                            .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    //Do Nothing
+                                }
+                            });
+
+                    AlertDialog alertDialog = builder.create();
+                    alertDialog.show();
+
+
+
+                }
+            });
         }
 
         @Override
@@ -188,6 +243,8 @@ public class ProfileActivity extends AppCompatActivity {
             TextView profileName;
             TextView profileAge;
             TextView profileGender;
+            ImageView profileEdit;
+            ImageView profileDelete;
 
             public ProfileViewHolder(View itemView) {
                 super(itemView);
@@ -196,6 +253,8 @@ public class ProfileActivity extends AppCompatActivity {
                 profileName = (TextView) itemView.findViewById(R.id.profile_name);
                 profileAge = (TextView) itemView.findViewById(R.id.profile_age);
                 profileGender = (TextView) itemView.findViewById(R.id.profile_gender);
+                profileEdit = (ImageView) itemView.findViewById(R.id.iv_edit);
+                profileDelete = (ImageView) itemView.findViewById(R.id.iv_delete);
             }
         }
     }

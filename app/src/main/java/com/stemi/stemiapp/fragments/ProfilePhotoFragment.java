@@ -53,6 +53,8 @@ public class ProfilePhotoFragment extends Fragment implements AppConstants,View.
     private CircleImageView img;
     Button register;
     UserDetailsTable dBforUserDetails;
+    private RegisteredUserDetails user;
+    private boolean editmode;
 
     public ProfilePhotoFragment() {
         // Required empty public constructor
@@ -76,6 +78,13 @@ public class ProfilePhotoFragment extends Fragment implements AppConstants,View.
         imgOption.setOnClickListener(this);
         register = (Button) view.findViewById(R.id.bt_register);
         register.setOnClickListener(this);
+        user = this.getArguments().getParcelable("user");
+        if(user != null){
+            RegistrationActivity.registeredUserDetails.setImgUrl(user.getImgUrl());
+            editmode = true;
+            Bitmap bitmap =new  CompressImageUtil().compressImage(getActivity(),user.getImgUrl());
+            img.setImageBitmap(bitmap);
+        }
         return view;
     }
 
@@ -238,7 +247,12 @@ public class ProfilePhotoFragment extends Fragment implements AppConstants,View.
                     Log.e(TAG, "onClick: "+ deviceId);
                     long count = dBforUserDetails.getProfilesCount();
                     count = count+1;
-                    RegistrationActivity.registeredUserDetails.setUniqueId(deviceId+"_"+ count);
+                    if(!editmode) {
+                        RegistrationActivity.registeredUserDetails.setUniqueId(deviceId + "_" + count);
+                    }
+                    else{
+                        RegistrationActivity.registeredUserDetails.setUniqueId(user.getUniqueId());
+                    }
                     if(RegistrationActivity.registeredUserDetails.getImgUrl() !=null){
                         appSharedPreference.setprofileUrl(PROFILE_URL,RegistrationActivity.registeredUserDetails.getImgUrl());
                     }else {
@@ -246,11 +260,21 @@ public class ProfilePhotoFragment extends Fragment implements AppConstants,View.
                     }
                     appSharedPreference.addProfileName(PROFILE_NAME,RegistrationActivity.registeredUserDetails.getUniqueId());
                    // dBforUserDetails.removeNote(RegistrationActivity.registeredUserDetails.getName());
-                    String uid = dBforUserDetails.addEntry(RegistrationActivity.registeredUserDetails,getActivity());
-                   // if(appSharedPreference.getUserId() == null){
+                    if(!editmode) {
+                        String uid = dBforUserDetails.addEntry(RegistrationActivity.registeredUserDetails, getActivity());
+                        if( dBforUserDetails.getProfilesCount() == 1) {
+                            appSharedPreference.setUserId(uid);
+                            GlobalClass.userID = uid;
+                        }
+                    }
+                    else{
+                        String uid = dBforUserDetails.updateEntry(RegistrationActivity.registeredUserDetails, getActivity());
+//                        appSharedPreference.setUserId(uid);
+//                        GlobalClass.userID = uid;
+                    }
+                    // if(appSharedPreference.getUserId() == null){
                         //first user profile registartion
-                        appSharedPreference.setUserId(uid);
-                        GlobalClass.userID = uid;
+
                    // }
                     RegistrationActivity.registeredUserDetails = new RegisteredUserDetails();
                     Log.e(TAG, "onClick: DB COUNT " + dBforUserDetails.getProfilesCount());

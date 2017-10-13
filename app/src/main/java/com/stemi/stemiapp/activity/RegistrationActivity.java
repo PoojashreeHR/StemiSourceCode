@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.stemi.stemiapp.R;
+import com.stemi.stemiapp.databases.UserDetailsTable;
 import com.stemi.stemiapp.fragments.UserDetailsFragment;
 import com.stemi.stemiapp.model.RegisteredUserDetails;
 
@@ -14,15 +15,24 @@ public class RegistrationActivity extends AppCompatActivity {
 
     public static RegisteredUserDetails registeredUserDetails = new RegisteredUserDetails();
 
+    private String userId;
+    private RegisteredUserDetails userDetails;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration);
+        userId = getIntent().getStringExtra("userid");
+        UserDetailsTable userDetailsTable = new UserDetailsTable(this);
+        userDetails = userDetailsTable.getUserDetails(userId);
         showFragment(new UserDetailsFragment());
     }
 
     public void showFragment(Fragment fragment) {
 
+        Bundle bundle = new Bundle();
+        bundle.putParcelable("user", userDetails);
+        fragment.setArguments(bundle);
         String TAG = fragment.getClass().getSimpleName();
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
 

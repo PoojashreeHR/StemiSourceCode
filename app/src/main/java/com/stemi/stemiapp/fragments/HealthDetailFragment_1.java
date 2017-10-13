@@ -17,6 +17,7 @@ import com.stemi.stemiapp.activity.RegistrationActivity;
 import com.stemi.stemiapp.customviews.AnswerTemplateView;
 import com.stemi.stemiapp.model.HealthAnswers;
 import com.stemi.stemiapp.model.HealthQuestions;
+import com.stemi.stemiapp.model.RegisteredUserDetails;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +33,9 @@ public class HealthDetailFragment_1 extends Fragment implements View.OnClickList
     private ArrayList<HealthAnswers> healthAnswers = new ArrayList<>();
     private HealthAdapter healthAdapter;
     Button registerButton;
+    private RegisteredUserDetails user;
+    private boolean editmode;
+
     public HealthDetailFragment_1() {
     }
 
@@ -49,6 +53,10 @@ public class HealthDetailFragment_1 extends Fragment implements View.OnClickList
         healthRecycler.setLayoutManager(mLayoutManager);
         healthRecycler.setAdapter(healthAdapter);
         healthData();
+        user = this.getArguments().getParcelable("user");
+        if(user != null){
+            editmode = true;
+        }
         return view;
     }
 
@@ -73,7 +81,9 @@ public class HealthDetailFragment_1 extends Fragment implements View.OnClickList
 
     public boolean validateAllFields(){
         boolean valid = true;
-
+        if(editmode){
+            return true;
+        }
         if(RegistrationActivity.registeredUserDetails.getDiabetes() == null) {
             Toast.makeText(getActivity(), "Please answer all the questions", Toast.LENGTH_SHORT).show();
             valid = false;
@@ -157,6 +167,39 @@ public class HealthDetailFragment_1 extends Fragment implements View.OnClickList
                 holder.answerTemplateView.setResponse(RegistrationActivity.registeredUserDetails.getFamily_had_heart_attack());
             }
 
+            if(user != null){
+                switch (position){
+                    case 0 :
+                        holder.answerTemplateView.setResponse(user.getDiabetes());
+                        RegistrationActivity.registeredUserDetails.setDiabetes(user.getDiabetes());
+                        break;
+
+                    case 1:
+                        holder.answerTemplateView.setResponse(user.getBlood_pressure());
+                        RegistrationActivity.registeredUserDetails.setBlood_pressure(user.getBlood_pressure());
+                        break;
+
+                    case 2:
+                        holder.answerTemplateView.setResponse(user.getCholesterol());
+                        RegistrationActivity.registeredUserDetails.setCholesterol(user.getCholesterol());
+                        break;
+
+                    case 3:
+                        holder.answerTemplateView.setResponse(user.getHad_paralytic_stroke());
+                        RegistrationActivity.registeredUserDetails.setHad_paralytic_stroke(user.getHad_paralytic_stroke());
+                        break;
+
+                    case 4:
+                        holder.answerTemplateView.setResponse(user.getHave_asthma());
+                        RegistrationActivity.registeredUserDetails.setHave_asthma(user.getHave_asthma());
+                        break;
+
+                    case 5:
+                        holder.answerTemplateView.setResponse(user.getFamily_had_heart_attack());
+                        RegistrationActivity.registeredUserDetails.setFamily_had_heart_attack(user.getFamily_had_heart_attack());
+                        break;
+                }
+            }
 
             holder.answerTemplateView.setResponseChangedListener(new AnswerTemplateView.ResponseChangedListener() {
                 @Override

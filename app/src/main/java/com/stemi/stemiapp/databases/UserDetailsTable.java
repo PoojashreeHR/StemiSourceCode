@@ -6,9 +6,11 @@ import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.stemi.stemiapp.model.MedicineDetails;
 import com.stemi.stemiapp.model.RegisteredUserDetails;
 import com.stemi.stemiapp.preference.AppSharedPreference;
@@ -138,7 +140,7 @@ public class UserDetailsTable {
         Log.e("DATABASE VALUES", "addDataTODb: " + id);
         //closing the database connection
         DatabaseManager.getInstance().closeDatabase();
-        Toast.makeText(context, "One row added successfully "+ id, Toast.LENGTH_SHORT).show();
+       // Toast.makeText(context, "One row added successfully "+ id, Toast.LENGTH_SHORT).show();
 
         //see that all database connection stuff is inside this method
         //so we don't need to open and close db connection outside this class
@@ -176,10 +178,14 @@ public class UserDetailsTable {
             String sql = "SELECT * FROM "+TABLE_NAME+" WHERE "+USER_UID+" ='"+userId+"'"
                     +" AND "+LOGIN_ID+" = '"+loginId+"'";
 
+            Log.e("db", "query = "+sql);
             Cursor cursor = db.rawQuery(sql,null);
             cursor.moveToFirst();
 
+            boolean dataAvailable = false;
+
             while(!cursor.isAfterLast()){
+                dataAvailable = true;
                 registeredUserDetails.setAddress(cursor.getString(cursor.getColumnIndex(USER_ADDRESS)));
                 registeredUserDetails.setAge(cursor.getString(cursor.getColumnIndex(USER_AGE)));
                 registeredUserDetails.setBlood_pressure(cursor.getString(cursor.getColumnIndex(HIGH_BLOOD_PRESSURE)));
@@ -201,6 +207,12 @@ public class UserDetailsTable {
                 registeredUserDetails.setWeight(cursor.getString(cursor.getColumnIndex(USER_WEIGHT)));
                 cursor.moveToNext();
             }
+
+            if(!dataAvailable){
+                return null;
+            }
+
+            Log.e("db", new Gson().toJson(registeredUserDetails));
         }
         catch(Exception e){
 
@@ -265,5 +277,47 @@ public class UserDetailsTable {
 
         }
         return registeredUserDetailsList;
+    }
+
+    public String updateEntry(RegisteredUserDetails registeredUserDetails, Context context) {
+        Log.e("db", "RegisteredUserDetails = "+ new Gson().toJson(registeredUserDetails));
+        SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
+        ContentValues values = new ContentValues();
+      /*  long count = getProfilesCount();
+        count = count+1;
+        String uid = registeredUserDetails.getUniqueId()+"_"+ count;*/
+        //values.put(USER_UID,registeredUserDetails.getUniqueId());
+        values.put(LOGIN_ID, loginId);
+        values.put(USER_NAME,registeredUserDetails.getName());
+        values.put(USER_AGE,registeredUserDetails.getAge());
+        values.put(USER_GENDER,registeredUserDetails.getGender());
+        values.put(USER_PHONE,registeredUserDetails.getPhone());
+        values.put(USER_EMAIL, registeredUserDetails.getEmail());
+        values.put(USER_ADDRESS,registeredUserDetails.getAddress());
+        values.put(USER_HEIGHT,registeredUserDetails.getHeight());
+        values.put(USER_WEIGHT,registeredUserDetails.getWeight());
+        values.put(USER_WAIST,registeredUserDetails.getWaist());
+        values.put(DO_YOU_SMOKE,registeredUserDetails.getDo_you_smoke());
+        values.put(HAD_HEART_ATTACK,registeredUserDetails.getHeart_attack());
+        values.put(HAVE_DIABETES,registeredUserDetails.getDiabetes());
+        values.put(HIGH_BLOOD_PRESSURE,registeredUserDetails.getBlood_pressure());
+        values.put(HIGH_CHOLESTEROL,registeredUserDetails.getCholesterol());
+        values.put(HAD_STROKE,registeredUserDetails.getHad_paralytic_stroke());
+        values.put(HAVE_ASTHMA, registeredUserDetails.getHave_asthma());
+        values.put(FAMILY_HEALTH,registeredUserDetails.getFamily_had_heart_attack());
+        values.put(USER_PROFILR_URL,registeredUserDetails.getImgUrl());
+
+        long id = db.update(TABLE_NAME,values,USER_UID+" = '"+registeredUserDetails.getUniqueId()+"'",null);
+        Log.e("db", "update condition = "+ USER_UID+" = '"+registeredUserDetails.getUniqueId()+"'");
+        Log.e("db", "addDataTODb: " + id);
+        //closing the database connection
+        DatabaseManager.getInstance().closeDatabase();
+        return registeredUserDetails.getUniqueId();
+    }
+
+    public void deleteEntry(String userId){
+        SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
+        db.delete(TABLE_NAME,USER_UID+" = '"+userId+"'",null);
+        DatabaseManager.getInstance().closeDatabase();
     }
 }

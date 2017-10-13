@@ -1,5 +1,7 @@
 package com.stemi.stemiapp.model;
 
+import android.os.Parcelable;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,7 +9,7 @@ import java.util.List;
  * Created by Pooja on 17-07-2017.
  */
 
-public class HealthQuestions extends RegisteredUserDetails {
+public class HealthQuestions extends RegisteredUserDetails{
 
     private String questions;
     private int size;
