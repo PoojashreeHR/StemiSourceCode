@@ -111,12 +111,14 @@ public class WeightFragment  extends Fragment implements View.OnClickListener,Tr
         return view;
     }
 
+
     //Calculate BMI
     private float calculateBMI (String wt, String ht) {
         float weight = Float.parseFloat(wt);
         float height = (Float.parseFloat(ht))/100;
         return (float) (weight / (height * height));
     }
+
 
     @Override
     public void onClick(View v) {
@@ -151,12 +153,14 @@ public class WeightFragment  extends Fragment implements View.OnClickListener,Tr
     @Override
     public void doBack() {
         if(GlobalClass.userID != null) {
-            if (!todaysWeight.getText().toString().equals("")) {
-                if (validateField()) {
-                    SaveData();
-                }
-            } else {
-                EventBus.getDefault().post(new MessageEvent("Hello!"));
+        if(!todaysWeight.getText().toString().equals("")){
+            if(validateField()) {
+                SaveData();
+            }
+        }else {
+            getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
+            EventBus.getDefault().post(new MessageEvent("Hello!"));
+            ((TrackActivity) getActivity()).setActionBarTitle("Track");
 
             }
         }
@@ -347,13 +351,17 @@ public class WeightFragment  extends Fragment implements View.OnClickListener,Tr
         boolean date = dbForTrackActivities.getDate(TrackActivity.userEventDetails.getDate(),GlobalClass.userID);
         if (!date) {
             dbForTrackActivities.addEntry(TrackActivity.userEventDetails);
+            getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
             ((TrackActivity) getActivity()).showFragment(new TrackFragment());
             ((TrackActivity) getActivity()).setActionBarTitle("Track");
             saveUserData();
 
+
         } else {
             int c = dbForTrackActivities.isEntryExists(TrackActivity.userEventDetails,4,getActivity());
             ((TrackActivity) getActivity()).setActionBarTitle("Track");
+            getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
+
 
         }
     }

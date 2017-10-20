@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -23,6 +24,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -51,10 +53,13 @@ import static android.app.Activity.RESULT_OK;
  * Created by Pooja on 24-07-2017.
  */
 
-public class SOSFragment extends Fragment implements View.OnClickListener,TrackActivity.OnBackPressedListener {
-    @BindView(R.id.bt_share_location)Button shateLocation;
-    @BindView(R.id.rl_call)RelativeLayout rlCall;
-    @BindView(R.id.rl_locateMap)RelativeLayout rlLocateMap;
+public class SOSFragment extends Fragment implements View.OnClickListener, TrackActivity.OnBackPressedListener {
+    @BindView(R.id.bt_share_location)
+    Button shateLocation;
+    @BindView(R.id.rl_call)
+    RelativeLayout rlCall;
+    @BindView(R.id.rl_locateMap)
+    RelativeLayout rlLocateMap;
 
     UserDetailsTable dBforUserDetails;
     BetterSpinner personSpinner;
@@ -64,7 +69,7 @@ public class SOSFragment extends Fragment implements View.OnClickListener,TrackA
     private static final String TAG = "SOSFragment";
     int PLACE_PICKER_REQUEST = 1;
     private EditText etLocation;
-    String selectedPersonName;
+    String selectedPersonName = null;
     private double latitude, longitude;
 
     public SOSFragment() {
@@ -81,16 +86,16 @@ public class SOSFragment extends Fragment implements View.OnClickListener,TrackA
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_sos, container, false);
-        ButterKnife.bind(this,view);
+        ButterKnife.bind(this, view);
 
         rlCall.setOnClickListener(this);
         rlLocateMap.setOnClickListener(this);
         shateLocation.setOnClickListener(this);
-       // ((TrackActivity) getActivity()).setActionBarTitle("SOS");
+        // ((TrackActivity) getActivity()).setActionBarTitle("SOS");
 
         personSpinner = (BetterSpinner) view.findViewById(R.id.person_Spinner);
         //pick_location = (ImageView) view.findViewById(R.id.pick_location);
-        etLocation = (EditText)view.findViewById(R.id.et_location);
+        etLocation = (EditText) view.findViewById(R.id.et_location);
         dBforUserDetails = new UserDetailsTable(getActivity());
         personName = new ArrayList<>();
         personName = dBforUserDetails.getRecords();
@@ -101,11 +106,11 @@ public class SOSFragment extends Fragment implements View.OnClickListener,TrackA
                 checkLocationServices();
             }
         });
-        ((TrackActivity)getActivity()).getViewPager().setPagingEnabled(false);
+        ((TrackActivity) getActivity()).getViewPager().setPagingEnabled(false);
 
         ((TrackActivity) getActivity()).setOnBackPressedListener(this);
 
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(getActivity(), R.layout.spinner_layout, personName );
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(getActivity(), R.layout.spinner_layout, personName);
         personSpinner.setAdapter(arrayAdapter);
         personSpinner.addTextChangedListener(new TextWatcher() {
             @Override
@@ -121,18 +126,18 @@ public class SOSFragment extends Fragment implements View.OnClickListener,TrackA
             @Override
             public void afterTextChanged(Editable s) {
                 selectedPersonName = personSpinner.getText().toString();
-                Log.e("TAG","Text is :"+ personSpinner.getText().toString());
+                Log.e("TAG", "Text is :" + personSpinner.getText().toString());
             }
         });
-        Log.e(TAG, "onCreateView: SOS Fragment"+ dBforUserDetails.getRecords() );
+        Log.e(TAG, "onCreateView: SOS Fragment" + dBforUserDetails.getRecords());
         return view;
     }
 
     @Override
     public void setMenuVisibility(boolean menuVisible) {
-        if(getActivity() != null){
-            if(menuVisible){
-            //    ((TrackActivity) getActivity()).setActionBarTitle("SOS");
+        if (getActivity() != null) {
+            if (menuVisible) {
+                //    ((TrackActivity) getActivity()).setActionBarTitle("SOS");
 
             }
         }
@@ -151,11 +156,11 @@ public class SOSFragment extends Fragment implements View.OnClickListener,TrackA
         }
     }
 
-    private void openPlacePicker(){
+    private void openPlacePicker() {
         PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
 
         try {
-            if(checkPlayServices()){
+            if (checkPlayServices()) {
                 startActivityForResult(builder.build(getActivity()), PLACE_PICKER_REQUEST);
             }
 
@@ -165,6 +170,7 @@ public class SOSFragment extends Fragment implements View.OnClickListener,TrackA
             e.printStackTrace();
         }
     }
+
     private boolean checkPlayServices() {
         GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
         int resultCode = apiAvailability.isGooglePlayServicesAvailable(getActivity());
@@ -181,20 +187,22 @@ public class SOSFragment extends Fragment implements View.OnClickListener,TrackA
         return true;
     }
 
-    private void checkLocationServices(){
-        LocationManager lm = (LocationManager)getActivity().getSystemService(Context.LOCATION_SERVICE);
+    private void checkLocationServices() {
+        LocationManager lm = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
         boolean gps_enabled = false;
         boolean network_enabled = false;
 
         try {
             gps_enabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
-        } catch(Exception ex) {}
+        } catch (Exception ex) {
+        }
 
         try {
             network_enabled = lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-        } catch(Exception ex) {}
+        } catch (Exception ex) {
+        }
 
-        if(!gps_enabled && !network_enabled) {
+        if (!gps_enabled && !network_enabled) {
             // notify user
             AlertDialog.Builder dialog;
             // dialog = new AlertDialog.Builder(this);
@@ -208,7 +216,7 @@ public class SOSFragment extends Fragment implements View.OnClickListener,TrackA
                 @Override
                 public void onClick(DialogInterface paramDialogInterface, int paramInt) {
                     // TODO Auto-generated method stub
-                    Intent myIntent = new Intent( Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                    Intent myIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                     startActivity(myIntent);
                     //get gps
                 }
@@ -222,25 +230,39 @@ public class SOSFragment extends Fragment implements View.OnClickListener,TrackA
                 }
             });
             dialog.show();
-        }
-        else{
+        } else {
             openPlacePicker();
         }
     }
 
+    public boolean ValidateFields() {
+        Boolean valid = true;
+
+        String location = etLocation.getText().toString();
+        if(selectedPersonName == null || selectedPersonName.equals("")){
+            valid = false;
+            Toast.makeText(getActivity(), "Select person name", Toast.LENGTH_SHORT).show();
+        }else if(TextUtils.isEmpty(location)){
+            valid = false;
+            etLocation.setError("Location is Required");
+        }
+
+        return valid;
+    }
 
     @Override
     public void onClick(View v) {
         int id = v.getId();
-        switch (id){
+        switch (id) {
             case R.id.bt_share_location:
-                Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
-                sharingIntent.setType("text/plain");
-                String shareBodyText = "Hi "+ selectedPersonName + " is in emergency his/her location is "+etLocation.getText().toString();
-                sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT,"Subject here");
-                sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBodyText);
-                startActivity(Intent.createChooser(sharingIntent, "Shearing Option"));
-
+                if (ValidateFields()) {
+                    Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+                    sharingIntent.setType("text/plain");
+                    String shareBodyText = "Hi " + selectedPersonName + " is in emergency his/her location is " + etLocation.getText().toString();
+                    sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Subject here");
+                    sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBodyText);
+                    startActivity(Intent.createChooser(sharingIntent, "Shearing Option"));
+                }
                 break;
 
             case R.id.rl_call:
@@ -256,11 +278,16 @@ public class SOSFragment extends Fragment implements View.OnClickListener,TrackA
 //                if (mapIntent.resolveActivity(getActivity().getPackageManager()) != null) {
 //                    startActivity(mapIntent);
 //                }
-                Intent mapIntent = new Intent(getActivity(), MapsActivity.class);
-                mapIntent.putExtra("lat", latitude);
-                mapIntent.putExtra("lon", longitude);
-                startActivity(mapIntent);
-                break;
+                String location = etLocation.getText().toString();
+                if(TextUtils.isEmpty(location)){
+                    etLocation.setError("Location is required");
+                }else {
+                    Intent mapIntent = new Intent(getActivity(), MapsActivity.class);
+                    mapIntent.putExtra("lat", latitude);
+                    mapIntent.putExtra("lon", longitude);
+                    startActivity(mapIntent);
+                    break;
+                }
         }
     }
 

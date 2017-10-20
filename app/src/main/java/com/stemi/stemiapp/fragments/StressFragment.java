@@ -73,7 +73,6 @@ public class StressFragment extends Fragment implements AppConstants, TrackActiv
     @BindView(R.id.iv_meditation)ImageView ivMeditation;
     @BindView(R.id.iv_hobbies)ImageView ivHobbies;
     String savedDate;
-    Boolean checkClicked = false;
 
     AppSharedPreference appSharedPreference;
     String stressCount = null;
@@ -171,45 +170,45 @@ public class StressFragment extends Fragment implements AppConstants, TrackActiv
                 if(eventDetails.get(0).getYoga().equals("true")){
                     ivYoga.setBackgroundResource(R.drawable.ic_checked_1);
                     ivYoga.setTag(R.drawable.ic_checked_1);
-                    checkClicked = true;
                 }else {
                     ivYoga.setBackgroundResource(R.drawable.ic_unchecked_1);
                     ivYoga.setTag(0);
-                    checkClicked = false;
                 }
 
                 if(eventDetails.get(0).getMeditation().equals("true")){
                     ivMeditation.setBackgroundResource(R.drawable.ic_checked_1);
                     ivMeditation.setTag(R.drawable.ic_checked_1);
-                    checkClicked = true;
                 }else {
                     ivMeditation.setBackgroundResource(R.drawable.ic_unchecked_1);
                     ivMeditation.setTag(0);
-                    checkClicked = false;
                 }
 
                 if(eventDetails.get(0).getHobbies().equals("true")){
                     ivHobbies.setBackgroundResource(R.drawable.ic_checked_1);
                     ivHobbies.setTag(R.drawable.ic_checked_1);
-                    checkClicked = true;
                 }else {
                     ivHobbies.setBackgroundResource(R.drawable.ic_unchecked_1);
                     ivHobbies.setTag(0);
-                    checkClicked = false;
                 }
 
             }else {
+                stressCount = "0";
                 ivYoga.setBackgroundResource(R.drawable.ic_unchecked_1);
+                ivYoga.setTag(0);
                 ivHobbies.setBackgroundResource(R.drawable.ic_unchecked_1);
+                ivHobbies.setTag(0);
                 ivMeditation.setBackgroundResource(R.drawable.ic_unchecked_1);
-
+                ivMeditation.setTag(0);
                 mSeekLin.setProgress(0);
             }
         }else {
+            stressCount = "0";
             ivYoga.setBackgroundResource(R.drawable.ic_unchecked_1);
+            ivYoga.setTag(0);
             ivHobbies.setBackgroundResource(R.drawable.ic_unchecked_1);
+            ivHobbies.setTag(0);
             ivMeditation.setBackgroundResource(R.drawable.ic_unchecked_1);
-
+            ivMeditation.setTag(0);
             mSeekLin.setProgress(0);
         }
     }
@@ -219,36 +218,30 @@ public class StressFragment extends Fragment implements AppConstants, TrackActiv
         int id = v.getId();
         switch (id) {
             case R.id.ll_yoga:
-                if (checkClicked) {
+                if (ivYoga.getTag().equals(R.drawable.ic_checked_1)) {
                     ivYoga.setBackgroundResource(R.drawable.ic_unchecked_1);
                     ivYoga.setTag(0);
-                    checkClicked = false;
                 } else {
                     ivYoga.setBackgroundResource(R.drawable.ic_checked_1);
                     ivYoga.setTag(R.drawable.ic_checked_1);
-                    checkClicked = true;
                 }
                 break;
             case R.id.ll_meditation:
-                if (checkClicked) {
+                if (ivMeditation.getTag().equals(R.drawable.ic_checked_1)) {
                     ivMeditation.setBackgroundResource(R.drawable.ic_unchecked_1);
                     ivMeditation.setTag(0);
-                    checkClicked = false;
                 } else {
                     ivMeditation.setBackgroundResource(R.drawable.ic_checked_1);
                     ivMeditation.setTag(R.drawable.ic_checked_1);
-                    checkClicked = true;
                 }
                 break;
             case R.id.ll_hobies:
-                if (checkClicked) {
+                if (ivHobbies.getTag().equals(R.drawable.ic_checked_1)) {
                     ivHobbies.setBackgroundResource(R.drawable.ic_unchecked_1);
                     ivHobbies.setTag(0);
-                    checkClicked = false;
                 } else {
                     ivHobbies.setBackgroundResource(R.drawable.ic_checked_1);
                     ivHobbies.setTag(R.drawable.ic_checked_1);
-                    checkClicked = true;
                 }
                 break;
         }
@@ -384,7 +377,6 @@ public class StressFragment extends Fragment implements AppConstants, TrackActiv
             TrackActivity. userEventDetails.setYoga("false");
             trackStress.setYoga(false);
         }
-
         if(ivMeditation.getTag().equals(R.drawable.ic_checked_1)){
             TrackActivity.userEventDetails.setMeditation("true");
             trackStress.setMeditation(true);
@@ -392,7 +384,6 @@ public class StressFragment extends Fragment implements AppConstants, TrackActiv
             TrackActivity.userEventDetails.setMeditation("false");
             trackStress.setMeditation(false);
         }
-
         if(ivHobbies.getTag().equals(R.drawable.ic_checked_1)){
             TrackActivity.userEventDetails.setHobbies("true");
             trackStress.setHobbies(true);
@@ -420,7 +411,7 @@ public class StressFragment extends Fragment implements AppConstants, TrackActiv
             saveUserData();
         } else {
             int c = dbForTrackActivities.isEntryExists(TrackActivity.userEventDetails,2,getActivity());
-            ((TrackActivity) getActivity()).setActionBarTitle("Track");
+           // ((TrackActivity) getActivity()).setActionBarTitle("Track");
 
         }
     }

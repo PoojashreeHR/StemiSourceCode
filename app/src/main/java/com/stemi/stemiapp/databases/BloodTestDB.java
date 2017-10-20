@@ -1,15 +1,24 @@
 package com.stemi.stemiapp.databases;
 
+import android.app.AlertDialog;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+import android.widget.Button;
 
 import com.google.gson.Gson;
+import com.stemi.stemiapp.R;
+import com.stemi.stemiapp.activity.TrackActivity;
+import com.stemi.stemiapp.fragments.TrackFragment;
 import com.stemi.stemiapp.model.BloodTestResult;
+import com.stemi.stemiapp.model.MessageEvent;
 import com.stemi.stemiapp.utils.GlobalClass;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.text.SimpleDateFormat;
 
@@ -56,6 +65,8 @@ public class BloodTestDB {
         }
 
     }
+
+
 
     public boolean isEntryExists(String userId, String dateTag){
         String query = "SELECT * FROM "+TABLE_BLOOD_TEST+" WHERE "+COLUMN_DATE_TAG+" = '"+dateTag+"'"

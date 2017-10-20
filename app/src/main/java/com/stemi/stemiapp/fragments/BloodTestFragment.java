@@ -110,44 +110,11 @@ public class BloodTestFragment extends Fragment implements TrackActivity.OnBackP
             @Override
             public void onClick(View v) {
 
-                fieldsOK = validate(new EditText[]{etHaemoglobin, etUreaCreatinine, etCholesterol, etHdl,etLdl,etTriglycerides,etRpg,etFpg,etPpg});
-                if(!fieldsOK){
-                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                    builder.setMessage("You entered some data!! You want to save?");
-                    //Yes Button
-                    builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            saveData();
-                            EventBus.getDefault().post(new MessageEvent("Hello!"));
-                            Log.i("Code2care ", "Yes button Clicked!");
-                            ((TrackActivity) getActivity()).setActionBarTitle("Track");
-
-                        }
-                    });
-                    //No Button
-                    builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                            EventBus.getDefault().post(new MessageEvent("Hello!"));
-                            Log.i("Code2care ","No button Clicked!");
-                            ((TrackActivity) getActivity()).setActionBarTitle("Track");
-
-
-                        }
-                    });
-
-
-                    AlertDialog alertDialog = builder.create();
-                    alertDialog.show();
-                    Button nbutton = alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE);
-                    nbutton.setTextColor(getActivity().getResources().getColor(R.color.appBackground));
-                    Button pbutton = alertDialog.getButton(DialogInterface.BUTTON_POSITIVE);
-                    pbutton.setTextColor(getActivity().getResources().getColor(R.color.appBackground));
+                fieldsOK = validate(new EditText[]{etHaemoglobin, etUreaCreatinine, etCholesterol, etHdl, etLdl, etTriglycerides, etRpg, etFpg, etPpg});
+                if (!fieldsOK) {
+                    saveData();
                 }else {
-                    EventBus.getDefault().post(new MessageEvent("Hello!"));
-                    ((TrackActivity) getActivity()).setActionBarTitle("Track");
+                    Toast.makeText(getActivity(), "Enter some data to save", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -168,6 +135,7 @@ public class BloodTestFragment extends Fragment implements TrackActivity.OnBackP
     @Override
     public void doBack() {
         EventBus.getDefault().post(new MessageEvent("Hello!"));
+        getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
         ((TrackActivity) getActivity()).setActionBarTitle("Track");
 
     }
@@ -233,6 +201,9 @@ public class BloodTestFragment extends Fragment implements TrackActivity.OnBackP
         }
         else return 0;
     }
+
+
+
     public void saveData(){
         bloodTestResult.setHeamoglobin(ParseDouble(etHaemoglobin.getText().toString()));
         bloodTestResult.setUreaCreatinine(ParseDouble(etUreaCreatinine.getText().toString()));
@@ -246,7 +217,14 @@ public class BloodTestFragment extends Fragment implements TrackActivity.OnBackP
         bloodTestResult.setUid(GlobalClass.userID);
         bloodTestResult.setDate(tvBloodTestDate.getText().toString());
 
-        bloodTestDB.addEntry(bloodTestResult.getUid(),bloodTestResult.getDate(), bloodTestResult);
+        if(bloodTestDB.isEntryExists(GlobalClass.userID,tvBloodTestDate.getText().toString())){
+            buidDialog(getActivity());
+        }else {
+            bloodTestDB.addEntry(bloodTestResult.getUid(), bloodTestResult.getDate(), bloodTestResult);
+            getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
+            EventBus.getDefault().post(new MessageEvent("Hello!"));
+            ((TrackActivity) getActivity()).setActionBarTitle("Track");
+        }
       //  ((TrackActivity) getActivity()).showFragment(new TrackFragment());
 
        /* if (tvBloodTestDate.getText().equals("Today  ")){
@@ -260,5 +238,38 @@ public class BloodTestFragment extends Fragment implements TrackActivity.OnBackP
     //  //  boolean date = bloodTestDB.getDate(TrackActivity.userEventDetails.getDate());
 
         }
+    public void buidDialog(final Context mContext){
+        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+        //builder.setTitle("");
+        builder.setMessage("Do you wish to update?");
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                bloodTestDB.updateEntry(GlobalClass.userID,tvBloodTestDate.getText().toString(),bloodTestResult);
+                EventBus.getDefault().post(new MessageEvent("Hello!"));
+                ((TrackActivity) mContext).setActionBarTitle("Track");
+                Log.i("Code2care ", "Yes button Clicked!");
+            }
+        });
+
+        //No Button
+        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Log.i("Code2care ","No button Clicked!");
+                dialog.dismiss();
+                ((TrackActivity) mContext).showFragment(new TrackFragment());
+                ((TrackActivity) mContext).setActionBarTitle("Track");
+
+            }
+        });
+
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+        Button nbutton = alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE);
+        nbutton.setTextColor(mContext.getResources().getColor(R.color.appBackground));
+        Button pbutton = alertDialog.getButton(DialogInterface.BUTTON_POSITIVE);
+        pbutton.setTextColor(mContext.getResources().getColor(R.color.appBackground));
+    }
 
 }

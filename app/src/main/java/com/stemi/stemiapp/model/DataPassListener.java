@@ -7,6 +7,6 @@ import java.util.ArrayList;
  */
 
 public interface DataPassListener {
-    void passData(ArrayList<MedicineDetails> data);
+    void passData(MedicineDetails data,String name);
     void goBack();
 }

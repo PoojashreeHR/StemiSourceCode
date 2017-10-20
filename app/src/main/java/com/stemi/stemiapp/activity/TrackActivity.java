@@ -54,6 +54,7 @@ import com.stemi.stemiapp.fragments.TrackFragment;
 import com.stemi.stemiapp.fragments.WeightFragment;
 import com.stemi.stemiapp.model.DataPassListener;
 import com.stemi.stemiapp.model.MedicineDetails;
+import com.stemi.stemiapp.model.MedicinesTakenOrNot;
 import com.stemi.stemiapp.model.MessageEvent;
 import com.stemi.stemiapp.model.RegisteredUserDetails;
 import com.stemi.stemiapp.model.SaveCurrentDataEvent;
@@ -366,6 +367,7 @@ public class TrackActivity extends AppCompatActivity implements NavigationView.O
         }
     }
 
+/*
     @Override
     public void passData(ArrayList<MedicineDetails> data) {
         AddMedicineFragment addMedicineFragment = new AddMedicineFragment();
@@ -375,6 +377,21 @@ public class TrackActivity extends AppCompatActivity implements NavigationView.O
         addMedicineFragment.setArguments(args);
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.mainContainer, addMedicineFragment).commit();
+    }
+*/
+
+
+    @Override
+    public void passData(MedicineDetails data, String name) {/*
+        AddMedicineFragment addMedicineFragment = new AddMedicineFragment();
+        Bundle args = new Bundle();
+        args.putParcelableArrayList("RECIEVE DATA", data);
+        args.putString("NAME", name);
+        // args.putString(AddMedicineFragment.DATA_RECEIVE, data);
+        addMedicineFragment.setArguments(args);
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.mainContainer, addMedicineFragment).commit();*/
+
     }
 
     @Override
@@ -618,8 +635,7 @@ public class TrackActivity extends AppCompatActivity implements NavigationView.O
         mainContainer.setVisibility(View.GONE);
 
         if (currentFrag != null) {
-
-            getSupportFragmentManager().popBackStack();
+           // getSupportFragmentManager().popBackStack();
             transaction.remove(currentFrag);
         }
         transaction.commitAllowingStateLoss();

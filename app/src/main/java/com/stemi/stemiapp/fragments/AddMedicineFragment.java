@@ -112,7 +112,7 @@ public class AddMedicineFragment extends Fragment implements View.OnClickListene
     Gson gson;
     AppSharedPreference appSharedPreference;
     MedicineTable medicineTable;
-    ArrayList<MedicineDetails> showReceivedData;
+   MedicineDetails showReceivedData;
     int checkEditOrNot = 0;
 
     public AddMedicineFragment() {
@@ -168,12 +168,42 @@ public class AddMedicineFragment extends Fragment implements View.OnClickListene
         medicineDetails = new MedicineDetails();
         medicineTable = new MedicineTable();
         Bundle args = getArguments();
-        if (args != null) {
-            showReceivedData = args.getParcelableArrayList("RECIEVE DATA");
-            Log.e(TAG, "onCreateView: " + showReceivedData.get(0));
+
+        //Calling from track activity passData to edit Medicine Data
+
+       /* if (args != null) {
+            showReceivedData = args.getParcelable("RECIEVE DATA");
+            String name = args.getString("NAME");
+            Log.e(TAG, "onCreateView: " + showReceivedData);
+            for(int i= 0; i<showReceivedData.getMedicineMorning().size();i++){
+                if(name == showReceivedData.getMedicineMorning().get(i).getMedName()){
+                    morningMedicine.setBackgroundResource(R.drawable.oval_shape_textview);
+                    morningMedicine.setTextColor(getResources().getColor(R.color.white));
+                    morningTime.setVisibility(View.VISIBLE);
+                    morningMedicine.setSelected(false);
+                    morningTime.setText(showReceivedData.getMedicineMorning().get(i).getMedTime());
+                }
+
+                if(name == showReceivedData.getMedicineAfternoon().get(i).getMedName()){
+                    noonMedicine.setBackgroundResource(R.drawable.oval_shape_textview);
+                    noonMedicine.setTextColor(getResources().getColor(R.color.white));
+                    noonTime.setVisibility(View.VISIBLE);
+                    noonMedicine.setSelected(true);
+                    noonTime.setText(showReceivedData.getMedicineAfternoon().get(i).getMedTime());
+                }
+
+                if(name ==  showReceivedData.getMedicineNight().get(i).getMedName()){
+                    nightMedicine.setBackgroundResource(R.drawable.oval_shape_textview);
+                    nightMedicine.setTextColor(getResources().getColor(R.color.white));
+                    nightTime.setVisibility(View.VISIBLE);
+                    nightMedicine.setSelected(true);
+                    nightTime.setText(showReceivedData.getMedicineNight().get(i).getMedTime());
+                }
+            }
+*//*
             medicineNamee.setText(showReceivedData.get(0).getMedicineName());
             medicineDays.setText(showReceivedData.get(0).getMedicineDays());
-            medicineRemainder.setChecked(showReceivedData.get(0).getMedicineRemainder());
+            medicineRemainder.setChecked(showReceivedData.get(0).getMedicineRemainder());*//*
 
             for (int i = 0; i < color.getChildCount(); i++) {
                 View v = color.getChildAt(i);
@@ -246,6 +276,11 @@ public class AddMedicineFragment extends Fragment implements View.OnClickListene
             morningTime.setVisibility(View.VISIBLE);
         }
 
+*/
+
+        morningMedicine.setBackgroundResource(R.drawable.oval_shape_textview);
+        morningMedicine.setTextColor(getResources().getColor(R.color.white));
+        morningTime.setVisibility(View.VISIBLE);
 
         morningMedicine.setOnClickListener(this);
         noonMedicine.setOnClickListener(this);
@@ -481,7 +516,6 @@ public class AddMedicineFragment extends Fragment implements View.OnClickListene
         if (getActivity() != null) {
             if (menuVisible) {
                 ((TrackActivity) getActivity()).setActionBarTitle("Hospital");
-
             }
         }
         super.setMenuVisibility(menuVisible);
@@ -760,23 +794,47 @@ public class AddMedicineFragment extends Fragment implements View.OnClickListene
                     String s = oldEntry.get(i);
                     Gson gsonObj = new Gson();
                     medDetails = gsonObj.fromJson(s, MedicineDetails.class);
-                    ArrayList<MedicinesTakenOrNot> medicineLists = null;
-                    if (medDetails.getMedicineMorning() != null) {
-                        medicineLists = medDetails.getMedicineMorning();
-                        medicineLists.add(medicinesTakenOrNotMorning);
-                        medDetails.setMedicineMorning(medicineLists);
-                        medicineLists.clear();
-                    } else if (medDetails.getMedicineAfternoon() != null) {
-                        medicineLists = medDetails.getMedicineAfternoon();
-                        medicineLists.add(medicinesTakenOrNotAfternoon);
-                        medDetails.setMedicineAfternoon(medicineLists);
-                        medicineLists.clear();
-                    } else if (medDetails.getMedicineNight() != null) {
-                        medicineLists = medDetails.getMedicineNight();
-                        medicineLists.add(medicinesTakenOrNotNight);
-                        medDetails.setMedicineNight(medicineLists);
-                        medicineLists.clear();
+                    ArrayList<MedicinesTakenOrNot> medicineLists = new ArrayList<>();
+                        if(morningTime.getVisibility() == View.VISIBLE) {
+                            if(medDetails.getMedicineMorning() != null) {
+                                medicineLists = medDetails.getMedicineMorning();
+                                medicineLists.add(medicinesTakenOrNotMorning);
+                                medDetails.setMedicineMorning(medicineLists);
+                            }else {
+                                medicineLists.add(medicinesTakenOrNotMorning);
+                                medDetails.setMedicineMorning(medicineLists);
+                            }
+                        }else {
+                            Log.e(TAG, "storeMedicalDetails: There is no data in Morning" );
+                        }
+                       // medicineLists.clear();
+                        if(noonTime.getVisibility() == View.VISIBLE) {
+                            if(medDetails.getMedicineAfternoon()!=null) {
+                                medicineLists = medDetails.getMedicineAfternoon();
+                                medicineLists.add(medicinesTakenOrNotAfternoon);
+                                medDetails.setMedicineAfternoon(medicineLists);
+                            }else {
+                                medicineLists.add(medicinesTakenOrNotAfternoon);
+                                medDetails.setMedicineAfternoon(medicineLists);
+                            }
+
+                        }else {
+                            Log.e(TAG, "storeMedicalDetails: There is no data in Afternoon" );
+                        //medicineLists.clear();
                     }
+                        if(nightTime.getVisibility() == View.VISIBLE) {
+                            if(medDetails.getMedicineNight() !=null) {
+                                medicineLists = medDetails.getMedicineNight();
+                                medicineLists.add(medicinesTakenOrNotNight);
+                                medDetails.setMedicineNight(medicineLists);
+                            }else {
+                                medicineLists.add(medicinesTakenOrNotNight);
+                                medDetails.setMedicineNight(medicineLists);
+                            }
+                        }else {
+                            Log.e(TAG, "storeMedicalDetails: There is no data in Night");
+                        }
+                        // medicineLists.clear();
                 }
 
                 medicineTable.updateDataWithDate(GlobalClass.userID, incDate, medDetails);
@@ -786,7 +844,7 @@ public class AddMedicineFragment extends Fragment implements View.OnClickListene
                 //Log.e(TAG, "onCreateView: Get Medicine Count " + getCount);
             } else {
                 if (checkEditOrNot == 1) {
-                    medicineTable.getMedicineToEdit(showReceivedData, medicineDetails);
+                 //   medicineTable.getMedicineToEdit(showReceivedData, medicineDetails);
                 } else {
                     medicineTable.addMedicineDetails(medicineDetails, medicineDetails.getPersonName());
                     long getCount = medicineTable.getMedicineDetailsCount();

@@ -114,7 +114,7 @@ public class TrackFragment extends Fragment {
                     Log.e(TAG, "onClick: You clicked on " + position);
                     switch (i) {
                         case 0:
-                        //    ((TrackActivity) getActivity()).showFragment(new AddMedicineFragment());
+                            ((TrackActivity) getActivity()).showFragment(new MedicationFragment());
                             break;
                         case 1:
                             ((TrackActivity) getActivity()).showFragment(new ExerciseFragment());
@@ -160,11 +160,11 @@ public class TrackFragment extends Fragment {
 
     @Override
     public void setMenuVisibility(boolean menuVisible) {
-        if(getActivity() != null){
+     /*   if(getActivity() != null){
             if(menuVisible){
                 ((TrackActivity) getActivity()).setActionBarTitle("Track");
             }
-        }
+        }*/
         super.setMenuVisibility(menuVisible);
     }
 

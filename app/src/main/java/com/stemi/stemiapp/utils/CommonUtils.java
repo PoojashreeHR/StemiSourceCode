@@ -112,10 +112,11 @@ public class CommonUtils {
          @Override
          public void onClick(DialogInterface dialog, int which) {
             dbForTrackActivities.updateUserTrack(TrackActivity.userEventDetails,value);
+            Log.i("Code2care ", "Yes button Clicked!");
             EventBus.getDefault().post(new MessageEvent("Hello!"));
             EventBus.getDefault().post(new UserAcceptedEvent(""+value));
             ((TrackActivity) mContext).setActionBarTitle("Track");
-            Log.i("Code2care ", "Yes button Clicked!");
+
          }
       });
 
