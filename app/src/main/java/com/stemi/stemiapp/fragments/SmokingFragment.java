@@ -60,6 +60,7 @@ public class SmokingFragment  extends Fragment implements TrackActivity.OnBackPr
     String savedDate;
     String responseChange;
     private boolean alreadySaved;
+    private TrackSmoking trackSmoking;
 
     // AnswerTemplateView answerTemplateView;
     public SmokingFragment() {
@@ -156,11 +157,21 @@ public class SmokingFragment  extends Fragment implements TrackActivity.OnBackPr
     }
 
     public void saveAllData() {
-        if(!alreadySaved) {
-            Log.e("fragment", "SmokingFragment saveAllData()");
-            saveData();
-            alreadySaved = true;
+        if(GlobalClass.userID !=null) {
+            if (!alreadySaved) {
+                Log.e("fragment", "SmokingFragment saveAllData()");
+                saveData();
+                alreadySaved = true;
+            }
         }
+        else{
+           // Toast.makeText(getActivity(), "Please add profile details first", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void saveUserData() {
+        TrackSmokingDB trackSmokingDB = new TrackSmokingDB(getActivity());
+        trackSmokingDB.addEntry(trackSmoking);
     }
 
     public static class DatePickerDialogClass extends DialogFragment implements DatePickerDialog.OnDateSetListener{
@@ -205,7 +216,7 @@ public class SmokingFragment  extends Fragment implements TrackActivity.OnBackPr
     public void saveData() {
         TrackActivity.userEventDetails.setUid(GlobalClass.userID);
         TrackSmokingDB trackSmokingDB = new TrackSmokingDB(getActivity());
-        TrackSmoking trackSmoking = new TrackSmoking();
+        trackSmoking = new TrackSmoking();
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy");
         trackSmoking.setUserId(GlobalClass.userID);
         if (tvSmokeToday.getText().equals("Today  ")){
@@ -234,7 +245,7 @@ public class SmokingFragment  extends Fragment implements TrackActivity.OnBackPr
             trackSmoking.setSmoked(true);
         }
 
-        trackSmokingDB.addEntry(trackSmoking);
+
         EventBus.getDefault().post(new DataSavedEvent(""));
 
         boolean date = dbForTrackActivities.getDate(TrackActivity.userEventDetails.getDate(),GlobalClass.userID);
@@ -242,6 +253,7 @@ public class SmokingFragment  extends Fragment implements TrackActivity.OnBackPr
             dbForTrackActivities.addEntry(TrackActivity.userEventDetails);
              EventBus.getDefault().post(new MessageEvent("Hello!"));
             ((TrackActivity) getActivity()).setActionBarTitle("Track");
+            saveUserData();
         } else {
             int c = dbForTrackActivities.isEntryExists(TrackActivity.userEventDetails,3,getActivity());
 

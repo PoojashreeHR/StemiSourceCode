@@ -57,6 +57,7 @@ import com.stemi.stemiapp.model.MedicineDetails;
 import com.stemi.stemiapp.model.MessageEvent;
 import com.stemi.stemiapp.model.RegisteredUserDetails;
 import com.stemi.stemiapp.model.SaveCurrentDataEvent;
+import com.stemi.stemiapp.model.UserAcceptedEvent;
 import com.stemi.stemiapp.model.UserEventDetails;
 import com.stemi.stemiapp.preference.AppSharedPreference;
 import com.stemi.stemiapp.utils.CommonUtils;
@@ -214,6 +215,24 @@ public class TrackActivity extends AppCompatActivity implements NavigationView.O
 
     public void setOnScanCompletedListener(OnScanCompletionListener onScanCompletionListener) {
         this.onScanCompletedListener = onScanCompletionListener;
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onUserAccepetedEvent(UserAcceptedEvent event){
+        String value = event.getMessage();
+
+        if(value.equalsIgnoreCase("1")){
+            ((ExerciseFragment) currentFragment).saveUserData();
+        }
+        else if(value.equalsIgnoreCase("2")){
+            ((StressFragment) currentFragment).saveUserData();
+        }
+        else if(value.equalsIgnoreCase("3")){
+            ((SmokingFragment) currentFragment).saveUserData();
+        }
+        else if(value.equalsIgnoreCase("4")){
+            ((WeightFragment) currentFragment).saveUserData();
+        }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -519,6 +538,7 @@ public class TrackActivity extends AppCompatActivity implements NavigationView.O
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 removeSharedPreferenceData();
+                GlobalClass.userID = null;
                 startActivity(new Intent(TrackActivity.this, MainActivity.class));
                 finish();
                 Log.i("Code2care ", "Yes button Clicked!");

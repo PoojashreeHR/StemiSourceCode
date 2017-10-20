@@ -80,6 +80,7 @@ public class StressFragment extends Fragment implements AppConstants, TrackActiv
     DBForTrackActivities dbForTrackActivities;
     int progresValue;
     private boolean alreadySaved;
+    private TrackStress trackStress;
 
     public StressFragment() {
         // Required empty public constructor
@@ -273,11 +274,21 @@ public class StressFragment extends Fragment implements AppConstants, TrackActiv
     }
 
     public void saveAllData() {
-        if(!alreadySaved) {
-            Log.e("fragment", "StressFragment saveAllData()");
-            storeData();
-            alreadySaved = true;
+        if(GlobalClass.userID != null) {
+            if (!alreadySaved) {
+                Log.e("fragment", "StressFragment saveAllData()");
+                storeData();
+                alreadySaved = true;
+            }
         }
+        else{
+           // Toast.makeText(getActivity(), "Please add profile details first", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void saveUserData() {
+        TrackStressDB trackStressDB = new TrackStressDB(getActivity());
+        trackStressDB.addEntry(trackStress);
     }
 
 
@@ -343,7 +354,7 @@ public class StressFragment extends Fragment implements AppConstants, TrackActiv
         Log.e("db", "storeData() in StressFragment");
         TrackActivity.userEventDetails.setUid(GlobalClass.userID);
         TrackStressDB trackStressDB = new TrackStressDB(getActivity());
-        TrackStress trackStress = new TrackStress();
+        trackStress = new TrackStress();
         trackStress.setUserId(GlobalClass.userID);
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy");
@@ -398,7 +409,7 @@ public class StressFragment extends Fragment implements AppConstants, TrackActiv
             trackStress.setStressed(true);
         }
 
-        trackStressDB.addEntry(trackStress);
+
         EventBus.getDefault().post(new DataSavedEvent(""));
 
         boolean date = dbForTrackActivities.getDate(TrackActivity.userEventDetails.getDate(),GlobalClass.userID);
@@ -406,6 +417,7 @@ public class StressFragment extends Fragment implements AppConstants, TrackActiv
             dbForTrackActivities.addEntry(TrackActivity.userEventDetails);
             EventBus.getDefault().post(new MessageEvent("Hello!"));
             ((TrackActivity) getActivity()).setActionBarTitle("Track");
+            saveUserData();
         } else {
             int c = dbForTrackActivities.isEntryExists(TrackActivity.userEventDetails,2,getActivity());
             ((TrackActivity) getActivity()).setActionBarTitle("Track");

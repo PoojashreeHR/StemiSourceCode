@@ -29,12 +29,14 @@ public class TrackExerciseDB extends SQLiteOpenHelper {
     public static final String COLUMN_USER_ID = "_id";
     public static final String COLUMN_DATE_TIME = "_datetime";
     public static final String COLUMN_EXERCISED = "exercised";
+    public static final String COLUMN_WEEK_NO = "weekNo";
 
     private static final String DATABASE_CREATE = "create table "
             + TABLE_EXERCISE + "( " + COLUMN_USER_ID
             + " text not null , " + COLUMN_DATE_TIME
             + " text not null , "+ COLUMN_EXERCISED
-            + " integer );";
+            + " integer , "+ COLUMN_WEEK_NO+
+            " integer );";
 
     public TrackExerciseDB(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -60,6 +62,10 @@ public class TrackExerciseDB extends SQLiteOpenHelper {
             cv.put(COLUMN_DATE_TIME, simpleDateFormat.format(stress.getDateTime()));
             cv.put(COLUMN_EXERCISED, stress.isExercised());
 
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(stress.getDateTime());
+            cv.put(COLUMN_WEEK_NO, calendar.get(Calendar.WEEK_OF_YEAR));
+
             if(entryExists(stress.getUserId(), simpleDateFormat.format(stress.getDateTime()))){
                 String whereClause = COLUMN_USER_ID+" = '"+stress.getUserId()+"' AND "
                         +COLUMN_DATE_TIME+" = '"+simpleDateFormat.format(stress.getDateTime())+"'";
@@ -81,7 +87,7 @@ public class TrackExerciseDB extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
         boolean isEntryExists = false;
         try{
-            String sql = "SELECT * FROM "+TABLE_EXERCISE+" WHERE"
+            String sql = "SELECT * FROM "+TABLE_EXERCISE+" WHERE "
                     +COLUMN_USER_ID+" = '"+userId+"' AND "
                     +COLUMN_DATE_TIME+" = '"+datetime+"'";
 
@@ -207,11 +213,13 @@ public class TrackExerciseDB extends SQLiteOpenHelper {
     public int getNumberOfWeeks(String userId){
         int dayCount = 0;
         int weekCount = 0;
+        int prevWeekNo = 0;
         SQLiteDatabase db = this.getReadableDatabase();
         try{
-            String query = "SELECT * FROM " + TABLE_EXERCISE
+            String query = "SELECT "+COLUMN_WEEK_NO+" , SUM("+COLUMN_EXERCISED+") AS WEEK_COUNT FROM " + TABLE_EXERCISE
                     +" WHERE "+COLUMN_USER_ID+" = '"+userId+"'"
-                    +" ORDER BY "+COLUMN_DATE_TIME+" ASC";
+                    +" GROUP BY "+COLUMN_WEEK_NO
+                    +" ORDER BY "+COLUMN_WEEK_NO+" ASC";
             Log.e("db","query = "+query);
             Cursor cursor = db.rawQuery(query, null);
             cursor.moveToFirst();
@@ -219,32 +227,29 @@ public class TrackExerciseDB extends SQLiteOpenHelper {
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
             while (!cursor.isAfterLast()) {
-                int withinlimitValue = cursor.getInt(cursor.getColumnIndex(COLUMN_EXERCISED));
-                String dateStr = cursor.getString(cursor.getColumnIndex(COLUMN_DATE_TIME));
-                Date recordedDate = simpleDateFormat.parse(dateStr);
+                int weekNo = cursor.getInt(cursor.getColumnIndex(COLUMN_WEEK_NO));
+                int weekSum = cursor.getInt(cursor.getColumnIndex("WEEK_COUNT"));
 
-                Calendar calendar = Calendar.getInstance();
-                calendar.setTime(recordedDate);
-                int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
+                Log.e("db","weekNo = "+weekNo+" and weekSum = "+ weekSum);
 
-                if(dayOfWeek == 1){
-
-                    if(withinlimitValue == 1){
-                        dayCount++;
-                    }
-
-                    if(dayCount >= 3){
+                if(prevWeekNo == 0 || weekNo == prevWeekNo + 1){
+                    if(weekSum >= 3){
                         weekCount++;
                     }
-
-                    dayCount = 0;
+                    else{
+                        weekCount = 0;
+                    }
                 }
                 else{
-                    if(withinlimitValue == 1){
-                        dayCount++;
+                    if(weekSum >= 3){
+                        weekCount = 1;
+                    }
+                    else{
+                        weekCount = 0;
                     }
                 }
 
+                prevWeekNo = weekNo;
                 cursor.moveToNext();
 
             }

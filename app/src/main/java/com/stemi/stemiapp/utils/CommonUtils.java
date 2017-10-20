@@ -21,6 +21,7 @@ import com.stemi.stemiapp.databases.DBForTrackActivities;
 import com.stemi.stemiapp.fragments.TrackFragment;
 import com.stemi.stemiapp.model.MessageEvent;
 import com.stemi.stemiapp.model.RegisteredUserDetails;
+import com.stemi.stemiapp.model.UserAcceptedEvent;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -112,6 +113,7 @@ public class CommonUtils {
          public void onClick(DialogInterface dialog, int which) {
             dbForTrackActivities.updateUserTrack(TrackActivity.userEventDetails,value);
             EventBus.getDefault().post(new MessageEvent("Hello!"));
+            EventBus.getDefault().post(new UserAcceptedEvent(""+value));
             ((TrackActivity) mContext).setActionBarTitle("Track");
             Log.i("Code2care ", "Yes button Clicked!");
          }
@@ -123,7 +125,8 @@ public class CommonUtils {
          public void onClick(DialogInterface dialog, int which) {
             Log.i("Code2care ","No button Clicked!");
             dialog.dismiss();
-            ((TrackActivity) mContext).showFragment(new TrackFragment());
+            //((TrackActivity) mContext).showFragment(new TrackFragment());
+            EventBus.getDefault().post(new MessageEvent("Hello!"));
             ((TrackActivity) mContext).setActionBarTitle("Track");
 
          }

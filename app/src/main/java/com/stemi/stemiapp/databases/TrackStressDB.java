@@ -94,7 +94,7 @@ public class TrackStressDB extends SQLiteOpenHelper{
         SQLiteDatabase db = this.getReadableDatabase();
         boolean isEntryExists = false;
         try{
-            String sql = "SELECT * FROM "+TABLE_STRESS+" WHERE"
+            String sql = "SELECT * FROM "+TABLE_STRESS+" WHERE "
                     +COLUMN_USER_ID+" = '"+userId+"' AND "
                     +COLUMN_DATE_TIME+" = '"+datetime+"'";
 

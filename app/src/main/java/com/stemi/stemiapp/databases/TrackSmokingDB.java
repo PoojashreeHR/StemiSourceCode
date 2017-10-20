@@ -68,6 +68,7 @@ public class TrackSmokingDB extends SQLiteOpenHelper{
                 db.update(TABLE_SMOKING,cv,whereClause,null);
             }
             else{
+                Log.e("db", "Inserting ");
                 db.insert(TABLE_SMOKING, null, cv);
             }
 
@@ -82,21 +83,26 @@ public class TrackSmokingDB extends SQLiteOpenHelper{
         SQLiteDatabase db = this.getReadableDatabase();
         boolean isEntryExists = false;
         try{
-            String sql = "SELECT * FROM "+TABLE_SMOKING+" WHERE"
+            String sql = "SELECT * FROM "+TABLE_SMOKING+" WHERE "
                     +COLUMN_USER_ID+" = '"+userId+"' AND "
                     +COLUMN_DATE_TIME+" = '"+datetime+"'";
+
+            Log.e("db", "sql = "+sql);
 
             Cursor cursor = db.rawQuery(sql,null);
             cursor.moveToFirst();
 
             while(!cursor.isAfterLast()){
                 String user = cursor.getString(cursor.getColumnIndex(COLUMN_USER_ID));
+                Log.e("db", "user = "+user);
                 isEntryExists = true;
                 cursor.moveToNext();
             }
+            Log.e("db", "isEntryExists = "+isEntryExists);
         }
         catch (Exception e){
-
+            Log.e("db", "e = "+e.getLocalizedMessage());
+            Log.e("db", "isEntryExists = "+isEntryExists);
         }
         return isEntryExists;
     }
@@ -231,7 +237,8 @@ public class TrackSmokingDB extends SQLiteOpenHelper{
                 if(previousDateObj == null || previousDateObj.equals(calendar.getTime())){
                     //continous streak
                     if(withinlimitValue == 0){
-                        dayCount++;
+                        Log.e("db", "dayCount = "+dayCount+" + 1");
+                        dayCount = dayCount + 1;
                         Log.e("db", "date = "+date+" dayCount = "+dayCount);
                     }
                     else{
@@ -241,6 +248,8 @@ public class TrackSmokingDB extends SQLiteOpenHelper{
                 else{
                     if(withinlimitValue == 0) {
                         dayCount = 1;
+                        Log.e("db", "previousDateObj = "+ previousDateObj.toString());
+                        Log.e("db", "else dayCount = "+dayCount);
                     }
                     else{
                         dayCount = 0;

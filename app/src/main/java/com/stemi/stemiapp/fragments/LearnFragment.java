@@ -18,7 +18,9 @@ import com.stemi.stemiapp.databases.TrackMedicationDB;
 import com.stemi.stemiapp.databases.TrackSmokingDB;
 import com.stemi.stemiapp.databases.TrackStressDB;
 import com.stemi.stemiapp.databases.TrackWeightDB;
+import com.stemi.stemiapp.databases.UserDetailsTable;
 import com.stemi.stemiapp.model.DataSavedEvent;
+import com.stemi.stemiapp.model.RegisteredUserDetails;
 import com.stemi.stemiapp.model.apiModels.StatusMessageResponse;
 import com.stemi.stemiapp.preference.AppSharedPreference;
 import com.stemi.stemiapp.rest.ApiClient;
@@ -120,6 +122,14 @@ public class LearnFragment extends Fragment implements AppConstants, UpdateableF
 
         TrackWeightDB trackWeightDB = new TrackWeightDB(getActivity());
         int weight = trackWeightDB.getLastKnownWeight(GlobalClass.userID);
+
+        if(weight == 0){
+            UserDetailsTable userDetailsTable = new UserDetailsTable(getActivity());
+            RegisteredUserDetails userDetails = userDetailsTable.getUserDetails(GlobalClass.userID);
+
+            weight = Integer.parseInt(userDetails.getWeight());
+        }
+
         String weightStr;
         if(weight >= getUpperWeight()){
             weightStr = "Oh no! You're in the overweight weight range as per your BMI";

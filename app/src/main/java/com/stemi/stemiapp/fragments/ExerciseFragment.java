@@ -91,6 +91,7 @@ public class ExerciseFragment extends Fragment implements View.OnClickListener, 
 
     String savedDate;
     private boolean alreadySaved;
+    private TrackExercise trackExercise;
 
     public ExerciseFragment() {
         // Required empty public constructor
@@ -306,11 +307,21 @@ public class ExerciseFragment extends Fragment implements View.OnClickListener, 
     }
 
     public void saveAllData() {
-        if(!alreadySaved) {
-            Log.e("fragment", "ExerciseFragment saveAllData()");
-            storeData();
-            alreadySaved = true;
+        if(GlobalClass.userID != null) {
+            if (!alreadySaved) {
+                Log.e("fragment", "ExerciseFragment saveAllData()");
+                storeData();
+                alreadySaved = true;
+            }
         }
+        else {
+            //Toast.makeText(getActivity(), "Please add profile details first", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void saveUserData() {
+        TrackExerciseDB trackExerciseDB = new TrackExerciseDB(getActivity());
+        trackExerciseDB.addEntry(trackExercise);
     }
 
     public static class DatePickerDialogClass extends DialogFragment implements DatePickerDialog.OnDateSetListener {
@@ -355,7 +366,7 @@ public class ExerciseFragment extends Fragment implements View.OnClickListener, 
 
     public void storeData() {
         TrackExerciseDB trackExerciseDB = new TrackExerciseDB(getActivity());
-        TrackExercise trackExercise = new TrackExercise();
+        trackExercise = new TrackExercise();
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy");
 
         trackExercise.setUserId(GlobalClass.userID);
@@ -442,12 +453,13 @@ public class ExerciseFragment extends Fragment implements View.OnClickListener, 
             dbForTrackActivities.addEntry(TrackActivity.userEventDetails);
             EventBus.getDefault().post(new MessageEvent("Hello!"));
             ((TrackActivity) getActivity()).setActionBarTitle("Track");
+            saveUserData();
         } else {
             int c = dbForTrackActivities.isEntryExists(TrackActivity.userEventDetails, 1, getActivity());
 
         }
 
-            trackExerciseDB.addEntry(trackExercise);
+
         EventBus.getDefault().post(new DataSavedEvent(""));
     }
 
