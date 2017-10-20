@@ -418,7 +418,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/medicineRemainder"
                 android:background="@color/appBackground"
-                android:text="SAVE"
+                android:text="Add Medicine"
                 android:textColor="@color/white"/>
         </RelativeLayout>
     </ScrollView>

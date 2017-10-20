@@ -177,7 +177,6 @@ public class DBForTrackActivities {
     //get Stress count data
     public int isEntryExists(UserEventDetails userEventDetails,int id,Context context) {
         int count;
-        UserEventDetails userEventDetails1 = null;
         String query = "SELECT * FROM " + USER_ACTIVITIES + " WHERE " + UID + " = '" + userEventDetails.getUid() + "' AND "
                 + DATE + " = '" + userEventDetails.getDate() + "'";
         SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();

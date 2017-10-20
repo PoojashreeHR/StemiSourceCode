@@ -52,8 +52,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Haemoglobin"
+                android:maxLength="4"
                 android:layout_margin="10dp"
-                android:inputType="number"
+                android:inputType="numberDecimal"
                 style="@style/StyledTilEditText"
                 android:imeOptions="actionGo"/>
             <TextView
@@ -75,7 +76,8 @@
                 android:layout_height="wrap_content"
                 android:hint="Urea Creatinine"
                 android:layout_margin="10dp"
-                android:inputType="number"
+                android:maxLength="4"
+                android:inputType="numberDecimal"
                 style="@style/StyledTilEditText"
                 android:layout_below="@+id/et_haemoglobin"
                 android:imeOptions="actionGo"/>
@@ -97,10 +99,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Total Cholesterol"
-                android:inputType="number"
+                android:inputType="numberDecimal"
                 style="@style/StyledTilEditText"
                 android:imeOptions="actionGo"
                 android:layout_marginTop="12dp"
+                android:maxLength="4"
                 android:layout_below="@+id/et_ureaCreatinine"
                 android:layout_alignLeft="@+id/et_HDL"
                 android:layout_alignStart="@+id/et_HDL" />
@@ -123,7 +126,8 @@
                 android:layout_height="wrap_content"
                 android:hint="High Density Lipoprotein(HDL)"
                 android:layout_margin="10dp"
-                android:inputType="number"
+                android:maxLength="4"
+                android:inputType="numberDecimal"
                 style="@style/StyledTilEditText"
                 android:layout_below="@+id/et_cholesterol"
                 android:imeOptions="actionGo"/>
@@ -145,7 +149,8 @@
                 android:layout_height="wrap_content"
                 android:hint="Low Density Lipoprotein(LDL)"
                 android:layout_margin="10dp"
-                android:inputType="number"
+                android:inputType="numberDecimal"
+                android:maxLength="4"
                 style="@style/StyledTilEditText"
                 android:layout_below="@+id/et_HDL"
                 android:imeOptions="actionGo"/>
@@ -166,8 +171,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Triglycerides"
+                android:maxLength="4"
                 android:layout_margin="10dp"
-                android:inputType="number"
+                android:inputType="numberDecimal"
                 style="@style/StyledTilEditText"
                 android:layout_below="@+id/et_LDL"
                 android:imeOptions="actionGo"/>
@@ -189,8 +195,9 @@
                 android:layout_height="wrap_content"
                 android:hint="Random Plasma Glucose"
                 android:layout_margin="10dp"
-                android:inputType="number"
+                android:inputType="numberDecimal"
                 style="@style/StyledTilEditText"
+                android:maxLength="4"
                 android:layout_below="@+id/et_Triglycerides"
                 android:imeOptions="actionGo"/>
             <TextView
@@ -212,8 +219,9 @@
                 android:layout_height="wrap_content"
                 android:hint="Fasting Plasma Glucose"
                 android:layout_margin="10dp"
-                android:inputType="number"
+                android:inputType="numberDecimal"
                 style="@style/StyledTilEditText"
+                android:maxLength="4"
                 android:layout_below="@+id/et_RPG"
                 android:imeOptions="actionGo"/>
             <TextView
@@ -235,10 +243,11 @@
                 android:layout_height="wrap_content"
                 android:hint="Post-prandial Plasma Glucose"
                 android:layout_margin="10dp"
-                android:inputType="number"
+                android:inputType="numberDecimal"
+                android:maxLength="4"
                 style="@style/StyledTilEditText"
                 android:layout_below="@+id/et_FPG"
-                android:imeOptions="actionGo"/>
+                android:imeOptions="actionDone"/>
             <TextView
                 android:id="@+id/tv_PPG"
                 android:layout_width="wrap_content"

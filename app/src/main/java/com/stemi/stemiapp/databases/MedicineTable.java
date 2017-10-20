@@ -57,6 +57,29 @@ public class MedicineTable {
         DatabaseManager.getInstance().closeDatabase();
     }
 
+
+    public boolean getDate(String date1,String userId){
+        String query = "SELECT * FROM " + MED_TABLE_NAME + " WHERE " + RELATED_PERSON + " = '" + userId +"' AND "
+                +DATE+" = '"+date1+"'";
+        SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
+        boolean count = false;
+        try{
+            Cursor c = db.rawQuery(query, null);
+            c.moveToFirst();
+            while(!c.isAfterLast()){
+                String date = c.getString(2);
+                if(date.equals(date1)){
+                    count = true;
+                    break;
+                }else {
+                    c.moveToNext();
+                }
+            }
+        }
+        catch(Exception e){
+        }
+        return count;
+    }
 /*
     public void updateMedicineData(MedicineDetails medicineDetails, int value, boolean checked) {
         MedicineDetails meds = new MedicineDetails();
@@ -208,10 +231,12 @@ public class MedicineTable {
     }
 
     //calling from MedicineFragment Info button to getMedicine Details
-    public ArrayList<String> getMedicine(String userId, String time) {
+    public ArrayList<String> getMedicine(String userId, String time,String date) {
         ArrayList<String> data = new ArrayList<String>();
         SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
-        String query = "SELECT * FROM " + MED_TABLE_NAME + " WHERE " + RELATED_PERSON + " = '" + userId + "'";
+        String query = "SELECT * FROM " + MED_TABLE_NAME + " WHERE " + RELATED_PERSON + " = '" + userId +"' AND "
+                + DATE + " = '" + date+ "'";
+
         Cursor cursor = db.rawQuery(query, null);
 
         //Cursor cursor = db.query(MED_TABLE_NAME, new String[]{MED_MEDICINE_DETAILS},null, null, null, null, null);

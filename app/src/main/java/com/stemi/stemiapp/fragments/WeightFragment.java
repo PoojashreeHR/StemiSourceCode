@@ -145,7 +145,9 @@ public class WeightFragment  extends Fragment implements View.OnClickListener,Tr
                 SaveData();
             }
         }else {
+            getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
             EventBus.getDefault().post(new MessageEvent("Hello!"));
+            ((TrackActivity) getActivity()).setActionBarTitle("Track");
 
         }
     }
@@ -308,12 +310,16 @@ public class WeightFragment  extends Fragment implements View.OnClickListener,Tr
         boolean date = dbForTrackActivities.getDate(TrackActivity.userEventDetails.getDate(),GlobalClass.userID);
         if (!date) {
             dbForTrackActivities.addEntry(TrackActivity.userEventDetails);
+            getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
             ((TrackActivity) getActivity()).showFragment(new TrackFragment());
             ((TrackActivity) getActivity()).setActionBarTitle("Track");
+
 
         } else {
             int c = dbForTrackActivities.isEntryExists(TrackActivity.userEventDetails,4,getActivity());
             ((TrackActivity) getActivity()).setActionBarTitle("Track");
+            getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
+
 
         }
     }

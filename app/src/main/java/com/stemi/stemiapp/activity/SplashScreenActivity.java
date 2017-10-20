@@ -31,7 +31,7 @@ public class SplashScreenActivity extends AppCompatActivity implements AppConsta
         introScreensShown = sharedPreference.isFirstTimeLaunch(IS_FIRST_TIME_LAUNCH);
         checkAppPermission();
         dBforUserDetails = new MedicineTable();
-        dBforUserDetails.removeMedicalData(GlobalClass.userID);
+        //dBforUserDetails.removeMedicalData(GlobalClass.userID);
     }
 
 
