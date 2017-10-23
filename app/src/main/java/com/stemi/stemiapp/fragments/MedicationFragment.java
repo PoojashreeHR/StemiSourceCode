@@ -172,6 +172,10 @@ public class MedicationFragment extends Fragment implements AppConstants, View.O
         medicineWithDate = new ArrayList<>();
 
 
+        morning = (LinearLayout) morningContainer.findViewById(R.id.imageTypeLayout);
+        afternoon = (LinearLayout) noonContainer.findViewById(R.id.imageTypeLayout);
+        night = (LinearLayout) nightContainer.findViewById(R.id.imageTypeLayout);
+
         morningMedicineInfo.setOnClickListener(this);
         noonMedicineInfo.setOnClickListener(this);
         nightMedicineInfo.setOnClickListener(this);
@@ -272,9 +276,6 @@ public class MedicationFragment extends Fragment implements AppConstants, View.O
     public void getMedicineDetails(final MedicineDetails medInfo, final String time, final RelativeLayout layout) {
         //final ArrayList<String> medicine = medicineTable.getMedicine(appSharedPreference.getUserId(), time);
         //for (int i = 0; i < medInfo.size(); i++) {
-        morning = (LinearLayout) morningContainer.findViewById(R.id.imageTypeLayout);
-        afternoon = (LinearLayout) noonContainer.findViewById(R.id.imageTypeLayout);
-        night = (LinearLayout) nightContainer.findViewById(R.id.imageTypeLayout);
 
         String medicineTime = "";
         if (time.equals("Morning")) {
@@ -680,7 +681,9 @@ public class MedicationFragment extends Fragment implements AppConstants, View.O
             TrackMedication med = new TrackMedication();
             Log.e(TAG, "doBack: " + medicineContains);
             storeData();
-
+        }else {
+            EventBus.getDefault().post(new MessageEvent("Hello!"));
+            ((TrackActivity) getActivity()).setActionBarTitle("Track");
         }
 
             /*for (int i = 0; i < m1.size(); i++) {
@@ -890,7 +893,7 @@ public class MedicationFragment extends Fragment implements AppConstants, View.O
         ArrayList<MedicinesTakenOrNot> medicineInfo;
         int id;
         ArrayList<MedicinesTakenOrNot> deletedData = new ArrayList<>();
-        ArrayList<MedicinesTakenOrNot> editData = new ArrayList<>();
+        ArrayList<MedicineDetails> editData = new ArrayList<>();
         DataPassListener mCallback = (DataPassListener) getActivity();
 
         public class MyViewHolder extends RecyclerView.ViewHolder {
@@ -934,19 +937,17 @@ public class MedicationFragment extends Fragment implements AppConstants, View.O
             holder.editImage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(id==1){
-                        ArrayList<MedicinesTakenOrNot> medList = medicineContains.getMedicineMorning();
-
-                        for(int i=0; i<= medList.size(); i++){
-                            if(medList.get(position).getMedName()== medList.get(i).getMedName()){
-                                mCallback.passData(medicineContains, medList.get(position).getMedName());
-                            }
-                        }
+                    ArrayList<MedicinesTakenOrNot> medList = new ArrayList<>();
+                    if(id==1) {
+                        medList = medicineContains.getMedicineMorning();
+                    }else if(id==2) {
+                        medList = medicineContains.getMedicineAfternoon();
+                    }else if(id==3) {
+                        medList = medicineContains.getMedicineNight();
                     }
-
-                    editData.add(medicineInfo.get(position));
-                    //   mCallback.passData(editData);
-                    infoDialogFragment.dismiss();
+                        editData.add(medicineContains);
+                        mCallback.passData(editData,medList.get(position).getMedName());
+                        infoDialogFragment.dismiss();
                     //((TrackActivity) getActivity()).showFragment(new AddMedicineFragment());
 
                 }

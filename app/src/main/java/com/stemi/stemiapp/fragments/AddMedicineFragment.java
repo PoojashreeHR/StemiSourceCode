@@ -76,6 +76,8 @@ public class AddMedicineFragment extends Fragment implements View.OnClickListene
     @BindView(R.id.etMedicineName)
     EditText medicineNamee;
 
+    MedicineDetails meds;
+
     @BindView(R.id.morningMedicine)
     TextView morningMedicine;
     @BindView(R.id.noonMedicine)
@@ -107,12 +109,13 @@ public class AddMedicineFragment extends Fragment implements View.OnClickListene
     long endTime;
     String typeOfMedicine;
     int colorOfMedicine;
+    String name;
     String numberOfDays;
     static TimePickerDialog timepickerdialog1;
     Gson gson;
     AppSharedPreference appSharedPreference;
     MedicineTable medicineTable;
-   MedicineDetails showReceivedData;
+   ArrayList<MedicineDetails> showReceivedData;
     int checkEditOrNot = 0;
 
     public AddMedicineFragment() {
@@ -169,42 +172,86 @@ public class AddMedicineFragment extends Fragment implements View.OnClickListene
         medicineTable = new MedicineTable();
         Bundle args = getArguments();
 
+        int medColor = 0;
         //Calling from track activity passData to edit Medicine Data
-
-       /* if (args != null) {
-            showReceivedData = args.getParcelable("RECIEVE DATA");
-            String name = args.getString("NAME");
+        String medType = "",medName="",medDuration="";
+        if (args != null) {
+            showReceivedData = args.getParcelableArrayList("RECIEVE DATA");
+            name = args.getString("NAME");
             Log.e(TAG, "onCreateView: " + showReceivedData);
-            for(int i= 0; i<showReceivedData.getMedicineMorning().size();i++){
-                if(name == showReceivedData.getMedicineMorning().get(i).getMedName()){
-                    morningMedicine.setBackgroundResource(R.drawable.oval_shape_textview);
-                    morningMedicine.setTextColor(getResources().getColor(R.color.white));
-                    morningTime.setVisibility(View.VISIBLE);
-                    morningMedicine.setSelected(false);
-                    morningTime.setText(showReceivedData.getMedicineMorning().get(i).getMedTime());
-                }
+            meds = showReceivedData.get(0);
+            if(meds.getMedicineMorning()!=null){
+                for(int i=0;i<meds.getMedicineMorning().size();i++){
+                    if(name.equalsIgnoreCase(meds.getMedicineMorning().get(i).getMedName())){
+                        medColor = meds.getMedicineMorning().get(i).getMedColor();
+                        medType = meds.getMedicineMorning().get(i).getType();
+                        medName= meds.getMedicineMorning().get(i).getMedName();
+                        medDuration = meds.getMedicineMorning().get(i).getDuration();
 
-                if(name == showReceivedData.getMedicineAfternoon().get(i).getMedName()){
-                    noonMedicine.setBackgroundResource(R.drawable.oval_shape_textview);
-                    noonMedicine.setTextColor(getResources().getColor(R.color.white));
-                    noonTime.setVisibility(View.VISIBLE);
-                    noonMedicine.setSelected(true);
-                    noonTime.setText(showReceivedData.getMedicineAfternoon().get(i).getMedTime());
-                }
+                        morningMedicine.setBackgroundResource(R.drawable.oval_shape_textview);
+                        morningMedicine.setTextColor(getResources().getColor(R.color.white));
+                        morningTime.setVisibility(View.VISIBLE);
+                        morningMedicine.setSelected(false);
+                        morningTime.setText(meds.getMedicineMorning().get(i).getMedTime());
 
-                if(name ==  showReceivedData.getMedicineNight().get(i).getMedName()){
-                    nightMedicine.setBackgroundResource(R.drawable.oval_shape_textview);
-                    nightMedicine.setTextColor(getResources().getColor(R.color.white));
-                    nightTime.setVisibility(View.VISIBLE);
-                    nightMedicine.setSelected(true);
-                    nightTime.setText(showReceivedData.getMedicineNight().get(i).getMedTime());
+                    }
                 }
             }
-*//*
-            medicineNamee.setText(showReceivedData.get(0).getMedicineName());
-            medicineDays.setText(showReceivedData.get(0).getMedicineDays());
-            medicineRemainder.setChecked(showReceivedData.get(0).getMedicineRemainder());*//*
 
+            if(meds.getMedicineAfternoon()!=null){
+                for(int i=0;i<meds.getMedicineAfternoon().size();i++){
+                    if(name.equalsIgnoreCase(meds.getMedicineAfternoon().get(i).getMedName())){
+                        medColor = meds.getMedicineAfternoon().get(i).getMedColor();
+                        medType = meds.getMedicineAfternoon().get(i).getType();
+                        medName= meds.getMedicineAfternoon().get(i).getMedName();
+                        medDuration = meds.getMedicineAfternoon().get(i).getDuration();
+
+                        noonMedicine.setBackgroundResource(R.drawable.oval_shape_textview);
+                        noonMedicine.setTextColor(getResources().getColor(R.color.white));
+                        noonTime.setVisibility(View.VISIBLE);
+                        noonMedicine.setSelected(false);
+                        noonTime.setText(meds.getMedicineAfternoon().get(i).getMedTime());
+
+                    }
+                }
+            }
+            if(meds.getMedicineNight()!=null){
+                for(int i=0;i<meds.getMedicineNight().size();i++){
+                    if(name.equalsIgnoreCase(meds.getMedicineNight().get(i).getMedName())){
+                        medColor = meds.getMedicineNight().get(i).getMedColor();
+                        medType = meds.getMedicineNight().get(i).getType();
+                        medName= meds.getMedicineNight().get(i).getMedName();
+                        medDuration = meds.getMedicineNight().get(i).getDuration();
+
+                        nightMedicine.setBackgroundResource(R.drawable.oval_shape_textview);
+                        nightMedicine.setTextColor(getResources().getColor(R.color.white));
+                        nightTime.setVisibility(View.VISIBLE);
+                        nightMedicine.setSelected(true);
+                        nightTime.setText(meds.getMedicineNight().get(i).getMedTime());
+
+                    }
+                }
+            }
+
+            medicineDays.setText(medDuration);
+            medicineNamee.setText(medName);
+         //   medicineRemainder.setChecked(meds.getMedicineRemainder());
+           for (int i = 0; i < medicineType.getChildCount(); i++) {
+               View v = medicineType.getChildAt(i);
+               if (v instanceof TextView) {
+                   final TextView textView = (TextView) v;
+                   if (textView.getText().equals(medType)) {
+                       typeOfMedicine = textView.getText().toString();
+                       textView.setTextColor(getResources().getColor(R.color.appBackground));
+                       for (Drawable drawable : textView.getCompoundDrawables()) {
+                           if (drawable != null) {
+                               drawable.setColorFilter(new PorterDuffColorFilter(getResources().getColor(R.color.appBackground), PorterDuff.Mode.SRC_IN));
+                           }
+                       }
+                   }
+
+               }
+           }
             for (int i = 0; i < color.getChildCount(); i++) {
                 View v = color.getChildAt(i);
                 if (v instanceof FrameLayout) {
@@ -217,99 +264,50 @@ public class AddMedicineFragment extends Fragment implements View.OnClickListene
 //                        colorModes(i, textView,iv);
                     // textView.setSelected(false);
                     int[] medicineColor = getResources().getIntArray(R.array.medicineColor);
-                    if (medicineColor[i] == showReceivedData.get(0).getMedicineColor()) {
+                    if (medicineColor[i] == medColor) {
                         colorOfMedicine = medicineColor[i];
                         iv.setImageDrawable(getResources().getDrawable(R.drawable.ic_color_selected));
                     }
                 }
 
             }
-            for (int i = 0; i < medicineType.getChildCount(); i++) {
-                View v = medicineType.getChildAt(i);
-                if (v instanceof TextView) {
-                    final TextView textView = (TextView) v;
-                    if (textView.getText().equals(showReceivedData.get(0).getMedicineType())) {
-                        typeOfMedicine = textView.getText().toString();
-                        textView.setTextColor(getResources().getColor(R.color.appBackground));
-                        for (Drawable drawable : textView.getCompoundDrawables()) {
-                            if (drawable != null) {
-                                drawable.setColorFilter(new PorterDuffColorFilter(getResources().getColor(R.color.appBackground), PorterDuff.Mode.SRC_IN));
-                            }
-                        }
-                    }
-
-                }
-
-            }
-
-            if (!showReceivedData.get(0).getMedicineMorning().equals("")) {
-                morningMedicine.setBackgroundResource(R.drawable.oval_shape_textview);
-                morningMedicine.setTextColor(getResources().getColor(R.color.white));
-                morningTime.setVisibility(View.VISIBLE);
-                morningMedicine.setSelected(false);
-                morningTime.setText(showReceivedData.get(0).getMedicineMorningTime());
-            }
-
-            if (!showReceivedData.get(0).getMedicineAfternoon().equals("")) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                    noonMedicine.setBackground(getResources().getDrawable(R.drawable.oval_shape_textview));
-                } else {
-                    noonMedicine.setBackgroundResource(R.drawable.oval_shape_textview);
-                }
-                noonMedicine.setTextColor(getResources().getColor(R.color.white));
-                noonTime.setVisibility(View.VISIBLE);
-                noonMedicine.setSelected(true);
-                noonTime.setText(showReceivedData.get(0).getMedicineNoonTime());
-            }
-            if (!showReceivedData.get(0).getMedicineNight().equals("")) {
-                nightMedicine.setBackgroundResource(R.drawable.oval_shape_textview);
-                nightMedicine.setTextColor(getResources().getColor(R.color.white));
-                nightTime.setVisibility(View.VISIBLE);
-                nightMedicine.setSelected(true);
-                nightTime.setText(showReceivedData.get(0).getMedicineNightTime());
-            }
-
-            checkEditOrNot = 1;
-        } else {
+            checkEditOrNot =1;
+        }else {
             morningMedicine.setBackgroundResource(R.drawable.oval_shape_textview);
             morningMedicine.setTextColor(getResources().getColor(R.color.white));
             morningTime.setVisibility(View.VISIBLE);
+
         }
 
-*/
 
-        morningMedicine.setBackgroundResource(R.drawable.oval_shape_textview);
-        morningMedicine.setTextColor(getResources().getColor(R.color.white));
-        morningTime.setVisibility(View.VISIBLE);
+            morningMedicine.setOnClickListener(this);
+            noonMedicine.setOnClickListener(this);
+            nightMedicine.setOnClickListener(this);
+            morningTime.setOnClickListener(this);
+            noonTime.setOnClickListener(this);
+            nightTime.setOnClickListener(this);
+            medicineRemainder.setOnClickListener(this);
 
-        morningMedicine.setOnClickListener(this);
-        noonMedicine.setOnClickListener(this);
-        nightMedicine.setOnClickListener(this);
-        morningTime.setOnClickListener(this);
-        noonTime.setOnClickListener(this);
-        nightTime.setOnClickListener(this);
-        medicineRemainder.setOnClickListener(this);
+            medicineDays.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-        medicineDays.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                if (s.length() != 0) {
-                    numberOfDays = medicineDays.getText().toString();
                 }
-            }
-        });
-        addMedicine.setOnClickListener(this);
-        ((TrackActivity) getActivity()).setActionBarTitle("Add Medicine");
-        return view;
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+                    if (s.length() != 0) {
+                        numberOfDays = medicineDays.getText().toString();
+                    }
+                }
+            });
+            addMedicine.setOnClickListener(this);
+            ((TrackActivity) getActivity()).setActionBarTitle("Add Medicine");
+            return view;
     }
 
     public static String getDate(Calendar cal) {
@@ -716,7 +714,7 @@ public class AddMedicineFragment extends Fragment implements View.OnClickListene
             e.printStackTrace();
         }
         ArrayList<MedicinesTakenOrNot> medicinesTakenOrNots = new ArrayList<>();
-        int maxDay = Integer.parseInt(numberOfDays);
+        int maxDay = Integer.parseInt(medicineDays.getText().toString());
         for (int co = 0; co < maxDay; co++) {
             MedicineDetails medicineDetails = new MedicineDetails();
             // MedicineDetails medInformation = new MedicineDetails();
@@ -742,6 +740,7 @@ public class AddMedicineFragment extends Fragment implements View.OnClickListene
                 medicinesTakenOrNotMorning.setTakenorNot(false);
                 medicinesTakenOrNotMorning.setType(typeOfMedicine);
                 medicinesTakenOrNotMorning.setMedColor(colorOfMedicine);
+                medicinesTakenOrNotMorning.setDuration(medicineDays.getText().toString());
 
                 medicinesTakenOrNots.add(medicinesTakenOrNotMorning);
                 medicineDetails.setMedicineMorning(medicinesTakenOrNots);
@@ -759,6 +758,7 @@ public class AddMedicineFragment extends Fragment implements View.OnClickListene
                 medicinesTakenOrNotAfternoon.setTakenorNot(false);
                 medicinesTakenOrNotAfternoon.setType(typeOfMedicine);
                 medicinesTakenOrNotAfternoon.setMedColor(colorOfMedicine);
+                medicinesTakenOrNotAfternoon.setDuration(medicineDays.getText().toString());
 
                 medicinesTakenOrNots.add(medicinesTakenOrNotAfternoon);
                 medicineDetails.setMedicineAfternoon(medicinesTakenOrNots);
@@ -776,6 +776,7 @@ public class AddMedicineFragment extends Fragment implements View.OnClickListene
                 medicinesTakenOrNotNight.setTakenorNot(false);
                 medicinesTakenOrNotNight.setType(typeOfMedicine);
                 medicinesTakenOrNotNight.setMedColor(colorOfMedicine);
+                medicinesTakenOrNotNight.setDuration(medicineDays.getText().toString());
 
 
                 medicinesTakenOrNots.add(medicinesTakenOrNotNight);
@@ -786,7 +787,130 @@ public class AddMedicineFragment extends Fragment implements View.OnClickListene
             }
 
             Log.e(TAG, "storeMedicalDetails: " + incDate);
-            if (medicineTable.isMedicineExist(incDate)) {
+            if (checkEditOrNot == 1) {
+                MedicineDetails medDetails = new MedicineDetails();
+                ArrayList<String> oldEntry = medicineTable.getAllMedicineDEtails(GlobalClass.userID,incDate);
+                for (int i = 0; i < oldEntry.size(); i++) {
+                    String s = oldEntry.get(i);
+                    Gson gsonObj = new Gson();
+                    medDetails = gsonObj.fromJson(s, MedicineDetails.class);
+
+                    if(morningTime.getVisibility() == View.VISIBLE) {
+                        Boolean morning = true;
+                        ArrayList<MedicinesTakenOrNot> medicineLists = new ArrayList<>();
+                        if (medDetails.getMedicineMorning() != null && medDetails.getMedicineMorning().size() != 0 ) {
+                            medicineLists = medDetails.getMedicineMorning();
+                            for (int mName = 0; mName < medicineLists.size(); mName++) {
+                                if (medicineLists.get(mName).getMedName().equalsIgnoreCase(name)) {
+                                    Log.e(TAG, "storeMedicalDetails: " + "EQUAL");
+                                    medicineLists.set(mName, medicinesTakenOrNotMorning);
+                                    medDetails.setMedicineMorning(medicineLists);
+                                    morning = false;
+                                    break;
+                                }/*else {
+                                    medicineLists.add(medicinesTakenOrNotMorning);
+                                    medDetails.setMedicineMorning(medicineLists);
+                                    break;
+                                }*/
+                            }
+                           if(morning){
+                               medicineLists.add(medicinesTakenOrNotMorning);
+                               medDetails.setMedicineMorning(medicineLists);
+                           }
+                        }else {
+                            medicineLists.add(medicinesTakenOrNotMorning);
+                            medDetails.setMedicineMorning(medicineLists);
+                        }
+                    }else {
+                        if (medDetails.getMedicineMorning() != null && medDetails.getMedicineMorning().size() != 0) {
+                            ArrayList<MedicinesTakenOrNot> medicineLists = medDetails.getMedicineMorning();
+                            for (int mName = 0; mName < medicineLists.size(); mName++) {
+                                if (medicineLists.get(mName).getMedName().equalsIgnoreCase(name)) {
+                                    medicineLists.remove(mName);
+                                    medDetails.setMedicineMorning(medicineLists);
+                                }
+                            }
+                        }
+                    }
+                    if(noonTime.getVisibility() == View.VISIBLE) {
+                        Boolean Aftrenoon =true;
+                        ArrayList<MedicinesTakenOrNot> medicineLists = new ArrayList<>();
+                        if (medDetails.getMedicineAfternoon() != null && medDetails.getMedicineAfternoon().size() !=0) {
+                            medicineLists = medDetails.getMedicineAfternoon();
+                            for (int mName = 0; mName < medicineLists.size(); mName++) {
+                                if (medicineLists.get(mName).getMedName().equalsIgnoreCase(name)) {
+                                    Log.e(TAG, "storeMedicalDetails: " + "EQUAL");
+                                    medicineLists.set(mName, medicinesTakenOrNotAfternoon);
+                                    medDetails.setMedicineAfternoon(medicineLists);
+                                    Aftrenoon = false;
+                                    break;
+                                } /*else {
+                                    medicineLists.add(medicinesTakenOrNotAfternoon);
+                                    medDetails.setMedicineAfternoon(medicineLists);
+                                    break;
+                                }*/
+                            }
+                            if(Aftrenoon){
+                                medicineLists.add(medicinesTakenOrNotAfternoon);
+                                medDetails.setMedicineAfternoon(medicineLists);
+                            }
+                        }else {
+                            medicineLists.add(medicinesTakenOrNotAfternoon);
+                            medDetails.setMedicineAfternoon(medicineLists);
+                        }
+                    }else {
+                        if (medDetails.getMedicineAfternoon() != null && medDetails.getMedicineAfternoon().size() != 0) {
+                            ArrayList<MedicinesTakenOrNot> medicineLists = medDetails.getMedicineAfternoon();
+                            for (int mName = 0; mName < medicineLists.size(); mName++) {
+                                if (medicineLists.get(mName).getMedName().equalsIgnoreCase(name)) {
+                                    medicineLists.remove(mName);
+                                    medDetails.setMedicineAfternoon(medicineLists);
+                                }
+                            }
+                        }
+                    }
+                    if(nightTime.getVisibility() == View.VISIBLE) {
+                        Boolean night = true;
+                        ArrayList<MedicinesTakenOrNot> medicineLists = new ArrayList<>();
+                        if (medDetails.getMedicineNight() != null && medDetails.getMedicineNight().size() !=0) {
+                            medicineLists = medDetails.getMedicineNight();
+                            for (int mName = 0; mName < medicineLists.size(); mName++) {
+                                if (medicineLists.get(mName).getMedName().equalsIgnoreCase(name)) {
+                                    Log.e(TAG, "storeMedicalDetails: " + "EQUAL");
+                                    medicineLists.set(mName, medicinesTakenOrNotNight);
+                                    medDetails.setMedicineNight(medicineLists);
+                                    night = false;
+                                    break;
+                                }/* else {
+                                    medicineLists.add(medicinesTakenOrNotNight);
+                                    medDetails.setMedicineNight(medicineLists);
+                                    break;
+                                }*/
+                            }
+                            if(night){
+                                medicineLists.add(medicinesTakenOrNotNight);
+                                medDetails.setMedicineNight(medicineLists);
+                            }
+                        }else {
+                            medicineLists.add(medicinesTakenOrNotNight);
+                            medDetails.setMedicineNight(medicineLists);
+                        }
+                    }else {
+                        if (medDetails.getMedicineNight() != null && medDetails.getMedicineNight().size() != 0) {
+                            ArrayList<MedicinesTakenOrNot> medicineLists = medDetails.getMedicineNight();
+                            for (int mName = 0; mName < medicineLists.size(); mName++) {
+                                if (medicineLists.get(mName).getMedName().equalsIgnoreCase(name)) {
+                                    medicineLists.remove(mName);
+                                    medDetails.setMedicineNight(medicineLists);
+                                }
+                            }
+                        }
+                    }
+                }
+                medicineTable.updateDataWithDate(GlobalClass.userID, incDate, medDetails);
+                incDate = sdf.format(c.getTime());
+
+            } else if (medicineTable.isMedicineExist(incDate)) {
                 MedicineDetails medDetails = new MedicineDetails();
                 ArrayList<String> oldEntry = medicineTable.getAllMedicineDEtails(GlobalClass.userID, incDate);
                 for (int i = 0; i < oldEntry.size(); i++) {
@@ -841,15 +965,12 @@ public class AddMedicineFragment extends Fragment implements View.OnClickListene
                 //long getCount = medicineTable.getMedicineDetailsCount();
                 //incDate = sdf.format(c.getTime());
                 //Log.e(TAG, "onCreateView: Get Medicine Count " + getCount);
-            } else {
-                if (checkEditOrNot == 1) {
-                 //   medicineTable.getMedicineToEdit(showReceivedData, medicineDetails);
-                } else {
+            } else if(checkEditOrNot == 0) {
                     medicineTable.addMedicineDetails(medicineDetails, medicineDetails.getPersonName());
                     long getCount = medicineTable.getMedicineDetailsCount();
                     incDate = sdf.format(c.getTime());
                     Log.e(TAG, "onCreateView: Get Medicine Count " + getCount);
-                }
+               // }
             }
         }
 
@@ -934,13 +1055,13 @@ public class AddMedicineFragment extends Fragment implements View.OnClickListene
         boolean valid = true;
 
         String medicineName = medicineNamee.getText().toString();
-        String userName = medicineTable.isExist(medicineDetails, medicineName);
+       // String userName = medicineTable.isExist(medicineDetails, medicineName);
 
         if (TextUtils.isEmpty(medicineName)) {
             medicineNamee.setError("Required");
             valid = false;
         }
-        if (userName != null) {
+/*        if (userName != null) {
             if (userName.equalsIgnoreCase(medicineName)) {
                 Log.e(TAG, "validateAllFields: " + "True ");
                 medicineNamee.setError("Medicine is registered");
@@ -950,7 +1071,7 @@ public class AddMedicineFragment extends Fragment implements View.OnClickListene
             }
         } else {
             medicineNamee.setError(null);
-        }
+        }*/
 
         String medicineType = typeOfMedicine;
         if (TextUtils.isEmpty(medicineType)) {
