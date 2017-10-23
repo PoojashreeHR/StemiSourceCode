@@ -164,7 +164,7 @@ public class StressFragment extends Fragment implements AppConstants, TrackActiv
 
         if(dbForTrackActivities.getDate((savedDate),GlobalClass.userID)) {
             ArrayList<UserEventDetails> eventDetails = dbForTrackActivities.getDetails(appSharedPreference.getProfileName(AppConstants.PROFILE_NAME), savedDate, 2);
-            if (eventDetails.get(0).getStressCount() != null) {
+            if (eventDetails.size() > 0 && eventDetails.get(0).getStressCount() != null) {
                 mSeekLin.setProgress(Integer.parseInt(eventDetails.get(0).getStressCount()));
                 stressCount = eventDetails.get(0).getStressCount();
                 if(eventDetails.get(0).getYoga().equals("true")){

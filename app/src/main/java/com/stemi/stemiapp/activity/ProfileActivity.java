@@ -76,6 +76,12 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
         UserDetailsTable dBforUserDetails = new UserDetailsTable(this);
@@ -155,7 +161,7 @@ public class ProfileActivity extends AppCompatActivity {
                                             GlobalClass.heightInM = heightInCms / 100;
                                         }
                                         startActivity(new Intent(ProfileActivity.this, TrackActivity.class));
-
+                                        finish();
 
 
                                         notifyDataSetChanged();

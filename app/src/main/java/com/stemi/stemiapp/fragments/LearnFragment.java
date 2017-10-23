@@ -126,8 +126,9 @@ public class LearnFragment extends Fragment implements AppConstants, UpdateableF
         if(weight == 0){
             UserDetailsTable userDetailsTable = new UserDetailsTable(getActivity());
             RegisteredUserDetails userDetails = userDetailsTable.getUserDetails(GlobalClass.userID);
-
-            weight = Integer.parseInt(userDetails.getWeight());
+            if(userDetails != null && userDetails.getWeight() != null) {
+                weight = Integer.parseInt(userDetails.getWeight());
+            }
         }
 
         String weightStr;

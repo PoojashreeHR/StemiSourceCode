@@ -284,7 +284,7 @@ public class SmokingFragment  extends Fragment implements TrackActivity.OnBackPr
 
         if(dbForTrackActivities.getDate((savedDate),GlobalClass.userID)) {
             ArrayList<UserEventDetails> eventDetails = dbForTrackActivities.getDetails(GlobalClass.userID, savedDate, 3);
-            if (eventDetails.get(0).getSmokeToday() != null) {
+            if (eventDetails.size() > 0 && eventDetails.get(0).getSmokeToday() != null) {
                 smokeToday.setResponse(eventDetails.get(0).getSmokeToday());
                 if(eventDetails.get(0).getSmokeToday().equals("YES")){
                     howMany.setText(eventDetails.get(0).getHowMany());

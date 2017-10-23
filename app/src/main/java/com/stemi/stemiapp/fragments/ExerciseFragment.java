@@ -19,6 +19,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.stemi.stemiapp.R;
 import com.stemi.stemiapp.activity.TrackActivity;
 import com.stemi.stemiapp.customviews.CircleImageView;
@@ -196,9 +197,13 @@ public class ExerciseFragment extends Fragment implements View.OnClickListener, 
             savedDate = tvExcerciseToday.getText().toString();
         }
 
+        Log.e("db", "appSharedPreference.getProfileName(AppConstants.PROFILE_NAME) = "+appSharedPreference.getProfileName(AppConstants.PROFILE_NAME) );
+        Log.e("db", "GlobalClass.userID = "+ GlobalClass.userID);
+
         if (dbForTrackActivities.getDate((savedDate), GlobalClass.userID)) {
             ArrayList<UserEventDetails> eventDetails = dbForTrackActivities.getDetails(GlobalClass.userID, savedDate, 1);
-            if (eventDetails != null) {
+            Log.e("db","eventDetails = "+new Gson().toJson(eventDetails));
+            if (eventDetails != null && eventDetails.size() > 0 ) {
                 if (eventDetails.get(0).getIswalked() == null) {
                     ivWalking.setBackgroundResource(R.drawable.ic_unchecked_1);
                     ivWalking.setTag(0);
@@ -352,9 +357,9 @@ public class ExerciseFragment extends Fragment implements View.OnClickListener, 
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy");
 
         trackExercise.setUserId(GlobalClass.userID);
-        if (appSharedPreference.getProfileName(AppConstants.PROFILE_NAME) != null) {
-            TrackActivity.userEventDetails.setUid(appSharedPreference.getProfileName(AppConstants.PROFILE_NAME));
-        }
+
+         TrackActivity.userEventDetails.setUid(GlobalClass.userID);
+
         if (tvExcerciseToday.getText().equals("Today  ")) {
             Date dt = new Date();
             // set format for date
@@ -440,7 +445,7 @@ public class ExerciseFragment extends Fragment implements View.OnClickListener, 
             int c = dbForTrackActivities.isEntryExists(TrackActivity.userEventDetails, 1, getActivity());
 
         }
-
+        Log.e("db", "Saving TrackActivity.userEventDetails = "+new Gson().toJson(TrackActivity.userEventDetails));
 
         EventBus.getDefault().post(new DataSavedEvent(""));
     }

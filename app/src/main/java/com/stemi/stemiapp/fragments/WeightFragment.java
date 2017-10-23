@@ -193,7 +193,7 @@ public class WeightFragment  extends Fragment implements View.OnClickListener,Tr
 
         if (dbForTrackActivities.getDate((savedDate), GlobalClass.userID)) {
             ArrayList<UserEventDetails> eventDetails = dbForTrackActivities.getDetails(appSharedPreference.getProfileName(AppConstants.PROFILE_NAME), savedDate, 4);
-            if (eventDetails.get(0).getTodaysWeight() != null) {
+            if (eventDetails.size() > 0 && eventDetails.get(0).getTodaysWeight() != null) {
                 todaysWeight.setText(eventDetails.get(0).getTodaysWeight());
                 bmiLayout.setVisibility(View.GONE);
             }

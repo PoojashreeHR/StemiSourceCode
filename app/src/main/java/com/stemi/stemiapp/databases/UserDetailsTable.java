@@ -159,7 +159,7 @@ public class UserDetailsTable {
     public ArrayList<String> getRecords(){
         ArrayList<String> data=new ArrayList<String>();
         SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
-        Cursor cursor = db.query(TABLE_NAME, new String[]{USER_NAME},USER_UID+" = '"+GlobalClass.userID+"'", null, null, null, null);
+        Cursor cursor = db.query(TABLE_NAME, new String[]{USER_NAME},LOGIN_ID+" = '"+loginId+"'", null, null, null, null);
         String fieldToAdd=null;
         while(cursor.moveToNext()){
             fieldToAdd=cursor.getString(0);

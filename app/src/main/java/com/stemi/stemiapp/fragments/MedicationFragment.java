@@ -212,6 +212,11 @@ public class MedicationFragment extends Fragment implements AppConstants, View.O
 
         if (medicineWithDate != null && medicineWithDate.size() > 0) {
             Log.e(TAG, "callSavedMethod: " + "CALL HERE");
+
+            removeAllChildViews(morning);
+            removeAllChildViews(afternoon);
+            removeAllChildViews(night);
+
             //    getMedicineDetails()
             for (int i = 0; i < medicineWithDate.size(); i++) {
                 String s = medicineWithDate.get(i);
@@ -279,6 +284,9 @@ public class MedicationFragment extends Fragment implements AppConstants, View.O
         morning = (LinearLayout) morningContainer.findViewById(R.id.imageTypeLayout);
         afternoon = (LinearLayout) noonContainer.findViewById(R.id.imageTypeLayout);
         night = (LinearLayout) nightContainer.findViewById(R.id.imageTypeLayout);
+
+
+
 
         String medicineTime = "";
         if (time.equals("Morning")) {
@@ -594,7 +602,8 @@ public class MedicationFragment extends Fragment implements AppConstants, View.O
             case R.id.ivInfo:
                 //dBforUserDetails.getMedicine("Morning");
                 ArrayList<String> Mmedicine = medicineTable.getMedicine(GlobalClass.userID, "Morning", savedDate);
-                ArrayList<MedicinesTakenOrNot> medicines = medicineContains.getMedicineMorning();
+                if(medicineContains != null){
+                    ArrayList<MedicinesTakenOrNot> medicines = medicineContains.getMedicineMorning();
                /* for (int i = 0; i < medicines.size(); i++) {
                     MedicinesTakenOrNot medicineInfo = new MedicinesTakenOrNot();
 *//*
@@ -605,15 +614,18 @@ public class MedicationFragment extends Fragment implements AppConstants, View.O
                     medicineInfo = medicineContains.getMedicineMorning().get(i);
                     medicines.add(medicineInfo);
 */
-                //     }
-                infoDialogFragment = new MyDialogFragment(medicines, "MORNING MEDICINES", 1);
-                infoDialogFragment.setCancelable(false);
-                infoDialogFragment.show(getActivity().getFragmentManager(), "Medicine Info");
+                    //     }
+                    infoDialogFragment = new MyDialogFragment(medicines, "MORNING MEDICINES", 1);
+                    infoDialogFragment.setCancelable(false);
+                    infoDialogFragment.show(getActivity().getFragmentManager(), "Medicine Info");
+                }
+
                 break;
 
             case R.id.ivInfo1:
                 //   ArrayList<String> Amedicine = medicineTable.getMedicine(GlobalClass.userID, "Afternoon", savedDate);
-                ArrayList<MedicinesTakenOrNot> Amedicines = medicineContains.getMedicineAfternoon();
+                if(medicineContains != null) {
+                    ArrayList<MedicinesTakenOrNot> Amedicines = medicineContains.getMedicineAfternoon();
 
               /*  for (int i = 0; i < Amedicine.size(); i++) {
                     MedicineDetails AmedicineInfo = new MedicineDetails();
@@ -625,15 +637,17 @@ public class MedicationFragment extends Fragment implements AppConstants, View.O
 
                     AmedicineInfo = medicineDetails;
                     Amedicines.add(AmedicineInfo);*/
-                // }
-                infoDialogFragment = new MyDialogFragment(Amedicines, "AFTERNOON MEDICINES", 2);
-                infoDialogFragment.setCancelable(false);
-                infoDialogFragment.show(getActivity().getFragmentManager(), "Medicine Info");
+                    // }
+                    infoDialogFragment = new MyDialogFragment(Amedicines, "AFTERNOON MEDICINES", 2);
+                    infoDialogFragment.setCancelable(false);
+                    infoDialogFragment.show(getActivity().getFragmentManager(), "Medicine Info");
+                }
                 break;
 
             case R.id.ivInfo2:
                 //  ArrayList<String> Nmedicine = medicineTable.getMedicine(GlobalClass.userID, "Night", savedDate);
-                ArrayList<MedicinesTakenOrNot> Nmedicines = medicineContains.getMedicineNight();
+                if(medicineContains != null) {
+                    ArrayList<MedicinesTakenOrNot> Nmedicines = medicineContains.getMedicineNight();
               /*  for (int i = 0; i < Nmedicine.size(); i++) {
                     MedicineDetails NmedicineInfo = new MedicineDetails();
 
@@ -645,9 +659,10 @@ public class MedicationFragment extends Fragment implements AppConstants, View.O
                     NmedicineInfo = medicineDetails;
                     Nmedicines.add(NmedicineInfo);
                 }*/
-                infoDialogFragment = new MyDialogFragment(Nmedicines, "NIGHT MEDICINES", 3);
-                infoDialogFragment.setCancelable(false);
-                infoDialogFragment.show(getActivity().getFragmentManager(), "Medicine Info");
+                    infoDialogFragment = new MyDialogFragment(Nmedicines, "NIGHT MEDICINES", 3);
+                    infoDialogFragment.setCancelable(false);
+                    infoDialogFragment.show(getActivity().getFragmentManager(), "Medicine Info");
+                }
                 break;
         }
     }
