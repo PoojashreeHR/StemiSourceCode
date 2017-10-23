@@ -29,6 +29,7 @@ import com.jjoe64.graphview.series.LineGraphSeries;
 import com.jjoe64.graphview.series.PointsGraphSeries;
 import com.stemi.stemiapp.R;
 import com.stemi.stemiapp.activity.TrackActivity;
+import com.stemi.stemiapp.activity.UpdateableFragment;
 import com.stemi.stemiapp.databases.BloodTestDB;
 import com.stemi.stemiapp.databases.TrackExerciseDB;
 import com.stemi.stemiapp.databases.TrackMedicationDB;
@@ -39,6 +40,7 @@ import com.stemi.stemiapp.graphs.FlaggedDataPoint;
 import com.stemi.stemiapp.graphs.XAxisDateFormatter;
 import com.stemi.stemiapp.graphs.YAxisValueFormatter;
 import com.stemi.stemiapp.model.BloodTestResult;
+import com.stemi.stemiapp.model.DataSavedEvent;
 import com.stemi.stemiapp.model.TrackExercise;
 import com.stemi.stemiapp.model.TrackMedication;
 import com.stemi.stemiapp.model.TrackSmoking;
@@ -46,6 +48,10 @@ import com.stemi.stemiapp.model.TrackStress;
 import com.stemi.stemiapp.model.TrackWeight;
 import com.stemi.stemiapp.samples.ChartSampleActivity;
 import com.stemi.stemiapp.utils.GlobalClass;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
@@ -62,7 +68,7 @@ import butterknife.ButterKnife;
  * Created by Pooja on 26-07-2017.
  */
 
-public class StatusFragment extends Fragment {
+public class StatusFragment extends Fragment implements UpdateableFragment{
     Button button;
     private TabLayout tabs;
     private RelativeLayout healthLayout, weightLayout, bloodTestLayout;
@@ -109,12 +115,38 @@ public class StatusFragment extends Fragment {
         // Required empty public constructor
     }
 
+    @Override
+    public void onStart() {
+        EventBus.getDefault().register(this);
+        super.onStart();
+    }
 
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onDataSaved(DataSavedEvent event){
+        updateSelf();
+    }
 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        //populateDummyData();
+        populateHealthGraph();
+        // populateDummyData();
+        populateStressGraph();
+        populateWeightGraph();
+        setupDate();
     }
 
     @Override
@@ -161,12 +193,7 @@ public class StatusFragment extends Fragment {
         tabs.setSelectedTabIndicatorColor(getResources().getColor(R.color.appBackground));
         tabs.setTabTextColors(getResources().getColor(R.color.colorPrimaryDark), getResources().getColor(R.color.appBackground));
 
-        //populateDummyData();
-        populateHealthGraph();
-       // populateDummyData();
-        populateStressGraph();
-        populateWeightGraph();
-        setupDate();
+
 
         ((TrackActivity)getActivity()).getViewPager().setPagingEnabled(false);
 
@@ -368,7 +395,7 @@ public class StatusFragment extends Fragment {
             weightData[j] = new DataPoint(weight.getMonthIndex(), weight.getWeight());
             j++;
         }
-
+        Log.e("db", new Gson().toJson(weightData));
         DataPointInterface[] weightUpperLimitData = new DataPoint[12];
         DataPointInterface[] weightLowerLimitData = new DataPoint[12];
         for(int i=0; i<weightUpperLimitData.length; i++){
@@ -379,7 +406,7 @@ public class StatusFragment extends Fragment {
         LineGraphSeries<DataPointInterface> weightGraphSeries = new LineGraphSeries<>(weightData);
         weightGraphSeries.setDrawDataPoints(true);
         weightGraph.addSeries(weightGraphSeries);
-
+       // Log.e("db", new Gson().toJson(weightGraphSeries));
 
         Paint paint = new Paint();
         paint.setStyle(Paint.Style.STROKE);
@@ -695,12 +722,23 @@ public class StatusFragment extends Fragment {
 
     @Override
     public void setMenuVisibility(boolean menuVisible) {
+        Log.e("fragment", "setMenuVisibility("+menuVisible+")");
         if(getActivity() != null){
             if(menuVisible){
                 ((TrackActivity) getActivity()).setActionBarTitle("Statistics");
+                updateSelf();
 
             }
         }
         super.setMenuVisibility(menuVisible);
+    }
+
+    @Override
+    public void updateSelf() {
+        populateHealthGraph();
+        // populateDummyData();
+        populateStressGraph();
+        populateWeightGraph();
+        setupDate();
     }
 }

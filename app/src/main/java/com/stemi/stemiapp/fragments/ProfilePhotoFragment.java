@@ -80,10 +80,13 @@ public class ProfilePhotoFragment extends Fragment implements AppConstants,View.
         register.setOnClickListener(this);
         user = this.getArguments().getParcelable("user");
         if(user != null){
+            Log.e("db", "user.getImgUrl() = "+user.getImgUrl());
             RegistrationActivity.registeredUserDetails.setImgUrl(user.getImgUrl());
             editmode = true;
-            Bitmap bitmap =new  CompressImageUtil().compressImage(getActivity(),user.getImgUrl());
-            img.setImageBitmap(bitmap);
+            if(user.getImgUrl() != null){
+                Bitmap bitmap =new  CompressImageUtil().compressImage(getActivity(),user.getImgUrl());
+                img.setImageBitmap(bitmap);
+            }
         }
         return view;
     }

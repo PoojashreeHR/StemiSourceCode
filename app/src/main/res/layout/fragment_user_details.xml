@@ -52,6 +52,7 @@
 
         <EditText
             android:id="@+id/et_age"
+            android:maxLength="3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="AGE"

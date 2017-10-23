@@ -120,7 +120,7 @@
                 android:textColor="@color/black"
                 android:gravity="center"
                 android:textSize="14sp"
-                android:maxLength="2"
+                android:maxLength="1"
                 android:background="@drawable/edittext_boundary"
                 android:layout_marginTop="15dp"/>
 

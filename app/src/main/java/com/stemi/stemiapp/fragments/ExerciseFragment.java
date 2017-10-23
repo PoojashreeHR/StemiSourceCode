@@ -4,22 +4,28 @@ import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.stemi.stemiapp.R;
 import com.stemi.stemiapp.activity.TrackActivity;
+import com.stemi.stemiapp.customviews.CircleImageView;
 import com.stemi.stemiapp.databases.DBForTrackActivities;
 import com.stemi.stemiapp.databases.TrackExerciseDB;
+import com.stemi.stemiapp.model.DataSavedEvent;
 import com.stemi.stemiapp.model.MessageEvent;
 import com.stemi.stemiapp.model.SetTimeEvent;
 import com.stemi.stemiapp.model.TrackExercise;
@@ -84,6 +90,8 @@ public class ExerciseFragment extends Fragment implements View.OnClickListener, 
     AppSharedPreference appSharedPreference;
 
     String savedDate;
+    private boolean alreadySaved;
+    private TrackExercise trackExercise;
 
     public ExerciseFragment() {
         // Required empty public constructor
@@ -121,7 +129,7 @@ public class ExerciseFragment extends Fragment implements View.OnClickListener, 
             }
         });
         ((TrackActivity) getActivity()).setOnBackPressedListener(this);
-
+        alreadySaved = false;
         return view;
     }
 
@@ -189,9 +197,13 @@ public class ExerciseFragment extends Fragment implements View.OnClickListener, 
             savedDate = tvExcerciseToday.getText().toString();
         }
 
+        Log.e("db", "appSharedPreference.getProfileName(AppConstants.PROFILE_NAME) = "+appSharedPreference.getProfileName(AppConstants.PROFILE_NAME) );
+        Log.e("db", "GlobalClass.userID = "+ GlobalClass.userID);
+
         if (dbForTrackActivities.getDate((savedDate), GlobalClass.userID)) {
             ArrayList<UserEventDetails> eventDetails = dbForTrackActivities.getDetails(GlobalClass.userID, savedDate, 1);
-            if (eventDetails != null) {
+            Log.e("db","eventDetails = "+new Gson().toJson(eventDetails));
+            if (eventDetails != null && eventDetails.size() > 0 ) {
                 if (eventDetails.get(0).getIswalked() == null) {
                     ivWalking.setBackgroundResource(R.drawable.ic_unchecked_1);
                     ivWalking.setTag(0);
@@ -281,6 +293,24 @@ public class ExerciseFragment extends Fragment implements View.OnClickListener, 
         callSavedMethod();
     }
 
+    public void saveAllData() {
+        if(GlobalClass.userID != null) {
+            if (!alreadySaved) {
+                Log.e("fragment", "ExerciseFragment saveAllData()");
+                storeData();
+                alreadySaved = true;
+            }
+        }
+        else {
+            //Toast.makeText(getActivity(), "Please add profile details first", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void saveUserData() {
+        TrackExerciseDB trackExerciseDB = new TrackExerciseDB(getActivity());
+        trackExerciseDB.addEntry(trackExercise);
+    }
+
     public static class DatePickerDialogClass extends DialogFragment implements DatePickerDialog.OnDateSetListener {
 
         @Override
@@ -323,13 +353,13 @@ public class ExerciseFragment extends Fragment implements View.OnClickListener, 
 
     public void storeData() {
         TrackExerciseDB trackExerciseDB = new TrackExerciseDB(getActivity());
-        TrackExercise trackExercise = new TrackExercise();
+        trackExercise = new TrackExercise();
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy");
 
         trackExercise.setUserId(GlobalClass.userID);
-        if (appSharedPreference.getProfileName(AppConstants.PROFILE_NAME) != null) {
-            TrackActivity.userEventDetails.setUid(appSharedPreference.getProfileName(AppConstants.PROFILE_NAME));
-        }
+
+         TrackActivity.userEventDetails.setUid(GlobalClass.userID);
+
         if (tvExcerciseToday.getText().equals("Today  ")) {
             Date dt = new Date();
             // set format for date
@@ -410,12 +440,14 @@ public class ExerciseFragment extends Fragment implements View.OnClickListener, 
             dbForTrackActivities.addEntry(TrackActivity.userEventDetails);
             EventBus.getDefault().post(new MessageEvent("Hello!"));
             ((TrackActivity) getActivity()).setActionBarTitle("Track");
+            saveUserData();
         } else {
             int c = dbForTrackActivities.isEntryExists(TrackActivity.userEventDetails, 1, getActivity());
 
         }
+        Log.e("db", "Saving TrackActivity.userEventDetails = "+new Gson().toJson(TrackActivity.userEventDetails));
 
-        trackExerciseDB.addEntry(trackExercise);
+        EventBus.getDefault().post(new DataSavedEvent(""));
     }
 
     /*  @Override

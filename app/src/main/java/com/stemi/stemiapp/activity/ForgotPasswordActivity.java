@@ -55,11 +55,13 @@ public class ForgotPasswordActivity extends AppCompatActivity implements View.On
                 if (response.isSuccessful()) {
                     if(response.body().getStatus().contains("success")) {
                         CommonUtils.hideLoadingProgress();
+                        Log.e("db","success response = "+response.body().getMessage());
                         Toast.makeText(ForgotPasswordActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
                         startActivity(new Intent(ForgotPasswordActivity.this, MainActivity.class));
                         finish();
                     }else {
                         CommonUtils.hideLoadingProgress();
+                        Log.e("db","failure response = "+response.body().getMessage());
                         Toast.makeText(ForgotPasswordActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -68,7 +70,7 @@ public class ForgotPasswordActivity extends AppCompatActivity implements View.On
             @Override
             public void onFailure(Call<StatusMessageResponse> call, Throwable t) {
                 CommonUtils.hideLoadingProgress();
-
+                Log.e("db","error response = "+t.getLocalizedMessage());
             }
         });
     }

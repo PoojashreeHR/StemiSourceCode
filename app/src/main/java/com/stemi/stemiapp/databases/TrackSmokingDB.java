@@ -13,6 +13,7 @@ import com.stemi.stemiapp.utils.GlobalClass;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -60,12 +61,50 @@ public class TrackSmokingDB extends SQLiteOpenHelper{
             cv.put(COLUMN_DATE_TIME, simpleDateFormat.format(stress.getDateTime()));
             cv.put(COLUMN_SMOKED, stress.isSmoked());
             Log.e("StatsFragment", "Saving "+new Gson().toJson(stress));
-            db.insertOrThrow(TABLE_SMOKING, null, cv);
+            if(entryExists(stress.getUserId(), simpleDateFormat.format(stress.getDateTime()))){
+                String whereClause = COLUMN_USER_ID+" = '"+stress.getUserId()+"' AND "
+                        +COLUMN_DATE_TIME+" = '"+simpleDateFormat.format(stress.getDateTime())+"'";
+                Log.e("db", "Updating TABLE_SMOKING with whereClause = "+ whereClause);
+                db.update(TABLE_SMOKING,cv,whereClause,null);
+            }
+            else{
+                Log.e("db", "Inserting ");
+                db.insert(TABLE_SMOKING, null, cv);
+            }
+
         }
         catch(Exception e){
-            Log.e("StatsFragment", "Exception "+e.getLocalizedMessage());
+
         }
         db.close();
+    }
+
+    private boolean entryExists(String userId, String datetime) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        boolean isEntryExists = false;
+        try{
+            String sql = "SELECT * FROM "+TABLE_SMOKING+" WHERE "
+                    +COLUMN_USER_ID+" = '"+userId+"' AND "
+                    +COLUMN_DATE_TIME+" = '"+datetime+"'";
+
+            Log.e("db", "sql = "+sql);
+
+            Cursor cursor = db.rawQuery(sql,null);
+            cursor.moveToFirst();
+
+            while(!cursor.isAfterLast()){
+                String user = cursor.getString(cursor.getColumnIndex(COLUMN_USER_ID));
+                Log.e("db", "user = "+user);
+                isEntryExists = true;
+                cursor.moveToNext();
+            }
+            Log.e("db", "isEntryExists = "+isEntryExists);
+        }
+        catch (Exception e){
+            Log.e("db", "e = "+e.getLocalizedMessage());
+            Log.e("db", "isEntryExists = "+isEntryExists);
+        }
+        return isEntryExists;
     }
 
     public boolean isTableEmpty(){
@@ -175,6 +214,8 @@ public class TrackSmokingDB extends SQLiteOpenHelper{
     public int getNumberOfDays(String userId){
         int dayCount = 0;
         SQLiteDatabase db = this.getReadableDatabase();
+        Date previousDateObj = null;
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
         try{
             String query = "SELECT * FROM " + TABLE_SMOKING
                     +" WHERE "+COLUMN_USER_ID+" = '"+userId+"'"
@@ -182,15 +223,42 @@ public class TrackSmokingDB extends SQLiteOpenHelper{
             Cursor cursor = db.rawQuery(query, null);
             cursor.moveToFirst();
             Log.e("db","query = "+query);
+
+
             while (!cursor.isAfterLast()) {
                 int withinlimitValue = cursor.getInt(cursor.getColumnIndex(COLUMN_SMOKED));
-                if(withinlimitValue == 0){
-                    dayCount++;
+                String date = cursor.getString(cursor.getColumnIndex(COLUMN_DATE_TIME));
+
+                Calendar calendar = Calendar.getInstance();
+                Date currentDateObj = simpleDateFormat.parse(date);
+                calendar.setTime(currentDateObj);
+                calendar.add(Calendar.DATE, -1);
+
+                if(previousDateObj == null || previousDateObj.equals(calendar.getTime())){
+                    //continous streak
+                    if(withinlimitValue == 0){
+                        Log.e("db", "dayCount = "+dayCount+" + 1");
+                        dayCount = dayCount + 1;
+                        Log.e("db", "date = "+date+" dayCount = "+dayCount);
+                    }
+                    else{
+                        dayCount = 0;
+                    }
                 }
                 else{
-                    dayCount = 0;
+                    if(withinlimitValue == 0) {
+                        dayCount = 1;
+                        Log.e("db", "previousDateObj = "+ previousDateObj.toString());
+                        Log.e("db", "else dayCount = "+dayCount);
+                    }
+                    else{
+                        dayCount = 0;
+                    }
                 }
+
+                previousDateObj = currentDateObj;
                 cursor.moveToNext();
+
 
             }
             Log.e("db","dayCount = "+dayCount);

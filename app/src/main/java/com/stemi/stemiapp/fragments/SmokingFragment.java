@@ -21,6 +21,7 @@ import com.stemi.stemiapp.activity.TrackActivity;
 import com.stemi.stemiapp.customviews.AnswerTemplateView;
 import com.stemi.stemiapp.databases.DBForTrackActivities;
 import com.stemi.stemiapp.databases.TrackSmokingDB;
+import com.stemi.stemiapp.model.DataSavedEvent;
 import com.stemi.stemiapp.model.MessageEvent;
 import com.stemi.stemiapp.model.SetTimeEvent;
 import com.stemi.stemiapp.model.TrackSmoking;
@@ -58,7 +59,10 @@ public class SmokingFragment  extends Fragment implements TrackActivity.OnBackPr
 
     String savedDate;
     String responseChange;
-   // AnswerTemplateView answerTemplateView;
+    private boolean alreadySaved;
+    private TrackSmoking trackSmoking;
+
+    // AnswerTemplateView answerTemplateView;
     public SmokingFragment() {
         // Required empty public constructor
     }
@@ -105,6 +109,8 @@ public class SmokingFragment  extends Fragment implements TrackActivity.OnBackPr
         ((TrackActivity) getActivity()).setOnBackPressedListener(this);
         ((TrackActivity) getActivity()).setActionBarTitle("Smoking");
 
+        alreadySaved = false;
+
         return view;
     }
 
@@ -134,13 +140,38 @@ public class SmokingFragment  extends Fragment implements TrackActivity.OnBackPr
     @Override
     public void onStop() {
         EventBus.getDefault().unregister(this);
+        Log.e("fragment", "SmokingFragment onStop()");
         super.onStop();
+    }
+
+    @Override
+    public void onDestroy() {
+        Log.e("fragment", "SmokingFragment onDestroy()");
+        super.onDestroy();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSetTimeEvent(SetTimeEvent event){
         tvSmokeToday.setText(event.getDate());
         callSavedMethod();
+    }
+
+    public void saveAllData() {
+        if(GlobalClass.userID !=null) {
+            if (!alreadySaved) {
+                Log.e("fragment", "SmokingFragment saveAllData()");
+                saveData();
+                alreadySaved = true;
+            }
+        }
+        else{
+           // Toast.makeText(getActivity(), "Please add profile details first", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void saveUserData() {
+        TrackSmokingDB trackSmokingDB = new TrackSmokingDB(getActivity());
+        trackSmokingDB.addEntry(trackSmoking);
     }
 
     public static class DatePickerDialogClass extends DialogFragment implements DatePickerDialog.OnDateSetListener{
@@ -185,7 +216,7 @@ public class SmokingFragment  extends Fragment implements TrackActivity.OnBackPr
     public void saveData() {
         TrackActivity.userEventDetails.setUid(GlobalClass.userID);
         TrackSmokingDB trackSmokingDB = new TrackSmokingDB(getActivity());
-        TrackSmoking trackSmoking = new TrackSmoking();
+        trackSmoking = new TrackSmoking();
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy");
         trackSmoking.setUserId(GlobalClass.userID);
         if (tvSmokeToday.getText().equals("Today  ")){
@@ -214,19 +245,22 @@ public class SmokingFragment  extends Fragment implements TrackActivity.OnBackPr
             trackSmoking.setSmoked(true);
         }
 
-        trackSmokingDB.addEntry(trackSmoking);
+
+        EventBus.getDefault().post(new DataSavedEvent(""));
 
         boolean date = dbForTrackActivities.getDate(TrackActivity.userEventDetails.getDate(),GlobalClass.userID);
         if (!date) {
             dbForTrackActivities.addEntry(TrackActivity.userEventDetails);
              EventBus.getDefault().post(new MessageEvent("Hello!"));
             ((TrackActivity) getActivity()).setActionBarTitle("Track");
+            saveUserData();
         } else {
             int c = dbForTrackActivities.isEntryExists(TrackActivity.userEventDetails,3,getActivity());
 
 
         }
     }
+
 
     public void callSavedMethod(){
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy");// set format for date
@@ -250,7 +284,7 @@ public class SmokingFragment  extends Fragment implements TrackActivity.OnBackPr
 
         if(dbForTrackActivities.getDate((savedDate),GlobalClass.userID)) {
             ArrayList<UserEventDetails> eventDetails = dbForTrackActivities.getDetails(GlobalClass.userID, savedDate, 3);
-            if (eventDetails.get(0).getSmokeToday() != null) {
+            if (eventDetails.size() > 0 && eventDetails.get(0).getSmokeToday() != null) {
                 smokeToday.setResponse(eventDetails.get(0).getSmokeToday());
                 if(eventDetails.get(0).getSmokeToday().equals("YES")){
                     howMany.setText(eventDetails.get(0).getHowMany());

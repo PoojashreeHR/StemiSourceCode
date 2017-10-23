@@ -29,6 +29,7 @@ import com.stemi.stemiapp.activity.TrackActivity;
 import com.stemi.stemiapp.customviews.TabSelectedListener;
 import com.stemi.stemiapp.databases.DBForTrackActivities;
 import com.stemi.stemiapp.databases.TrackWeightDB;
+import com.stemi.stemiapp.model.DataSavedEvent;
 import com.stemi.stemiapp.model.MessageEvent;
 import com.stemi.stemiapp.model.SetTimeEvent;
 import com.stemi.stemiapp.model.TrackWeight;
@@ -68,8 +69,11 @@ public class WeightFragment  extends Fragment implements View.OnClickListener,Tr
     String savedDate;
     AppSharedPreference appSharedPreference;
     DBForTrackActivities dbForTrackActivities;
+    private boolean alreadySaved;
 
     TabSelectedListener tabSelectedListener;
+    private TrackWeight trackWeight;
+
     public WeightFragment() {
         // Required empty public constructor
     }
@@ -101,7 +105,9 @@ public class WeightFragment  extends Fragment implements View.OnClickListener,Tr
         ((TrackActivity) getActivity()).setActionBarTitle("Weight");
         ((TrackActivity) getActivity()).setOnBackPressedListener(this);
 
+        alreadySaved = false;
         tabSelectedListener =  new TabSelectedListener(getActivity(),new WebViewFragment());
+
         return view;
     }
 
@@ -125,12 +131,18 @@ public class WeightFragment  extends Fragment implements View.OnClickListener,Tr
 
                 if(!todaysWeight.getText().toString().equals("")) {
                     if(validateField()) {
-                        float bmiValue = calculateBMI(todaysWeight.getText().toString(), appSharedPreference.getUserHeight(AppConstants.USER_HEIGHT));
-                        bmiCount = String.format("%.2f", bmiValue);
-                        String string = interpretBMI(bmiValue);
-                        BmiValue.setText("Your BMI is " + bmiCount);
-                        bmiResult.setText(string);
-                        bmiLayout.setVisibility(View.VISIBLE);
+
+                        if(appSharedPreference.getUserHeight(AppConstants.USER_HEIGHT) != null){
+                            float bmiValue = calculateBMI(todaysWeight.getText().toString(), appSharedPreference.getUserHeight(AppConstants.USER_HEIGHT));
+                            bmiCount = String.format("%.2f", bmiValue);
+                            String string = interpretBMI(bmiValue);
+                            BmiValue.setText("Your BMI is " + bmiCount);
+                            bmiResult.setText(string);
+                            bmiLayout.setVisibility(View.VISIBLE);
+                        }
+                        else{
+                            Toast.makeText(getActivity(), "Height is undefined ! Please add profile first", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 }else {
                     Toast.makeText(getActivity(), "Please enter your weight!!", Toast.LENGTH_SHORT).show();
@@ -140,6 +152,7 @@ public class WeightFragment  extends Fragment implements View.OnClickListener,Tr
 
     @Override
     public void doBack() {
+        if(GlobalClass.userID != null) {
         if(!todaysWeight.getText().toString().equals("")){
             if(validateField()) {
                 SaveData();
@@ -149,6 +162,10 @@ public class WeightFragment  extends Fragment implements View.OnClickListener,Tr
             EventBus.getDefault().post(new MessageEvent("Hello!"));
             ((TrackActivity) getActivity()).setActionBarTitle("Track");
 
+            }
+        }
+        else{
+            Toast.makeText(getActivity(), "Please add profile details first", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -176,7 +193,7 @@ public class WeightFragment  extends Fragment implements View.OnClickListener,Tr
 
         if (dbForTrackActivities.getDate((savedDate), GlobalClass.userID)) {
             ArrayList<UserEventDetails> eventDetails = dbForTrackActivities.getDetails(appSharedPreference.getProfileName(AppConstants.PROFILE_NAME), savedDate, 4);
-            if (eventDetails.get(0).getTodaysWeight() != null) {
+            if (eventDetails.size() > 0 && eventDetails.get(0).getTodaysWeight() != null) {
                 todaysWeight.setText(eventDetails.get(0).getTodaysWeight());
                 bmiLayout.setVisibility(View.GONE);
             }
@@ -206,6 +223,24 @@ public class WeightFragment  extends Fragment implements View.OnClickListener,Tr
     public void onSetTimeEvent(SetTimeEvent event){
         tvWeightToday.setText(event.getDate());
         callSavedMethod();
+    }
+
+    public void saveAllData() {
+        if(GlobalClass.userID != null) {
+            if (!alreadySaved) {
+                Log.e("fragment", "WeightFragment saveAllData()");
+                SaveData();
+                alreadySaved = true;
+            }
+        }
+        else{
+            //Toast.makeText(getActivity(), "Please add profile details first", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void saveUserData() {
+        TrackWeightDB trackWeightDB = new TrackWeightDB(getActivity());
+        trackWeightDB.addEntry(trackWeight);
     }
 
     public static class DatePickerDialogClass extends DialogFragment implements DatePickerDialog.OnDateSetListener{
@@ -271,7 +306,7 @@ public class WeightFragment  extends Fragment implements View.OnClickListener,Tr
         TrackActivity.userEventDetails.setUid(GlobalClass.userID);
         TrackWeightDB trackWeightDB = new TrackWeightDB(getActivity());
 
-        TrackWeight trackWeight = new TrackWeight();
+        trackWeight = new TrackWeight();
         trackWeight.setUserId(GlobalClass.userID);
         trackWeight.setWeight(Integer.parseInt(todaysWeight.getText().toString()));
 
@@ -299,11 +334,17 @@ public class WeightFragment  extends Fragment implements View.OnClickListener,Tr
 
         }
         Log.e("db", new Gson().toJson(trackWeight));
-        trackWeightDB.addEntry(trackWeight);
+
+        EventBus.getDefault().post(new DataSavedEvent(""));
         TrackActivity.userEventDetails.setTodaysWeight(todaysWeight.getText().toString());
         if(bmiCount == null){
-            float bmiValue = calculateBMI(todaysWeight.getText().toString(), appSharedPreference.getUserHeight(AppConstants.USER_HEIGHT));
-            bmiCount = String.format("%.2f",bmiValue);
+            if(appSharedPreference.getUserHeight(AppConstants.USER_HEIGHT) != null) {
+                float bmiValue = calculateBMI(todaysWeight.getText().toString(), appSharedPreference.getUserHeight(AppConstants.USER_HEIGHT));
+                bmiCount = String.format("%.2f", bmiValue);
+            }
+            else{
+                bmiCount = "0";
+            }
         }
         TrackActivity.userEventDetails.setBmiValue(bmiCount);
 
@@ -313,6 +354,7 @@ public class WeightFragment  extends Fragment implements View.OnClickListener,Tr
             getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
             ((TrackActivity) getActivity()).showFragment(new TrackFragment());
             ((TrackActivity) getActivity()).setActionBarTitle("Track");
+            saveUserData();
 
 
         } else {

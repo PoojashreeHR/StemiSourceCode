@@ -29,6 +29,7 @@ import com.stemi.stemiapp.customviews.AnimateHorizontalProgressBar;
 import com.stemi.stemiapp.databases.DBForTrackActivities;
 import com.stemi.stemiapp.databases.TrackStressDB;
 import com.stemi.stemiapp.model.DataPassListener;
+import com.stemi.stemiapp.model.DataSavedEvent;
 import com.stemi.stemiapp.model.MessageEvent;
 import com.stemi.stemiapp.model.SetTimeEvent;
 import com.stemi.stemiapp.model.TrackStress;
@@ -77,6 +78,9 @@ public class StressFragment extends Fragment implements AppConstants, TrackActiv
     String stressCount = null;
     DBForTrackActivities dbForTrackActivities;
     int progresValue;
+    private boolean alreadySaved;
+    private TrackStress trackStress;
+
     public StressFragment() {
         // Required empty public constructor
     }
@@ -114,7 +118,7 @@ public class StressFragment extends Fragment implements AppConstants, TrackActiv
             //    Toast.makeText(getActivity(),"seekbar touch stopped! "+ progresValue + "/" + seekBar.getMax(), Toast.LENGTH_SHORT).show();
             }
         });
-
+        alreadySaved = false;
         callSavedMEthod();
         llYoga.setOnClickListener(this);
         llMeditation.setOnClickListener(this);
@@ -160,7 +164,7 @@ public class StressFragment extends Fragment implements AppConstants, TrackActiv
 
         if(dbForTrackActivities.getDate((savedDate),GlobalClass.userID)) {
             ArrayList<UserEventDetails> eventDetails = dbForTrackActivities.getDetails(appSharedPreference.getProfileName(AppConstants.PROFILE_NAME), savedDate, 2);
-            if (eventDetails.get(0).getStressCount() != null) {
+            if (eventDetails.size() > 0 && eventDetails.get(0).getStressCount() != null) {
                 mSeekLin.setProgress(Integer.parseInt(eventDetails.get(0).getStressCount()));
                 stressCount = eventDetails.get(0).getStressCount();
                 if(eventDetails.get(0).getYoga().equals("true")){
@@ -262,6 +266,24 @@ public class StressFragment extends Fragment implements AppConstants, TrackActiv
         callSavedMEthod();
     }
 
+    public void saveAllData() {
+        if(GlobalClass.userID != null) {
+            if (!alreadySaved) {
+                Log.e("fragment", "StressFragment saveAllData()");
+                storeData();
+                alreadySaved = true;
+            }
+        }
+        else{
+           // Toast.makeText(getActivity(), "Please add profile details first", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void saveUserData() {
+        TrackStressDB trackStressDB = new TrackStressDB(getActivity());
+        trackStressDB.addEntry(trackStress);
+    }
+
 
     public static class DatePickerDialogClass extends DialogFragment implements DatePickerDialog.OnDateSetListener{
 
@@ -325,7 +347,7 @@ public class StressFragment extends Fragment implements AppConstants, TrackActiv
         Log.e("db", "storeData() in StressFragment");
         TrackActivity.userEventDetails.setUid(GlobalClass.userID);
         TrackStressDB trackStressDB = new TrackStressDB(getActivity());
-        TrackStress trackStress = new TrackStress();
+        trackStress = new TrackStress();
         trackStress.setUserId(GlobalClass.userID);
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy");
@@ -378,13 +400,15 @@ public class StressFragment extends Fragment implements AppConstants, TrackActiv
             trackStress.setStressed(true);
         }
 
-        trackStressDB.addEntry(trackStress);
+
+        EventBus.getDefault().post(new DataSavedEvent(""));
 
         boolean date = dbForTrackActivities.getDate(TrackActivity.userEventDetails.getDate(),GlobalClass.userID);
         if (!date) {
             dbForTrackActivities.addEntry(TrackActivity.userEventDetails);
             EventBus.getDefault().post(new MessageEvent("Hello!"));
             ((TrackActivity) getActivity()).setActionBarTitle("Track");
+            saveUserData();
         } else {
             int c = dbForTrackActivities.isEntryExists(TrackActivity.userEventDetails,2,getActivity());
            // ((TrackActivity) getActivity()).setActionBarTitle("Track");

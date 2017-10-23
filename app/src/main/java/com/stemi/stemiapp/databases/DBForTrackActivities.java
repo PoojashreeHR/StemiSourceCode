@@ -13,6 +13,7 @@ import com.stemi.stemiapp.model.BloodTestResult;
 import com.stemi.stemiapp.model.MedicineDetails;
 import com.stemi.stemiapp.model.MessageEvent;
 import com.stemi.stemiapp.model.TrackMedication;
+import com.stemi.stemiapp.model.UserAcceptedEvent;
 import com.stemi.stemiapp.model.UserEventDetails;
 import com.stemi.stemiapp.utils.CommonUtils;
 import com.stemi.stemiapp.utils.GlobalClass;
@@ -192,6 +193,7 @@ public class DBForTrackActivities {
                     }else {
                         updateUserTrack(TrackActivity.userEventDetails,1);
                         EventBus.getDefault().post(new MessageEvent("Hello!"));
+                        EventBus.getDefault().post(new UserAcceptedEvent("1"));
                         ((TrackActivity) context).setActionBarTitle("Track");
                     }
                     break;
@@ -202,6 +204,7 @@ public class DBForTrackActivities {
                     }else {
                         updateUserTrack(TrackActivity.userEventDetails,2);
                         EventBus.getDefault().post(new MessageEvent("Hello!"));
+                        EventBus.getDefault().post(new UserAcceptedEvent("2"));
                         ((TrackActivity) context).setActionBarTitle("Track");
 
                     }break;
@@ -211,6 +214,7 @@ public class DBForTrackActivities {
                     }else {
                         updateUserTrack(TrackActivity.userEventDetails,3);
                         EventBus.getDefault().post(new MessageEvent("Hello!"));
+                        EventBus.getDefault().post(new UserAcceptedEvent("3"));
                         ((TrackActivity) context).setActionBarTitle("Track");
 
                     }break;
@@ -220,6 +224,7 @@ public class DBForTrackActivities {
                     }else {
                         updateUserTrack(TrackActivity.userEventDetails,4);
                         EventBus.getDefault().post(new MessageEvent("Hello!"));
+                        EventBus.getDefault().post(new UserAcceptedEvent("4"));
                         ((TrackActivity) context).setActionBarTitle("Track");
                     }
             }

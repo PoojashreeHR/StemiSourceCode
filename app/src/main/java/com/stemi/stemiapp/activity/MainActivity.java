@@ -13,12 +13,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.stemi.stemiapp.R;
+import com.stemi.stemiapp.databases.UserDetailsTable;
+import com.stemi.stemiapp.model.RegisteredUserDetails;
 import com.stemi.stemiapp.model.apiModels.SignUpResponseModel;
 import com.stemi.stemiapp.preference.AppSharedPreference;
 import com.stemi.stemiapp.rest.ApiClient;
 import com.stemi.stemiapp.rest.ApiInterface;
 import com.stemi.stemiapp.utils.AppConstants;
 import com.stemi.stemiapp.utils.CommonUtils;
+import com.stemi.stemiapp.utils.GlobalClass;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -76,9 +81,22 @@ public class MainActivity extends AppCompatActivity implements AppConstants,View
                         appSharedPreferences.addLoginId(etEmail.getText().toString());
                         Log.e(TAG, "onResponse: Signup Response" + signUpResponseModel);
                         Toast.makeText(MainActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
-                        if(appSharedPreferences.getUserId() == null){
+
+                        UserDetailsTable userDetailsTable = new UserDetailsTable(MainActivity.this);
+                        int profileCount = userDetailsTable.getAllUsers().size();
+
+                        if(profileCount == 0){
                             startActivity(new Intent(MainActivity.this, RegistrationActivity.class));
+                            new AppSharedPreference(MainActivity.this).setFirstTimeLaunch(IS_FIRST_TIME_LAUNCH,true);
                         }else {
+                            if(GlobalClass.userID == null) {
+                                List<RegisteredUserDetails> allUsers = userDetailsTable.getAllUsers();
+                                if(allUsers != null && allUsers.size()>0) {
+                                    GlobalClass.userID = allUsers.get(0).getUniqueId();
+                                    appSharedPreferences.setUserId(GlobalClass.userID);
+                                    Log.e("StemiApplication", " GlobalClass.userID = " + GlobalClass.userID);
+                                }
+                            }
                             startActivity(new Intent(MainActivity.this, TrackActivity.class));
                         }
 

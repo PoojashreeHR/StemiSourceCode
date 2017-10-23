@@ -47,4 +47,6 @@ public class CustomViewPager extends android.support.v4.view.ViewPager{
         super.setCurrentItem(item, false);
     }
 
+
+
 }

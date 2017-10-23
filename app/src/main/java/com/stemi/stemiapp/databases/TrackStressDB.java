@@ -12,6 +12,7 @@ import com.stemi.stemiapp.utils.GlobalClass;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -58,6 +59,8 @@ public class TrackStressDB extends SQLiteOpenHelper{
         onCreate(sqLiteDatabase);
     }
 
+
+
     public void addEntry(TrackStress stress){
         SQLiteDatabase db = this.getWritableDatabase();
         try{
@@ -69,13 +72,48 @@ public class TrackStressDB extends SQLiteOpenHelper{
             cv.put(COLUMN_YOGA, stress.isYoga());
             cv.put(COLUMN_MEDITATION, stress.isMeditation());
             cv.put(COLUMN_HOBBIES, stress.isHobbies());
-            db.insert(TABLE_STRESS, null, cv);
+
+            if(entryExists(stress.getUserId(), simpleDateFormat.format(stress.getDateTime()))){
+                String whereClause = COLUMN_USER_ID+" = '"+stress.getUserId()+"' AND "
+                        +COLUMN_DATE_TIME+" = '"+simpleDateFormat.format(stress.getDateTime())+"'";
+                Log.e("db", "Updating TABLE_STRESS with whereClause = "+ whereClause);
+                db.update(TABLE_STRESS,cv,whereClause,null);
+            }
+            else{
+                db.insert(TABLE_STRESS, null, cv);
+            }
+
         }
         catch(Exception e){
 
         }
         db.close();
     }
+
+    private boolean entryExists(String userId, String datetime) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        boolean isEntryExists = false;
+        try{
+            String sql = "SELECT * FROM "+TABLE_STRESS+" WHERE "
+                    +COLUMN_USER_ID+" = '"+userId+"' AND "
+                    +COLUMN_DATE_TIME+" = '"+datetime+"'";
+
+            Cursor cursor = db.rawQuery(sql,null);
+            cursor.moveToFirst();
+
+            while(!cursor.isAfterLast()){
+                String user = cursor.getString(cursor.getColumnIndex(COLUMN_USER_ID));
+                isEntryExists = true;
+                cursor.moveToNext();
+            }
+        }
+        catch (Exception e){
+
+        }
+        return isEntryExists;
+    }
+
+
 
     public boolean isTableEmpty(){
         String query = "SELECT * FROM "+TABLE_STRESS;
@@ -202,6 +240,8 @@ public class TrackStressDB extends SQLiteOpenHelper{
     public int getNumberOfDays(String userId){
         int dayCount = 0;
         SQLiteDatabase db = this.getReadableDatabase();
+        Date previousDateObj = null;
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
         try{
             String query = "SELECT * FROM " + TABLE_STRESS
                     +" WHERE "+COLUMN_USER_ID+" = '"+userId+"'"
@@ -211,12 +251,36 @@ public class TrackStressDB extends SQLiteOpenHelper{
             Log.e("db","query = "+query);
             while (!cursor.isAfterLast()) {
                 int withinlimitValue = cursor.getInt(cursor.getColumnIndex(COLUMN_STRESSED));
-                if(withinlimitValue == 0){
-                    dayCount++;
+
+                String date = cursor.getString(cursor.getColumnIndex(COLUMN_DATE_TIME));
+
+                Calendar calendar = Calendar.getInstance();
+                Date currentDateObj = simpleDateFormat.parse(date);
+                calendar.setTime(currentDateObj);
+                calendar.add(Calendar.DATE, -1);
+
+                if(previousDateObj == null || previousDateObj.equals(calendar.getTime())){
+                    //continous streak
+                    if(withinlimitValue == 0){
+                        dayCount++;
+                        Log.e("db", "date = "+date+" dayCount = "+dayCount);
+                    }
+                    else{
+                        dayCount = 0;
+                    }
                 }
                 else{
-                    dayCount = 0;
+                    if(withinlimitValue == 0) {
+                        dayCount = 1;
+                    }
+                    else{
+                        dayCount = 0;
+                    }
                 }
+
+                previousDateObj = currentDateObj;
+
+
                 cursor.moveToNext();
 
             }

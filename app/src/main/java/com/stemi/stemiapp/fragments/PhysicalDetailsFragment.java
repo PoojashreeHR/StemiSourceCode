@@ -12,15 +12,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.stemi.stemiapp.R;
 import com.stemi.stemiapp.activity.RegistrationActivity;
 import com.stemi.stemiapp.customviews.AnswerTemplateView;
-import com.stemi.stemiapp.customviews.BetterSpinner;
-import com.stemi.stemiapp.customviews.MaterialSpinner;
 import com.stemi.stemiapp.model.RegisteredUserDetails;
 import com.stemi.stemiapp.preference.AppSharedPreference;
 import com.stemi.stemiapp.utils.AppConstants;
@@ -58,6 +55,9 @@ public class PhysicalDetailsFragment extends Fragment implements View.OnClickLis
   //  BetterSpinner spinner;
     RegisteredUserDetails registeredUserDetails;
     private RegisteredUserDetails user;
+    private boolean editmode;
+    private boolean isHeightInFtChanged;
+    private boolean isWaistInCmsChanged;
 
     public PhysicalDetailsFragment() {
     }
@@ -78,7 +78,7 @@ public class PhysicalDetailsFragment extends Fragment implements View.OnClickLis
         // genderText.add("Mrs");
 
         etHeightFt.addTextChangedListener(new GenericTextWatcher(etHeightFt));
-        etHeightInch.addTextChangedListener(new GenericTextWatcher(etHeightFt));
+        etHeightInch.addTextChangedListener(new GenericTextWatcher(etHeightInch));
         et_HeightCm.addTextChangedListener(new GenericTextWatcher(et_HeightCm));
 
         etWaistCm.addTextChangedListener(new GenericTextWatcher(etWaistCm));
@@ -112,13 +112,20 @@ public class PhysicalDetailsFragment extends Fragment implements View.OnClickLis
 
         user = this.getArguments().getParcelable("user");
         if(user != null){
+            editmode = true;
             etAddress.setText(user.getAddress());
             etWeight.setText(user.getWeight());
             et_HeightCm.setText(user.getHeight());
 
+            Log.e("db", "user.getHeight() = "+user.getHeight());
             double heightInInches = Double.parseDouble(user.getHeight()) / 2.54;
+            Log.e("db", "heightInInches = "+heightInInches);
+
             int feet = (int) (heightInInches / 12);
-            int inches = (int) (heightInInches % 12);
+            int inches = (int) Math.round(heightInInches % 12);
+            Log.e("db", "heightInInches % 12 = "+(heightInInches % 12));
+            Log.e("db", "inches = "+inches);
+
             etHeightFt.setText(""+feet);
             etHeightInch.setText(""+inches);
 
@@ -144,7 +151,7 @@ public class PhysicalDetailsFragment extends Fragment implements View.OnClickLis
 
    public void saveDetails(){
 
-        if(et_HeightCm.getText().toString().isEmpty()){
+        if(et_HeightCm.getText().toString().isEmpty() || isHeightInFtChanged){
             String[] parts = HeightInFeet.split("-");
             double part1 = Double.parseDouble(parts[0]); // 004
             double part2 = Double.parseDouble(parts[1]); // 034556
@@ -157,7 +164,7 @@ public class PhysicalDetailsFragment extends Fragment implements View.OnClickLis
             HeightIncm = et_HeightCm.getText().toString();
         }
 
-        if(etWaistInches.getText().toString().isEmpty()){
+        if(etWaistInches.getText().toString().isEmpty() || isWaistInCmsChanged){
             int waistInCms = Integer.parseInt(etWaistCm.getText().toString());
             double waistInInches = waistInCms * 0.393701;
             Waist= ""+waistInInches;
@@ -213,10 +220,7 @@ public class PhysicalDetailsFragment extends Fragment implements View.OnClickLis
         String heightIn = etHeightInch.getText().toString();
         String heightCm = et_HeightCm.getText().toString();
 
-        if(etHeightFt.isEnabled() && et_HeightCm.isEnabled()){
-            Toast.makeText(getActivity(), "Please Enter Height", Toast.LENGTH_SHORT).show();
-            valid = false;
-        }else if(!etHeightFt.isEnabled() &&  TextUtils.isEmpty(heightCm)){
+        if(!etHeightFt.isEnabled() &&  TextUtils.isEmpty(heightCm)){
             et_HeightCm.setError("Required");
             valid = false;
         }else if(etHeightFt.isEnabled()) {
@@ -238,13 +242,10 @@ public class PhysicalDetailsFragment extends Fragment implements View.OnClickLis
         String waistIn = etWaistInches.getText().toString();
         String waistCm = etWaistCm.getText().toString();
 
-        if(etWaistInches.isEnabled() && etWaistCm.isEnabled()){
-            Toast.makeText(getActivity(), "Please enter Waist", Toast.LENGTH_SHORT).show();
-            valid = false;
-        }else if(etWaistInches.isEnabled() && TextUtils.isEmpty(waistIn)){
+        if(etWaistInches.isEnabled() && TextUtils.isEmpty(waistIn)){
             etWaistInches.setError("Reqired");
             valid = false;
-        }else if(et_HeightCm.isEnabled() && TextUtils.isEmpty(waistCm)){
+        }else if(etWaistCm.isEnabled() && TextUtils.isEmpty(waistCm)){
             etWaistCm.setError("Reqired");
             valid = false;
         }else {
@@ -301,51 +302,71 @@ public class PhysicalDetailsFragment extends Fragment implements View.OnClickLis
         }
 
         public void afterTextChanged(Editable editable) {
-            String text = editable.toString();
-            switch (view.getId()) {
-                case R.id.et_inFt:
-                    if(editable.length() > 0 || etHeightInch.length() > 0){
-                        et_HeightCm.setEnabled(false);
-                        et_HeightCm.setAlpha(0.6f);
-                    }else if(etHeightFt.getText().toString().isEmpty() && etHeightInch.getText().toString().isEmpty()) {
-                        et_HeightCm.setEnabled(true);
-                        et_HeightCm.setAlpha(1f);
-                    }
-                    break;
+            if(!editmode){
+                String text = editable.toString();
 
-                case R.id.et_inCm:
-                    if(editable.length() > 0){
-                        etHeightFt.setEnabled(false);
-                        etHeightFt.setAlpha(0.6f);
+                switch (view.getId()) {
+                    case R.id.et_inFt:
+                        if(editable.length() > 0 || etHeightInch.length() > 0){
+                            et_HeightCm.setEnabled(false);
+                            et_HeightCm.setAlpha(0.6f);
+                        }else if(etHeightFt.getText().toString().isEmpty() && etHeightInch.getText().toString().isEmpty()) {
+                            et_HeightCm.setEnabled(true);
+                            et_HeightCm.setAlpha(1f);
+                        }
+                        break;
 
-                        etHeightInch.setEnabled(false);
-                        etHeightInch.setAlpha(0.6f);
-                    }else {
-                        etHeightFt.setEnabled(true);
-                        etHeightFt.setAlpha(1f);
+                    case R.id.et_inCm:
+                        if(editable.length() > 0){
+                            etHeightFt.setEnabled(false);
+                            etHeightFt.setAlpha(0.6f);
 
-                        etHeightInch.setEnabled(true);
-                        etHeightInch.setAlpha(1f);
-                    }
-                    break;
-                case R.id.et_waistCm:
-                    if(editable.length()>0){
-                        etWaistInches.setEnabled(false);
-                        etWaistInches.setAlpha(0.5f);
-                    }else {
-                        etWaistInches.setEnabled(true);
-                        etWaistInches.setAlpha(1f);
-                    }
-                    break;
-                case R.id.et_waistInches:
-                    if(editable.length()>0){
-                        etWaistCm.setEnabled(false);
-                        etWaistCm.setAlpha(0.5f);
-                    }else {
-                        etWaistCm.setEnabled(true);
-                        etWaistCm.setAlpha(1f);
-                    }
+                            etHeightInch.setEnabled(false);
+                            etHeightInch.setAlpha(0.6f);
+                        }else {
+                            etHeightFt.setEnabled(true);
+                            etHeightFt.setAlpha(1f);
+
+                            etHeightInch.setEnabled(true);
+                            etHeightInch.setAlpha(1f);
+                        }
+                        break;
+                    case R.id.et_waistCm:
+                        if(editable.length()>0){
+                            etWaistInches.setEnabled(false);
+                            etWaistInches.setAlpha(0.5f);
+                        }else {
+                            etWaistInches.setEnabled(true);
+                            etWaistInches.setAlpha(1f);
+                        }
+                        break;
+                    case R.id.et_waistInches:
+                        if(editable.length()>0){
+                            etWaistCm.setEnabled(false);
+                            etWaistCm.setAlpha(0.5f);
+                        }else {
+                            etWaistCm.setEnabled(true);
+                            etWaistCm.setAlpha(1f);
+                        }
+                }
             }
+            else{
+                switch (view.getId()) {
+                    case R.id.et_inFt:
+                        isHeightInFtChanged = true;
+                        break;
+                    case R.id.et_inCm:
+                        isHeightInFtChanged = false;
+                        break;
+                    case R.id.et_waistCm:
+                        isWaistInCmsChanged = true;
+                        break;
+                    case R.id.et_waistInches:
+                        isWaistInCmsChanged = false;
+                        break;
+                }
+            }
+
         }
     }
 }
