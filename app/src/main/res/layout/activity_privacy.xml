@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.stemi.stemiapp.activity.PrivacyActivity">
+    <include
+        android:id="@+id/terms_toolbar"
+        layout="@layout/toolbar" />
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/terms_toolbar">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:id="@+id/textView7"
+            android:layout_below="@+id/privacy_recycler"
+            android:text="@string/privacy"
+            android:padding="16dp"
+            android:textSize="14sp"
+            android:autoLink="web|email"
+            android:textColorLink="@android:color/holo_blue_dark"/>
+
+            <android.support.v7.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/privacy_recycler">
+            </android.support.v7.widget.RecyclerView>
+
+
+        </RelativeLayout>
+    </ScrollView>
+</RelativeLayout>

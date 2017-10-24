@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.stemi.stemiapp.activity.TermsAndConditionActivity">
+
+    <include
+        android:id="@+id/terms_toolbar"
+        layout="@layout/toolbar" />
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/terms_toolbar">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <android.support.v7.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/terms_recycler">
+            </android.support.v7.widget.RecyclerView>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/terms_condition"
+                android:id="@+id/textView7"
+                android:layout_below="@+id/terms_recycler"
+                android:padding="16dp"
+                android:textSize="14sp"
+                android:autoLink="web|email"
+                android:textColorLink="@android:color/holo_blue_dark"/>
+        </RelativeLayout>
+    </ScrollView>
+    <!--
+        <ExpandableListView
+            android:id="@+id/lvExp"
+            android:layout_below="@+id/toolbar"
+            android:layout_height="match_parent"
+            android:layout_margin="10dp"
+            android:groupIndicator="@null"
+            android:layout_width="match_parent"/>-->
+</RelativeLayout>
+
