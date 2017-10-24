@@ -197,7 +197,7 @@ public class ExerciseFragment extends Fragment implements View.OnClickListener, 
             savedDate = tvExcerciseToday.getText().toString();
         }
 
-        Log.e("db", "appSharedPreference.getProfileName(AppConstants.PROFILE_NAME) = "+appSharedPreference.getProfileName(AppConstants.PROFILE_NAME) );
+       // Log.e("db", "appSharedPreference.getProfileName(AppConstants.PROFILE_NAME) = "+appSharedPreference.getProfileName(AppConstants.PROFILE_NAME) );
         Log.e("db", "GlobalClass.userID = "+ GlobalClass.userID);
 
         if (dbForTrackActivities.getDate((savedDate), GlobalClass.userID)) {
@@ -328,25 +328,26 @@ public class ExerciseFragment extends Fragment implements View.OnClickListener, 
 
 
         public void onDateSet(DatePicker view, int year, int month, int day) {
-            Date parseDate = null;
-            Calendar cal = Calendar.getInstance();
-            SimpleDateFormat month_date = new SimpleDateFormat("MMM");
-            cal.set(Calendar.MONTH, (month));
-            String month_name = month_date.format(cal.getTime());
+            if(view.isShown()) {
+                Date parseDate = null;
+                Calendar cal = Calendar.getInstance();
+                SimpleDateFormat month_date = new SimpleDateFormat("MMM");
+                cal.set(Calendar.MONTH, (month));
+                String month_name = month_date.format(cal.getTime());
 
-            Log.e("", "" + month_name);
+                Log.e("", "" + month_name);
 
-            String date1 = day + " " + month_name + " " + year;
-            SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy");
-            try {
-                parseDate = dateFormat.parse(date1);
-            } catch (ParseException e) {
-                e.printStackTrace();
+                String date1 = day + " " + month_name + " " + year;
+                SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy");
+                try {
+                    parseDate = dateFormat.parse(date1);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                String stDate = dateFormat.format(parseDate); //2016/11/16 12:08:43
+                Log.e("Comparing Date :", " Your date is correct");
+                EventBus.getDefault().post(new SetTimeEvent(0, stDate));
             }
-            String stDate = dateFormat.format(parseDate); //2016/11/16 12:08:43
-            Log.e("Comparing Date :", " Your date is correct");
-            EventBus.getDefault().post(new SetTimeEvent(0, stDate));
-
 
         }
     }

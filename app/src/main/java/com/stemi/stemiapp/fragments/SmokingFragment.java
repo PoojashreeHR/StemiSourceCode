@@ -16,6 +16,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.stemi.stemiapp.R;
 import com.stemi.stemiapp.activity.TrackActivity;
 import com.stemi.stemiapp.customviews.AnswerTemplateView;
@@ -190,24 +191,26 @@ public class SmokingFragment  extends Fragment implements TrackActivity.OnBackPr
         }
 
         public void onDateSet(DatePicker view, int year, int month, int day){
-            Date parseDate = null;
-            Calendar cal=Calendar.getInstance();
-            SimpleDateFormat month_date = new SimpleDateFormat("MMM");
-            cal.set(Calendar.MONTH,(month));
-            String month_name = month_date.format(cal.getTime());
+            if(view.isShown()) {
+                Date parseDate = null;
+                Calendar cal = Calendar.getInstance();
+                SimpleDateFormat month_date = new SimpleDateFormat("MMM");
+                cal.set(Calendar.MONTH, (month));
+                String month_name = month_date.format(cal.getTime());
 
-            Log.e("",""+month_name);
+                Log.e("", "" + month_name);
 
-            String date1 = day + " " + month_name + " " + year;
-            SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy");
-            try {
-                parseDate = dateFormat.parse(date1);
-            } catch (ParseException e) {
-                e.printStackTrace();
+                String date1 = day + " " + month_name + " " + year;
+                SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy");
+                try {
+                    parseDate = dateFormat.parse(date1);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                String stDate = dateFormat.format(parseDate); //2016/11/16 12:08:43
+                Log.e("Comparing Date :", " Your date is correct");
+                EventBus.getDefault().post(new SetTimeEvent(0, stDate));
             }
-            String stDate= dateFormat.format(parseDate); //2016/11/16 12:08:43
-            Log.e("Comparing Date :"," Your date is correct");
-            EventBus.getDefault().post(new SetTimeEvent(0,stDate));
 //            tvSmokeToday.setText(stDate);
 //            callSavedMethod();
         }
@@ -284,6 +287,7 @@ public class SmokingFragment  extends Fragment implements TrackActivity.OnBackPr
 
         if(dbForTrackActivities.getDate((savedDate),GlobalClass.userID)) {
             ArrayList<UserEventDetails> eventDetails = dbForTrackActivities.getDetails(GlobalClass.userID, savedDate, 3);
+            Log.e("db", "eventDetails = "+ new Gson().toJson(eventDetails));
             if (eventDetails.size() > 0 && eventDetails.get(0).getSmokeToday() != null) {
                 smokeToday.setResponse(eventDetails.get(0).getSmokeToday());
                 if(eventDetails.get(0).getSmokeToday().equals("YES")){
@@ -293,6 +297,10 @@ public class SmokingFragment  extends Fragment implements TrackActivity.OnBackPr
                     howMany.setEnabled(false);
                     howMany.setAlpha(.6f);
                 }
+            }
+            else{
+                howMany.setText(null);
+                smokeToday.setResponse("NULL");
             }
         }else {
             howMany.setText(null);

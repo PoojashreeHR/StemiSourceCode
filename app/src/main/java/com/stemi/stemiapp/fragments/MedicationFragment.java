@@ -208,7 +208,7 @@ public class MedicationFragment extends Fragment implements AppConstants, View.O
             savedDate = tvMedicationToday.getText().toString();
         }
         medicineWithDate = medicineTable.getAllMedicineDEtails(GlobalClass.userID, savedDate);
-
+        Log.e("db", "medicineWithDate = "+ new Gson().toJson(medicineWithDate));
 
         if (medicineWithDate != null && medicineWithDate.size() > 0) {
             Log.e(TAG, "callSavedMethod: " + "CALL HERE");
@@ -239,6 +239,7 @@ public class MedicationFragment extends Fragment implements AppConstants, View.O
             }
         } else {
             //  if(layout2!=null) {
+            Log.e(TAG, "removeAllChildViews: " + "CALL HERE");
             removeAllChildViews(morning);
             removeAllChildViews(afternoon);
             removeAllChildViews(night);// }
@@ -264,12 +265,18 @@ public class MedicationFragment extends Fragment implements AppConstants, View.O
     void removeAllChildViews(ViewGroup viewGroup) {
         if (viewGroup != null) {
             ViewGroup parent = viewGroup;
-            for (int i = 0; i < viewGroup.getChildCount(); i++) {
-                View child = viewGroup.getChildAt(i);
+            //Log.e("db", " viewGroup.getChildCount() = "+  viewGroup.getChildCount());
+            int childCount = viewGroup.getChildCount();
+            for (int i = 0; i < childCount;  i++) {
+                //Log.e("db", "entering  loop "+i);
+                View child = viewGroup.getChildAt(0);
+                //Log.e("db", "child = "+child.toString());
                 if (child instanceof FrameLayout) {
+                    //Log.e("db", "Removing child "+i);
                     parent.removeView(child);
                     //removeAllChildViews(((ViewGroup) child));
-                } /*else {
+                }
+                /*else {
                     viewGroup.removeView(child);
                 }*/
             }
@@ -290,7 +297,9 @@ public class MedicationFragment extends Fragment implements AppConstants, View.O
 
         String medicineTime = "";
         if (time.equals("Morning")) {
+
             for (int j = 0; j < medInfo.getMedicineMorning().size(); j++) {
+                Log.e("db", "Morning medicine ");
                 final FrameLayout frameLayout = new FrameLayout(getActivity());
                 FrameLayout.LayoutParams params2 = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
                 params2.gravity = Gravity.CENTER_VERTICAL;
@@ -768,12 +777,14 @@ public class MedicationFragment extends Fragment implements AppConstants, View.O
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSetTimeEvent(SetTimeEvent event) {
         tvMedicationToday.setText(event.getDate());
+        Log.e("db", "callSavedMethod()");
         callSavedMethod();
     }
 
     public void saveAllData() {
         if(!alreadySaved) {
             Log.e("fragment", "MedicationFragment saveAllData()");
+            storeData();
             alreadySaved = true;
         }
     }
@@ -790,28 +801,32 @@ public class MedicationFragment extends Fragment implements AppConstants, View.O
             DatePickerDialog datepickerdialog = new DatePickerDialog(getActivity(),
                     AlertDialog.THEME_DEVICE_DEFAULT_LIGHT, this, year, month, day);
             datepickerdialog.getDatePicker().setMaxDate(System.currentTimeMillis());
+            Log.e("Comparing create date :", " Your date is correct");
             return datepickerdialog;
         }
 
         public void onDateSet(DatePicker view, int year, int month, int day) {
-            Date parseDate = null;
-            Calendar cal = Calendar.getInstance();
-            SimpleDateFormat month_date = new SimpleDateFormat("MMM");
-            cal.set(Calendar.MONTH, (month));
-            String month_name = month_date.format(cal.getTime());
+            if(view.isShown()){
+                Date parseDate = null;
+                Calendar cal = Calendar.getInstance();
+                SimpleDateFormat month_date = new SimpleDateFormat("MMM");
+                cal.set(Calendar.MONTH, (month));
+                String month_name = month_date.format(cal.getTime());
 
-            Log.e("", "" + month_name);
+                Log.e("", "" + month_name);
 
-            String date1 = day + " " + month_name + " " + year;
-            SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy");
-            try {
-                parseDate = dateFormat.parse(date1);
-            } catch (ParseException e) {
-                e.printStackTrace();
+                String date1 = day + " " + month_name + " " + year;
+                SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy");
+                try {
+                    parseDate = dateFormat.parse(date1);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                String stDate = dateFormat.format(parseDate); //2016/11/16 12:08:43
+                Log.e("Comparing Date :", " Your date is correct");
+                EventBus.getDefault().post(new SetTimeEvent(0, stDate));
             }
-            String stDate = dateFormat.format(parseDate); //2016/11/16 12:08:43
-            Log.e("Comparing Date :", " Your date is correct");
-            EventBus.getDefault().post(new SetTimeEvent(0, stDate));
+
             // tvMedicationToday.setText(stDate);
         }
     }

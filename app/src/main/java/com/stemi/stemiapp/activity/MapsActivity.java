@@ -1,5 +1,12 @@
 package com.stemi.stemiapp.activity;
 
+import android.Manifest;
+import android.content.Context;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
@@ -14,6 +21,7 @@ import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.gson.Gson;
 import com.stemi.stemiapp.R;
 import com.stemi.stemiapp.loaders.HospitalsLoader;
 import com.stemi.stemiapp.model.apiModels.Hospital;
@@ -23,7 +31,9 @@ import com.stemi.stemiapp.utils.AppConstants;
 
 import java.util.List;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, LoaderManager.LoaderCallbacks<NearestHospitalResponse> {
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback,
+        LoaderManager.LoaderCallbacks<NearestHospitalResponse>,
+        LocationListener {
 
     private static final String TAG = "MapsActivity";
     private GoogleMap mMap;
@@ -39,15 +49,30 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        latitude = getIntent().getDoubleExtra("lat",0.0);
+        latitude = getIntent().getDoubleExtra("lat", 0.0);
         longitude = getIntent().getDoubleExtra("lon", 0.0);
         token = new AppSharedPreference(this).getUserToken(AppConstants.USER_TOKEN);
 
-        Log.e(TAG,"latitude = "+latitude);
-        Log.e(TAG,"longitude = "+longitude);
-        Log.e(TAG,"token = "+token);
+        Log.e(TAG, "latitude = " + latitude);
+        Log.e(TAG, "longitude = " + longitude);
+        Log.e(TAG, "token = " + token);
 
-        getSupportLoaderManager().restartLoader(0,null,this).forceLoad();
+        if(latitude != 0.0 && longitude != 0.0) {
+            getSupportLoaderManager().restartLoader(0, null, this).forceLoad();
+        }
+
+        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 5000, 10, this);
     }
 
 
@@ -65,6 +90,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap = googleMap;
 
         // Add a marker in Sydney and move the camera
+        moveToCurrentLoc();
+    }
+
+    private void moveToCurrentLoc() {
         LatLng currentLoc = new LatLng(latitude, longitude);
         BitmapDescriptor currentLocIcon = BitmapDescriptorFactory.fromResource(R.drawable.ic_my_location);
         mMap.addMarker(new MarkerOptions().position(currentLoc).icon(currentLocIcon));
@@ -101,6 +130,35 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     public void onLoaderReset(Loader<NearestHospitalResponse> loader) {
+
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        Log.e(TAG, "location = "+ new Gson().toJson(location));
+        Log.e(TAG, "latitude = "+latitude+" longitude = "+ longitude);
+        if(location != null){
+            if(latitude == 0.0 || longitude == 0.0){
+                latitude = location.getLatitude();
+                longitude = location.getLongitude();
+                moveToCurrentLoc();
+                getSupportLoaderManager().restartLoader(0,null,this).forceLoad();
+            }
+        }
+    }
+
+    @Override
+    public void onStatusChanged(String s, int i, Bundle bundle) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String s) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String s) {
 
     }
 }

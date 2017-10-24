@@ -101,8 +101,10 @@ public class BloodTestFragment extends Fragment implements TrackActivity.OnBackP
         btRightArrow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                monthIndex++;
-                setupDate();
+                if(monthIndex <= -1) {
+                    monthIndex++;
+                    setupDate();
+                }
             }
         });
 

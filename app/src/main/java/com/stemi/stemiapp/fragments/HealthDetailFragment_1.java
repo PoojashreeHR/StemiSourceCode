@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.stemi.stemiapp.R;
 import com.stemi.stemiapp.activity.RegistrationActivity;
 import com.stemi.stemiapp.customviews.AnswerTemplateView;
@@ -195,7 +197,9 @@ public class HealthDetailFragment_1 extends Fragment implements View.OnClickList
                         break;
 
                     case 5:
-                        holder.answerTemplateView.setResponse(user.getFamily_had_heart_attack());
+                        Log.e("db", "user = "+ new Gson().toJson(user));
+                        String resp = (user.getFamily_had_heart_attack() == null)?"NULL":user.getFamily_had_heart_attack();
+                        holder.answerTemplateView.setResponse(resp);
                         RegistrationActivity.registeredUserDetails.setFamily_had_heart_attack(user.getFamily_had_heart_attack());
                         break;
                 }

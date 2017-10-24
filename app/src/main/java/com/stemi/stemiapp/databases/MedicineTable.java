@@ -355,7 +355,7 @@ public class MedicineTable {
 
                     long l = db.update(MED_TABLE_NAME, cv, MED_MEDICINE_DETAILS + "='" + old
                             + "' AND " + RELATED_PERSON + "='" +
-                            appSharedPreference.getProfileName(AppConstants.PROFILE_NAME) + "'", null);
+                            GlobalClass.userID + "'", null);
                     Log.e(TAG, "removeMedicine: " + l);
 
                 } else {

@@ -116,7 +116,7 @@ public class ProfileActivity extends AppCompatActivity {
         public void onBindViewHolder(final ProfileViewHolder profileViewHolder, int i) {
             final RegisteredUserDetails user = this.registeredUsers.get(i);
             profileViewHolder.profileName.setText(user.getName());
-            profileViewHolder.profileGender.setText(user.getGender());
+            profileViewHolder.profileGender.setText(user.getGender().toUpperCase());
             profileViewHolder.profileAge.setText(user.getAge());
             if(user.getImgUrl() == null){
                 profileViewHolder.profileImage.setImageResource(R.drawable.ic_user);
