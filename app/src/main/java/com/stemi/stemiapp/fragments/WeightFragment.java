@@ -6,7 +6,12 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
@@ -18,6 +23,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.webkit.WebView;
 import android.webkit.WebViewFragment;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -31,6 +37,7 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.stemi.stemiapp.R;
 import com.stemi.stemiapp.activity.TrackActivity;
+import com.stemi.stemiapp.activity.WebActivity;
 import com.stemi.stemiapp.customviews.TabSelectedListener;
 import com.stemi.stemiapp.databases.DBForTrackActivities;
 import com.stemi.stemiapp.databases.TrackWeightDB;
@@ -155,9 +162,10 @@ public class WeightFragment  extends Fragment implements View.OnClickListener,Tr
                 }
                 break;
             case R.id.learn_more:
-                if(learnMore.getVisibility() == View.VISIBLE) {
+               startActivity(new Intent(getActivity(), WebActivity.class));
+               /* if(learnMore.getVisibility() == View.VISIBLE) {
                     showImage();
-                }
+                }*/
 
         }
     }
@@ -180,6 +188,32 @@ public class WeightFragment  extends Fragment implements View.OnClickListener,Tr
                builder.dismiss();
             }
         });
+        SensorManager sensorManager = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
+        sensorManager.registerListener(new SensorEventListener() {
+                                           int orientation = -1;
+
+                                           @Override
+                                           public void onSensorChanged(SensorEvent event) {
+                                               if (event.values[1] < 6.5 && event.values[1] > -6.5) {
+                                                   if (orientation != 1) {
+                                                       Log.d("Sensor", "Landscape");
+                                                       imageView.setRotation(90f);
+                                                   }
+                                                   orientation = 1;
+                                               } else {
+                                                   if (orientation != 0) {
+                                                       Log.d("Sensor", "Portrait");
+                                                       imageView.setRotation(0);
+                                                   }
+                                                   orientation = 0;
+                                               }
+                                           }
+
+                                           @Override
+                                           public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
+                                           }
+                                       }, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_GAME);
         builder.show();
     }
     @Override
@@ -190,10 +224,9 @@ public class WeightFragment  extends Fragment implements View.OnClickListener,Tr
                 SaveData();
             }
         }else {
-            getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
             EventBus.getDefault().post(new MessageEvent("Hello!"));
             ((TrackActivity) getActivity()).setActionBarTitle("Track");
-
+            getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
             }
         }
         else{
@@ -386,16 +419,14 @@ public class WeightFragment  extends Fragment implements View.OnClickListener,Tr
         boolean date = dbForTrackActivities.getDate(TrackActivity.userEventDetails.getDate(),GlobalClass.userID);
         if (!date) {
             dbForTrackActivities.addEntry(TrackActivity.userEventDetails);
-            getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
             ((TrackActivity) getActivity()).showFragment(new TrackFragment());
             ((TrackActivity) getActivity()).setActionBarTitle("Track");
+            getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
             saveUserData();
-
-
         } else {
             int c = dbForTrackActivities.isEntryExists(TrackActivity.userEventDetails,4,getActivity());
             ((TrackActivity) getActivity()).setActionBarTitle("Track");
-            getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
+//            getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
 
 
         }

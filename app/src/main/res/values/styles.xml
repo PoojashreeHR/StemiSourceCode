@@ -52,6 +52,11 @@
         <item name="android:textSize">18sp</item>
     </style>
 
+
+    <style name="CustomToolbarTheme" parent="Base.ThemeOverlay.AppCompat.ActionBar">
+        <item name="android:textColorPrimary">@color/colorPrimary</item>
+        <item name="actionMenuTextColor">@color/colorPrimary</item>
+    </style>
     <style name="StyledTilEditText">
         <item name="android:theme">@style/StyledTilEditTextTheme</item>
         <item name="android:paddingTop">15dp</item>

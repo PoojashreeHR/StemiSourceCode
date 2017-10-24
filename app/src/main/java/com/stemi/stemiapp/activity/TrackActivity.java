@@ -515,7 +515,12 @@ public class TrackActivity extends AppCompatActivity implements NavigationView.O
                 break;
             case R.id.change_password:
                 startActivity(new Intent(TrackActivity.this, ResetPasswordActivity.class));
-
+                break;
+            case R.id.nav_privacy:
+                startActivity(new Intent(TrackActivity.this, PrivacyActivity.class));
+                break;
+            case R.id.nav_terms_condition:
+                startActivity(new Intent(TrackActivity.this, TermsAndConditionActivity.class));
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         assert drawer != null;

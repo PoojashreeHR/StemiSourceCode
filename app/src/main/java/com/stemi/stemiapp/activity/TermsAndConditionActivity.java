@@ -2,14 +2,12 @@ package com.stemi.stemiapp.activity;
 
 import android.content.Context;
 import android.graphics.Typeface;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.text.Spannable;
-import android.text.SpannableStringBuilder;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -25,75 +23,94 @@ import com.stemi.stemiapp.utils.CommonUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PrivacyActivity extends AppCompatActivity {
-    private List<Privacy> privacyLists = new ArrayList<>();
-    SimpleAdapter mAdapter;
-    TextView textView7;
+public class TermsAndConditionActivity extends AppCompatActivity {
+    private List<Privacy> termsList = new ArrayList<>();
     Toolbar toolbar;
-    Spannable sb;
-    SpannableStringBuilder total;
+    TermsAdapter mAdapter;
+    TextView tv, textView7;
     RecyclerView recyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_privacy);
+        setContentView(R.layout.activity_terms_and_condition);
+
         toolbar = (Toolbar) findViewById(R.id.terms_toolbar);
-        toolbar.setTitle("Privacy Policy");
+        toolbar.setTitle("Terms and Conditions");
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        /*profile_img = (ImageView) findViewById(R.id.profileImg);
+        profile_img.setVisibility(View.GONE);*/
         textView7 = (TextView) findViewById(R.id.textView7);
 
-        CommonUtils.setRobotoLightFonts(this,textView7);
+     /*   tv = (TextView) findViewById(R.id.tv_toolbarText);
+        tv.setText("Terms and Condition");
+*/
+        CommonUtils.setRobotoLightFonts(this, textView7);
 
-        recyclerView = (RecyclerView) findViewById(R.id.privacy_recycler);
+        recyclerView = (RecyclerView) findViewById(R.id.terms_recycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
-        mAdapter = new SimpleAdapter(privacyLists, recyclerView, this);
+        mAdapter = new TermsAdapter(termsList, recyclerView, this);
         recyclerView.setAdapter(mAdapter);
-
-        preparePrivacyList();
-    }
-    private void preparePrivacyList() {
-        Privacy privacy = new Privacy(getResources().getString(R.string.collect_info),
-                CommonUtils.makeSectionOfTextBold(getResources().getString(R.string.collect_info_answer), "Contact Information", "Payment and billing information:", "Demographic information:", "Medical information:", "Information about your lifestyle:","Other information:"));
-        privacyLists.add(privacy);
-
-        privacy = new Privacy(getResources().getString(R.string.how_to_collect_info),
-                CommonUtils.makeSectionOfTextBold(getResources().getString(R.string.how_to_collect_info_ans), "Direct collection:"));
-        privacyLists.add(privacy);
-
-        privacy = new Privacy(getResources().getString(R.string.personal_info),
-                CommonUtils.makeSectionOfTextBold(getResources().getString(R.string.personal_info_ans), "To contact you:", "To improve our services:", "To ensure security:", "To abide by laws:"));
-        privacyLists.add(privacy);
-
-        privacy = new Privacy(getResources().getString(R.string.third_party_info),
-                CommonUtils.makeSectionOfTextBold(getResources().getString(R.string.third_party_ans)));
-        privacyLists.add(privacy);
-
-        privacy = new Privacy(getResources().getString(R.string.third_party_sites),
-                CommonUtils.makeSectionOfTextBold(getResources().getString(R.string.third_party_sites_ans)));
-        privacyLists.add(privacy);
-
-        privacy = new Privacy(getResources().getString(R.string.grievance_officer),
-                CommonUtils.makeSectionOfTextBold(getResources().getString(R.string.grievance_ans),"Grievance Officer Name:","Address","Phone"));
-        privacyLists.add(privacy);
-
-        privacy = new Privacy(getResources().getString(R.string.jurisdiction),
-                CommonUtils.makeSectionOfTextBold(getResources().getString(R.string.jurisdiction_ans)));
-        privacyLists.add(privacy);
+        prepareTermsList();
     }
 
-    private class SimpleAdapter extends RecyclerView.Adapter<SimpleAdapter.ViewHolder> {
+    private void prepareTermsList() {
+        Privacy terms = new Privacy("Acceptance of Terms & Conditions",
+                CommonUtils.makeSectionOfTextBold(getResources().getString(R.string.acceptance)));
+        termsList.add(terms);
+
+        terms = new Privacy("Copyrighted Materials for Limited Use",
+                CommonUtils.makeSectionOfTextBold(getResources().getString(R.string.copyright)));
+        termsList.add(terms);
+
+        terms = new Privacy("User Information",
+                CommonUtils.makeSectionOfTextBold(getResources().getString(R.string.user_info)));
+        termsList.add(terms);
+
+        terms = new Privacy("Consent",
+                CommonUtils.makeSectionOfTextBold(getResources().getString(R.string.consent)));
+        termsList.add(terms);
+
+        terms = new Privacy("Use of App",
+                CommonUtils.makeSectionOfTextBold(getResources().getString(R.string.use_of_app)));
+        termsList.add(terms);
+
+        terms = new Privacy("Indemnification",
+                CommonUtils.makeSectionOfTextBold(getResources().getString(R.string.indemnification)));
+        termsList.add(terms);
+
+        terms = new Privacy("Disclaimer of Warranty",
+                CommonUtils.makeSectionOfTextBold(getResources().getString(R.string.disclaime_of_warrenty)));
+        termsList.add(terms);
+
+        terms = new Privacy("Limited Warranty",
+                CommonUtils.makeSectionOfTextBold(getResources().getString(R.string.limited_warrenty)));
+        termsList.add(terms);
+
+        terms = new Privacy("Limitation of Liability",
+                CommonUtils.makeSectionOfTextBold(getResources().getString(R.string.liabalities)));
+        termsList.add(terms);
+
+        terms = new Privacy("App Feedback",
+                CommonUtils.makeSectionOfTextBold(getResources().getString(R.string.feedback)));
+        termsList.add(terms);
+
+        terms = new Privacy("Governing Law",
+                CommonUtils.makeSectionOfTextBold(getResources().getString(R.string.governing_law)));
+        termsList.add(terms);
+    }
+
+    private static class TermsAdapter extends RecyclerView.Adapter<TermsAdapter.ViewHolder> {
         private static final int UNSELECTED = -1;
-        private List<Privacy> privacyList;
+        private List<Privacy> termsLists;
         private int selectedItem = UNSELECTED;
         RecyclerView recyclerView;
         Context context;
 
-
-        public SimpleAdapter(List<Privacy> privacyList, RecyclerView recyclerView, Context context) {
-            this.privacyList = privacyList;
+        public TermsAdapter(List<Privacy> terms, RecyclerView recyclerView, Context context) {
+            this.termsLists = terms;
             this.recyclerView = recyclerView;
             this.context = context;
         }
@@ -112,7 +129,7 @@ public class PrivacyActivity extends AppCompatActivity {
 
         @Override
         public int getItemCount() {
-            return privacyList.size();
+            return termsLists.size();
         }
 
         public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -135,7 +152,7 @@ public class PrivacyActivity extends AppCompatActivity {
 
             public void bind(int position) {
                 this.position = position;
-                Privacy privacy = privacyList.get(position);
+                Privacy privacy = termsLists.get(position);
                 expandButton.setText(privacy.getQuestion());
                 privacy_answer.setText(privacy.getAnswer());
                 //   privacy_answer.setText(privacy.getAnswers());
@@ -143,18 +160,18 @@ public class PrivacyActivity extends AppCompatActivity {
                 expandButton.setSelected(false);
                 expandableLayout.collapse(false);
 
-                CommonUtils.setRobotoLightFonts(context,expandButton);
-                CommonUtils.setRobotoLightFonts(context,privacy_answer);
+                CommonUtils.setRobotoLightFonts(context, expandButton);
+                CommonUtils.setRobotoLightFonts(context, privacy_answer);
 
             }
 
             @Override
             public void onClick(View view) {
-                ViewHolder holder = (ViewHolder) recyclerView.findViewHolderForAdapterPosition(selectedItem);
+                TermsAdapter.ViewHolder holder = (TermsAdapter.ViewHolder) recyclerView.findViewHolderForAdapterPosition(selectedItem);
                 if (holder != null) {
                     holder.expandButton.setSelected(false);
                     holder.expandableLayout.collapse();
-                    CommonUtils.setRobotoLightFonts(context,holder.expandButton);
+                    CommonUtils.setRobotoLightFonts(context, holder.expandButton);
                 }
 
                 if (position == selectedItem) {
@@ -167,8 +184,8 @@ public class PrivacyActivity extends AppCompatActivity {
                 }
             }
         }
-    }
 
+    }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (android.R.id.home == item.getItemId()) {

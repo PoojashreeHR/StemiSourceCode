@@ -31,6 +31,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -161,16 +162,17 @@ public class BloodTestFragment extends Fragment implements TrackActivity.OnBackP
         if(bloodTestDB.isEntryExists(GlobalClass.userID, tvBloodTestDate.getText().toString())){
             BloodTestResult bloodTestResults = bloodTestDB.getEntry(GlobalClass.userID, tvBloodTestDate.getText().toString());
             if(bloodTestResults != null){
-                etHaemoglobin.setText(""+bloodTestResults.getHeamoglobin());
-                etUreaCreatinine.setText(""+bloodTestResults.getUreaCreatinine());
+                DecimalFormat decimalFormat = new DecimalFormat();
+                etHaemoglobin.setText(decimalFormat.format(bloodTestResults.getHeamoglobin()));
+                etUreaCreatinine.setText(decimalFormat.format(bloodTestResults.getUreaCreatinine()));
                 String st = CheckEmptyOrNot(""+bloodTestResults.getTotalCholestrol());
-                etCholesterol.setText(st);
-                etTriglycerides.setText(""+bloodTestResults.getTriglycerides());
-                etHdl.setText(""+bloodTestResults.getHighDensityLipoProtein());
-                etLdl.setText(""+bloodTestResults.getLowDensityLipoProtein());
-                etRpg.setText(""+bloodTestResults.getRandomPlasmaGlucose());
-                etFpg.setText(""+bloodTestResults.getFastingPlasmaGlucose());
-                etPpg.setText(""+bloodTestResults.getPostPrandialPlasmaGlucose());
+                etCholesterol.setText(decimalFormat.format(bloodTestResults.getTotalCholestrol()));
+                etTriglycerides.setText(decimalFormat.format(bloodTestResults.getTriglycerides()));
+                etHdl.setText(decimalFormat.format(bloodTestResults.getHighDensityLipoProtein()));
+                etLdl.setText(decimalFormat.format(bloodTestResults.getLowDensityLipoProtein()));
+                etRpg.setText(decimalFormat.format(bloodTestResults.getRandomPlasmaGlucose()));
+                etFpg.setText(decimalFormat.format(bloodTestResults.getFastingPlasmaGlucose()));
+                etPpg.setText(decimalFormat.format(bloodTestResults.getPostPrandialPlasmaGlucose()));
             }
         }else {
             etHaemoglobin.setText(null);

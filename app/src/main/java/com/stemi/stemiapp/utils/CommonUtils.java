@@ -4,10 +4,14 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Environment;
 import android.text.Spannable;
 import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.StyleSpan;
 import android.text.style.TypefaceSpan;
 import android.util.Log;
 import android.view.View;
@@ -29,6 +33,7 @@ import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * Created by Pooja on 18-07-2017.
@@ -175,6 +180,29 @@ public class CommonUtils {
       // CommonUtils.passViewsToChangeTextSize(context, v, textSize);
    }
 
+   /**
+    * Bold some of the content from string.
+    */
+   public static SpannableStringBuilder makeSectionOfTextBold(String text, String... textToBold) {
+      SpannableStringBuilder builder = new SpannableStringBuilder(text);
 
+      for (String textItem :
+              textToBold) {
+         if (textItem.length() > 0 && !textItem.trim().equals("")) {
+            //for counting start/end indexes
+            String testText = text.toLowerCase(Locale.US);
+            String testTextToBold = textItem.toLowerCase(Locale.US);
+            int startingIndex = testText.indexOf(testTextToBold);
+            int endingIndex = startingIndex + testTextToBold.length();
+
+            if (startingIndex >= 0 && endingIndex >= 0) {
+               builder.setSpan(new StyleSpan(Typeface.BOLD), startingIndex, endingIndex, 0);
+               builder.setSpan(new ForegroundColorSpan(Color.BLACK), startingIndex, endingIndex, 0);
+            }
+         }
+      }
+
+      return builder;
+   }
 
 }
