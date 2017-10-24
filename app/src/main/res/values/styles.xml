@@ -6,6 +6,7 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:windowActionBarOverlay">true</item>
         <item name="drawerArrowStyle">@style/MyDrawerArrowToggle</item>
     </style>
 
@@ -24,6 +25,7 @@
 
     <style name="tabtextcolor" parent="@android:style/Widget.Holo.Light.ActionBar.TabText">
         <item name="android:textColor">@android:color/white</item>
+        <item name="android:windowActionBarOverlay">true</item>
     </style>
 
     <style name="TextviewStyle">

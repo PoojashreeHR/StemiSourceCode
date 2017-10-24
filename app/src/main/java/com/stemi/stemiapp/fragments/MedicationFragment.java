@@ -695,7 +695,7 @@ public class MedicationFragment extends Fragment implements AppConstants, View.O
 
     @Override
     public void doBack() {
-        if (morning != null || afternoon != null || night != null) {
+        if (medicineContains !=null) {
             Boolean checkedOrNot = false;
             TrackMedication med = new TrackMedication();
             Log.e(TAG, "doBack: " + medicineContains);
@@ -792,7 +792,7 @@ public class MedicationFragment extends Fragment implements AppConstants, View.O
 
             DatePickerDialog datepickerdialog = new DatePickerDialog(getActivity(),
                     AlertDialog.THEME_DEVICE_DEFAULT_LIGHT, this, year, month, day);
-            datepickerdialog.getDatePicker().setMaxDate(System.currentTimeMillis());
+           // datepickerdialog.getDatePicker().setMaxDate(System.currentTimeMillis());
             return datepickerdialog;
         }
 
