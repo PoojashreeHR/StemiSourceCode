@@ -281,11 +281,11 @@ public class MedicineDetails implements Parcelable {
             dest.writeByte((byte) 1);
             dest.writeInt(medicineColor);
         }
-        dest.writeArray(new ArrayList[]{medicineMorning});
+        dest.writeTypedList(medicineMorning);
         dest.writeString(medicineMorningTime);
-        dest.writeArray(new ArrayList[]{medicineAfternoon});
+        dest.writeTypedList(medicineAfternoon);
         dest.writeString(medicineNoonTime);
-        dest.writeArray(new ArrayList[]{medicineNight});
+        dest.writeTypedList(medicineNight);
         dest.writeString(medicineNightTime);
         dest.writeString(medicineDays);
         dest.writeByte((byte) (medicineRemainder == null ? 0 : medicineRemainder ? 1 : 2));

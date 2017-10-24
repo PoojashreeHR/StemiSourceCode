@@ -225,6 +225,7 @@ public class TrackExerciseDB extends SQLiteOpenHelper {
             cursor.moveToFirst();
 
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            Calendar calendar = Calendar.getInstance();
 
             while (!cursor.isAfterLast()) {
                 int weekNo = cursor.getInt(cursor.getColumnIndex(COLUMN_WEEK_NO));
@@ -237,7 +238,13 @@ public class TrackExerciseDB extends SQLiteOpenHelper {
                         weekCount++;
                     }
                     else{
-                        weekCount = 0;
+                        int curWeekNo = calendar.get(Calendar.WEEK_OF_YEAR);
+                        if(curWeekNo == weekNo){
+
+                        }
+                        else{
+                            weekCount = 0;
+                        }
                     }
                 }
                 else{

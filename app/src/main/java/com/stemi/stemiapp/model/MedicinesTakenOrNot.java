@@ -1,10 +1,13 @@
 package com.stemi.stemiapp.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * Created by Pooja on 13-10-2017.
  */
 
-public class MedicinesTakenOrNot {
+public class MedicinesTakenOrNot implements Parcelable{
 
     private String date;
     private String medName;
@@ -13,6 +16,29 @@ public class MedicinesTakenOrNot {
     private String type;
     private String duration;
     private int medColor;
+
+    public MedicinesTakenOrNot(){}
+
+    protected MedicinesTakenOrNot(Parcel in) {
+        date = in.readString();
+        medName = in.readString();
+        medTime = in.readString();
+        type = in.readString();
+        duration = in.readString();
+        medColor = in.readInt();
+    }
+
+    public static final Creator<MedicinesTakenOrNot> CREATOR = new Creator<MedicinesTakenOrNot>() {
+        @Override
+        public MedicinesTakenOrNot createFromParcel(Parcel in) {
+            return new MedicinesTakenOrNot(in);
+        }
+
+        @Override
+        public MedicinesTakenOrNot[] newArray(int size) {
+            return new MedicinesTakenOrNot[size];
+        }
+    };
 
     public String getDuration() {
         return duration;
@@ -68,5 +94,20 @@ public class MedicinesTakenOrNot {
 
     public void setTakenorNot(Boolean takenorNot) {
         TakenorNot = takenorNot;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(date);
+        parcel.writeString(medName);
+        parcel.writeString(medTime);
+        parcel.writeString(type);
+        parcel.writeString(duration);
+        parcel.writeInt(medColor);
     }
 }

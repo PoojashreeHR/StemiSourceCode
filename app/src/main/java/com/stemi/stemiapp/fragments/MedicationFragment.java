@@ -55,6 +55,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -676,6 +677,10 @@ public class MedicationFragment extends Fragment implements AppConstants, View.O
 
     public void storeData() {
         MedicineDetailsTable medicineDetailsTable = new MedicineDetailsTable();
+        TrackMedicationDB trackMedicationDB = new TrackMedicationDB(getActivity());
+        TrackMedication trackMedication = new TrackMedication();
+
+        trackMedication.setUserId(GlobalClass.userID);
 
         if (tvMedicationToday.getText().equals("Today  ")) {
             Date dt = new Date();
@@ -683,9 +688,17 @@ public class MedicationFragment extends Fragment implements AppConstants, View.O
             String todaysDate = dateFormat.format(dt); // parse it like
             savedDate = todaysDate;
             medicineContains.setDate(savedDate);
+            trackMedication.setDateTime(dt);
         } else {
             savedDate = tvMedicationToday.getText().toString();
             medicineContains.setDate(savedDate);
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy");
+            try {
+                Date selectedDate = dateFormat.parse(savedDate);
+                trackMedication.setDateTime(selectedDate);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
         }
         boolean date = medicineTable.getDate(savedDate, GlobalClass.userID);
         if (!date) {
@@ -697,6 +710,81 @@ public class MedicationFragment extends Fragment implements AppConstants, View.O
             EventBus.getDefault().post(new MessageEvent("Hello!"));
             ((TrackActivity) getActivity()).setActionBarTitle("Track");
         }
+
+
+
+        boolean hadMorning = false, hadAfternoon = false, hadNight = false;
+        List<MedicinesTakenOrNot> morningMedicines = medicineContains.getMedicineMorning();
+        if(morningMedicines == null || morningMedicines.size() == 0){
+            hadMorning = true;
+        }
+        else{
+            for(MedicinesTakenOrNot takenOrNot : morningMedicines){
+                if(takenOrNot.getTakenorNot()){
+                    hadMorning = true;
+                }
+                else{
+                    hadMorning = false;
+                    break;
+                }
+            }
+        }
+
+        List<MedicinesTakenOrNot> afternoonMedicines = medicineContains.getMedicineAfternoon();
+        if(afternoonMedicines == null || afternoonMedicines.size() == 0){
+            hadAfternoon = true;
+        }
+        else{
+            for(MedicinesTakenOrNot takenOrNot : afternoonMedicines){
+                if(takenOrNot.getTakenorNot()){
+                    hadAfternoon = true;
+                }
+                else{
+                    hadAfternoon = false;
+                    break;
+                }
+            }
+        }
+
+        List<MedicinesTakenOrNot> nightMedicines = medicineContains.getMedicineNight();
+        if(nightMedicines == null || nightMedicines.size() == 0){
+            hadNight = true;
+        }
+        else{
+            for(MedicinesTakenOrNot takenOrNot : nightMedicines){
+                if(takenOrNot.getTakenorNot()){
+                    hadNight = true;
+                }
+                else{
+                    hadNight = false;
+                    break;
+                }
+            }
+        }
+
+
+        if(hadMorning && hadAfternoon && hadNight){
+            trackMedication.setHadAllMedicines(true);
+        }
+        else{
+            trackMedication.setHadAllMedicines(false);
+        }
+
+        if((morningMedicines == null || morningMedicines.size() == 0) &&
+                (afternoonMedicines == null || afternoonMedicines.size() == 0) &&
+                (nightMedicines == null || nightMedicines.size() == 0)){
+            hadMorning = false;
+            hadAfternoon = false;
+            hadNight = false;
+        }
+        else{
+            trackMedicationDB.addEntry(trackMedication);
+        }
+
+
+
+
+
     }
 
     @Override
@@ -869,7 +957,7 @@ public class MedicationFragment extends Fragment implements AppConstants, View.O
 
             saveButton.setEnabled(false);
 
-            if (info.size() == 0) {
+            if (info != null && info.size() == 0) {
                 noItems.setVisibility(View.VISIBLE);
             } else {
                 noItems.setVisibility(View.GONE);
