@@ -180,8 +180,10 @@ public class StatusFragment extends Fragment implements UpdateableFragment{
         btnRightArrow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                monthIndex++;
-                setupDate();
+                if(monthIndex <= -1) {
+                    monthIndex++;
+                    setupDate();
+                }
             }
         });
 

@@ -109,6 +109,11 @@ public class HospitalFragment extends Fragment implements TrackActivity.OnScanCo
             @Override
             public void onClick(View view) {
                 DataUploadedDB dataUploadedDB = new DataUploadedDB(getActivity());
+                if(GlobalClass.userID == null){
+                    Toast.makeText(getActivity(), "You've to create a profile first !", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 boolean uploadStatus = dataUploadedDB.getUploadStatus(GlobalClass.userID);
                 if(!uploadStatus) {
                     openQRScanningActivity();
@@ -205,8 +210,8 @@ public class HospitalFragment extends Fragment implements TrackActivity.OnScanCo
         Location currentLoc = null;
         currentLoc = getLastKnownLocation();
         Intent mapIntent = new Intent(getActivity(), MapsActivity.class);
-        mapIntent.putExtra("lat", currentLoc.getLatitude());
-        mapIntent.putExtra("lon", currentLoc.getLongitude());
+        //mapIntent.putExtra("lat", currentLoc.getLatitude());
+        //mapIntent.putExtra("lon", currentLoc.getLongitude());
         startActivity(mapIntent);
     }
 

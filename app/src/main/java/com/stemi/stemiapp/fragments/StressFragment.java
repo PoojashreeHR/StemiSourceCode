@@ -163,7 +163,7 @@ public class StressFragment extends Fragment implements AppConstants, TrackActiv
         }
 
         if(dbForTrackActivities.getDate((savedDate),GlobalClass.userID)) {
-            ArrayList<UserEventDetails> eventDetails = dbForTrackActivities.getDetails(appSharedPreference.getProfileName(AppConstants.PROFILE_NAME), savedDate, 2);
+            ArrayList<UserEventDetails> eventDetails = dbForTrackActivities.getDetails(GlobalClass.userID, savedDate, 2);
             if (eventDetails.size() > 0 && eventDetails.get(0).getStressCount() != null) {
                 mSeekLin.setProgress(Integer.parseInt(eventDetails.get(0).getStressCount()));
                 stressCount = eventDetails.get(0).getStressCount();
@@ -303,24 +303,26 @@ public class StressFragment extends Fragment implements AppConstants, TrackActiv
         }
 
         public void onDateSet(DatePicker view, int year, int month, int day){
-            Date parseDate = null;
-            Calendar cal=Calendar.getInstance();
-            SimpleDateFormat month_date = new SimpleDateFormat("MMM");
-            cal.set(Calendar.MONTH,(month));
-            String month_name = month_date.format(cal.getTime());
+            if(view.isShown()) {
+                Date parseDate = null;
+                Calendar cal = Calendar.getInstance();
+                SimpleDateFormat month_date = new SimpleDateFormat("MMM");
+                cal.set(Calendar.MONTH, (month));
+                String month_name = month_date.format(cal.getTime());
 
-            Log.e("",""+month_name);
+                Log.e("", "" + month_name);
 
-            String date1 = day + " " + month_name + " " + year;
-            SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy");
-            try {
-                parseDate = dateFormat.parse(date1);
-            } catch (ParseException e) {
-                e.printStackTrace();
+                String date1 = day + " " + month_name + " " + year;
+                SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy");
+                try {
+                    parseDate = dateFormat.parse(date1);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                String stDate = dateFormat.format(parseDate); //2016/11/16 12:08:43
+                Log.e("Comparing Date :", " Your date is correct");
+                EventBus.getDefault().post(new SetTimeEvent(0, stDate));
             }
-            String stDate= dateFormat.format(parseDate); //2016/11/16 12:08:43
-            Log.e("Comparing Date :"," Your date is correct");
-            EventBus.getDefault().post(new SetTimeEvent(0,stDate));
 //
         }
     }

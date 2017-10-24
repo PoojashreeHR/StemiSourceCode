@@ -1,6 +1,7 @@
 package com.stemi.stemiapp.fragments;
 
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -20,13 +21,18 @@ import com.stemi.stemiapp.activity.TrackActivity;
 import com.stemi.stemiapp.databases.BloodTestDB;
 import com.stemi.stemiapp.model.BloodTestResult;
 import com.stemi.stemiapp.model.MessageEvent;
+import com.stemi.stemiapp.model.UserEventDetails;
 import com.stemi.stemiapp.preference.AppSharedPreference;
 import com.stemi.stemiapp.utils.AppConstants;
+import com.stemi.stemiapp.utils.CommonUtils;
 import com.stemi.stemiapp.utils.GlobalClass;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -83,20 +89,22 @@ public class BloodTestFragment extends Fragment implements TrackActivity.OnBackP
         bloodTestResult = new BloodTestResult();
         ((TrackActivity) getActivity()).setOnBackPressedListener(this);
         ((TrackActivity) getActivity()).setActionBarTitle("Blood Test Report");
-        setupDate(0);
+        setupDate();
         btLeftArrow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 monthIndex--;
-                setupDate(1);
+                setupDate();
             }
         });
         callSavedMethod();
         btRightArrow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                monthIndex++;
-                setupDate(2);
+                if(monthIndex <= -1) {
+                    monthIndex++;
+                    setupDate();
+                }
             }
         });
 
@@ -176,29 +184,18 @@ public class BloodTestFragment extends Fragment implements TrackActivity.OnBackP
             etPpg.setText(null);
         }
     }
-    private void setupDate(int value) {
+    private void setupDate() {
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.MONTH, monthIndex);
 
         Date date = calendar.getTime();
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMM yyyy");
         String dateStr = simpleDateFormat.format(date);
-        tvBloodTestDate.setText(dateStr);
 
-       /* Date date1 = new Date();
+        Date date1 = new Date();
         String currentDate = simpleDateFormat.format(date1);
-        if(value == 2){
-           if(date.after(date1)){
-               Toast.makeText(getActivity(), "You cannot enter data for future date", Toast.LENGTH_SHORT).show();
-               monthIndex = 0;
-           }else {
-               tvBloodTestDate.setText(dateStr);
-           }
-        }else {
 
-        }*/
-
-
+        tvBloodTestDate.setText(dateStr);
         callSavedMethod();
        // loadStatsForDate(dateStr);
     }
