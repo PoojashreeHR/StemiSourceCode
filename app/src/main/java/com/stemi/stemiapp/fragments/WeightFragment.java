@@ -5,6 +5,8 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
@@ -13,13 +15,16 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.WebViewFragment;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -95,6 +100,7 @@ public class WeightFragment  extends Fragment implements View.OnClickListener,Tr
         callSavedMethod();
         CommonUtils.setRobotoRegularFonts(getActivity(),tvWeightToday);
         btCalculateBmi.setOnClickListener(this);
+        learnMore.setOnClickListener(this);
         tvWeightToday.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -147,9 +153,35 @@ public class WeightFragment  extends Fragment implements View.OnClickListener,Tr
                 }else {
                     Toast.makeText(getActivity(), "Please enter your weight!!", Toast.LENGTH_SHORT).show();
                 }
+                break;
+            case R.id.learn_more:
+                if(learnMore.getVisibility() == View.VISIBLE) {
+                    showImage();
+                }
+
         }
     }
 
+
+    public void showImage() {
+        final Dialog builder = new Dialog(getActivity());
+        builder.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        builder.getWindow().setBackgroundDrawable(
+                new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        final ImageView imageView = new ImageView(getActivity());
+
+        imageView.setImageDrawable(getResources().getDrawable(R.drawable.bmi_chart));
+        builder.addContentView(imageView, new RelativeLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT));
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               builder.dismiss();
+            }
+        });
+        builder.show();
+    }
     @Override
     public void doBack() {
         if(GlobalClass.userID != null) {

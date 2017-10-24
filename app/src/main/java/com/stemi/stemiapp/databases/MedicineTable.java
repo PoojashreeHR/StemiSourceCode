@@ -165,11 +165,31 @@ public class MedicineTable {
         Cursor cursor = db.rawQuery(query, null);
         String fieldToAdd = null;
         while (cursor.moveToNext()) {
-            fieldToAdd = cursor.getString(1);
+            fieldToAdd = cursor.getString(cursor.getColumnIndex(MED_MEDICINE_DETAILS));
             Gson gsonObj = new Gson();
             MedicineDetails stringMedicine = gsonObj.fromJson(fieldToAdd, MedicineDetails.class);
-            if (stringMedicine.getMedicineName().equals(medicineName)) {
-                string = medicineName;
+
+            if(stringMedicine.getMedicineMorning()!=null) {
+                for (int i = 0; i < stringMedicine.getMedicineMorning().size(); i++) {
+                    if (stringMedicine.getMedicineMorning().get(i).getMedName().equals(medicineName)) {
+                        string = medicineName;
+                    }
+                }
+            }
+            if(stringMedicine.getMedicineAfternoon()!=null) {
+                for (int i = 0; i < stringMedicine.getMedicineAfternoon().size(); i++) {
+                    if (stringMedicine.getMedicineAfternoon().get(i).getMedName().equals(medicineName)) {
+                        string = medicineName;
+                    }
+                }
+            }
+
+            if(stringMedicine.getMedicineNight()!=null) {
+                for (int i = 0; i < stringMedicine.getMedicineNight().size(); i++) {
+                    if (stringMedicine.getMedicineNight().get(i).getMedName().equals(medicineName)) {
+                        string = medicineName;
+                    }
+                }
             }
         }
         cursor.close();
@@ -207,7 +227,7 @@ public class MedicineTable {
         //Cursor cursor = db.query(MED_TABLE_NAME, new String[]{MED_MEDICINE_DETAILS},null, null, null, null, null);
         String fieldToAdd = null;
         while(cursor.moveToNext()) {
-            fieldToAdd = cursor.getString(1);
+            fieldToAdd = cursor.getString(cursor.getColumnIndex(MED_MEDICINE_DETAILS));
             Gson gsonObj = new Gson();
             MedicineDetails medicineDetails = gsonObj.fromJson(fieldToAdd, MedicineDetails.class);
             String MedicineString = gsonObj.toJson(medicineDetails);

@@ -11,7 +11,16 @@ public class MedicinesTakenOrNot {
     private  Boolean TakenorNot;
     private String medTime;
     private String type;
+    private String duration;
     private int medColor;
+
+    public String getDuration() {
+        return duration;
+    }
+
+    public void setDuration(String duration) {
+        this.duration = duration;
+    }
 
     public int getMedColor() {
         return medColor;

@@ -113,10 +113,10 @@ public class BloodTestFragment extends Fragment implements TrackActivity.OnBackP
             public void onClick(View v) {
 
                 fieldsOK = validate(new EditText[]{etHaemoglobin, etUreaCreatinine, etCholesterol, etHdl, etLdl, etTriglycerides, etRpg, etFpg, etPpg});
-                if (!fieldsOK) {
+                if (fieldsOK) {
                     saveData();
                 }else {
-                    Toast.makeText(getActivity(), "Enter some data to save", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "Enter Correct data to save", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -128,8 +128,15 @@ public class BloodTestFragment extends Fragment implements TrackActivity.OnBackP
         for (int i = 0; i < fields.length; i++) {
             Log.e(TAG, "validate: "+fields.length );
             EditText currentField = fields[i];
-            if (!currentField.getText().toString().isEmpty()) {
+            if(currentField.getText().toString().endsWith(".")){
                 valid = false;
+                currentField.setError("Error");
+                Toast.makeText(getActivity(),"Please Enter correct value",Toast.LENGTH_LONG).show();
+            }
+            if(currentField.getText().toString().startsWith("-")){
+                valid = false;
+                currentField.setError("Error");
+                Toast.makeText(getActivity(),"Negative numbers are not allowed",Toast.LENGTH_LONG).show();
             }
         }
         return valid;

@@ -367,22 +367,8 @@ public class TrackActivity extends AppCompatActivity implements NavigationView.O
         }
     }
 
-/*
     @Override
-    public void passData(ArrayList<MedicineDetails> data) {
-        AddMedicineFragment addMedicineFragment = new AddMedicineFragment();
-        Bundle args = new Bundle();
-        args.putParcelableArrayList("RECIEVE DATA", data);
-        // args.putString(AddMedicineFragment.DATA_RECEIVE, data);
-        addMedicineFragment.setArguments(args);
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.mainContainer, addMedicineFragment).commit();
-    }
-*/
-
-
-    @Override
-    public void passData(MedicineDetails data, String name) {/*
+    public void passData(ArrayList<MedicineDetails> data,String name) {
         AddMedicineFragment addMedicineFragment = new AddMedicineFragment();
         Bundle args = new Bundle();
         args.putParcelableArrayList("RECIEVE DATA", data);
@@ -390,9 +376,22 @@ public class TrackActivity extends AppCompatActivity implements NavigationView.O
         // args.putString(AddMedicineFragment.DATA_RECEIVE, data);
         addMedicineFragment.setArguments(args);
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.mainContainer, addMedicineFragment).commit();*/
-
+        fragmentTransaction.replace(R.id.mainContainer, addMedicineFragment).commit();
     }
+
+
+/*    @Override
+    public void passData(MedicineDetails data, String name) {
+        AddMedicineFragment addMedicineFragment = new AddMedicineFragment();
+        Bundle args = new Bundle();
+        args.putParcelable("RECIEVE DATA", data);
+    //    args.putString("NAME", name);
+        // args.putString(AddMedicineFragment.DATA_RECEIVE, data);
+        addMedicineFragment.setArguments(args);
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.mainContainer, addMedicineFragment).commit();
+
+    }*/
 
     @Override
     public void goBack() {
