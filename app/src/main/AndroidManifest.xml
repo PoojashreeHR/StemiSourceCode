@@ -32,9 +32,9 @@
         <activity
             android:name=".activity.RegistrationActivity"
             android:windowSoftInputMode="adjustPan" />
-        <activity android:name=".activity.TrackActivity"
-            android:screenOrientation="portrait"
-            ></activity>
+        <activity
+            android:name=".activity.TrackActivity"
+            android:screenOrientation="portrait" />
         <activity android:name=".samples.ChartSampleActivity">
 
             <!--
@@ -61,7 +61,8 @@
             android:name=".activity.MapsActivity"
             android:label="@string/title_activity_maps" />
         <activity android:name=".activity.FollowupActivity" />
-        <activity android:name=".activity.ResetPasswordActivity"></activity>
+        <activity android:name=".activity.ResetPasswordActivity" />
+        <activity android:name=".activity.PrivacyActivity"></activity>
     </application>
 
 </manifest>

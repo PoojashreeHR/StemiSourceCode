@@ -53,4 +53,9 @@
     <string name="learn_more"><u>Learn More</u></string>
     <string name="sync_stemi">Sync with nearest heart-attack ready (STEMI) Hospital</string>
     <string name="title_activity_reset_password">ResetPasswordActivity</string>
+
+
+    <!-- Privacy Strings-->
+    <string name="privacy">This Privacy Policy applies to the CardiaCare Application (hereinafter referred to as the "App" or “CardiaCare”) owned by the STEMI India Charitable Trust (“STEMI India”), a not-for-profit organisation having its registered office situated at #204-205, Poongothai Nagar, Civil Aerodrome, Coimbatore – 641014.
+        STEMI India recognizes the importance of maintaining your privacy. We value your privacy and appreciate your trust in us. This Policy describes how we treat user information we collect on CardiaCare. This Privacy Policy applies to all users of CardiaCare. By using and/or entering data into our App, you agree to this Privacy Policy.</string>
 </resources>
