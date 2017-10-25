@@ -12,6 +12,7 @@ import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -159,7 +160,7 @@ public class MedicationFragment extends Fragment implements AppConstants, View.O
         CommonUtils.setRobotoRegularFonts(getActivity(), tvMedicationToday);
         ((TrackActivity) getActivity()).setOnBackPressedListener(this);
         ((TrackActivity) getActivity()).setOnBackPressedListener(this);
-        ((TrackActivity) getActivity()).setActionBarTitle("Medication");
+        //((TrackActivity) getActivity()).setActionBarTitle("Medication");
 
         alreadySaved = false;
         return view;
@@ -196,6 +197,7 @@ public class MedicationFragment extends Fragment implements AppConstants, View.O
         addNewMedicine.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 ((TrackActivity) getActivity()).showFragment(new AddMedicineFragment());
             }
         });
@@ -691,11 +693,15 @@ public class MedicationFragment extends Fragment implements AppConstants, View.O
         if (!date) {
             medicineTable.addMedicineDetails(medicineContains, GlobalClass.userID);
             EventBus.getDefault().post(new MessageEvent("Hello!"));
-            ((TrackActivity) getActivity()).setActionBarTitle("Track");
+       //     ((TrackActivity) getActivity()).setActionBarTitle("Track");
         } else {
             medicineTable.updateDataWithDate(GlobalClass.userID, savedDate, medicineContains);
             EventBus.getDefault().post(new MessageEvent("Hello!"));
-            ((TrackActivity) getActivity()).setActionBarTitle("Track");
+            FragmentManager fm = getActivity().getSupportFragmentManager();
+            for(int i = 0; i < fm.getBackStackEntryCount(); ++i) {
+                fm.popBackStack();
+            }
+        //    ((TrackActivity) getActivity()).setActionBarTitle("Track");
         }
     }
 
@@ -707,8 +713,12 @@ public class MedicationFragment extends Fragment implements AppConstants, View.O
             Log.e(TAG, "doBack: " + medicineContains);
             storeData();
         }else {
+            FragmentManager fm = getActivity().getSupportFragmentManager();
+            for(int i = 0; i < fm.getBackStackEntryCount(); ++i) {
+                fm.popBackStack();
+            }
             EventBus.getDefault().post(new MessageEvent("Hello!"));
-            ((TrackActivity) getActivity()).setActionBarTitle("Track");
+          //  ((TrackActivity) getActivity()).setActionBarTitle("Track");
         }
 
             /*for (int i = 0; i < m1.size(); i++) {
@@ -784,6 +794,7 @@ public class MedicationFragment extends Fragment implements AppConstants, View.O
         if(!alreadySaved) {
             Log.e("fragment", "MedicationFragment saveAllData()");
             storeData();
+         //   getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
             alreadySaved = true;
         }
     }
@@ -921,6 +932,7 @@ public class MedicationFragment extends Fragment implements AppConstants, View.O
     @Override
     public void onResume() {
         super.onResume();
+        ((TrackActivity) getActivity()).setActionBarTitle("Medication");
 //        notifyAll();
 
     }

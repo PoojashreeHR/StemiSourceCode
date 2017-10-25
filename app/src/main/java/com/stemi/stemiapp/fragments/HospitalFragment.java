@@ -9,7 +9,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Build;
@@ -28,7 +27,6 @@ import android.widget.Toast;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 import com.google.zxing.integration.android.IntentIntegrator;
-import com.google.zxing.integration.android.IntentResult;
 import com.stemi.stemiapp.R;
 import com.stemi.stemiapp.activity.FollowupActivity;
 import com.stemi.stemiapp.activity.MapsActivity;
@@ -52,9 +50,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -63,7 +58,7 @@ import retrofit2.Response;
  * Created by Pooja on 24-07-2017.
  */
 
-public class HospitalFragment extends Fragment implements TrackActivity.OnScanCompletionListener{
+public class HospitalFragment extends Fragment implements TrackActivity.OnScanCompletionListener {
     private static final String TAG = "HospitalFragment";
     private LocationManager lm;
     private LatLng currentLoc;
@@ -74,7 +69,6 @@ public class HospitalFragment extends Fragment implements TrackActivity.OnScanCo
     public HospitalFragment() {
         // Required empty public constructor
     }
-
 
 
     RelativeLayout locateHospitalLayout;
@@ -109,16 +103,15 @@ public class HospitalFragment extends Fragment implements TrackActivity.OnScanCo
             @Override
             public void onClick(View view) {
                 DataUploadedDB dataUploadedDB = new DataUploadedDB(getActivity());
-                if(GlobalClass.userID == null){
+                if (GlobalClass.userID == null) {
                     Toast.makeText(getActivity(), "You've to create a profile first !", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
                 boolean uploadStatus = dataUploadedDB.getUploadStatus(GlobalClass.userID);
-                if(!uploadStatus) {
+                if (!uploadStatus) {
                     openQRScanningActivity();
-                }
-                else{
+                } else {
                     Toast.makeText(getActivity(), "You've already uploaded data !", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -144,18 +137,26 @@ public class HospitalFragment extends Fragment implements TrackActivity.OnScanCo
         qrScan.initiateScan();
     }
 
+    boolean isVisible;
 
-
+    @Override
+    public void onResume() {
+        super.onResume();
+       // if (isVisible)
+            //((TrackActivity) getActivity()).setActionBarTitle("Hospital");
+    }
 
     @Override
     public void setMenuVisibility(boolean menuVisible) {
+        super.setMenuVisibility(menuVisible);
+
         if (getActivity() != null) {
             if (menuVisible) {
-              //  ((TrackActivity) getActivity()).setActionBarTitle("Hospital");
+                isVisible = true;
+                ((TrackActivity) getActivity()).setActionBarTitle("Hospital");
 
             }
         }
-        super.setMenuVisibility(menuVisible);
     }
 
     private void checkLocationServices() {
@@ -246,13 +247,13 @@ public class HospitalFragment extends Fragment implements TrackActivity.OnScanCo
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        ((TrackActivity)context).setOnScanCompletedListener(this);
+        ((TrackActivity) context).setOnScanCompletedListener(this);
     }
 
     @Override
     public void scanCompleted(String contents) {
-        Toast.makeText(getActivity(), "Hospital id = "+contents, Toast.LENGTH_SHORT).show();
-        Log.e("MapsActivity", "contents = "+contents);
+        Toast.makeText(getActivity(), "Hospital id = " + contents, Toast.LENGTH_SHORT).show();
+        Log.e("MapsActivity", "contents = " + contents);
         CommonUtils.showLoadingProgress(getActivity());
         //contents = "153";
         AppSharedPreference appSharedPreference = new AppSharedPreference(getActivity());
@@ -261,8 +262,8 @@ public class HospitalFragment extends Fragment implements TrackActivity.OnScanCo
         UserDetailsTable userDetailTable = new UserDetailsTable(getActivity());
         RegisteredUserDetails userDetails = userDetailTable.getUserDetails(GlobalClass.userID);
 
-        Log.e("MapsActivity", "token = "+token);
-        Call<StatusMessageResponse> apiCall = apiInterface.callUploadDataApi(token,contents,
+        Log.e("MapsActivity", "token = " + token);
+        Call<StatusMessageResponse> apiCall = apiInterface.callUploadDataApi(token, contents,
                 userDetails.getName(),
                 userDetails.getAge(),
                 userDetails.getGender(),
@@ -293,7 +294,7 @@ public class HospitalFragment extends Fragment implements TrackActivity.OnScanCo
             @Override
             public void onFailure(Call<StatusMessageResponse> call, Throwable t) {
                 CommonUtils.hideLoadingProgress();
-                Log.e("MapsActivity",t.getMessage());
+                Log.e("MapsActivity", t.getMessage());
                 Toast.makeText(getActivity(), "Data Upload failed !", Toast.LENGTH_SHORT).show();
             }
         });
@@ -304,14 +305,13 @@ public class HospitalFragment extends Fragment implements TrackActivity.OnScanCo
         dataUploadedDB.addEntry(GlobalClass.userID, true);
     }
 
-    private void showNextFollowupDate(){
+    private void showNextFollowupDate() {
         FollowupsDB followupsDB = new FollowupsDB(getActivity());
         String nextDate = followupsDB.getNextFollowupDate(GlobalClass.userID);
 
-        if(nextDate == null){
+        if (nextDate == null) {
             Toast.makeText(getActivity(), "You've to upload your data first !!!", Toast.LENGTH_SHORT).show();
-        }
-        else{
+        } else {
             Intent intent = new Intent(getActivity(), FollowupActivity.class);
             startActivity(intent);
         }
@@ -319,14 +319,14 @@ public class HospitalFragment extends Fragment implements TrackActivity.OnScanCo
 
     private void setFollowupDates() {
         Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.MONTH,1);
+        calendar.add(Calendar.MONTH, 1);
         addEvent(calendar.getTime());
 
-        calendar.add(Calendar.MONTH,1);
+        calendar.add(Calendar.MONTH, 1);
         addEvent(calendar.getTime());
 
         Calendar calendarSecondary = Calendar.getInstance();
-        for(int i=1;i<=20;i++){
+        for (int i = 1; i <= 20; i++) {
             calendarSecondary.add(Calendar.MONTH, 3);
             addEvent(calendarSecondary.getTime());
         }
@@ -341,12 +341,12 @@ public class HospitalFragment extends Fragment implements TrackActivity.OnScanCo
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
         String datePart = simpleDateFormat.format(date);
 
-        String dateTime = datePart+" 09:00 AM";
+        String dateTime = datePart + " 09:00 AM";
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm a");
 
         Date modifiedDate = null;
         try {
-             modifiedDate = dateFormat.parse(dateTime);
+            modifiedDate = dateFormat.parse(dateTime);
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -358,7 +358,7 @@ public class HospitalFragment extends Fragment implements TrackActivity.OnScanCo
         eventValues.put(CalendarContract.Events.DESCRIPTION, "You have a follow up checkup scheduled today");
 
         eventValues.put(CalendarContract.Events.DTSTART, modifiedDate.getTime());
-        long endTime =  modifiedDate.getTime() + (60 * 60 * 1000);
+        long endTime = modifiedDate.getTime() + (60 * 60 * 1000);
         eventValues.put(CalendarContract.Events.DTEND, endTime);
 
         eventValues.put(CalendarContract.Events.EVENT_TIMEZONE, TimeZone.getDefault().toString());

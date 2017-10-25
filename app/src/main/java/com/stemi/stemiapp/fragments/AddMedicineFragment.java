@@ -17,6 +17,7 @@ import android.os.Bundle;
 import android.provider.CalendarContract.Events;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -161,7 +162,8 @@ public class AddMedicineFragment extends Fragment implements View.OnClickListene
         ButterKnife.bind(this, view);
         formIsValid(color);
         formIsValid(medicineType);
-
+        Log.e(TAG, "onCreateView: "+getFragmentManager() );
+     //   getActivity().getSupportFragmentManager().beginTransaction().remove(getParentFragment()).commit();
         //Setting fonts
         CommonUtils.setRobotoRegularFonts(getActivity(), medicineNamee);
         ((TrackActivity) getActivity()).setOnBackPressedListener(this);
@@ -306,7 +308,7 @@ public class AddMedicineFragment extends Fragment implements View.OnClickListene
                 }
             });
             addMedicine.setOnClickListener(this);
-            ((TrackActivity) getActivity()).setActionBarTitle("Add Medicine");
+       //     ((TrackActivity) getActivity()).setActionBarTitle("Add Medicine");
             return view;
     }
 
@@ -513,7 +515,7 @@ public class AddMedicineFragment extends Fragment implements View.OnClickListene
     public void setMenuVisibility(boolean menuVisible) {
         if (getActivity() != null) {
             if (menuVisible) {
-                ((TrackActivity) getActivity()).setActionBarTitle("Hospital");
+                ((TrackActivity) getActivity()).setActionBarTitle("Add Medicine");
             }
         }
         super.setMenuVisibility(menuVisible);
@@ -668,6 +670,7 @@ public class AddMedicineFragment extends Fragment implements View.OnClickListene
     @Override
     public void doBack() {
         EventBus.getDefault().post(new MessageEvent("Hello!"));
+        ((TrackActivity) getActivity()).showFragment(new MedicationFragment());
     }
 
 
@@ -685,6 +688,7 @@ public class AddMedicineFragment extends Fragment implements View.OnClickListene
         @Override
         public void onResume() {
             super.onResume();
+            ((TrackActivity) getActivity()).setActionBarTitle("Add Medicine");
         }
 
         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
@@ -1103,6 +1107,13 @@ public class AddMedicineFragment extends Fragment implements View.OnClickListene
             medicineDays.setError(null);
         }
         return valid;
+    }
+
+    public void saveAllData() {
+        FragmentManager fm = getActivity().getSupportFragmentManager();
+        for(int i = 0; i < fm.getBackStackEntryCount(); ++i) {
+            fm.popBackStack();
+        }
     }
 }
 

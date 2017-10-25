@@ -115,7 +115,7 @@ public class WeightFragment  extends Fragment implements View.OnClickListener,Tr
                 dialogfragment.show(getActivity().getFragmentManager(), "Date Picker Dialog");
             }
         });
-        ((TrackActivity) getActivity()).setActionBarTitle("Weight");
+     //   ((TrackActivity) getActivity()).setActionBarTitle("Weight");
         ((TrackActivity) getActivity()).setOnBackPressedListener(this);
 
         alreadySaved = false;
@@ -225,7 +225,7 @@ public class WeightFragment  extends Fragment implements View.OnClickListener,Tr
             }
         }else {
             EventBus.getDefault().post(new MessageEvent("Hello!"));
-            ((TrackActivity) getActivity()).setActionBarTitle("Track");
+       //     ((TrackActivity) getActivity()).setActionBarTitle("Track");
             getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
             }
         }
@@ -296,6 +296,7 @@ public class WeightFragment  extends Fragment implements View.OnClickListener,Tr
             if (!alreadySaved) {
                 Log.e("fragment", "WeightFragment saveAllData()");
                 SaveData();
+             //   getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
                 alreadySaved = true;
             }
         }
@@ -420,19 +421,25 @@ public class WeightFragment  extends Fragment implements View.OnClickListener,Tr
         if (!date) {
             dbForTrackActivities.addEntry(TrackActivity.userEventDetails);
             ((TrackActivity) getActivity()).showFragment(new TrackFragment());
-            ((TrackActivity) getActivity()).setActionBarTitle("Track");
+           // ((TrackActivity) getActivity()).setActionBarTitle("Track");
             getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
             saveUserData();
         } else {
             int c = dbForTrackActivities.isEntryExists(TrackActivity.userEventDetails,4,getActivity());
-            ((TrackActivity) getActivity()).setActionBarTitle("Track");
+          //  ((TrackActivity) getActivity()).setActionBarTitle("Track");
 //            getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
 
 
         }
     }
 
-/*    @Override
+    @Override
+    public void onResume() {
+        super.onResume();
+        ((TrackActivity) getActivity()).setActionBarTitle("Weight");
+    }
+
+    /*    @Override
     //Pressed return button - returns to the results menu
     public void onResume() {
         super.onResume();

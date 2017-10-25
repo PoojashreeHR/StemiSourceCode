@@ -160,17 +160,18 @@ public class TrackFragment extends Fragment {
 
     @Override
     public void setMenuVisibility(boolean menuVisible) {
-     /*   if(getActivity() != null){
+        super.setMenuVisibility(menuVisible);
+        if(getActivity() != null){
             if(menuVisible){
                 ((TrackActivity) getActivity()).setActionBarTitle("Track");
             }
-        }*/
-        super.setMenuVisibility(menuVisible);
+        }
+
     }
 
-  /*  @Override
+    @Override
     public void onResume() {
         super.onResume();
-        ((TrackActivity) getActivity()).setActionBarTitle("Track");
-    }*/
+     //   ((TrackActivity) getActivity()).setActionBarTitle("Track");
+    }
 }

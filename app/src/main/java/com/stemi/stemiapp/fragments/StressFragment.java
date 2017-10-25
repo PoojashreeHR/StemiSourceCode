@@ -132,7 +132,7 @@ public class StressFragment extends Fragment implements AppConstants, TrackActiv
                 dialogfragment.show(getActivity().getFragmentManager(), "Date Picker Dialog");
             }
         });
-        ((TrackActivity) getActivity()).setActionBarTitle("Stress");
+    //    ((TrackActivity) getActivity()).setActionBarTitle("Stress");
         ((TrackActivity) getActivity()).setOnBackPressedListener(this);
 
         return view;
@@ -145,7 +145,7 @@ public class StressFragment extends Fragment implements AppConstants, TrackActiv
                 storeData();
             } else {
                 EventBus.getDefault().post(new MessageEvent("Hello!"));
-                ((TrackActivity) getActivity()).setActionBarTitle("Track");
+             //   ((TrackActivity) getActivity()).setActionBarTitle("Track");
             }
         }else {
             Toast.makeText(getActivity(), "Please add profile details first", Toast.LENGTH_SHORT).show();
@@ -271,6 +271,7 @@ public class StressFragment extends Fragment implements AppConstants, TrackActiv
             if (!alreadySaved) {
                 Log.e("fragment", "StressFragment saveAllData()");
                 storeData();
+        //        getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
                 alreadySaved = true;
             }
         }
@@ -409,7 +410,7 @@ public class StressFragment extends Fragment implements AppConstants, TrackActiv
         if (!date) {
             dbForTrackActivities.addEntry(TrackActivity.userEventDetails);
             EventBus.getDefault().post(new MessageEvent("Hello!"));
-            ((TrackActivity) getActivity()).setActionBarTitle("Track");
+         //   ((TrackActivity) getActivity()).setActionBarTitle("Track");
             saveUserData();
         } else {
             int c = dbForTrackActivities.isEntryExists(TrackActivity.userEventDetails,2,getActivity());
@@ -418,7 +419,13 @@ public class StressFragment extends Fragment implements AppConstants, TrackActiv
         }
     }
 
-/*    @Override
+    @Override
+    public void onResume() {
+        super.onResume();
+        ((TrackActivity) getActivity()).setActionBarTitle("Stress");
+    }
+
+    /*    @Override
     //Pressed return button - returns to the results menu
     public void onResume() {
         super.onResume();

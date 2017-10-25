@@ -110,7 +110,7 @@ public class ExerciseFragment extends Fragment implements View.OnClickListener, 
         ButterKnife.bind(this, view);
 
         CommonUtils.setRobotoRegularFonts(getActivity(), tvExcerciseToday);
-        ((TrackActivity) getActivity()).setActionBarTitle("Exercise");
+        //((TrackActivity) getActivity()).setActionBarTitle("Exercise");
         dbForTrackActivities = new DBForTrackActivities();
         appSharedPreference = new AppSharedPreference(getActivity());
 
@@ -298,6 +298,7 @@ public class ExerciseFragment extends Fragment implements View.OnClickListener, 
             if (!alreadySaved) {
                 Log.e("fragment", "ExerciseFragment saveAllData()");
                 storeData();
+              //  getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
                 alreadySaved = true;
             }
         }
@@ -440,36 +441,41 @@ public class ExerciseFragment extends Fragment implements View.OnClickListener, 
         if (!date) {
             dbForTrackActivities.addEntry(TrackActivity.userEventDetails);
             EventBus.getDefault().post(new MessageEvent("Hello!"));
-            ((TrackActivity) getActivity()).setActionBarTitle("Track");
+          //  ((TrackActivity) getActivity()).setActionBarTitle("Track");
             saveUserData();
         } else {
             int c = dbForTrackActivities.isEntryExists(TrackActivity.userEventDetails, 1, getActivity());
-
         }
         Log.e("db", "Saving TrackActivity.userEventDetails = "+new Gson().toJson(TrackActivity.userEventDetails));
 
         EventBus.getDefault().post(new DataSavedEvent(""));
     }
 
-    /*  @Override
-      //Pressed return button - returns to the results menu
-      public void onResume() {
-          super.onResume();
-          excerciseLayout.setFocusableInTouchMode(true);
-          excerciseLayout.requestFocus();
-          excerciseLayout.setOnKeyListener(new View.OnKeyListener() {
-              @Override
-              public boolean onKey(View v, int keyCode, KeyEvent event) {
-                  if (event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK) {
-                      storeData();
-                      //((TrackActivity) getActivity()).showFragment(new TrackFragment());
-                      Toast.makeText(getActivity(), "You pressed Back", Toast.LENGTH_SHORT).show();
-                  }
-                  return false;
-              }
-          });
+    @Override
+    public void onResume() {
+        super.onResume();
+        ((TrackActivity) getActivity()).setActionBarTitle("Exercise");
+    }
 
-      }*/
+    /*  @Override
+          //Pressed return button - returns to the results menu
+          public void onResume() {
+              super.onResume();
+              excerciseLayout.setFocusableInTouchMode(true);
+              excerciseLayout.requestFocus();
+              excerciseLayout.setOnKeyListener(new View.OnKeyListener() {
+                  @Override
+                  public boolean onKey(View v, int keyCode, KeyEvent event) {
+                      if (event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK) {
+                          storeData();
+                          //((TrackActivity) getActivity()).showFragment(new TrackFragment());
+                          Toast.makeText(getActivity(), "You pressed Back", Toast.LENGTH_SHORT).show();
+                      }
+                      return false;
+                  }
+              });
+
+          }*/
     @Override
     public void doBack() {
         if (GlobalClass.userID != null) {
@@ -492,7 +498,7 @@ public class ExerciseFragment extends Fragment implements View.OnClickListener, 
                 }
                 else {
                     EventBus.getDefault().post(new MessageEvent("Hello!"));
-                    ((TrackActivity) getActivity()).setActionBarTitle("Track");
+                  //  ((TrackActivity) getActivity()).setActionBarTitle("Track");
                 }
             }
         }else {

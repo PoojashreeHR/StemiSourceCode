@@ -115,40 +115,37 @@ public class SmokingFragment  extends Fragment implements TrackActivity.OnBackPr
         return view;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        ((TrackActivity) getActivity()).setActionBarTitle("Smoking");
+    }
 
     @Override
     public void doBack() {
         if (GlobalClass.userID != null) {
         if (smokeToday.getResponse() == null || smokeToday.getResponse().equals("")) {
             EventBus.getDefault().post(new MessageEvent("Hello!"));
-            ((TrackActivity) getActivity()).setActionBarTitle("Track");
+         //   ((TrackActivity) getActivity()).setActionBarTitle("Track");
         } else if (howMany.isEnabled() && howMany.getText().toString().equals("")) {
             Toast.makeText(getActivity(), "Please enter how many", Toast.LENGTH_LONG).show();
         } else {
             saveData();
         }
     }else {
-        Toast.makeText(getActivity(), "Please add profile details first", Toast.LENGTH_SHORT).show();
+         Toast.makeText(getActivity(), "Please add profile details first", Toast.LENGTH_SHORT).show();
+            getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
     }
     }
 
     @Override
     public void onStart() {
-        EventBus.getDefault().register(this);
+        try {
+            EventBus.getDefault().register(this);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         super.onStart();
-    }
-
-    @Override
-    public void onStop() {
-        EventBus.getDefault().unregister(this);
-        Log.e("fragment", "SmokingFragment onStop()");
-        super.onStop();
-    }
-
-    @Override
-    public void onDestroy() {
-        Log.e("fragment", "SmokingFragment onDestroy()");
-        super.onDestroy();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -161,8 +158,15 @@ public class SmokingFragment  extends Fragment implements TrackActivity.OnBackPr
         if(GlobalClass.userID !=null) {
             if (!alreadySaved) {
                 Log.e("fragment", "SmokingFragment saveAllData()");
-                saveData();
-                alreadySaved = true;
+                if (howMany.isEnabled() && howMany.getText().toString().equals("")) {
+                    Toast.makeText(getActivity(), "Please enter how many", Toast.LENGTH_LONG).show();
+                    alreadySaved = false;
+                }else {
+                    saveData();
+                    alreadySaved = true;
+                }
+                //   getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit()
+
             }
         }
         else{
@@ -255,11 +259,10 @@ public class SmokingFragment  extends Fragment implements TrackActivity.OnBackPr
         if (!date) {
             dbForTrackActivities.addEntry(TrackActivity.userEventDetails);
              EventBus.getDefault().post(new MessageEvent("Hello!"));
-            ((TrackActivity) getActivity()).setActionBarTitle("Track");
+            //((TrackActivity) getActivity()).setActionBarTitle("Track");
             saveUserData();
         } else {
             int c = dbForTrackActivities.isEntryExists(TrackActivity.userEventDetails,3,getActivity());
-
 
         }
     }

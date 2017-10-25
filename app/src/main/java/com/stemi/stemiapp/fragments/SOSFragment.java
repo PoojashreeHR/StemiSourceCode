@@ -135,13 +135,13 @@ public class SOSFragment extends Fragment implements View.OnClickListener, Track
 
     @Override
     public void setMenuVisibility(boolean menuVisible) {
+        super.setMenuVisibility(menuVisible);
         if (getActivity() != null) {
             if (menuVisible) {
-                //    ((TrackActivity) getActivity()).setActionBarTitle("SOS");
+                    ((TrackActivity) getActivity()).setActionBarTitle("SOS");
 
             }
         }
-        super.setMenuVisibility(menuVisible);
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -248,6 +248,12 @@ public class SOSFragment extends Fragment implements View.OnClickListener, Track
         }
 
         return valid;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        //((TrackActivity) getActivity()).setActionBarTitle("SOS");
     }
 
     @Override

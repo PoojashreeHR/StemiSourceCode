@@ -248,8 +248,6 @@ public class TrackMedicationDB {
                 dialog.dismiss();
                 ((TrackActivity) mContext).showFragment(new TrackFragment());
                 ((TrackActivity) mContext).setActionBarTitle("Track");
-
-
             }
         });
 

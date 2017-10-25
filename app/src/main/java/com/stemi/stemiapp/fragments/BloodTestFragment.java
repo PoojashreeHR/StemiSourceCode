@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -89,7 +90,7 @@ public class BloodTestFragment extends Fragment implements TrackActivity.OnBackP
         bloodTestDB = new BloodTestDB();
         bloodTestResult = new BloodTestResult();
         ((TrackActivity) getActivity()).setOnBackPressedListener(this);
-        ((TrackActivity) getActivity()).setActionBarTitle("Blood Test Report");
+       // ((TrackActivity) getActivity()).setActionBarTitle("Blood Test Report");
         setupDate();
         btLeftArrow.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -114,10 +115,10 @@ public class BloodTestFragment extends Fragment implements TrackActivity.OnBackP
             public void onClick(View v) {
 
                 fieldsOK = validate(new EditText[]{etHaemoglobin, etUreaCreatinine, etCholesterol, etHdl, etLdl, etTriglycerides, etRpg, etFpg, etPpg});
-                if (fieldsOK) {
+                if (!fieldsOK) {
                     saveData();
                 }else {
-                    Toast.makeText(getActivity(), "Enter Correct data to save", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "Enter data to save", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -129,6 +130,9 @@ public class BloodTestFragment extends Fragment implements TrackActivity.OnBackP
         for (int i = 0; i < fields.length; i++) {
             Log.e(TAG, "validate: "+fields.length );
             EditText currentField = fields[i];
+            if(!currentField.getText().toString().isEmpty()){
+                valid = false;
+            }
             if(currentField.getText().toString().endsWith(".")){
                 valid = false;
                 currentField.setError("Error");
@@ -145,8 +149,8 @@ public class BloodTestFragment extends Fragment implements TrackActivity.OnBackP
     @Override
     public void doBack() {
         EventBus.getDefault().post(new MessageEvent("Hello!"));
-        getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
-        ((TrackActivity) getActivity()).setActionBarTitle("Track");
+      //  getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
+      //  ((TrackActivity) getActivity()).setActionBarTitle("Track");
 
     }
 
@@ -165,13 +169,13 @@ public class BloodTestFragment extends Fragment implements TrackActivity.OnBackP
                 DecimalFormat decimalFormat = new DecimalFormat();
                 etHaemoglobin.setText(decimalFormat.format(bloodTestResults.getHeamoglobin()));
                 etUreaCreatinine.setText(decimalFormat.format(bloodTestResults.getUreaCreatinine()));
-                String st = CheckEmptyOrNot(""+bloodTestResults.getTotalCholestrol());
                 etCholesterol.setText(decimalFormat.format(bloodTestResults.getTotalCholestrol()));
                 etTriglycerides.setText(decimalFormat.format(bloodTestResults.getTriglycerides()));
                 etHdl.setText(decimalFormat.format(bloodTestResults.getHighDensityLipoProtein()));
                 etLdl.setText(decimalFormat.format(bloodTestResults.getLowDensityLipoProtein()));
                 etRpg.setText(decimalFormat.format(bloodTestResults.getRandomPlasmaGlucose()));
                 etFpg.setText(decimalFormat.format(bloodTestResults.getFastingPlasmaGlucose()));
+                String st = CheckEmptyOrNot(""+bloodTestResults.getTotalCholestrol());
                 etPpg.setText(decimalFormat.format(bloodTestResults.getPostPrandialPlasmaGlucose()));
             }
         }else {
@@ -201,7 +205,12 @@ public class BloodTestFragment extends Fragment implements TrackActivity.OnBackP
         callSavedMethod();
        // loadStatsForDate(dateStr);
     }
-
+    public void saveAllData() {
+        FragmentManager fm = getActivity().getSupportFragmentManager();
+        for(int i = 0; i < fm.getBackStackEntryCount(); ++i) {
+            fm.popBackStack();
+        }
+    }
     double ParseDouble(String strNumber) {
         if (strNumber != null && strNumber.length() > 0) {
             try {
@@ -234,7 +243,7 @@ public class BloodTestFragment extends Fragment implements TrackActivity.OnBackP
             bloodTestDB.addEntry(bloodTestResult.getUid(), bloodTestResult.getDate(), bloodTestResult);
             getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
             EventBus.getDefault().post(new MessageEvent("Hello!"));
-            ((TrackActivity) getActivity()).setActionBarTitle("Track");
+           // ((TrackActivity) getActivity()).setActionBarTitle("Track");
         }
       //  ((TrackActivity) getActivity()).showFragment(new TrackFragment());
 
@@ -252,13 +261,15 @@ public class BloodTestFragment extends Fragment implements TrackActivity.OnBackP
     public void buidDialog(final Context mContext){
         AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
         //builder.setTitle("");
+        builder.setCancelable(false);
+
         builder.setMessage("Do you wish to update?");
         builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 bloodTestDB.updateEntry(GlobalClass.userID,tvBloodTestDate.getText().toString(),bloodTestResult);
                 EventBus.getDefault().post(new MessageEvent("Hello!"));
-                ((TrackActivity) mContext).setActionBarTitle("Track");
+            //    ((TrackActivity) mContext).setActionBarTitle("Track");
                 Log.i("Code2care ", "Yes button Clicked!");
             }
         });
@@ -270,7 +281,7 @@ public class BloodTestFragment extends Fragment implements TrackActivity.OnBackP
                 Log.i("Code2care ","No button Clicked!");
                 dialog.dismiss();
                 ((TrackActivity) mContext).showFragment(new TrackFragment());
-                ((TrackActivity) mContext).setActionBarTitle("Track");
+             //   ((TrackActivity) mContext).setActionBarTitle("Track");
 
             }
         });
@@ -283,4 +294,9 @@ public class BloodTestFragment extends Fragment implements TrackActivity.OnBackP
         pbutton.setTextColor(mContext.getResources().getColor(R.color.appBackground));
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        ((TrackActivity) getActivity()).setActionBarTitle("Blood Test Report");
+    }
 }
