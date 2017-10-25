@@ -14,7 +14,7 @@
 
     <application
         android:name=".StemiApplication"
-        android:allowBackup="true"
+        android:allowBackup="false"
         android:icon="@drawable/ic_stemi_icon"
         android:label="@string/app_name"
         android:roundIcon="@drawable/ic_stemi_icon"
