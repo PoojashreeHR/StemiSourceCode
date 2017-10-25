@@ -1,7 +1,5 @@
 package com.stemi.stemiapp.fragments;
 
-import android.app.DatePickerDialog;
-import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.DashPathEffect;
@@ -14,14 +12,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.jjoe64.graphview.GraphView;
-import com.jjoe64.graphview.LegendRenderer;
 import com.jjoe64.graphview.helper.StaticLabelsFormatter;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.DataPointInterface;
@@ -37,7 +33,6 @@ import com.stemi.stemiapp.databases.TrackSmokingDB;
 import com.stemi.stemiapp.databases.TrackStressDB;
 import com.stemi.stemiapp.databases.TrackWeightDB;
 import com.stemi.stemiapp.graphs.FlaggedDataPoint;
-import com.stemi.stemiapp.graphs.XAxisDateFormatter;
 import com.stemi.stemiapp.graphs.YAxisValueFormatter;
 import com.stemi.stemiapp.model.BloodTestResult;
 import com.stemi.stemiapp.model.DataSavedEvent;
@@ -46,20 +41,17 @@ import com.stemi.stemiapp.model.TrackMedication;
 import com.stemi.stemiapp.model.TrackSmoking;
 import com.stemi.stemiapp.model.TrackStress;
 import com.stemi.stemiapp.model.TrackWeight;
-import com.stemi.stemiapp.samples.ChartSampleActivity;
 import com.stemi.stemiapp.utils.GlobalClass;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Random;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -68,7 +60,7 @@ import butterknife.ButterKnife;
  * Created by Pooja on 26-07-2017.
  */
 
-public class StatusFragment extends Fragment implements UpdateableFragment{
+public class StatusFragment extends Fragment implements UpdateableFragment {
     Button button;
     private TabLayout tabs;
     private RelativeLayout healthLayout, weightLayout, bloodTestLayout;
@@ -82,31 +74,31 @@ public class StatusFragment extends Fragment implements UpdateableFragment{
     private TextView dateText;
 
     @BindView(R.id.txt_heamoglobin)
-     TextView txtHeamoglobin;
+    TextView txtHeamoglobin;
 
     @BindView(R.id.txt_urea_creatinine)
-     TextView txtUreaCreatinine;
+    TextView txtUreaCreatinine;
 
     @BindView(R.id.txt_total_cholestrol)
-     TextView txtTotalCholestrol;
+    TextView txtTotalCholestrol;
 
     @BindView(R.id.txt_high_density_lipo)
-     TextView txtHighDesnityLipo;
+    TextView txtHighDesnityLipo;
 
     @BindView(R.id.txt_low_density_lipo)
-     TextView txtLowDensityLipo;
+    TextView txtLowDensityLipo;
 
     @BindView(R.id.txt_triglycerides)
-     TextView txtTriglycerides;
+    TextView txtTriglycerides;
 
     @BindView(R.id.txt_random_plasma_glucose)
-     TextView txtRandomPlasmaGlucose;
+    TextView txtRandomPlasmaGlucose;
 
     @BindView(R.id.txt_fasting_plasma_glucose)
-     TextView txtFastingPlasmaGlucose;
+    TextView txtFastingPlasmaGlucose;
 
     @BindView(R.id.txt_post_prandial_plasma_glucose)
-     TextView txtPostPrandialPlasmaGlucose;
+    TextView txtPostPrandialPlasmaGlucose;
     private RelativeLayout stressLayout;
     private GraphView stressGraph;
     private final String TAG = "Graphs";
@@ -128,7 +120,7 @@ public class StatusFragment extends Fragment implements UpdateableFragment{
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onDataSaved(DataSavedEvent event){
+    public void onDataSaved(DataSavedEvent event) {
         updateSelf();
     }
 
@@ -141,6 +133,8 @@ public class StatusFragment extends Fragment implements UpdateableFragment{
     @Override
     public void onResume() {
         super.onResume();
+       // if (isVisibl)
+          //  ((TrackActivity) getActivity()).setActionBarTitle("Statistics");
         //populateDummyData();
         populateHealthGraph();
         // populateDummyData();
@@ -154,7 +148,7 @@ public class StatusFragment extends Fragment implements UpdateableFragment{
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_status, container, false);
-        ButterKnife.bind(this,view);
+        ButterKnife.bind(this, view);
         tabs = (TabLayout) view.findViewById(R.id.tabs);
         healthLayout = (RelativeLayout) view.findViewById(R.id.health_layout);
         weightLayout = (RelativeLayout) view.findViewById(R.id.weight_layout);
@@ -180,7 +174,7 @@ public class StatusFragment extends Fragment implements UpdateableFragment{
         btnRightArrow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(monthIndex <= -1) {
+                if (monthIndex <= -1) {
                     monthIndex++;
                     setupDate();
                 }
@@ -196,33 +190,29 @@ public class StatusFragment extends Fragment implements UpdateableFragment{
         tabs.setTabTextColors(getResources().getColor(R.color.colorPrimaryDark), getResources().getColor(R.color.appBackground));
 
 
-
-        ((TrackActivity)getActivity()).getViewPager().setPagingEnabled(false);
+        ((TrackActivity) getActivity()).getViewPager().setPagingEnabled(false);
 
         tabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                if(tab.getText().equals("Health")){
+                if (tab.getText().equals("Health")) {
                     bloodTestLayout.setVisibility(View.GONE);
                     weightLayout.setVisibility(View.GONE);
                     stressLayout.setVisibility(View.GONE);
                     healthLayout.setVisibility(View.VISIBLE);
-                   // populateDummyData();
-                   // populateHealthGraph();
-                }
-                else if(tab.getText().equals("Stress")){
+                    // populateDummyData();
+                    // populateHealthGraph();
+                } else if (tab.getText().equals("Stress")) {
                     healthLayout.setVisibility(View.GONE);
                     bloodTestLayout.setVisibility(View.GONE);
                     weightLayout.setVisibility(View.GONE);
                     stressLayout.setVisibility(View.VISIBLE);
-                }
-                else if(tab.getText().equals("Weight")){
+                } else if (tab.getText().equals("Weight")) {
                     healthLayout.setVisibility(View.GONE);
                     stressLayout.setVisibility(View.GONE);
                     bloodTestLayout.setVisibility(View.GONE);
                     weightLayout.setVisibility(View.VISIBLE);
-                }
-                else{
+                } else {
                     healthLayout.setVisibility(View.GONE);
                     stressLayout.setVisibility(View.GONE);
                     weightLayout.setVisibility(View.GONE);
@@ -247,14 +237,14 @@ public class StatusFragment extends Fragment implements UpdateableFragment{
     private void populateStressGraph() {
         TrackStressDB trackStressDB = new TrackStressDB(getActivity());
         List<TrackStress> trackStressList = trackStressDB.getAllInfo(GlobalClass.userID);
-        Log.e(TAG, "trackStressList.size() = "+trackStressList.size());
+        Log.e(TAG, "trackStressList.size() = " + trackStressList.size());
 
         DataPointInterface[] meditationPoints = new FlaggedDataPoint[trackStressList.size()];
         DataPointInterface[] yogaPoints = new FlaggedDataPoint[trackStressList.size()];
         DataPointInterface[] hobbyPoints = new FlaggedDataPoint[trackStressList.size()];
 
-        int i=0;
-        for(TrackStress trackStress : trackStressList){
+        int i = 0;
+        for (TrackStress trackStress : trackStressList) {
             Log.e("db", new Gson().toJson(trackStress));
             yogaPoints[i] = new FlaggedDataPoint(trackStress.getDateTime(), 1, trackStress.isYoga());
             meditationPoints[i] = new FlaggedDataPoint(trackStress.getDateTime(), 2, trackStress.isMeditation());
@@ -278,13 +268,12 @@ public class StatusFragment extends Fragment implements UpdateableFragment{
             public void draw(Canvas canvas, Paint paint, float x, float y, DataPointInterface dataPoint) {
                 paint.setStrokeWidth(10);
                 FlaggedDataPoint flaggedDataPoint = (FlaggedDataPoint) dataPoint;
-                if(flaggedDataPoint.getFlag()) {
+                if (flaggedDataPoint.getFlag()) {
                     paint.setColor(getResources().getColor(R.color.appBackground));
-                }
-                else{
+                } else {
                     paint.setColor(Color.GRAY);
                 }
-                canvas.drawCircle(x,y,10,paint);
+                canvas.drawCircle(x, y, 10, paint);
             }
         });
 
@@ -298,13 +287,12 @@ public class StatusFragment extends Fragment implements UpdateableFragment{
             public void draw(Canvas canvas, Paint paint, float x, float y, DataPointInterface dataPoint) {
                 paint.setStrokeWidth(10);
                 FlaggedDataPoint flaggedDataPoint = (FlaggedDataPoint) dataPoint;
-                if(flaggedDataPoint.getFlag()) {
+                if (flaggedDataPoint.getFlag()) {
                     paint.setColor(getResources().getColor(R.color.colorGreen));
-                }
-                else{
+                } else {
                     paint.setColor(Color.GRAY);
                 }
-                canvas.drawCircle(x,y,10,paint);
+                canvas.drawCircle(x, y, 10, paint);
             }
         });
 
@@ -318,13 +306,12 @@ public class StatusFragment extends Fragment implements UpdateableFragment{
             public void draw(Canvas canvas, Paint paint, float x, float y, DataPointInterface dataPoint) {
                 paint.setStrokeWidth(10);
                 FlaggedDataPoint flaggedDataPoint = (FlaggedDataPoint) dataPoint;
-                if(flaggedDataPoint.getFlag()) {
+                if (flaggedDataPoint.getFlag()) {
                     paint.setColor(getResources().getColor(R.color.blue));
-                }
-                else{
+                } else {
                     paint.setColor(Color.GRAY);
                 }
-                canvas.drawCircle(x,y,10,paint);
+                canvas.drawCircle(x, y, 10, paint);
             }
         });
 
@@ -374,15 +361,15 @@ public class StatusFragment extends Fragment implements UpdateableFragment{
         BloodTestDB bloodTestDB = new BloodTestDB();
         BloodTestResult bloodTestResult = bloodTestDB.getEntry(GlobalClass.userID, dateStr);
 
-        txtHeamoglobin.setText(String.format("%.1f",bloodTestResult.getHeamoglobin()));
-        txtUreaCreatinine.setText(String.format("%.1f",bloodTestResult.getUreaCreatinine()));
-        txtTotalCholestrol.setText(String.format("%.1f",bloodTestResult.getTotalCholestrol()));
-        txtHighDesnityLipo.setText(String.format("%.1f",bloodTestResult.getHighDensityLipoProtein()));
-        txtLowDensityLipo.setText(String.format("%.1f",bloodTestResult.getLowDensityLipoProtein()));
-        txtTriglycerides.setText(String.format("%.1f",bloodTestResult.getTriglycerides()));
-        txtRandomPlasmaGlucose.setText(String.format("%.1f",bloodTestResult.getRandomPlasmaGlucose()));
-        txtFastingPlasmaGlucose.setText(String.format("%.1f",bloodTestResult.getFastingPlasmaGlucose()));
-        txtPostPrandialPlasmaGlucose.setText(String.format("%.1f",bloodTestResult.getPostPrandialPlasmaGlucose()));
+        txtHeamoglobin.setText(String.format("%.1f", bloodTestResult.getHeamoglobin()));
+        txtUreaCreatinine.setText(String.format("%.1f", bloodTestResult.getUreaCreatinine()));
+        txtTotalCholestrol.setText(String.format("%.1f", bloodTestResult.getTotalCholestrol()));
+        txtHighDesnityLipo.setText(String.format("%.1f", bloodTestResult.getHighDensityLipoProtein()));
+        txtLowDensityLipo.setText(String.format("%.1f", bloodTestResult.getLowDensityLipoProtein()));
+        txtTriglycerides.setText(String.format("%.1f", bloodTestResult.getTriglycerides()));
+        txtRandomPlasmaGlucose.setText(String.format("%.1f", bloodTestResult.getRandomPlasmaGlucose()));
+        txtFastingPlasmaGlucose.setText(String.format("%.1f", bloodTestResult.getFastingPlasmaGlucose()));
+        txtPostPrandialPlasmaGlucose.setText(String.format("%.1f", bloodTestResult.getPostPrandialPlasmaGlucose()));
     }
 
 
@@ -390,31 +377,31 @@ public class StatusFragment extends Fragment implements UpdateableFragment{
 
         TrackWeightDB trackWeightDB = new TrackWeightDB(getActivity());
         List<TrackWeight> trackWeightList = trackWeightDB.getEntries(GlobalClass.userID);
-        Log.e("StatsFragment", "trackWeightList.size() = "+trackWeightList.size());
+        Log.e("StatsFragment", "trackWeightList.size() = " + trackWeightList.size());
         DataPointInterface[] weightData = new DataPoint[trackWeightList.size()];
         int j = 0;
-        for(TrackWeight weight : trackWeightList){
+        for (TrackWeight weight : trackWeightList) {
             weightData[j] = new DataPoint(weight.getMonthIndex(), weight.getWeight());
             j++;
         }
         Log.e("db", new Gson().toJson(weightData));
         DataPointInterface[] weightUpperLimitData = new DataPoint[12];
         DataPointInterface[] weightLowerLimitData = new DataPoint[12];
-        for(int i=0; i<weightUpperLimitData.length; i++){
+        for (int i = 0; i < weightUpperLimitData.length; i++) {
 
-            weightUpperLimitData[i] = new DataPoint(i+1, getUpperWeight());
-            weightLowerLimitData[i] = new DataPoint(i+1, getLowerWeight());
+            weightUpperLimitData[i] = new DataPoint(i + 1, getUpperWeight());
+            weightLowerLimitData[i] = new DataPoint(i + 1, getLowerWeight());
         }
         LineGraphSeries<DataPointInterface> weightGraphSeries = new LineGraphSeries<>(weightData);
         weightGraphSeries.setDrawDataPoints(true);
         weightGraph.addSeries(weightGraphSeries);
-       // Log.e("db", new Gson().toJson(weightGraphSeries));
+        // Log.e("db", new Gson().toJson(weightGraphSeries));
 
         Paint paint = new Paint();
         paint.setStyle(Paint.Style.STROKE);
         paint.setStrokeWidth(5);
         paint.setColor(getResources().getColor(R.color.colorGreen));
-        paint.setPathEffect(new DashPathEffect(new float[]{5,10,15,20}, 0));
+        paint.setPathEffect(new DashPathEffect(new float[]{5, 10, 15, 20}, 0));
 
         LineGraphSeries<DataPointInterface> upperGraphSeries = new LineGraphSeries<>(weightUpperLimitData);
         upperGraphSeries.setCustomPaint(paint);
@@ -430,8 +417,8 @@ public class StatusFragment extends Fragment implements UpdateableFragment{
 
         weightGraph.getViewport().setXAxisBoundsManual(true);
         StaticLabelsFormatter staticLabelsFormatter = new StaticLabelsFormatter(weightGraph);
-        staticLabelsFormatter.setHorizontalLabels(new String[]{"JAN","FEB","MAR"
-        ,"APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"});
+        staticLabelsFormatter.setHorizontalLabels(new String[]{"JAN", "FEB", "MAR"
+                , "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"});
         weightGraph.getGridLabelRenderer().setLabelFormatter(staticLabelsFormatter);
         weightGraph.getGridLabelRenderer().setNumHorizontalLabels(6);
 
@@ -441,7 +428,7 @@ public class StatusFragment extends Fragment implements UpdateableFragment{
         return 24.9 * (GlobalClass.heightInM * GlobalClass.heightInM);
     }
 
-    private double getLowerWeight(){
+    private double getLowerWeight() {
         return 18.5 * (GlobalClass.heightInM * GlobalClass.heightInM);
     }
 
@@ -453,8 +440,8 @@ public class StatusFragment extends Fragment implements UpdateableFragment{
         exerSeries = new PointsGraphSeries<>(exerPoints);
         healthGraph.addSeries(exerSeries);
 
-       // stressSeries = new PointsGraphSeries<>(stressPoints);
-       // healthGraph.addSeries(stressSeries);
+        // stressSeries = new PointsGraphSeries<>(stressPoints);
+        // healthGraph.addSeries(stressSeries);
 
         smokingSeries = new PointsGraphSeries<>(smokingPoints);
         healthGraph.addSeries(smokingSeries);
@@ -464,13 +451,12 @@ public class StatusFragment extends Fragment implements UpdateableFragment{
             public void draw(Canvas canvas, Paint paint, float x, float y, DataPointInterface dataPoint) {
                 paint.setStrokeWidth(10);
                 FlaggedDataPoint flaggedDataPoint = (FlaggedDataPoint) dataPoint;
-                if(flaggedDataPoint.getFlag()) {
+                if (flaggedDataPoint.getFlag()) {
                     paint.setColor(Color.GREEN);
-                }
-                else{
+                } else {
                     paint.setColor(Color.GRAY);
                 }
-                canvas.drawCircle(x,y,10,paint);
+                canvas.drawCircle(x, y, 10, paint);
                 //canvas.drawLine(x-20, y-20, x+20, y+20, paint);
                 //canvas.drawLine(x+20, y-20, x-20, y+20, paint);
             }
@@ -481,10 +467,9 @@ public class StatusFragment extends Fragment implements UpdateableFragment{
             public void draw(Canvas canvas, Paint paint, float x, float y, DataPointInterface dataPoint) {
                 paint.setStrokeWidth(10);
                 FlaggedDataPoint flaggedDataPoint = (FlaggedDataPoint) dataPoint;
-                if(flaggedDataPoint.getFlag()) {
+                if (flaggedDataPoint.getFlag()) {
                     paint.setColor(Color.YELLOW);
-                }
-                else{
+                } else {
                     paint.setColor(Color.GRAY);
                 }
 
@@ -497,7 +482,7 @@ public class StatusFragment extends Fragment implements UpdateableFragment{
 //
 //                canvas.drawPath(path, paint);
 
-                canvas.drawCircle(x,y,10,paint);
+                canvas.drawCircle(x, y, 10, paint);
                 //canvas.drawLine(x-20, y-20, x+20, y+20, paint);
                 //canvas.drawLine(x+20, y-20, x-20, y+20, paint);
             }
@@ -525,15 +510,14 @@ public class StatusFragment extends Fragment implements UpdateableFragment{
             public void draw(Canvas canvas, Paint paint, float x, float y, DataPointInterface dataPoint) {
                 paint.setStrokeWidth(10);
                 FlaggedDataPoint flaggedDataPoint = (FlaggedDataPoint) dataPoint;
-                if(flaggedDataPoint.getFlag()) {
+                if (flaggedDataPoint.getFlag()) {
                     paint.setColor(Color.RED);
-                }
-                else{
+                } else {
                     paint.setColor(Color.GRAY);
                 }
                 //canvas.drawCircle(x,y,10,paint);
-                canvas.drawLine(x-10, y-10, x+10, y+10, paint);
-                canvas.drawLine(x+10, y-10, x-10, y+10, paint);
+                canvas.drawLine(x - 10, y - 10, x + 10, y + 10, paint);
+                canvas.drawLine(x + 10, y - 10, x - 10, y + 10, paint);
             }
         });
 
@@ -541,7 +525,7 @@ public class StatusFragment extends Fragment implements UpdateableFragment{
         yAxes.add("");
         yAxes.add("Medicines");
         yAxes.add("Exercise");
-       // yAxes.add("Stress");
+        // yAxes.add("Stress");
         yAxes.add("Smoking");
 
         healthGraph.getGridLabelRenderer().setLabelFormatter(new YAxisValueFormatter(getActivity(), yAxes));
@@ -564,31 +548,31 @@ public class StatusFragment extends Fragment implements UpdateableFragment{
     private void populateDatapoints() {
         TrackMedicationDB trackMedicationDB = new TrackMedicationDB(getActivity());
         List<TrackMedication> trackMedicationList = trackMedicationDB.getAllInfo(GlobalClass.userID);
-        Log.e("StatsFragment", "trackMedicationList.size() = "+trackMedicationList.size());
-        int i=0;
+        Log.e("StatsFragment", "trackMedicationList.size() = " + trackMedicationList.size());
+        int i = 0;
         medPoints = new FlaggedDataPoint[trackMedicationList.size()];
-        for(TrackMedication medication : trackMedicationList){
-            medPoints[i] = new FlaggedDataPoint(medication.getDateTime(),1,medication.isHadAllMedicines());
+        for (TrackMedication medication : trackMedicationList) {
+            medPoints[i] = new FlaggedDataPoint(medication.getDateTime(), 1, medication.isHadAllMedicines());
             i++;
         }
 
         TrackExerciseDB trackExerciseDB = new TrackExerciseDB(getActivity());
         List<TrackExercise> trackExerciseList = trackExerciseDB.getAllInfo(GlobalClass.userID);
 
-        int j=0;
+        int j = 0;
         exerPoints = new FlaggedDataPoint[trackExerciseList.size()];
-        for(TrackExercise exercise : trackExerciseList){
-            exerPoints[j] = new FlaggedDataPoint(exercise.getDateTime(),2,exercise.isExercised());
+        for (TrackExercise exercise : trackExerciseList) {
+            exerPoints[j] = new FlaggedDataPoint(exercise.getDateTime(), 2, exercise.isExercised());
             j++;
         }
 
         TrackSmokingDB trackSmokingDB = new TrackSmokingDB(getActivity());
         List<TrackSmoking> trackSmokingList = trackSmokingDB.getAllInfo(GlobalClass.userID);
-        Log.e("StatsFragment","trackSmokingList.size() = "+trackSmokingList.size());
+        Log.e("StatsFragment", "trackSmokingList.size() = " + trackSmokingList.size());
 
-        int k=0;
+        int k = 0;
         smokingPoints = new FlaggedDataPoint[trackSmokingList.size()];
-        for(TrackSmoking smoking : trackSmokingList){
+        for (TrackSmoking smoking : trackSmokingList) {
             smokingPoints[k] = new FlaggedDataPoint(smoking.getDateTime(), 3, smoking.isSmoked());
             k++;
         }
@@ -596,16 +580,16 @@ public class StatusFragment extends Fragment implements UpdateableFragment{
         TrackStressDB trackStressDB = new TrackStressDB(getActivity());
         List<TrackStress> trackStressList = trackStressDB.getAllInfo(GlobalClass.userID);
 
-        int l=0;
+        int l = 0;
         stressPoints = new FlaggedDataPoint[trackStressList.size()];
-        for(TrackStress stress : trackStressList){
+        for (TrackStress stress : trackStressList) {
             stressPoints[l] = new FlaggedDataPoint(stress.getDateTime(), 4, stress.isStressed());
             l++;
         }
 
     }
 
-    private void populateDummyData(){
+    private void populateDummyData() {
         TrackWeightDB trackWeightDB = new TrackWeightDB(getActivity());
         TrackWeight trackWeight = new TrackWeight();
         trackWeight.setUserId(GlobalClass.userID);
@@ -655,7 +639,6 @@ public class StatusFragment extends Fragment implements UpdateableFragment{
         bloodTestResult.setFastingPlasmaGlucose(10);
         bloodTestResult.setPostPrandialPlasmaGlucose(12);
         bloodTestDB.addEntry(GlobalClass.userID, "Sep 2017", bloodTestResult);*/
-
 
 
 //        TrackStressDB trackStressDB = new TrackStressDB(getActivity());
@@ -722,17 +705,20 @@ public class StatusFragment extends Fragment implements UpdateableFragment{
 
     }
 
+    boolean isVisibl;
+
     @Override
     public void setMenuVisibility(boolean menuVisible) {
-        Log.e("fragment", "setMenuVisibility("+menuVisible+")");
-        if(getActivity() != null){
-            if(menuVisible){
+        super.setMenuVisibility(menuVisible);
+        Log.e("fragment", "setMenuVisibility(" + menuVisible + ")");
+        if (getActivity() != null) {
+            if (menuVisible) {
+                isVisibl = true;
                 ((TrackActivity) getActivity()).setActionBarTitle("Statistics");
                 updateSelf();
 
             }
         }
-        super.setMenuVisibility(menuVisible);
     }
 
     @Override

@@ -82,7 +82,6 @@ public class LearnFragment extends Fragment implements AppConstants, UpdateableF
         updateSelf();
     }
 
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -201,13 +200,13 @@ public class LearnFragment extends Fragment implements AppConstants, UpdateableF
 
     @Override
     public void setMenuVisibility(boolean menuVisible) {
+        super.setMenuVisibility(menuVisible);
         if(getActivity() != null){
             if(menuVisible){
-           //     ((TrackActivity) getActivity()).setActionBarTitle("Learn");
+                ((TrackActivity) getActivity()).setActionBarTitle("Learn");
                 updateSelf();
             }
         }
-        super.setMenuVisibility(menuVisible);
     }
 
     @Override
@@ -215,6 +214,7 @@ public class LearnFragment extends Fragment implements AppConstants, UpdateableF
        // ((TrackActivity) getActivity()).setActionBarTitle("Learn");
         populatePerformanceTexts();
         super.onResume();
+        //((TrackActivity) getActivity()).setActionBarTitle("Learn");
     }
 
     @Override

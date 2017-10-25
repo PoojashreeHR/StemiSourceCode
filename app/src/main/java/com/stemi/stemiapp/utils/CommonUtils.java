@@ -111,6 +111,7 @@ public class CommonUtils {
    public static void buidDialog(final Context mContext, final int value){
       AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
       //builder.setTitle("");
+      builder.setCancelable(false);
       builder.setMessage("Old Entry Exist !! Do you want to save this?");
       //Yes Button
       builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
@@ -120,7 +121,7 @@ public class CommonUtils {
             Log.i("Code2care ", "Yes button Clicked!");
             EventBus.getDefault().post(new MessageEvent("Hello!"));
             EventBus.getDefault().post(new UserAcceptedEvent(""+value));
-            ((TrackActivity) mContext).setActionBarTitle("Track");
+        //    ((TrackActivity) mContext).setActionBarTitle("Track");
 
          }
       });
@@ -133,7 +134,7 @@ public class CommonUtils {
             dialog.dismiss();
             //((TrackActivity) mContext).showFragment(new TrackFragment());
             EventBus.getDefault().post(new MessageEvent("Hello!"));
-            ((TrackActivity) mContext).setActionBarTitle("Track");
+          //  ((TrackActivity) mContext).setActionBarTitle("Track");
 
          }
       });

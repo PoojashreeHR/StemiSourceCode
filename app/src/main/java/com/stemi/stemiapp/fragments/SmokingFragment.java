@@ -115,26 +115,36 @@ public class SmokingFragment  extends Fragment implements TrackActivity.OnBackPr
         return view;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        ((TrackActivity) getActivity()).setActionBarTitle("Smoking");
+    }
 
     @Override
     public void doBack() {
         if (GlobalClass.userID != null) {
         if (smokeToday.getResponse() == null || smokeToday.getResponse().equals("")) {
             EventBus.getDefault().post(new MessageEvent("Hello!"));
-            ((TrackActivity) getActivity()).setActionBarTitle("Track");
+         //   ((TrackActivity) getActivity()).setActionBarTitle("Track");
         } else if (howMany.isEnabled() && howMany.getText().toString().equals("")) {
             Toast.makeText(getActivity(), "Please enter how many", Toast.LENGTH_LONG).show();
         } else {
             saveData();
         }
     }else {
-        Toast.makeText(getActivity(), "Please add profile details first", Toast.LENGTH_SHORT).show();
+         Toast.makeText(getActivity(), "Please add profile details first", Toast.LENGTH_SHORT).show();
+            getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
     }
     }
 
     @Override
     public void onStart() {
-        EventBus.getDefault().register(this);
+        try {
+            EventBus.getDefault().register(this);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         super.onStart();
     }
 
@@ -259,16 +269,13 @@ public class SmokingFragment  extends Fragment implements TrackActivity.OnBackPr
         EventBus.getDefault().post(new DataSavedEvent(""));
 
         boolean date = dbForTrackActivities.getDate(TrackActivity.userEventDetails.getDate(),GlobalClass.userID);
-        Log.e("db", "TrackActivity.userEventDetails.getDate() = "+ TrackActivity.userEventDetails.getDate());
-        Log.e("db", "responseChange = "+ responseChange);
         if (!date) {
             dbForTrackActivities.addEntry(TrackActivity.userEventDetails);
              EventBus.getDefault().post(new MessageEvent("Hello!"));
-            ((TrackActivity) getActivity()).setActionBarTitle("Track");
+            //((TrackActivity) getActivity()).setActionBarTitle("Track");
             saveUserData();
         } else {
             int c = dbForTrackActivities.isEntryExists(TrackActivity.userEventDetails,3,getActivity());
-
 
         }
     }
@@ -296,7 +303,6 @@ public class SmokingFragment  extends Fragment implements TrackActivity.OnBackPr
 
         if(dbForTrackActivities.getDate((savedDate),GlobalClass.userID)) {
             ArrayList<UserEventDetails> eventDetails = dbForTrackActivities.getDetails(GlobalClass.userID, savedDate, 3);
-            Log.e("db", "savedDate = "+ savedDate);
             Log.e("db", "eventDetails = "+ new Gson().toJson(eventDetails));
             if (eventDetails.size() > 0 && eventDetails.get(0).getSmokeToday() != null) {
                 smokeToday.setResponse(eventDetails.get(0).getSmokeToday());

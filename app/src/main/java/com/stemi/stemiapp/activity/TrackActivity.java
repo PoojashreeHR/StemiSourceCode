@@ -9,7 +9,6 @@ import android.graphics.Bitmap;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -24,14 +23,11 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -42,6 +38,7 @@ import com.stemi.stemiapp.customviews.CircleImageView;
 import com.stemi.stemiapp.customviews.CustomViewPager;
 import com.stemi.stemiapp.databases.UserDetailsTable;
 import com.stemi.stemiapp.fragments.AddMedicineFragment;
+import com.stemi.stemiapp.fragments.BloodTestFragment;
 import com.stemi.stemiapp.fragments.ExerciseFragment;
 import com.stemi.stemiapp.fragments.HospitalFragment;
 import com.stemi.stemiapp.fragments.LearnFragment;
@@ -54,7 +51,6 @@ import com.stemi.stemiapp.fragments.TrackFragment;
 import com.stemi.stemiapp.fragments.WeightFragment;
 import com.stemi.stemiapp.model.DataPassListener;
 import com.stemi.stemiapp.model.MedicineDetails;
-import com.stemi.stemiapp.model.MedicinesTakenOrNot;
 import com.stemi.stemiapp.model.MessageEvent;
 import com.stemi.stemiapp.model.RegisteredUserDetails;
 import com.stemi.stemiapp.model.SaveCurrentDataEvent;
@@ -97,16 +93,17 @@ public class TrackActivity extends AppCompatActivity implements NavigationView.O
     private ViewPagerAdapter adapter;
     private boolean updateEvent;
 
+    String toolBarText;
     @Override
     protected void onResume() {
         super.onResume();
-
+        getSupportFragmentManager().addOnBackStackChangedListener(getListener());
         UserDetailsTable dBforUserDetails = new UserDetailsTable(this);
         registeredUserDetails = dBforUserDetails.getUserDetails(GlobalClass.userID);
         Log.e(TAG, "GlobalClass.userID = " + GlobalClass.userID);
 
-        if (registeredUserDetails != null &&  registeredUserDetails.getImgUrl() != null) {
-            Bitmap bitmap = new CompressImageUtil().compressImage(this,registeredUserDetails.getImgUrl());
+        if (registeredUserDetails != null && registeredUserDetails.getImgUrl() != null) {
+            Bitmap bitmap = new CompressImageUtil().compressImage(this, registeredUserDetails.getImgUrl());
             profileImage.setImageBitmap(bitmap);
             nav_profile_pic.setImageBitmap(bitmap);
         } else {
@@ -114,7 +111,7 @@ public class TrackActivity extends AppCompatActivity implements NavigationView.O
             nav_profile_pic.setImageResource(R.drawable.ic_user);
         }
 
-        if(registeredUserDetails != null) {
+        if (registeredUserDetails != null) {
             nav_header_userName.setText(registeredUserDetails.getName());
             nav_header_email.setText(registeredUserDetails.getEmail());
         }
@@ -218,49 +215,56 @@ public class TrackActivity extends AppCompatActivity implements NavigationView.O
         this.onScanCompletedListener = onScanCompletionListener;
     }
 
+    private void clearBackStack(){
+        FragmentManager fm = getSupportFragmentManager();
+        for(int i = 0; i < fm.getBackStackEntryCount(); ++i) {
+            fm.popBackStack();
+        }
+    }
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onUserAccepetedEvent(UserAcceptedEvent event){
+    public void onUserAccepetedEvent(UserAcceptedEvent event) {
         String value = event.getMessage();
 
-        if(value.equalsIgnoreCase("1")){
+        if (value.equalsIgnoreCase("1")) {
             ((ExerciseFragment) currentFragment).saveUserData();
-        }
-        else if(value.equalsIgnoreCase("2")){
+        } else if (value.equalsIgnoreCase("2")) {
             ((StressFragment) currentFragment).saveUserData();
-        }
-        else if(value.equalsIgnoreCase("3")){
+        } else if (value.equalsIgnoreCase("3")) {
             ((SmokingFragment) currentFragment).saveUserData();
-        }
-        else if(value.equalsIgnoreCase("4")){
+        } else if (value.equalsIgnoreCase("4")) {
             ((WeightFragment) currentFragment).saveUserData();
         }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onSaveDataEvent(SaveCurrentDataEvent event){
-        Log.e("fragment", "event = "+event.message);
+    public void onSaveDataEvent(SaveCurrentDataEvent event) {
+        Log.e("fragment", "event = " + event.message);
 
 
-
-
-        if(currentFragmentName.equalsIgnoreCase("MedicationFragment")){
+        if (currentFragmentName.equalsIgnoreCase("MedicationFragment")) {
             ((MedicationFragment) currentFragment).saveAllData();
-        }
-        else if(currentFragmentName.equalsIgnoreCase("ExerciseFragment")){
+          //  clearBackStack();
+        } else if (currentFragmentName.equalsIgnoreCase("ExerciseFragment")) {
             ((ExerciseFragment) currentFragment).saveAllData();
-        }
-        else if(currentFragmentName.equalsIgnoreCase("StressFragment")){
+          //  clearBackStack();
+        } else if (currentFragmentName.equalsIgnoreCase("StressFragment")) {
             ((StressFragment) currentFragment).saveAllData();
-        }
-        else if(currentFragmentName.equalsIgnoreCase("SmokingFragment")){
+            //clearBackStack();
+        } else if (currentFragmentName.equalsIgnoreCase("SmokingFragment")) {
             ((SmokingFragment) currentFragment).saveAllData();
-        }
-        else if(currentFragmentName.equalsIgnoreCase("WeightFragment")){
+        //    clearBackStack();
+        } else if (currentFragmentName.equalsIgnoreCase("WeightFragment")) {
             ((WeightFragment) currentFragment).saveAllData();
-        }
-        else{
+        //    clearBackStack();
+        } else if(currentFragmentName.equalsIgnoreCase("BloodTestFragment")){
             //ignore
-        }
+            ((BloodTestFragment) currentFragment).saveAllData();
+        } else if(currentFragmentName.equalsIgnoreCase("AddMedicineFragment")) {
+            //ignore
+            ((AddMedicineFragment) currentFragment).saveAllData();
+        } else {
+
+            }
     }
 
     public void showFragment(Fragment fragment) {
@@ -302,7 +306,7 @@ public class TrackActivity extends AppCompatActivity implements NavigationView.O
             }
         }
     }
-
+    Fragment customFragment;
 
     public class TabListener implements TabLayout.OnTabSelectedListener {
 
@@ -314,6 +318,37 @@ public class TrackActivity extends AppCompatActivity implements NavigationView.O
                 mainContainer.setVisibility(View.GONE);
             }
 
+
+        //  currentFragment = (Fragment) getSupportFragmentManager().getFragments().get(position);
+           // Log.e(TAG, "onTabSelected: " + customFragment);
+            switch (position) {
+                case 0:
+                    toolBarText = "Learn";
+                    toolbarTitle.setText("Learn");
+                  //  customFragment = (Fragment) getSupportFragmentManager().getFragments().get(position);
+                    break;
+                case 1:
+                    toolBarText = "Track";
+                    toolbarTitle.setText("Track");
+                    //customFragment = (Fragment) getSupportFragmentManager().getFragments().get(position);
+                    break;
+                case 2:
+                    toolBarText = "SOS";
+                    toolbarTitle.setText("SOS");
+                 //   customFragment = (Fragment) getSupportFragmentManager().getFragments().get(position);
+                    break;
+                case 3:
+                    toolBarText = "Hospital";
+                    toolbarTitle.setText("Hospital");
+                   // customFragment = (Fragment) getSupportFragmentManager().getFragments().get(position);
+                    break;
+                case 4:
+                    toolBarText = "Statistics";
+                    toolbarTitle.setText("Statistics");
+                  //  customFragment = (Fragment) getSupportFragmentManager().getFragments().get(position);
+                    break;
+            }
+            //clearBackStack();
             if (tab.isSelected()) {
                 for (int i = 0; i < tabLayout.getTabCount(); i++) {
                     if (i == position) {
@@ -368,7 +403,7 @@ public class TrackActivity extends AppCompatActivity implements NavigationView.O
     }
 
     @Override
-    public void passData(ArrayList<MedicineDetails> data,String name) {
+    public void passData(ArrayList<MedicineDetails> data, String name) {
         AddMedicineFragment addMedicineFragment = new AddMedicineFragment();
         Bundle args = new Bundle();
         args.putParcelableArrayList("RECIEVE DATA", data);
@@ -465,12 +500,12 @@ public class TrackActivity extends AppCompatActivity implements NavigationView.O
      */
     private void setupViewPager(ViewPager viewPager) {
 
-         adapter = new ViewPagerAdapter(getSupportFragmentManager());
+        adapter = new ViewPagerAdapter(getSupportFragmentManager());
 
         adapter.addFrag(new LearnFragment(), "Learn");
         adapter.addFrag(new TrackFragment(), "Track");
         adapter.addFrag(new SOSFragment(), "SOS");
-        adapter.addFrag(hospitalFragment, "Hospital");
+        adapter.addFrag(new HospitalFragment(), "Hospital");
         adapter.addFrag(new StatusFragment(), "Status");
         viewPager.setAdapter(adapter);
         viewPager.setOffscreenPageLimit(0);
@@ -591,8 +626,50 @@ public class TrackActivity extends AppCompatActivity implements NavigationView.O
         if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
             finish();
         }
+
         getSupportFragmentManager().popBackStack();
+        //   getSupportFragmentManager().addOnBackStackChangedListener(getListener());
         removeCurrentFragment();
+    }
+
+    private FragmentManager.OnBackStackChangedListener getListener() {
+        FragmentManager.OnBackStackChangedListener result = new FragmentManager.OnBackStackChangedListener() {
+            public void onBackStackChanged() {
+                FragmentManager manager = getSupportFragmentManager();
+
+                if (manager != null) {
+                    Log.e(TAG, "onBackStackChanged: COUNT " + manager.getBackStackEntryCount());
+                    if (manager.getBackStackEntryCount() > 0) {
+                    //    Boolean bool = manager.popBackStackImmediate();
+                    Fragment currFrag = (Fragment) manager.findFragmentById(R.id.mainContainer);
+                    currFrag.onResume();
+                    currFrag.setMenuVisibility(true);
+
+                }else {
+                        clearBackStack();
+                        toolbarTitle.setText(toolBarText);
+                    }
+                        // String topOnStack = manager.getBackStackEntryAt(manager.getBackStackEntryCount() - 1).getName();
+                        //Log.e(TAG, "onBackStackChanged: " + topOnStack);
+                  //  } else {
+                      //  currentFragment.onResume();
+                       /* List<Fragment> fragmentList = manager.getFragments();
+
+                        for (int i = 0; i < fragmentList.size(); i++) {
+                          *//*  if ( == tabLayout.getSelectedTabPosition()){
+                                Log.e(TAG, "onBackStackChanged: TAB"+ fragmentList.get(i).getTag() );
+                            }*//*
+                        }
+                        //Fragment currFrag = (Fragment) manager.findFragmentByTag("1");
+//                        Log.e(TAG, "onBackStackChanged: "+currFrag.getTag() );*/
+                      //  toolbarTitle.setText("Track");
+                //    }
+                    //currFrag.onFragmentResume();
+                }
+            }
+        };
+
+        return result;
     }
 
     @Override
@@ -633,14 +710,14 @@ public class TrackActivity extends AppCompatActivity implements NavigationView.O
     private void removeCurrentFragment() {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 
-        Fragment currentFrag = getSupportFragmentManager()
-                .findFragmentById(R.id.mainContainer);
+        Fragment currentFrag = getSupportFragmentManager().findFragmentById(R.id.mainContainer);
         viewPager.setVisibility(View.VISIBLE);
         mainContainer.setVisibility(View.GONE);
 
         if (currentFrag != null) {
-           // getSupportFragmentManager().popBackStack();
+            // getSupportFragmentManager().popBackStack();
             transaction.remove(currentFrag);
+//            currentFrag.onResume();
         }
         transaction.commitAllowingStateLoss();
     }
@@ -675,7 +752,7 @@ public class TrackActivity extends AppCompatActivity implements NavigationView.O
         }
 
 
-        public void update(){
+        public void update() {
             notifyDataSetChanged();
             setupTabIcons();
         }
