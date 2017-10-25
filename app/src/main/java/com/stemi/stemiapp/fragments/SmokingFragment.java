@@ -160,8 +160,15 @@ public class SmokingFragment  extends Fragment implements TrackActivity.OnBackPr
     public void saveAllData() {
         if(GlobalClass.userID !=null) {
             if (!alreadySaved) {
-                Log.e("fragment", "SmokingFragment saveAllData()");
-                saveData();
+                Log.e("db", "SmokingFragment saveAllData()");
+                if (smokeToday.getResponse() == null || smokeToday.getResponse().equals("")) {
+
+                } else if (howMany.isEnabled() && howMany.getText().toString().equals("")) {
+                   // Toast.makeText(getActivity(), "Please enter how many", Toast.LENGTH_LONG).show();
+                } else {
+                    saveData();
+                }
+                //saveData();
                 alreadySaved = true;
             }
         }
@@ -252,6 +259,8 @@ public class SmokingFragment  extends Fragment implements TrackActivity.OnBackPr
         EventBus.getDefault().post(new DataSavedEvent(""));
 
         boolean date = dbForTrackActivities.getDate(TrackActivity.userEventDetails.getDate(),GlobalClass.userID);
+        Log.e("db", "TrackActivity.userEventDetails.getDate() = "+ TrackActivity.userEventDetails.getDate());
+        Log.e("db", "responseChange = "+ responseChange);
         if (!date) {
             dbForTrackActivities.addEntry(TrackActivity.userEventDetails);
              EventBus.getDefault().post(new MessageEvent("Hello!"));
@@ -287,24 +296,31 @@ public class SmokingFragment  extends Fragment implements TrackActivity.OnBackPr
 
         if(dbForTrackActivities.getDate((savedDate),GlobalClass.userID)) {
             ArrayList<UserEventDetails> eventDetails = dbForTrackActivities.getDetails(GlobalClass.userID, savedDate, 3);
+            Log.e("db", "savedDate = "+ savedDate);
             Log.e("db", "eventDetails = "+ new Gson().toJson(eventDetails));
             if (eventDetails.size() > 0 && eventDetails.get(0).getSmokeToday() != null) {
                 smokeToday.setResponse(eventDetails.get(0).getSmokeToday());
                 if(eventDetails.get(0).getSmokeToday().equals("YES")){
                     howMany.setText(eventDetails.get(0).getHowMany());
-                }else {
+                }else if(eventDetails.get(0).getSmokeToday().equals("NO")){
                     howMany.setText(null);
                     howMany.setEnabled(false);
                     howMany.setAlpha(.6f);
+                }else{
+                    howMany.setText(null);
+                    smokeToday.setResponse("NULL");
+                    responseChange = "NULL";
                 }
             }
             else{
                 howMany.setText(null);
                 smokeToday.setResponse("NULL");
+                responseChange = "NULL";
             }
         }else {
             howMany.setText(null);
             smokeToday.setResponse("NULL");
+            responseChange = "NULL";
         }
     }
 }

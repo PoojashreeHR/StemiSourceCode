@@ -704,11 +704,13 @@ public class MedicationFragment extends Fragment implements AppConstants, View.O
         if (!date) {
             medicineTable.addMedicineDetails(medicineContains, GlobalClass.userID);
             EventBus.getDefault().post(new MessageEvent("Hello!"));
-            ((TrackActivity) getActivity()).setActionBarTitle("Track");
+            if(getActivity() != null)
+                ((TrackActivity) getActivity()).setActionBarTitle("Track");
         } else {
             medicineTable.updateDataWithDate(GlobalClass.userID, savedDate, medicineContains);
             EventBus.getDefault().post(new MessageEvent("Hello!"));
-            ((TrackActivity) getActivity()).setActionBarTitle("Track");
+            if(getActivity() != null)
+                ((TrackActivity) getActivity()).setActionBarTitle("Track");
         }
 
 
@@ -794,6 +796,7 @@ public class MedicationFragment extends Fragment implements AppConstants, View.O
             TrackMedication med = new TrackMedication();
             Log.e(TAG, "doBack: " + medicineContains);
             storeData();
+            alreadySaved = true;
         }else {
             EventBus.getDefault().post(new MessageEvent("Hello!"));
             ((TrackActivity) getActivity()).setActionBarTitle("Track");
@@ -871,8 +874,10 @@ public class MedicationFragment extends Fragment implements AppConstants, View.O
     public void saveAllData() {
         if(!alreadySaved) {
             Log.e("fragment", "MedicationFragment saveAllData()");
-            storeData();
-            alreadySaved = true;
+            if (medicineContains !=null) {
+                storeData();
+                alreadySaved = true;
+            }
         }
     }
 
