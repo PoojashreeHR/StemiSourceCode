@@ -15,6 +15,8 @@ import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.text.Html;
+import android.text.Spanned;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -150,7 +152,9 @@ public class WeightFragment  extends Fragment implements View.OnClickListener,Tr
                             float bmiValue = calculateBMI(todaysWeight.getText().toString(), appSharedPreference.getUserHeight(AppConstants.USER_HEIGHT));
                             bmiCount = String.format("%.2f", bmiValue);
                             String string = interpretBMI(bmiValue);
-                            BmiValue.setText("Your BMI is " + bmiCount);
+                            Spanned value = Html.fromHtml("Your BMI is "+bmiCount + " Kg/m<sup><small>2</small></sup>");
+                            BmiValue.setText(value);
+
                             bmiResult.setText(string);
                             bmiLayout.setVisibility(View.VISIBLE);
                         }
@@ -368,15 +372,13 @@ public class WeightFragment  extends Fragment implements View.OnClickListener,Tr
         if (bmiValue < 16) {
             return "Severely underweight";
         } else if (bmiValue < 18.5) {
-
-            return "Which means you are underweight";
+            return "This means you are underweight";
         } else if (bmiValue < 25) {
-
-            return "Which means you are normal";
+            return "This means you are normal";
         } else if (bmiValue < 30) {
-            return "Which means you are overweight";
+            return "This means you are overweight";
         } else {
-            return "Which means you are obese";
+            return "This means you are obese";
         }
     }
 

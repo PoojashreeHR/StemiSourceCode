@@ -101,14 +101,25 @@ public class UserDetailsTable {
     }
 
     // To get Number of profile
-    public long getProfilesCount() {
-        long cnt = 0;
+    public long getProfilesCount(String loginId) {
+        long cnt=0;
         SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
-        Cursor cursor = db.query(TABLE_NAME, new String[]{USER_NAME},LOGIN_ID+" = '"+loginId+"'", null, null, null, null);
-        while(cursor.moveToNext()) {
-            cnt = DatabaseUtils.queryNumEntries(db, TABLE_NAME);
+        String sql = "SELECT * FROM "+TABLE_NAME+" WHERE "+LOGIN_ID+" = '"+loginId+"'";
+        Cursor cursor = db.rawQuery(sql,null);
+        Log.e(TAG, "getProfilesCount: FROM DB: "+cursor.getCount());
+        cnt = cursor.getCount();
+       // Cursor cursor = db.query(TABLE_NAME, new String[]{USER_NAME},LOGIN_ID+" = '"+loginId+"'", null, null, null, null);
+      /*  while(cursor.moveToFirst()) {
+            Log.e(TAG, "getProfilesCount: FROM DB: "+cursor.getCount());
+            for (int i = 0; i < cursor.getCount(); i++) {
+                cnt = cursor.getString(cursor.getColumnIndex(LOGIN_ID));
+                cursor.moveToNext();
+            }
+          //  cnt = DatabaseUtils.queryNumEntries(db, TABLE_NAME);
             //db.close();
         }
+        long count = Long.parseLong(cnt);*/
+        cursor.close();
         return cnt;
     }
 

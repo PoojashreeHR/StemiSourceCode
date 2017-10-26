@@ -111,7 +111,8 @@ public class MainActivity extends AppCompatActivity implements AppConstants,View
 
             @Override
             public void onFailure(Call<SignUpResponseModel> call, Throwable t) {
-
+                CommonUtils.hideLoadingProgress();
+                Toast.makeText(MainActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }

@@ -233,7 +233,7 @@
         android:id="@+id/do_you_smoke"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Do you Smoke?"
+        android:text="@string/Do_you_smoke"
         android:textSize="16sp"
         android:textColor="@color/black"
         android:layout_marginTop="20dp"/>
@@ -256,7 +256,7 @@
             android:id="@+id/heart_attack_before"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Did you had heart attack before?"
+            android:text="@string/had_heart_attack"
             android:textSize="16sp"
             android:textColor="@color/black"
             android:layout_marginTop="20dp"/>

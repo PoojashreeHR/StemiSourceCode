@@ -345,6 +345,7 @@ public class StressFragment extends Fragment implements AppConstants, TrackActiv
             textView.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
             textView.setGravity(Gravity.LEFT);
             seekbarText.addView(textView);
+            textView.setTextSize(17f);
             textView.setLayoutParams((count == maxCount - 1) ? getLayoutParams(0.0f) : getLayoutParams(1.0f));
         }
 

@@ -231,11 +231,12 @@ public class ProfilePhotoFragment extends Fragment implements AppConstants,View.
                    // dBforUserDetails.removeNote(RegistrationActivity.registeredUserDetails.getName());
                     if(!editmode) {
                         String uid = dBforUserDetails.addEntry(RegistrationActivity.registeredUserDetails, getActivity());
-                            Log.e(TAG, "onClick: "+dBforUserDetails.getProfilesCount());
-                            if(dBforUserDetails.getProfilesCount() == 1){
+                            Log.e(TAG, "onClick: PROFILE "+dBforUserDetails.getProfilesCount(appSharedPreference.getLoginId()));
+                            if(dBforUserDetails.getProfilesCount(appSharedPreference.getLoginId()) == 1){
                                 appSharedPreference.setUserId(uid);
                                 GlobalClass.userID = appSharedPreference.getUserId();
                             }
+                        Log.e(TAG, "onClick: DB COUNT : PROFILE " + dBforUserDetails.getProfilesCount(appSharedPreference.getLoginId()));
                     }
                     else{
                         String uid = dBforUserDetails.updateEntry(RegistrationActivity.registeredUserDetails, getActivity());
@@ -249,7 +250,7 @@ public class ProfilePhotoFragment extends Fragment implements AppConstants,View.
 
                    // }
                     RegistrationActivity.registeredUserDetails = new RegisteredUserDetails();
-                    Log.e(TAG, "onClick: DB COUNT " + dBforUserDetails.getProfilesCount());
+                   // Log.e(TAG, "onClick: DB COUNT " + dBforUserDetails.getProfilesCount());
 
                     startActivity(new Intent(getActivity(), TrackActivity.class));
                     getActivity().finish();
