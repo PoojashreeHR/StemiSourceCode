@@ -149,6 +149,19 @@ public class SmokingFragment  extends Fragment implements TrackActivity.OnBackPr
         super.onStart();
     }
 
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+        Log.e("fragment", "SmokingFragment onStop()");
+        super.onStop();
+    }
+
+    @Override
+    public void onDestroy() {
+        Log.e("fragment", "SmokingFragment onDestroy()");
+        super.onDestroy();
+    }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSetTimeEvent(SetTimeEvent event){
         tvSmokeToday.setText(event.getDate());
@@ -174,10 +187,9 @@ public class SmokingFragment  extends Fragment implements TrackActivity.OnBackPr
                     }
                 }else {
                     saveData();
-                    alreadySaved = true;
                 }
-                //   getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit()
-
+                //saveData();
+                alreadySaved = true;
             }
         }
         else{
@@ -306,19 +318,25 @@ public class SmokingFragment  extends Fragment implements TrackActivity.OnBackPr
                 smokeToday.setResponse(eventDetails.get(0).getSmokeToday());
                 if(eventDetails.get(0).getSmokeToday().equals("YES")){
                     howMany.setText(eventDetails.get(0).getHowMany());
-                }else {
+                }else if(eventDetails.get(0).getSmokeToday().equals("NO")){
                     howMany.setText(null);
                     howMany.setEnabled(false);
                     howMany.setAlpha(.6f);
+                }else{
+                    howMany.setText(null);
+                    smokeToday.setResponse("NULL");
+                    responseChange = "NULL";
                 }
             }
             else{
                 howMany.setText(null);
                 smokeToday.setResponse("NULL");
+                responseChange = "NULL";
             }
         }else {
             howMany.setText(null);
             smokeToday.setResponse("NULL");
+            responseChange = "NULL";
         }
     }
 }

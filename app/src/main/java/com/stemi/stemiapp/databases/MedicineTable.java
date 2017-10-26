@@ -223,7 +223,9 @@ public class MedicineTable {
         ArrayList<String> data=new ArrayList<String>();
         SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
         String query = "SELECT * FROM " + MED_TABLE_NAME + " WHERE " + RELATED_PERSON + " = '" + userId + "' AND "
-                + DATE + " = '" + date+ "'";        Cursor cursor = db.rawQuery(query,null);
+                + DATE + " = '" + date+ "'";
+        Log.e("db", "query = "+query);
+        Cursor cursor = db.rawQuery(query,null);
         //Cursor cursor = db.query(MED_TABLE_NAME, new String[]{MED_MEDICINE_DETAILS},null, null, null, null, null);
         String fieldToAdd = null;
         while(cursor.moveToNext()) {
@@ -231,6 +233,7 @@ public class MedicineTable {
             Gson gsonObj = new Gson();
             MedicineDetails medicineDetails = gsonObj.fromJson(fieldToAdd, MedicineDetails.class);
             String MedicineString = gsonObj.toJson(medicineDetails);
+            Log.e("db", "MedicineString = "+ MedicineString);
             data.add(MedicineString);
         }
         return data;

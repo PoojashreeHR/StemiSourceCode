@@ -40,7 +40,7 @@
         android:id="@+id/sv_blood"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/bloodSaveButton"
+
         android:layout_below="@+id/date_component">
         <RelativeLayout
             android:layout_width="match_parent"

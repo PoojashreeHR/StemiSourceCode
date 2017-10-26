@@ -931,6 +931,7 @@ public class AddMedicineFragment extends Fragment implements View.OnClickListene
                                 medicineLists.add(medicinesTakenOrNotMorning);
                                 medDetails.setMedicineMorning(medicineLists);
                             }else {
+                                medicineLists = new ArrayList<>();
                                 medicineLists.add(medicinesTakenOrNotMorning);
                                 medDetails.setMedicineMorning(medicineLists);
                             }
@@ -944,6 +945,7 @@ public class AddMedicineFragment extends Fragment implements View.OnClickListene
                                 medicineLists.add(medicinesTakenOrNotAfternoon);
                                 medDetails.setMedicineAfternoon(medicineLists);
                             }else {
+                                medicineLists = new ArrayList<>();
                                 medicineLists.add(medicinesTakenOrNotAfternoon);
                                 medDetails.setMedicineAfternoon(medicineLists);
                             }
@@ -958,6 +960,7 @@ public class AddMedicineFragment extends Fragment implements View.OnClickListene
                                 medicineLists.add(medicinesTakenOrNotNight);
                                 medDetails.setMedicineNight(medicineLists);
                             }else {
+                                medicineLists = new ArrayList<>();
                                 medicineLists.add(medicinesTakenOrNotNight);
                                 medDetails.setMedicineNight(medicineLists);
                             }

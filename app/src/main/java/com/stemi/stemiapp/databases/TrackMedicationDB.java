@@ -227,16 +227,17 @@ public class TrackMedicationDB {
 
     public void buidDialog(final Context mContext, final String userId, final String date, final TrackMedication trackMedication){
         AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-        builder.setTitle("AlertDialog with No Buttons");
+        builder.setTitle("Save");
         builder.setMessage("Old Entry Exist !! Do you want to save this?");
         //Yes Button
         builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 updateEntry(userId, date,trackMedication);
-                ((TrackActivity) mContext).setActionBarTitle("Track");
-                EventBus.getDefault().post(new MessageEvent("Hello!"));
-                Log.i("Code2care ", "Yes button Clicked!");
+                dialog.dismiss();
+//                ((TrackActivity) mContext).setActionBarTitle("Track");
+//                EventBus.getDefault().post(new MessageEvent("Hello!"));
+//                Log.i("Code2care ", "Yes button Clicked!");
             }
         });
 
@@ -246,8 +247,10 @@ public class TrackMedicationDB {
             public void onClick(DialogInterface dialog, int which) {
                 Log.i("Code2care ","No button Clicked!");
                 dialog.dismiss();
-                ((TrackActivity) mContext).showFragment(new TrackFragment());
-                ((TrackActivity) mContext).setActionBarTitle("Track");
+//                ((TrackActivity) mContext).showFragment(new TrackFragment());
+//                ((TrackActivity) mContext).setActionBarTitle("Track");
+
+
             }
         });
 

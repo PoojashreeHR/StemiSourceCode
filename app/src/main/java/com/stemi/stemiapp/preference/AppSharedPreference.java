@@ -14,6 +14,7 @@ public class AppSharedPreference implements AppConstants {
     private static final String USERID = "userid";
     private static final String LOGINID = "loginId";
     private static final String LAST_TIP = "lastTip";
+    private static final String PROFILE_COUNTER = "profilecount";
     private SharedPreferences sharedPreferences;
 
     public AppSharedPreference(Context context) {
@@ -93,6 +94,16 @@ public class AppSharedPreference implements AppConstants {
 
     public boolean isFirstTimeLaunch(String value) {
         return sharedPreferences.getBoolean(value, false);
+    }
+
+    public void setProfileCounter(int count){
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt(PROFILE_COUNTER, count);
+        editor.apply();
+    }
+
+    public int getProfileCounter(){
+        return sharedPreferences.getInt(PROFILE_COUNTER, 0);
     }
 
     public void removeAllSPData() {

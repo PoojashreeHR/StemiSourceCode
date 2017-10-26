@@ -215,6 +215,7 @@ public class MedicationFragment extends Fragment implements AppConstants, View.O
             savedDate = tvMedicationToday.getText().toString();
         }
         medicineWithDate = medicineTable.getAllMedicineDEtails(GlobalClass.userID, savedDate);
+        Log.e("db", "GlobalClass.userID = "+ GlobalClass.userID);
         Log.e("db", "medicineWithDate = "+ new Gson().toJson(medicineWithDate));
 
         if (medicineWithDate != null && medicineWithDate.size() > 0) {
@@ -706,10 +707,13 @@ public class MedicationFragment extends Fragment implements AppConstants, View.O
         if (!date) {
             medicineTable.addMedicineDetails(medicineContains, GlobalClass.userID);
             EventBus.getDefault().post(new MessageEvent("Hello!"));
-       //     ((TrackActivity) getActivity()).setActionBarTitle("Track");
+            //if(getActivity() != null)
+               // ((TrackActivity) getActivity()).setActionBarTitle("Track");
         } else {
             medicineTable.updateDataWithDate(GlobalClass.userID, savedDate, medicineContains);
             EventBus.getDefault().post(new MessageEvent("Hello!"));
+            if(getActivity() != null)
+                ((TrackActivity) getActivity()).setActionBarTitle("Track");
             FragmentManager fm = getActivity().getSupportFragmentManager();
             for(int i = 0; i < fm.getBackStackEntryCount(); ++i) {
                 fm.popBackStack();
@@ -800,6 +804,7 @@ public class MedicationFragment extends Fragment implements AppConstants, View.O
             TrackMedication med = new TrackMedication();
             Log.e(TAG, "doBack: " + medicineContains);
             storeData();
+            alreadySaved = true;
         }else {
             FragmentManager fm = getActivity().getSupportFragmentManager();
             for(int i = 0; i < fm.getBackStackEntryCount(); ++i) {

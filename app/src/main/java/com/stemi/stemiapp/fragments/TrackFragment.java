@@ -25,7 +25,7 @@ import static android.content.ContentValues.TAG;
  * Created by Pooja on 24-07-2017.
  */
 
-public class TrackFragment extends Fragment {
+public class TrackFragment extends Fragment implements TrackActivity.OnBackPressedListener{
     private GridLayoutManager lLayout;
     public TrackFragment() {
         // Required empty public constructor
@@ -66,6 +66,7 @@ public class TrackFragment extends Fragment {
         RecyclerViewAdapter rcAdapter = new RecyclerViewAdapter(getActivity(), rowListItem);
         rView.setAdapter(rcAdapter);
         ((TrackActivity)getActivity()).getViewPager().setPagingEnabled(false);
+        ((TrackActivity) getActivity()).setOnBackPressedListener(this);
 
         return view;
 
@@ -82,6 +83,11 @@ public class TrackFragment extends Fragment {
         allItems.add(new TrackElements("Blood Test Result", R.drawable.btn_blood_test));
 
         return allItems;
+    }
+
+    @Override
+    public void doBack() {
+
     }
 
     public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.RecyclerViewHolders> {

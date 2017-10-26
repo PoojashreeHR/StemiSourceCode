@@ -189,13 +189,15 @@ public class ExerciseFragment extends Fragment implements View.OnClickListener, 
     }
 
     public void callSavedMethod() {
-        if (tvExcerciseToday.getText().equals("Today  ")) {
-            Date dt = new Date();
-            SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy");// set format for date
-            String todaysDate = dateFormat.format(dt); // parse it like
-            savedDate = todaysDate;
-        } else {
-            savedDate = tvExcerciseToday.getText().toString();
+        if(tvExcerciseToday.getText() != null) {
+            if (tvExcerciseToday.getText().equals("Today  ")) {
+                Date dt = new Date();
+                SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy");// set format for date
+                String todaysDate = dateFormat.format(dt); // parse it like
+                savedDate = todaysDate;
+            } else {
+                savedDate = tvExcerciseToday.getText().toString();
+            }
         }
 
        // Log.e("db", "appSharedPreference.getProfileName(AppConstants.PROFILE_NAME) = "+appSharedPreference.getProfileName(AppConstants.PROFILE_NAME) );

@@ -416,6 +416,7 @@ public class StressFragment extends Fragment implements AppConstants, TrackActiv
         EventBus.getDefault().post(new DataSavedEvent(""));
 
         boolean date = dbForTrackActivities.getDate(TrackActivity.userEventDetails.getDate(),GlobalClass.userID);
+        Log.e("db", "Stress TrackActivity.userEventDetails.getDate() = "+ TrackActivity.userEventDetails.getDate());
         if (!date) {
             dbForTrackActivities.addEntry(TrackActivity.userEventDetails);
             EventBus.getDefault().post(new MessageEvent("Hello!"));
