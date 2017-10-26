@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">StemiApp</string>
+    <string name="app_name">Stemi</string>
     <string name="title_activity_main">MainActivity</string>
 
     <!-- Login Strings -->

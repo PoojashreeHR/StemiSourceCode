@@ -215,6 +215,7 @@ public class MedicationFragment extends Fragment implements AppConstants, View.O
             savedDate = tvMedicationToday.getText().toString();
         }
         medicineWithDate = medicineTable.getAllMedicineDEtails(GlobalClass.userID, savedDate);
+        Log.e("db", "GlobalClass.userID = "+ GlobalClass.userID);
         Log.e("db", "medicineWithDate = "+ new Gson().toJson(medicineWithDate));
 
         if (medicineWithDate != null && medicineWithDate.size() > 0) {
