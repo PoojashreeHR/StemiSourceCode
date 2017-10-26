@@ -881,9 +881,17 @@ public class MedicationFragment extends Fragment implements AppConstants, View.O
     public void saveAllData() {
         if(!alreadySaved) {
             Log.e("fragment", "MedicationFragment saveAllData()");
-            storeData();
-         //   getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
-            alreadySaved = true;
+            if (medicineContains !=null) {
+                storeData();
+                alreadySaved = true;
+            }else {
+                alreadySaved = false;
+                FragmentManager fm = getActivity().getSupportFragmentManager();
+                for(int i = 0; i < fm.getBackStackEntryCount(); ++i) {
+                    fm.popBackStack();
+                }
+            }
+
         }
     }
 

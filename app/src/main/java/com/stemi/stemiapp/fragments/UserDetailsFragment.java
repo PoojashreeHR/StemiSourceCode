@@ -37,7 +37,7 @@ public class UserDetailsFragment extends Fragment implements View.OnClickListene
     @BindView(R.id.et_email) EditText etEmail;
 
     String emailPattern = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$";
-    String phonePatteren = "^[7-9][0-9]{9}$";
+    String phonePatteren = "^[0-9]{10}$";
 
     //  EditText etEmail;
     UserDetailsTable dBforUserDetails;

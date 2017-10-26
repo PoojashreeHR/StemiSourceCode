@@ -14,6 +14,7 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -295,9 +296,19 @@ public class WeightFragment  extends Fragment implements View.OnClickListener,Tr
         if(GlobalClass.userID != null) {
             if (!alreadySaved) {
                 Log.e("fragment", "WeightFragment saveAllData()");
-                SaveData();
+                if(!todaysWeight.getText().toString().equals("")) {
+                    if (validateField()) {
+                        SaveData();
+                        alreadySaved = true;
+                    }
+                }else {
+                    alreadySaved =false;
+                    FragmentManager fm = getActivity().getSupportFragmentManager();
+                    for(int i = 0; i < fm.getBackStackEntryCount(); ++i) {
+                        fm.popBackStack();
+                    }
+                }
              //   getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
-                alreadySaved = true;
             }
         }
         else{

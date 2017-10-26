@@ -97,9 +97,9 @@ public class PhysicalDetailsFragment extends Fragment implements View.OnClickLis
             }
 
         }
-        smokeAnswer.setOnClickListener(new View.OnClickListener() {
+        smokeAnswer.setResponseChangedListener(new AnswerTemplateView.ResponseChangedListener() {
             @Override
-            public void onClick(View v) {
+            public void onResponse(String response) {
                 InputMethodManager inputManager =
                         (InputMethodManager) getActivity().
                                 getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -242,12 +242,22 @@ public class PhysicalDetailsFragment extends Fragment implements View.OnClickLis
         String waistIn = etWaistInches.getText().toString();
         String waistCm = etWaistCm.getText().toString();
 
-        if(etWaistInches.isEnabled() && TextUtils.isEmpty(waistIn)){
-            etWaistInches.setError("Reqired");
-            valid = false;
-        }else if(etWaistCm.isEnabled() && TextUtils.isEmpty(waistCm)){
-            etWaistCm.setError("Reqired");
-            valid = false;
+        if(etWaistInches.isEnabled() ){
+            if(TextUtils.isEmpty(waistIn)) {
+                etWaistInches.setError("Reqired");
+                valid = false;
+            }else if (Integer.parseInt(waistIn) < 20 || Integer.parseInt(waistIn) > 99){
+                etWaistInches.setError("Enter valid data");
+                valid = false;
+            }
+        }else if(etWaistCm.isEnabled()){
+            if(TextUtils.isEmpty(waistCm)) {
+                etWaistCm.setError("Reqired");
+                valid = false;
+            }else if((Integer.parseInt(waistCm) < 20 || Integer.parseInt(waistCm) > 200)){
+                etWaistCm.setError("Enter valid data");
+                valid = false;
+            }
         }else {
             etWaistCm.setError(null);
             etWaistInches.setError(null);

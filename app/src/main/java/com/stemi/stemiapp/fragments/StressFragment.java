@@ -9,6 +9,7 @@ import android.graphics.PorterDuff;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -270,9 +271,17 @@ public class StressFragment extends Fragment implements AppConstants, TrackActiv
         if(GlobalClass.userID != null) {
             if (!alreadySaved) {
                 Log.e("fragment", "StressFragment saveAllData()");
-                storeData();
-        //        getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
-                alreadySaved = true;
+                if (stressCount != null) {
+                    storeData();
+                    alreadySaved = true;
+                }else {
+                    alreadySaved = false;
+                    FragmentManager fm = getActivity().getSupportFragmentManager();
+                    for (int i = 0; i < fm.getBackStackEntryCount(); ++i) {
+                        fm.popBackStack();
+                    }
+                }
+
             }
         }
         else{

@@ -108,24 +108,26 @@ public class SignUpActivity extends AppCompatActivity implements AppConstants, V
     private boolean validateAllFields() {
         boolean valid = true;
 
-        String firstName = etRegEmail.getText().toString();
-        if (TextUtils.isEmpty(firstName)) {
+        String email = etRegEmail.getText().toString();
+        if (TextUtils.isEmpty(email)) {
             etRegEmail.setError("Required");
             valid = false;
         } else {
             etRegEmail.setError(null);
         }
 
-        String lastName = etRegPassword.getText().toString();
-        if (TextUtils.isEmpty(lastName)) {
+        String password = etRegPassword.getText().toString();
+        if (TextUtils.isEmpty(password)) {
             etRegPassword.setError("Required");
             valid = false;
-        } else {
-            etRegPassword.setError(null);
+        } else if(password.length() < 6 || password.length() > 12){
+            etRegPassword.setError("must be 6 characters long");
+           // Toast.makeText(this, "must be 6 characters long", Toast.LENGTH_SHORT).show();
+            valid = false;
         }
 
-        String email = etConfirmPassword.getText().toString();
-        if (TextUtils.isEmpty(email)) {
+        String confirmPAssword = etConfirmPassword.getText().toString();
+        if (TextUtils.isEmpty(confirmPAssword)) {
             etConfirmPassword.setError("Required");
             valid = false;
         } else {

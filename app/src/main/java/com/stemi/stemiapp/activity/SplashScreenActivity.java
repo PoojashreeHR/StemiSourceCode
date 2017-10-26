@@ -8,9 +8,11 @@ import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.stemi.stemiapp.R;
 import com.stemi.stemiapp.databases.MedicineTable;
+import com.stemi.stemiapp.databases.UserDetailsTable;
 import com.stemi.stemiapp.preference.AppSharedPreference;
 import com.stemi.stemiapp.utils.AppConstants;
 import com.stemi.stemiapp.utils.GlobalClass;
@@ -44,12 +46,23 @@ public class SplashScreenActivity extends AppCompatActivity implements AppConsta
                     Intent mainIntent = new Intent(SplashScreenActivity.this, OnBoardingActivity.class);
                     startActivity(mainIntent);
                     sharedPreference.setFirstTimeLaunch(IS_FIRST_TIME_LAUNCH,true);
-                   // introScreensShown =  sharedPreference.isFirstTimeLaunch(IS_FIRST_TIME_LAUNCH);
                     finish();
                 } else {
-                    Intent mainIntent = new Intent(SplashScreenActivity.this, MainActivity.class);
-                    startActivity(mainIntent);
-                    finish();
+                    if(sharedPreference.getUserToken(USER_TOKEN) != null){
+                        UserDetailsTable userDetailsTable = new UserDetailsTable(SplashScreenActivity.this);
+                        int profileCount = userDetailsTable.getAllUsers().size();
+                        if(profileCount == 0){
+                            startActivity(new Intent(SplashScreenActivity.this,RegistrationActivity.class));
+                            finish();
+                        }else {
+                            startActivity(new Intent(SplashScreenActivity.this, TrackActivity.class));
+                            finish();
+                        }
+                    }else {
+                        Intent mainIntent = new Intent(SplashScreenActivity.this, MainActivity.class);
+                        startActivity(mainIntent);
+                        finish();
+                    }
                 }
             }
         }, SPLASH_DISPLAY_LENGTH);

@@ -155,10 +155,15 @@ public class BloodTestFragment extends Fragment implements TrackActivity.OnBackP
     }
 
     public String CheckEmptyOrNot(String st){
-        if(st != null || !st.matches("0.0")){
-            return st;
+        String sts = "";
+        if(st != null){
+            if(!st.matches("0")){
+                return st;
+            }else {
+                return sts;
+            }
         }else{
-            return null;
+            return sts;
         }
     }
 
@@ -167,16 +172,32 @@ public class BloodTestFragment extends Fragment implements TrackActivity.OnBackP
             BloodTestResult bloodTestResults = bloodTestDB.getEntry(GlobalClass.userID, tvBloodTestDate.getText().toString());
             if(bloodTestResults != null){
                 DecimalFormat decimalFormat = new DecimalFormat();
-                etHaemoglobin.setText(decimalFormat.format(bloodTestResults.getHeamoglobin()));
-                etUreaCreatinine.setText(decimalFormat.format(bloodTestResults.getUreaCreatinine()));
-                etCholesterol.setText(decimalFormat.format(bloodTestResults.getTotalCholestrol()));
-                etTriglycerides.setText(decimalFormat.format(bloodTestResults.getTriglycerides()));
-                etHdl.setText(decimalFormat.format(bloodTestResults.getHighDensityLipoProtein()));
-                etLdl.setText(decimalFormat.format(bloodTestResults.getLowDensityLipoProtein()));
-                etRpg.setText(decimalFormat.format(bloodTestResults.getRandomPlasmaGlucose()));
-                etFpg.setText(decimalFormat.format(bloodTestResults.getFastingPlasmaGlucose()));
-                String st = CheckEmptyOrNot(""+bloodTestResults.getTotalCholestrol());
-                etPpg.setText(decimalFormat.format(bloodTestResults.getPostPrandialPlasmaGlucose()));
+                String haemoglobin = CheckEmptyOrNot(decimalFormat.format(bloodTestResults.getHeamoglobin()));
+                etHaemoglobin.setText(haemoglobin);
+
+                String urea = CheckEmptyOrNot(decimalFormat.format(bloodTestResults.getUreaCreatinine()));
+                etUreaCreatinine.setText(urea);
+
+                String cholesterol = CheckEmptyOrNot(decimalFormat.format(bloodTestResults.getTotalCholestrol()));
+                etCholesterol.setText(cholesterol);
+
+                String triglycerides = CheckEmptyOrNot(decimalFormat.format(bloodTestResults.getTriglycerides()));
+                etTriglycerides.setText(triglycerides);
+
+                String hdl = CheckEmptyOrNot(decimalFormat.format(bloodTestResults.getHighDensityLipoProtein()));
+                etHdl.setText(hdl);
+
+                String st3 = CheckEmptyOrNot(decimalFormat.format(bloodTestResults.getLowDensityLipoProtein()));
+                etLdl.setText(st3);
+
+                String st2 = CheckEmptyOrNot(decimalFormat.format(bloodTestResults.getRandomPlasmaGlucose()));
+                etRpg.setText(st2);
+
+                String st1 = CheckEmptyOrNot(decimalFormat.format(bloodTestResults.getFastingPlasmaGlucose()));
+                etFpg.setText(st1);
+
+                String st = CheckEmptyOrNot(decimalFormat.format(bloodTestResults.getPostPrandialPlasmaGlucose()));
+                etPpg.setText(st);
             }
         }else {
             etHaemoglobin.setText(null);
