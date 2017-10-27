@@ -147,7 +147,7 @@ public class MedicationFragment extends Fragment implements AppConstants, View.O
         // layout2 = (LinearLayout) morningContainer.findViewById(R.id.imageTypeLayout);
 
         // Setting fonts
-        callSavedMethod();
+
 
         long count = medicineTable.getMedicineDetailsCount();
         Log.e(TAG, "onCreateView: Profile Count" + count);
@@ -1034,6 +1034,7 @@ public class MedicationFragment extends Fragment implements AppConstants, View.O
     public void onResume() {
         super.onResume();
         ((TrackActivity) getActivity()).setActionBarTitle("Medication");
+        callSavedMethod();
 //        notifyAll();
 
     }

@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.Viewport;
 import com.jjoe64.graphview.helper.StaticLabelsFormatter;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.DataPointInterface;
@@ -434,6 +435,43 @@ public class StatusFragment extends Fragment implements UpdateableFragment {
 
     private void populateHealthGraph() {
         populateDatapoints();
+
+        List<String> yAxes = new ArrayList<>();
+        yAxes.add("");
+        yAxes.add("Medicines");
+        yAxes.add("Exercise");
+        // yAxes.add("Stress");
+        yAxes.add("Smoking");
+
+        healthGraph.getGridLabelRenderer().setLabelFormatter(new YAxisValueFormatter(getActivity(), yAxes));
+        healthGraph.getGridLabelRenderer().setHumanRounding(false);
+        healthGraph.getGridLabelRenderer().setNumHorizontalLabels(5);
+        healthGraph.getGridLabelRenderer().setNumVerticalLabels(4);
+
+
+
+
+        healthGraph.getViewport().setYAxisBoundsManual(true);
+        healthGraph.getViewport().setMinY(0);
+        healthGraph.getViewport().setMaxY(3);
+        healthGraph.getViewport().setXAxisBoundsManual(true);
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.DATE, -10);
+        healthGraph.getViewport().setMinX(cal.getTime().getTime());
+        cal.add(Calendar.DATE, 10);
+        healthGraph.getViewport().setMaxX(cal.getTime().getTime());
+
+
+        healthGraph.getViewport().setScrollable(true);
+
+        healthGraph.getViewport().setOnXAxisBoundsChangedListener(new Viewport.OnXAxisBoundsChangedListener() {
+            @Override
+            public void onXAxisBoundsChanged(double minX, double maxX, Reason reason) {
+                Log.e("graph", "onXAxisBoundsChanged("+minX+" , "+maxX+" , "+reason.toString()+")");
+            }
+        });
+
+
         medSeries = new PointsGraphSeries<>(medPoints);
         healthGraph.addSeries(medSeries);
 
@@ -521,28 +559,12 @@ public class StatusFragment extends Fragment implements UpdateableFragment {
             }
         });
 
-        List<String> yAxes = new ArrayList<>();
-        yAxes.add("");
-        yAxes.add("Medicines");
-        yAxes.add("Exercise");
-        // yAxes.add("Stress");
-        yAxes.add("Smoking");
 
-        healthGraph.getGridLabelRenderer().setLabelFormatter(new YAxisValueFormatter(getActivity(), yAxes));
-        healthGraph.getGridLabelRenderer().setHumanRounding(false);
-        healthGraph.getGridLabelRenderer().setNumHorizontalLabels(5);
-        healthGraph.getGridLabelRenderer().setNumVerticalLabels(4);
 
-        healthGraph.getViewport().setYAxisBoundsManual(true);
-        healthGraph.getViewport().setMinY(0);
-        healthGraph.getViewport().setMaxY(3);
-        healthGraph.getViewport().setXAxisBoundsManual(true);
-        Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.DATE, -10);
-        healthGraph.getViewport().setMinX(cal.getTime().getTime());
-        cal.add(Calendar.DATE, 10);
-        healthGraph.getViewport().setMaxX(cal.getTime().getTime());
-        healthGraph.getViewport().setScrollable(true);
+
+
+        //healthGraph.getViewport().scrollToEnd();
+
     }
 
     private void populateDatapoints() {

@@ -140,7 +140,7 @@ public class TrackStressDB extends SQLiteOpenHelper{
         SQLiteDatabase db = this.getReadableDatabase();
         try {
             String query = "SELECT * FROM "+TABLE_STRESS+" WHERE "+COLUMN_USER_ID+" = '"+userid+"' "
-                    +"ORDER BY "+COLUMN_DATE_TIME;
+                    +"ORDER BY "+COLUMN_DATE_TIME+" ASC";
 
             Cursor rows = db.rawQuery(query, null);
             rows.moveToFirst();

@@ -99,7 +99,7 @@ public class SmokingFragment  extends Fragment implements TrackActivity.OnBackPr
             }
         });
 
-         callSavedMethod();
+
         tvSmokeToday.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -120,6 +120,7 @@ public class SmokingFragment  extends Fragment implements TrackActivity.OnBackPr
     public void onResume() {
         super.onResume();
         ((TrackActivity) getActivity()).setActionBarTitle("Smoking");
+        callSavedMethod();
     }
 
     @Override

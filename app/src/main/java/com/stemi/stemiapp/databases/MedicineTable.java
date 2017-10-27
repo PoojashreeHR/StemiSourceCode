@@ -50,7 +50,7 @@ public class MedicineTable {
         values.put(MED_MEDICINE_DETAILS, MedicineString);
         values.put(RELATED_PERSON, personName);
         values.put(DATE, medicineDetails.getDate());
-
+        Log.e("med", "ContentValues = "+new Gson().toJson(values));
         long id = db.insert(MED_TABLE_NAME, null, values);
         Log.e("DATABASE VALUES", "addDataTODb: " + id);
         //closing the database connection
@@ -224,17 +224,21 @@ public class MedicineTable {
         SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
         String query = "SELECT * FROM " + MED_TABLE_NAME + " WHERE " + RELATED_PERSON + " = '" + userId + "' AND "
                 + DATE + " = '" + date+ "'";
-        Log.e("db", "query = "+query);
+        Log.e("med", "query = "+query);
         Cursor cursor = db.rawQuery(query,null);
         //Cursor cursor = db.query(MED_TABLE_NAME, new String[]{MED_MEDICINE_DETAILS},null, null, null, null, null);
         String fieldToAdd = null;
-        while(cursor.moveToNext()) {
+        cursor.moveToFirst();
+        while(!cursor.isAfterLast()) {
             fieldToAdd = cursor.getString(cursor.getColumnIndex(MED_MEDICINE_DETAILS));
+            String relatedPerson = cursor.getString(cursor.getColumnIndex(RELATED_PERSON));
             Gson gsonObj = new Gson();
             MedicineDetails medicineDetails = gsonObj.fromJson(fieldToAdd, MedicineDetails.class);
             String MedicineString = gsonObj.toJson(medicineDetails);
-            Log.e("db", "MedicineString = "+ MedicineString);
+            Log.e("med", "MedicineString = "+ MedicineString);
+            Log.e("med", "relatedPerson = "+ relatedPerson);
             data.add(MedicineString);
+            cursor.moveToNext();
         }
         return data;
     }
@@ -248,7 +252,7 @@ public class MedicineTable {
         cv.put(MED_MEDICINE_DETAILS,new Gson().toJson(medicineDetails));
        long l =  db.update(MED_TABLE_NAME,cv, RELATED_PERSON + " = '" + personName + "' AND "
                 + DATE + " = '" + date+ "'", null);
-        Log.e(TAG, "updateDataWithDate: "+l );
+        Log.e("med", "updateDataWithDate: "+l );
 
 
     }
