@@ -79,7 +79,7 @@
                 android:text="Walking"
                 android:layout_gravity="center"
                 android:textColor="@color/colorLightGrey"
-                android:textSize="10sp"
+                android:textSize="14sp"
                 android:fontFamily="serif"
                 android:layout_marginTop="5dp"
                 android:layout_marginBottom="10dp"/>
@@ -118,7 +118,7 @@
                 android:layout_height="wrap_content"
                 android:text="Cycling"
                 android:layout_gravity="center"
-                android:textSize="10sp"
+                android:textSize="14sp"
                 android:textColor="@color/colorLightGrey"
                 android:fontFamily="serif"
                 android:layout_marginTop="5dp"
@@ -163,7 +163,7 @@
                 android:textColor="@color/colorLightGrey"
                 android:fontFamily="serif"
                 android:layout_gravity="center"
-                android:textSize="10sp"
+                android:textSize="14sp"
                 android:singleLine="true"
                 android:layout_marginTop="5dp"
                 android:layout_marginBottom="10dp"/>
@@ -175,11 +175,10 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_weight="1"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
             android:layout_below="@+id/ll_walking"
-            android:layout_toLeftOf="@+id/ll_cycling"
-            android:layout_toStartOf="@+id/ll_cycling"
-            android:layout_marginTop="30dp"
-            android:layout_marginBottom="20dp">
+            android:layout_marginLeft="70dp">
 
             <FrameLayout
                 android:layout_width="wrap_content"
@@ -204,7 +203,7 @@
                 android:layout_height="wrap_content"
                 android:text="Aerobics"
                 android:layout_gravity="center"
-                android:textSize="10sp"
+                android:textSize="14sp"
                 android:textColor="@color/colorLightGrey"
                 android:fontFamily="serif"
                 android:layout_marginTop="5dp"
@@ -217,9 +216,12 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_weight="1"
-            android:layout_alignTop="@+id/ll_aerobics"
-            android:layout_toRightOf="@+id/ll_cycling"
-            android:layout_toEndOf="@+id/ll_cycling">
+            android:layout_below="@+id/ll_swimming"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginRight="70dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp">
 
             <FrameLayout
                 android:layout_width="wrap_content"
@@ -245,7 +247,7 @@
                 android:layout_height="wrap_content"
                 android:text="Others"
                 android:layout_gravity="center"
-                android:textSize="10sp"
+                android:textSize="14sp"
                 android:textColor="@color/colorLightGrey"
                 android:fontFamily="serif"
                 android:layout_marginTop="5dp"
