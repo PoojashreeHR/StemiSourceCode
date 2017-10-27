@@ -78,6 +78,7 @@ public class WeightFragment  extends Fragment implements View.OnClickListener,Tr
     @BindView(R.id.bmiValue) TextView BmiValue;
     @BindView(R.id.bmiResult) TextView bmiResult;
     @BindView(R.id.learn_more)TextView learnMore;
+    @BindView(R.id.weight_save) Button btnWeightSave;
     String bmiCount = null;
 
     @BindView(R.id.ll_bmiCalculation)LinearLayout bmiLayout;
@@ -123,6 +124,26 @@ public class WeightFragment  extends Fragment implements View.OnClickListener,Tr
 
         alreadySaved = false;
         tabSelectedListener =  new TabSelectedListener(getActivity(),new WebViewFragment());
+
+        btnWeightSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(GlobalClass.userID != null) {
+                    if(!todaysWeight.getText().toString().equals("")){
+                        if(validateField()) {
+                            SaveData();
+                        }
+                    }else {
+                        EventBus.getDefault().post(new MessageEvent("Hello!"));
+                        //     ((TrackActivity) getActivity()).setActionBarTitle("Track");
+                        getActivity().getSupportFragmentManager().beginTransaction().remove(WeightFragment.this).commit();
+                    }
+                }
+                else{
+                    Toast.makeText(getActivity(), "Please add profile details first", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
 
         return view;
     }
@@ -223,20 +244,7 @@ public class WeightFragment  extends Fragment implements View.OnClickListener,Tr
     }
     @Override
     public void doBack() {
-        if(GlobalClass.userID != null) {
-        if(!todaysWeight.getText().toString().equals("")){
-            if(validateField()) {
-                SaveData();
-            }
-        }else {
-            EventBus.getDefault().post(new MessageEvent("Hello!"));
-       //     ((TrackActivity) getActivity()).setActionBarTitle("Track");
-            getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
-            }
-        }
-        else{
-            Toast.makeText(getActivity(), "Please add profile details first", Toast.LENGTH_SHORT).show();
-        }
+        EventBus.getDefault().post(new MessageEvent("Hello!"));
     }
 
     public Boolean validateField(){

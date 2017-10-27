@@ -298,4 +298,14 @@
             </LinearLayout>
         </RelativeLayout>
     </ScrollView>
+
+    <Button
+        android:id="@+id/stress_save"
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/appBackground"
+        android:text="SAVE"
+        android:textColor="@color/white"/>
 </RelativeLayout>

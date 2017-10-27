@@ -89,6 +89,9 @@ public class ExerciseFragment extends Fragment implements View.OnClickListener, 
     @BindView(R.id.tv_excercise_today)
     TextView tvExcerciseToday;
 
+    @BindView(R.id.exercise_save)
+    Button btnExerciseSave;
+
     DBForTrackActivities dbForTrackActivities;
     AppSharedPreference appSharedPreference;
 
@@ -133,6 +136,40 @@ public class ExerciseFragment extends Fragment implements View.OnClickListener, 
         });
         ((TrackActivity) getActivity()).setOnBackPressedListener(this);
         alreadySaved = false;
+
+
+        btnExerciseSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (GlobalClass.userID != null) {
+                    if (ivWalking.getTag().equals(R.drawable.ic_checked_1) || ivCycling.getTag().equals(R.drawable.ic_checked_1)
+                            || ivSwimming.getTag().equals(R.drawable.ic_checked_1) || ivAerobics.getTag().equals(R.drawable.ic_checked_1)
+                            || ivOthers.getTag().equals(R.drawable.ic_checked_1)) {
+                        storeData();
+                    } else {
+                        if (tvExcerciseToday.getText().equals("Today  ")) {
+                            Date dt = new Date();
+                            SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy");// set format for date
+                            String todaysDate = dateFormat.format(dt); // parse it like
+                            savedDate = todaysDate;
+                        } else {
+                            savedDate = tvExcerciseToday.getText().toString();
+                        }
+
+                        if (dbForTrackActivities.getDate((savedDate), GlobalClass.userID)) {
+                            storeData();
+                        }
+                        else {
+                            EventBus.getDefault().post(new MessageEvent("Hello!"));
+                            //  ((TrackActivity) getActivity()).setActionBarTitle("Track");
+                        }
+                    }
+                }else {
+                    Toast.makeText(getActivity(), "Please add profile details first", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
         return view;
     }
 
@@ -299,28 +336,28 @@ public class ExerciseFragment extends Fragment implements View.OnClickListener, 
     }
 
     public void saveAllData() {
-        if(GlobalClass.userID != null) {
-            if (!alreadySaved) {
-                Log.e("fragment", "ExerciseFragment saveAllData()");
-                if (ivWalking.getTag().equals(R.drawable.ic_checked_1) || ivCycling.getTag().equals(R.drawable.ic_checked_1)
-                        || ivSwimming.getTag().equals(R.drawable.ic_checked_1) || ivAerobics.getTag().equals(R.drawable.ic_checked_1)
-                        || ivOthers.getTag().equals(R.drawable.ic_checked_1)) {
-                    storeData();
-                    alreadySaved = true;
-                }else {
-                    alreadySaved = false;
-                    FragmentManager fm = getActivity().getSupportFragmentManager();
-                    for(int i = 0; i < fm.getBackStackEntryCount(); ++i) {
-                        fm.popBackStack();
-                    }
-                }
-              //  getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
-
-            }
-        }
-        else {
-            //Toast.makeText(getActivity(), "Please add profile details first", Toast.LENGTH_SHORT).show();
-        }
+//        if(GlobalClass.userID != null) {
+//            if (!alreadySaved) {
+//                Log.e("fragment", "ExerciseFragment saveAllData()");
+//                if (ivWalking.getTag().equals(R.drawable.ic_checked_1) || ivCycling.getTag().equals(R.drawable.ic_checked_1)
+//                        || ivSwimming.getTag().equals(R.drawable.ic_checked_1) || ivAerobics.getTag().equals(R.drawable.ic_checked_1)
+//                        || ivOthers.getTag().equals(R.drawable.ic_checked_1)) {
+//                    storeData();
+//                    alreadySaved = true;
+//                }else {
+//                    alreadySaved = false;
+//                    FragmentManager fm = getActivity().getSupportFragmentManager();
+//                    for(int i = 0; i < fm.getBackStackEntryCount(); ++i) {
+//                        fm.popBackStack();
+//                    }
+//                }
+//              //  getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
+//
+//            }
+//        }
+//        else {
+//            //Toast.makeText(getActivity(), "Please add profile details first", Toast.LENGTH_SHORT).show();
+//        }
     }
 
     public void saveUserData() {
@@ -495,32 +532,7 @@ public class ExerciseFragment extends Fragment implements View.OnClickListener, 
           }*/
     @Override
     public void doBack() {
-        if (GlobalClass.userID != null) {
-            if (ivWalking.getTag().equals(R.drawable.ic_checked_1) || ivCycling.getTag().equals(R.drawable.ic_checked_1)
-                    || ivSwimming.getTag().equals(R.drawable.ic_checked_1) || ivAerobics.getTag().equals(R.drawable.ic_checked_1)
-                    || ivOthers.getTag().equals(R.drawable.ic_checked_1)) {
-                storeData();
-            } else {
-                if (tvExcerciseToday.getText().equals("Today  ")) {
-                    Date dt = new Date();
-                    SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy");// set format for date
-                    String todaysDate = dateFormat.format(dt); // parse it like
-                    savedDate = todaysDate;
-                } else {
-                    savedDate = tvExcerciseToday.getText().toString();
-                }
-
-                if (dbForTrackActivities.getDate((savedDate), GlobalClass.userID)) {
-                    storeData();
-                }
-                else {
-                    EventBus.getDefault().post(new MessageEvent("Hello!"));
-                  //  ((TrackActivity) getActivity()).setActionBarTitle("Track");
-                }
-            }
-        }else {
-            Toast.makeText(getActivity(), "Please add profile details first", Toast.LENGTH_SHORT).show();
-        }
+        EventBus.getDefault().post(new MessageEvent("Hello!"));
     }
 
 }

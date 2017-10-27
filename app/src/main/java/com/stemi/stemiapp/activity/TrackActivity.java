@@ -518,7 +518,7 @@ public class TrackActivity extends AppCompatActivity implements NavigationView.O
 
             @Override
             public void onPageSelected(int i) {
-                EventBus.getDefault().post(new SaveCurrentDataEvent("" + i));
+                //EventBus.getDefault().post(new SaveCurrentDataEvent("" + i));
                 //adapter.notifyDataSetChanged();
             }
 

@@ -365,6 +365,23 @@ public class HospitalFragment extends Fragment implements TrackActivity.OnScanCo
         eventValues.put(CalendarContract.Events.HAS_ALARM, 1); // 0 for false, 1 for true
 
         Uri eventUri = cr.insert(eventUriString, eventValues);
+        long eventID = Long.parseLong(eventUri.getLastPathSegment());
+
+        ContentValues reminders = new ContentValues();
+        reminders.put(CalendarContract.Reminders.EVENT_ID, eventID);
+        reminders.put(CalendarContract.Reminders.METHOD, CalendarContract.Reminders.METHOD_ALERT);
+        reminders.put(CalendarContract.Reminders.MINUTES, 30);
+        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        Uri uri2 = cr.insert(CalendarContract.Reminders.CONTENT_URI, reminders);
 
         FollowupsDB followupsDB = new FollowupsDB(getActivity());
         followupsDB.addEntry(GlobalClass.userID, modifiedDate);

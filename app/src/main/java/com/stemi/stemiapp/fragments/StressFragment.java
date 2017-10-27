@@ -16,6 +16,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -64,6 +65,7 @@ public class StressFragment extends Fragment implements AppConstants, TrackActiv
     @BindView(R.id.tv_food_today) TextView tvFoodToday;
     @BindView(R.id.seekbar) SeekBar mSeekLin;
     @BindView(R.id.seekbarText)LinearLayout seekbarText;
+    @BindView(R.id.stress_save) Button btnStressSave;
 
 
     @BindView(R.id.ll_yoga)LinearLayout llYoga;
@@ -136,21 +138,28 @@ public class StressFragment extends Fragment implements AppConstants, TrackActiv
     //    ((TrackActivity) getActivity()).setActionBarTitle("Stress");
         ((TrackActivity) getActivity()).setOnBackPressedListener(this);
 
+        btnStressSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (GlobalClass.userID != null) {
+                    if (stressCount != null) {
+                        storeData();
+                    } else {
+                        EventBus.getDefault().post(new MessageEvent("Hello!"));
+                        //   ((TrackActivity) getActivity()).setActionBarTitle("Track");
+                    }
+                }else {
+                    Toast.makeText(getActivity(), "Please add profile details first", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
         return view;
     }
 
     @Override
     public void doBack() {
-        if (GlobalClass.userID != null) {
-            if (stressCount != null) {
-                storeData();
-            } else {
-                EventBus.getDefault().post(new MessageEvent("Hello!"));
-             //   ((TrackActivity) getActivity()).setActionBarTitle("Track");
-            }
-        }else {
-            Toast.makeText(getActivity(), "Please add profile details first", Toast.LENGTH_SHORT).show();
-        }
+        EventBus.getDefault().post(new MessageEvent("Hello!"));
     }
 
     public void callSavedMEthod(){

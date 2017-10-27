@@ -70,6 +70,8 @@ import static android.content.ContentValues.TAG;
 public class MedicationFragment extends Fragment implements AppConstants, View.OnClickListener, TrackActivity.OnBackPressedListener {
     @BindView(R.id.tv_medication_today)
     TextView tvMedicationToday;
+    @BindView(R.id.medication_save)
+    Button btnMedicationSave;
     @BindView(R.id.bt_addNewMedicine)
     Button addNewMedicine;
     MyDialogFragment infoDialogFragment;
@@ -164,6 +166,25 @@ public class MedicationFragment extends Fragment implements AppConstants, View.O
         //((TrackActivity) getActivity()).setActionBarTitle("Medication");
 
         alreadySaved = false;
+        btnMedicationSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (medicineContains !=null) {
+                    Boolean checkedOrNot = false;
+                    TrackMedication med = new TrackMedication();
+                    Log.e(TAG, "doBack: " + medicineContains);
+                    storeData();
+                    alreadySaved = true;
+                }else {
+                    FragmentManager fm = getActivity().getSupportFragmentManager();
+                    for(int i = 0; i < fm.getBackStackEntryCount(); ++i) {
+                        fm.popBackStack();
+                    }
+                    EventBus.getDefault().post(new MessageEvent("Hello!"));
+                    //  ((TrackActivity) getActivity()).setActionBarTitle("Track");
+                }
+            }
+        });
         return view;
     }
 
@@ -799,21 +820,8 @@ public class MedicationFragment extends Fragment implements AppConstants, View.O
 
     @Override
     public void doBack() {
-        if (medicineContains !=null) {
-            Boolean checkedOrNot = false;
-            TrackMedication med = new TrackMedication();
-            Log.e(TAG, "doBack: " + medicineContains);
-            storeData();
-            alreadySaved = true;
-        }else {
-            FragmentManager fm = getActivity().getSupportFragmentManager();
-            for(int i = 0; i < fm.getBackStackEntryCount(); ++i) {
-                fm.popBackStack();
-            }
-            EventBus.getDefault().post(new MessageEvent("Hello!"));
-          //  ((TrackActivity) getActivity()).setActionBarTitle("Track");
-        }
 
+        EventBus.getDefault().post(new MessageEvent("Hello!"));
             /*for (int i = 0; i < m1.size(); i++) {
 *//*
                 String MedicineString = new Gson().toJson(beforeAdd.get(i));

@@ -110,9 +110,9 @@ public class CommonUtils {
 
    public static void buidDialog(final Context mContext, final int value){
       AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-      //builder.setTitle("");
+      builder.setTitle("Save");
       builder.setCancelable(false);
-      builder.setMessage("Old Entry Exist !! Do you want to save this?");
+      builder.setMessage("Do you want to update the value?");
       //Yes Button
       builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
          @Override

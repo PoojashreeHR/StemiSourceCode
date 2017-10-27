@@ -228,7 +228,7 @@ public class TrackMedicationDB {
     public void buidDialog(final Context mContext, final String userId, final String date, final TrackMedication trackMedication){
         AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
         builder.setTitle("Save");
-        builder.setMessage("Old Entry Exist !! Do you want to save this?");
+        builder.setMessage("Do you want to update the value?");
         //Yes Button
         builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             @Override

@@ -12,6 +12,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -55,6 +56,8 @@ public class SmokingFragment  extends Fragment implements TrackActivity.OnBackPr
     @BindView(R.id.tv_smoke_today) TextView tvSmokeToday;
     @BindView(R.id.smokeToday) AnswerTemplateView smokeToday;
     @BindView(R.id.tv_howMany) EditText howMany;
+    @BindView(R.id.smoking_save)
+    Button btnSmokingSave;
     AppSharedPreference appSharedPreference;
 
     DBForTrackActivities dbForTrackActivities;
@@ -113,6 +116,25 @@ public class SmokingFragment  extends Fragment implements TrackActivity.OnBackPr
 
         alreadySaved = false;
 
+        btnSmokingSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (GlobalClass.userID != null) {
+                    if (smokeToday.getResponse() == null || smokeToday.getResponse().equals("")) {
+                        EventBus.getDefault().post(new MessageEvent("Hello!"));
+                        //   ((TrackActivity) getActivity()).setActionBarTitle("Track");
+                    } else if (howMany.isEnabled() && howMany.getText().toString().equals("")) {
+                        Toast.makeText(getActivity(), "Please enter how many", Toast.LENGTH_LONG).show();
+                    } else {
+                        saveData();
+                    }
+                }else {
+                    Toast.makeText(getActivity(), "Please add profile details first", Toast.LENGTH_SHORT).show();
+                    getActivity().getSupportFragmentManager().beginTransaction().remove(SmokingFragment.this).commit();
+                }
+            }
+        });
+
         return view;
     }
 
@@ -125,19 +147,7 @@ public class SmokingFragment  extends Fragment implements TrackActivity.OnBackPr
 
     @Override
     public void doBack() {
-        if (GlobalClass.userID != null) {
-        if (smokeToday.getResponse() == null || smokeToday.getResponse().equals("")) {
-            EventBus.getDefault().post(new MessageEvent("Hello!"));
-         //   ((TrackActivity) getActivity()).setActionBarTitle("Track");
-        } else if (howMany.isEnabled() && howMany.getText().toString().equals("")) {
-            Toast.makeText(getActivity(), "Please enter how many", Toast.LENGTH_LONG).show();
-        } else {
-            saveData();
-        }
-    }else {
-         Toast.makeText(getActivity(), "Please add profile details first", Toast.LENGTH_SHORT).show();
-            getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
-    }
+        EventBus.getDefault().post(new MessageEvent("Hello!"));
     }
 
     @Override
