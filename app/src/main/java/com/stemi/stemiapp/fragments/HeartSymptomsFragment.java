@@ -8,6 +8,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -67,6 +68,7 @@ public class HeartSymptomsFragment extends Fragment implements TrackActivity.OnB
         heartSymptomsAdapter = new HeartSymptomsAdapter(heartSymptomsModel, getActivity());
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         heartSymptomsRecycler.setLayoutManager(mLayoutManager);
+        heartSymptomsRecycler.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL));
         heartSymptomsRecycler.setAdapter(heartSymptomsAdapter);
         askHelp.setOnClickListener(new View.OnClickListener() {
             @Override

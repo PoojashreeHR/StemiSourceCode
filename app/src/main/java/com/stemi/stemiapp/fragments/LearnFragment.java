@@ -60,7 +60,7 @@ import static android.content.ContentValues.TAG;
  * Created by Pooja on 24-07-2017.
  */
 
-public class LearnFragment extends Fragment implements AppConstants, UpdateableFragment{
+public class LearnFragment extends Fragment implements AppConstants, UpdateableFragment, View.OnClickListener{
     @BindView(R.id.tvTips) TextView tvTips;
     @BindView(R.id.tvExpandable) TextView tvExpandableSymptoms;
 
@@ -71,6 +71,12 @@ public class LearnFragment extends Fragment implements AppConstants, UpdateableF
     @BindView(R.id.desc_weight) TextView tvDescWeight;
     @BindView(R.id.pager_tabDots)TabLayout tabLayout;
     private List<HeartSymptomsModel> heartSymptomsModel;
+
+    @BindView(R.id.learn_medication)RelativeLayout learnMedication;
+    @BindView(R.id.learn_weight)RelativeLayout learnWeight;
+    @BindView(R.id.learn_smoking)RelativeLayout learnSmoking;
+    @BindView(R.id.learn_exercise)RelativeLayout learnExercise;
+    @BindView(R.id.learn_stress)RelativeLayout learnStress;
 
     @BindView(R.id.banner_view_pager)ViewPager bannerViewPager;
 
@@ -128,6 +134,13 @@ public class LearnFragment extends Fragment implements AppConstants, UpdateableF
         pagerAdapter = new ImagesPagerAdapter(getActivity(),heartSymptomsModel);
         bannerViewPager.setAdapter(pagerAdapter);
         tabLayout.setupWithViewPager(bannerViewPager);
+
+        learnMedication.setOnClickListener(this);
+        learnWeight.setOnClickListener(this);
+        learnSmoking.setOnClickListener(this);
+        learnExercise.setOnClickListener(this);
+        learnStress.setOnClickListener(this);
+
         return view;
     }
 
@@ -240,6 +253,28 @@ public class LearnFragment extends Fragment implements AppConstants, UpdateableF
                 ((TrackActivity) getActivity()).setActionBarTitle("Learn");
                 updateSelf();
             }
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        int id = v.getId();
+        switch (id){
+            case R.id.learn_medication:
+                ((TrackActivity) getActivity()).showFragment(new MedicationFragment());
+                break;
+            case R.id.learn_weight:
+                ((TrackActivity) getActivity()).showFragment(new WeightFragment());
+                break;
+            case R.id.learn_smoking:
+                ((TrackActivity) getActivity()).showFragment(new SmokingFragment());
+                break;
+            case R.id.learn_exercise:
+                ((TrackActivity) getActivity()).showFragment(new ExerciseFragment());
+                break;
+            case R.id.learn_stress:
+                ((TrackActivity) getActivity()).showFragment(new StressFragment());
+                break;
         }
     }
 

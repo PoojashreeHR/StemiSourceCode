@@ -69,6 +69,7 @@ public class BloodTestFragment extends Fragment implements TrackActivity.OnBackP
     AppSharedPreference appSharedPreference;
     Context context;
     boolean fieldsOK;
+    Boolean validate;
     BloodTestResult bloodTestResult;
     public BloodTestFragment() {
         // Required empty public constructor
@@ -113,10 +114,12 @@ public class BloodTestFragment extends Fragment implements TrackActivity.OnBackP
         bloodSaveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                validate = true;
                 fieldsOK = validate(new EditText[]{etHaemoglobin, etUreaCreatinine, etCholesterol, etHdl, etLdl, etTriglycerides, etRpg, etFpg, etPpg});
-                if (!fieldsOK) {
-                    saveData();
+                if (!fieldsOK ) {
+                    if(validate) {
+                        saveData();
+                    }
                 }else {
                     Toast.makeText(getActivity(), "Enter data to save", Toast.LENGTH_SHORT).show();
                 }
@@ -134,7 +137,7 @@ public class BloodTestFragment extends Fragment implements TrackActivity.OnBackP
                 valid = false;
             }
             if(currentField.getText().toString().endsWith(".")){
-                valid = false;
+                validate = false;
                 currentField.setError("Error");
                 Toast.makeText(getActivity(),"Please Enter correct value",Toast.LENGTH_LONG).show();
             }

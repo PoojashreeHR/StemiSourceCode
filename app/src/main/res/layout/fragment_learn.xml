@@ -143,6 +143,7 @@
                     android:orientation="vertical">
 
                     <RelativeLayout
+                        android:id="@+id/learn_medication"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:padding="10dp">
@@ -182,6 +183,7 @@
                     </RelativeLayout>
 
                     <RelativeLayout
+                        android:id="@+id/learn_weight"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:padding="10dp">
@@ -221,6 +223,7 @@
                     </RelativeLayout>
 
                     <RelativeLayout
+                        android:id="@+id/learn_smoking"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:padding="10dp">
@@ -260,6 +263,7 @@
                     </RelativeLayout>
 
                     <RelativeLayout
+                        android:id="@+id/learn_exercise"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:padding="10dp">
@@ -299,6 +303,7 @@
                     </RelativeLayout>
 
                     <RelativeLayout
+                        android:id="@+id/learn_stress"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:padding="10dp">
@@ -332,17 +337,10 @@
                             android:layout_below="@+id/txt_stress"
                             android:layout_marginLeft="15dp"
                             android:textAppearance="?android:attr/textAppearanceMedium"
-                            android:text="You’ve been right on track for 4 days with your medication!"
-                            />
+                            android:text="You’ve been right on track for 4 days with your medication!" />
 
                     </RelativeLayout>
-
                 </LinearLayout>
-
-
-
-
-
             </android.support.v7.widget.CardView>
 
         </RelativeLayout>
