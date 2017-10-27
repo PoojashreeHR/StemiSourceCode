@@ -162,7 +162,7 @@ public class TrackMedicationDB {
         SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
         try {
             String query = "SELECT * FROM "+ TABLE_MEDICATION +" WHERE "+COLUMN_USER_ID+" = '"+userid+"' "
-                    +"ORDER BY "+COLUMN_DATE_TIME;
+                    +"ORDER BY "+COLUMN_DATE_TIME+" ASC";
 
             Cursor rows = db.rawQuery(query, null);
             rows.moveToFirst();

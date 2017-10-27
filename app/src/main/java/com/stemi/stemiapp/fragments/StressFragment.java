@@ -119,7 +119,7 @@ public class StressFragment extends Fragment implements AppConstants, TrackActiv
             }
         });
         alreadySaved = false;
-        callSavedMEthod();
+
         llYoga.setOnClickListener(this);
         llMeditation.setOnClickListener(this);
         llHobies.setOnClickListener(this);
@@ -424,6 +424,7 @@ public class StressFragment extends Fragment implements AppConstants, TrackActiv
     public void onResume() {
         super.onResume();
         ((TrackActivity) getActivity()).setActionBarTitle("Stress");
+        callSavedMEthod();
     }
 
     /*    @Override

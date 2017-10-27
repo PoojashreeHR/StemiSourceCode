@@ -120,7 +120,7 @@ public class ExerciseFragment extends Fragment implements View.OnClickListener, 
         llAerobics.setOnClickListener(this);
         llOthers.setOnClickListener(this);
 
-        callSavedMethod();
+
         tvExcerciseToday.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -457,6 +457,7 @@ public class ExerciseFragment extends Fragment implements View.OnClickListener, 
     public void onResume() {
         super.onResume();
         ((TrackActivity) getActivity()).setActionBarTitle("Exercise");
+        callSavedMethod();
     }
 
     /*  @Override

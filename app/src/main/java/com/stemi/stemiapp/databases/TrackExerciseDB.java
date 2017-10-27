@@ -131,7 +131,7 @@ public class TrackExerciseDB extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
         try {
             String query = "SELECT * FROM "+ TABLE_EXERCISE +" WHERE "+COLUMN_USER_ID+" = '"+userid+"' "
-                    +"ORDER BY "+COLUMN_DATE_TIME;
+                    +"ORDER BY "+COLUMN_DATE_TIME+" ASC";
 
             Cursor rows = db.rawQuery(query, null);
             rows.moveToFirst();

@@ -104,7 +104,7 @@ public class WeightFragment  extends Fragment implements View.OnClickListener,Tr
         appSharedPreference = new AppSharedPreference(getActivity());
         dbForTrackActivities = new DBForTrackActivities();
 
-        callSavedMethod();
+
         CommonUtils.setRobotoRegularFonts(getActivity(),tvWeightToday);
         btCalculateBmi.setOnClickListener(this);
         learnMore.setOnClickListener(this);
@@ -437,6 +437,7 @@ public class WeightFragment  extends Fragment implements View.OnClickListener,Tr
     public void onResume() {
         super.onResume();
         ((TrackActivity) getActivity()).setActionBarTitle("Weight");
+        callSavedMethod();
     }
 
     /*    @Override

@@ -1,5 +1,6 @@
 package com.stemi.stemiapp.fragments;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -7,6 +8,7 @@ import android.app.DialogFragment;
 import android.app.TimePickerDialog;
 import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.content.pm.PackageManager;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.Drawable;
@@ -14,8 +16,10 @@ import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.CalendarContract;
 import android.provider.CalendarContract.Events;
 import android.support.annotation.RequiresApi;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.text.Editable;
@@ -116,7 +120,7 @@ public class AddMedicineFragment extends Fragment implements View.OnClickListene
     Gson gson;
     AppSharedPreference appSharedPreference;
     MedicineTable medicineTable;
-   ArrayList<MedicineDetails> showReceivedData;
+    ArrayList<MedicineDetails> showReceivedData;
     int checkEditOrNot = 0;
 
     public AddMedicineFragment() {
@@ -162,8 +166,8 @@ public class AddMedicineFragment extends Fragment implements View.OnClickListene
         ButterKnife.bind(this, view);
         formIsValid(color);
         formIsValid(medicineType);
-        Log.e(TAG, "onCreateView: "+getFragmentManager() );
-     //   getActivity().getSupportFragmentManager().beginTransaction().remove(getParentFragment()).commit();
+        Log.e(TAG, "onCreateView: " + getFragmentManager());
+        //   getActivity().getSupportFragmentManager().beginTransaction().remove(getParentFragment()).commit();
         //Setting fonts
         CommonUtils.setRobotoRegularFonts(getActivity(), medicineNamee);
         ((TrackActivity) getActivity()).setOnBackPressedListener(this);
@@ -176,18 +180,18 @@ public class AddMedicineFragment extends Fragment implements View.OnClickListene
 
         int medColor = 0;
         //Calling from track activity passData to edit Medicine Data
-        String medType = "",medName="",medDuration="";
+        String medType = "", medName = "", medDuration = "";
         if (args != null) {
             showReceivedData = args.getParcelableArrayList("RECIEVE DATA");
             name = args.getString("NAME");
             Log.e(TAG, "onCreateView: " + showReceivedData);
             meds = showReceivedData.get(0);
-            if(meds.getMedicineMorning()!=null){
-                for(int i=0;i<meds.getMedicineMorning().size();i++){
-                    if(name.equalsIgnoreCase(meds.getMedicineMorning().get(i).getMedName())){
+            if (meds.getMedicineMorning() != null) {
+                for (int i = 0; i < meds.getMedicineMorning().size(); i++) {
+                    if (name.equalsIgnoreCase(meds.getMedicineMorning().get(i).getMedName())) {
                         medColor = meds.getMedicineMorning().get(i).getMedColor();
                         medType = meds.getMedicineMorning().get(i).getType();
-                        medName= meds.getMedicineMorning().get(i).getMedName();
+                        medName = meds.getMedicineMorning().get(i).getMedName();
                         medDuration = meds.getMedicineMorning().get(i).getDuration();
 
                         morningMedicine.setBackgroundResource(R.drawable.oval_shape_textview);
@@ -200,12 +204,12 @@ public class AddMedicineFragment extends Fragment implements View.OnClickListene
                 }
             }
 
-            if(meds.getMedicineAfternoon()!=null){
-                for(int i=0;i<meds.getMedicineAfternoon().size();i++){
-                    if(name.equalsIgnoreCase(meds.getMedicineAfternoon().get(i).getMedName())){
+            if (meds.getMedicineAfternoon() != null) {
+                for (int i = 0; i < meds.getMedicineAfternoon().size(); i++) {
+                    if (name.equalsIgnoreCase(meds.getMedicineAfternoon().get(i).getMedName())) {
                         medColor = meds.getMedicineAfternoon().get(i).getMedColor();
                         medType = meds.getMedicineAfternoon().get(i).getType();
-                        medName= meds.getMedicineAfternoon().get(i).getMedName();
+                        medName = meds.getMedicineAfternoon().get(i).getMedName();
                         medDuration = meds.getMedicineAfternoon().get(i).getDuration();
 
                         noonMedicine.setBackgroundResource(R.drawable.oval_shape_textview);
@@ -217,12 +221,12 @@ public class AddMedicineFragment extends Fragment implements View.OnClickListene
                     }
                 }
             }
-            if(meds.getMedicineNight()!=null){
-                for(int i=0;i<meds.getMedicineNight().size();i++){
-                    if(name.equalsIgnoreCase(meds.getMedicineNight().get(i).getMedName())){
+            if (meds.getMedicineNight() != null) {
+                for (int i = 0; i < meds.getMedicineNight().size(); i++) {
+                    if (name.equalsIgnoreCase(meds.getMedicineNight().get(i).getMedName())) {
                         medColor = meds.getMedicineNight().get(i).getMedColor();
                         medType = meds.getMedicineNight().get(i).getType();
-                        medName= meds.getMedicineNight().get(i).getMedName();
+                        medName = meds.getMedicineNight().get(i).getMedName();
                         medDuration = meds.getMedicineNight().get(i).getDuration();
 
                         nightMedicine.setBackgroundResource(R.drawable.oval_shape_textview);
@@ -237,23 +241,23 @@ public class AddMedicineFragment extends Fragment implements View.OnClickListene
 
             medicineDays.setText(medDuration);
             medicineNamee.setText(medName);
-         //   medicineRemainder.setChecked(meds.getMedicineRemainder());
-           for (int i = 0; i < medicineType.getChildCount(); i++) {
-               View v = medicineType.getChildAt(i);
-               if (v instanceof TextView) {
-                   final TextView textView = (TextView) v;
-                   if (textView.getText().equals(medType)) {
-                       typeOfMedicine = textView.getText().toString();
-                       textView.setTextColor(getResources().getColor(R.color.appBackground));
-                       for (Drawable drawable : textView.getCompoundDrawables()) {
-                           if (drawable != null) {
-                               drawable.setColorFilter(new PorterDuffColorFilter(getResources().getColor(R.color.appBackground), PorterDuff.Mode.SRC_IN));
-                           }
-                       }
-                   }
+            //   medicineRemainder.setChecked(meds.getMedicineRemainder());
+            for (int i = 0; i < medicineType.getChildCount(); i++) {
+                View v = medicineType.getChildAt(i);
+                if (v instanceof TextView) {
+                    final TextView textView = (TextView) v;
+                    if (textView.getText().equals(medType)) {
+                        typeOfMedicine = textView.getText().toString();
+                        textView.setTextColor(getResources().getColor(R.color.appBackground));
+                        for (Drawable drawable : textView.getCompoundDrawables()) {
+                            if (drawable != null) {
+                                drawable.setColorFilter(new PorterDuffColorFilter(getResources().getColor(R.color.appBackground), PorterDuff.Mode.SRC_IN));
+                            }
+                        }
+                    }
 
-               }
-           }
+                }
+            }
             for (int i = 0; i < color.getChildCount(); i++) {
                 View v = color.getChildAt(i);
                 if (v instanceof FrameLayout) {
@@ -273,8 +277,8 @@ public class AddMedicineFragment extends Fragment implements View.OnClickListene
                 }
 
             }
-            checkEditOrNot =1;
-        }else {
+            checkEditOrNot = 1;
+        } else {
             morningMedicine.setBackgroundResource(R.drawable.oval_shape_textview);
             morningMedicine.setTextColor(getResources().getColor(R.color.white));
             morningTime.setVisibility(View.VISIBLE);
@@ -282,34 +286,34 @@ public class AddMedicineFragment extends Fragment implements View.OnClickListene
         }
 
 
-            morningMedicine.setOnClickListener(this);
-            noonMedicine.setOnClickListener(this);
-            nightMedicine.setOnClickListener(this);
-            morningTime.setOnClickListener(this);
-            noonTime.setOnClickListener(this);
-            nightTime.setOnClickListener(this);
-            medicineRemainder.setOnClickListener(this);
+        morningMedicine.setOnClickListener(this);
+        noonMedicine.setOnClickListener(this);
+        nightMedicine.setOnClickListener(this);
+        morningTime.setOnClickListener(this);
+        noonTime.setOnClickListener(this);
+        nightTime.setOnClickListener(this);
+        medicineRemainder.setOnClickListener(this);
 
-            medicineDays.addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        medicineDays.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s.length() != 0) {
+                    numberOfDays = medicineDays.getText().toString();
                 }
-
-                @Override
-                public void onTextChanged(CharSequence s, int start, int before, int count) {
-                }
-
-                @Override
-                public void afterTextChanged(Editable s) {
-                    if (s.length() != 0) {
-                        numberOfDays = medicineDays.getText().toString();
-                    }
-                }
-            });
-            addMedicine.setOnClickListener(this);
-       //     ((TrackActivity) getActivity()).setActionBarTitle("Add Medicine");
-            return view;
+            }
+        });
+        addMedicine.setOnClickListener(this);
+        //     ((TrackActivity) getActivity()).setActionBarTitle("Add Medicine");
+        return view;
     }
 
     public static String getDate(Calendar cal) {
@@ -656,11 +660,27 @@ public class AddMedicineFragment extends Fragment implements View.OnClickListene
         eventValues.put(Events.RRULE, "FREQ=DAILY;COUNT=" + medicineDays.getText().toString());
         eventValues.put(Events.EVENT_TIMEZONE, TimeZone.getDefault().toString());
         //   eventValues.put("eventStatus", 1); // This information is sufficient for most entries tentative (0), confirmed (1) or canceled (2):
-        eventValues.put(Events.HAS_ALARM, 1); // 0 for false, 1 for true
-
+        //eventValues.put(Events.HAS_ALARM, 1); // 0 for false, 1 for true
+        Log.e("cal", "eventValues = " + new Gson().toJson(eventValues));
         Uri eventUri = cr.insert(eventUriString, eventValues);
         long eventID = Long.parseLong(eventUri.getLastPathSegment());
 
+
+        ContentValues reminders = new ContentValues();
+        reminders.put(CalendarContract.Reminders.EVENT_ID, eventID);
+        reminders.put(CalendarContract.Reminders.METHOD, CalendarContract.Reminders.METHOD_ALERT);
+        reminders.put(CalendarContract.Reminders.MINUTES, 0);
+        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return -1;
+        }
+        Uri uri2 = cr.insert(CalendarContract.Reminders.CONTENT_URI, reminders);
 //System.out.println("event id is::"+eventID);
         return eventID;
 

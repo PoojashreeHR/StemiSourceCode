@@ -99,7 +99,7 @@ public class BloodTestFragment extends Fragment implements TrackActivity.OnBackP
                 setupDate();
             }
         });
-        callSavedMethod();
+
         btRightArrow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -298,5 +298,6 @@ public class BloodTestFragment extends Fragment implements TrackActivity.OnBackP
     public void onResume() {
         super.onResume();
         ((TrackActivity) getActivity()).setActionBarTitle("Blood Test Report");
+        callSavedMethod();
     }
 }
