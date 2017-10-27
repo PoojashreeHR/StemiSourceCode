@@ -62,10 +62,11 @@
         android:textSize="14sp"/>
 
         <ImageView
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp"
             android:background="@drawable/ic_min"
-            android:layout_margin="10dp"
             android:layout_alignParentLeft="true"
             android:layout_below="@+id/tv_stress"
             android:id="@+id/imageView2" />
@@ -98,12 +99,13 @@
 -->
 
     <ImageView
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
         android:background="@drawable/ic_max"
-        android:layout_margin="10dp"
         android:layout_alignParentRight="true"
         android:id="@+id/img3"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
         android:layout_below="@+id/tv_stress" />
 
     <LinearLayout
@@ -138,8 +140,6 @@
 
     </LinearLayout>
 </RelativeLayout>
-
-
     <TextView
         android:layout_below="@+id/rl_stressCount"
         android:id="@+id/tv_stress_health"
@@ -147,7 +147,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:textSize="14sp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="40dp"
         android:text="Breathe deeply. Reduce stress levels with "/>
 
     <LinearLayout
@@ -155,7 +155,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/tv_stress_health"
         android:orientation="horizontal"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="20dp"
         android:weightSum="3">
     <LinearLayout
         android:id="@+id/ll_yoga"

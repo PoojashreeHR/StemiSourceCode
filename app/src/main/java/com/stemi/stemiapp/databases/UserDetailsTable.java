@@ -87,8 +87,8 @@ public class UserDetailsTable {
     public String isExist(String userName) {
         SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
         String string = null;
-        Log.e(TAG, "isExist: " + "SELECT " + USER_NAME + " FROM " + TABLE_NAME + " WHERE " + USER_NAME + "=" + "'" + userName + "'", null);
-        Cursor cur = db.rawQuery("SELECT " + USER_NAME + " FROM " + TABLE_NAME + " WHERE " + "UPPER("+ USER_NAME + ")" + "=" + "\"" + userName.toUpperCase() + "\"", null);
+        Log.e(TAG, "isExist: " +"SELECT " + USER_NAME + " FROM " + TABLE_NAME + " WHERE " + "UPPER("+ USER_NAME + ")" + "=" + "\"" + userName.toUpperCase() + "\"" + " AND " + LOGIN_ID + " = "+ "'" +loginId + "'", null);
+        Cursor cur = db.rawQuery("SELECT " + USER_NAME + " FROM " + TABLE_NAME + " WHERE " + "UPPER("+ USER_NAME + ")" + "=" + "\"" + userName.toUpperCase() + "\"" + " AND " + LOGIN_ID + "= "+  "'"+ loginId + "'", null);
         if (cur.moveToFirst()){
             for (int i = 0; i < cur.getCount(); i++){
                 string = cur.getString(cur.getColumnIndex(USER_NAME));
@@ -101,10 +101,25 @@ public class UserDetailsTable {
     }
 
     // To get Number of profile
-    public long getProfilesCount() {
+    public long getProfilesCount(String loginId) {
+        long cnt=0;
         SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
-        long cnt  = DatabaseUtils.queryNumEntries(db, TABLE_NAME);
-        //db.close();
+        String sql = "SELECT * FROM "+TABLE_NAME+" WHERE "+LOGIN_ID+" = '"+loginId+"'";
+        Cursor cursor = db.rawQuery(sql,null);
+        Log.e(TAG, "getProfilesCount: FROM DB: "+cursor.getCount());
+        cnt = cursor.getCount();
+       // Cursor cursor = db.query(TABLE_NAME, new String[]{USER_NAME},LOGIN_ID+" = '"+loginId+"'", null, null, null, null);
+      /*  while(cursor.moveToFirst()) {
+            Log.e(TAG, "getProfilesCount: FROM DB: "+cursor.getCount());
+            for (int i = 0; i < cursor.getCount(); i++) {
+                cnt = cursor.getString(cursor.getColumnIndex(LOGIN_ID));
+                cursor.moveToNext();
+            }
+          //  cnt = DatabaseUtils.queryNumEntries(db, TABLE_NAME);
+            //db.close();
+        }
+        long count = Long.parseLong(cnt);*/
+        cursor.close();
         return cnt;
     }
 

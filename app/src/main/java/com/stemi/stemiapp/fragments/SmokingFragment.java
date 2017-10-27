@@ -6,6 +6,7 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -171,12 +172,21 @@ public class SmokingFragment  extends Fragment implements TrackActivity.OnBackPr
     public void saveAllData() {
         if(GlobalClass.userID !=null) {
             if (!alreadySaved) {
-                Log.e("db", "SmokingFragment saveAllData()");
                 if (smokeToday.getResponse() == null || smokeToday.getResponse().equals("")) {
-
-                } else if (howMany.isEnabled() && howMany.getText().toString().equals("")) {
-                   // Toast.makeText(getActivity(), "Please enter how many", Toast.LENGTH_LONG).show();
-                } else {
+                    alreadySaved = false;
+                    FragmentManager fm = getActivity().getSupportFragmentManager();
+                    for(int i = 0; i < fm.getBackStackEntryCount(); ++i) {
+                        fm.popBackStack();
+                    }
+                }
+                Log.e("fragment", "SmokingFragment saveAllData()");
+                if (howMany.isEnabled() && howMany.getText().toString().equals("")) {
+                    alreadySaved = false;
+                    FragmentManager fm = getActivity().getSupportFragmentManager();
+                    for(int i = 0; i < fm.getBackStackEntryCount(); ++i) {
+                        fm.popBackStack();
+                    }
+                }else {
                     saveData();
                 }
                 //saveData();

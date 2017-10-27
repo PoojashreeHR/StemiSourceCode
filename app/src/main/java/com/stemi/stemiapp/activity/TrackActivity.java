@@ -649,22 +649,6 @@ public class TrackActivity extends AppCompatActivity implements NavigationView.O
                         clearBackStack();
                         toolbarTitle.setText(toolBarText);
                     }
-                        // String topOnStack = manager.getBackStackEntryAt(manager.getBackStackEntryCount() - 1).getName();
-                        //Log.e(TAG, "onBackStackChanged: " + topOnStack);
-                  //  } else {
-                      //  currentFragment.onResume();
-                       /* List<Fragment> fragmentList = manager.getFragments();
-
-                        for (int i = 0; i < fragmentList.size(); i++) {
-                          *//*  if ( == tabLayout.getSelectedTabPosition()){
-                                Log.e(TAG, "onBackStackChanged: TAB"+ fragmentList.get(i).getTag() );
-                            }*//*
-                        }
-                        //Fragment currFrag = (Fragment) manager.findFragmentByTag("1");
-//                        Log.e(TAG, "onBackStackChanged: "+currFrag.getTag() );*/
-                      //  toolbarTitle.setText("Track");
-                //    }
-                    //currFrag.onFragmentResume();
                 }
             }
         };
@@ -677,13 +661,6 @@ public class TrackActivity extends AppCompatActivity implements NavigationView.O
         if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
             onBackPressedListener.doBack();
 
-           /* new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    backstackFragment();
-                }
-            },1000);
-        }*/
         } else {
             super.onBackPressed();
         }
@@ -704,7 +681,6 @@ public class TrackActivity extends AppCompatActivity implements NavigationView.O
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(MessageEvent event) {
         backstackFragment();
-        // Toast.makeText(this, event.message, Toast.LENGTH_SHORT).show();
     }
 
     private void removeCurrentFragment() {
@@ -715,9 +691,7 @@ public class TrackActivity extends AppCompatActivity implements NavigationView.O
         mainContainer.setVisibility(View.GONE);
 
         if (currentFrag != null) {
-            // getSupportFragmentManager().popBackStack();
             transaction.remove(currentFrag);
-//            currentFrag.onResume();
         }
         transaction.commitAllowingStateLoss();
     }

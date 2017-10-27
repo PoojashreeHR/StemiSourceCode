@@ -889,7 +889,14 @@ public class MedicationFragment extends Fragment implements AppConstants, View.O
             if (medicineContains !=null) {
                 storeData();
                 alreadySaved = true;
+            }else {
+                alreadySaved = false;
+                FragmentManager fm = getActivity().getSupportFragmentManager();
+                for(int i = 0; i < fm.getBackStackEntryCount(); ++i) {
+                    fm.popBackStack();
+                }
             }
+
         }
     }
 

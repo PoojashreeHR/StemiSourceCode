@@ -7,6 +7,7 @@ import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -299,9 +300,20 @@ public class ExerciseFragment extends Fragment implements View.OnClickListener, 
         if(GlobalClass.userID != null) {
             if (!alreadySaved) {
                 Log.e("fragment", "ExerciseFragment saveAllData()");
-                storeData();
+                if (ivWalking.getTag().equals(R.drawable.ic_checked_1) || ivCycling.getTag().equals(R.drawable.ic_checked_1)
+                        || ivSwimming.getTag().equals(R.drawable.ic_checked_1) || ivAerobics.getTag().equals(R.drawable.ic_checked_1)
+                        || ivOthers.getTag().equals(R.drawable.ic_checked_1)) {
+                    storeData();
+                    alreadySaved = true;
+                }else {
+                    alreadySaved = false;
+                    FragmentManager fm = getActivity().getSupportFragmentManager();
+                    for(int i = 0; i < fm.getBackStackEntryCount(); ++i) {
+                        fm.popBackStack();
+                    }
+                }
               //  getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
-                alreadySaved = true;
+
             }
         }
         else {

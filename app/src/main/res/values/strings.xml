@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Stemi</string>
+    <string name="app_name">CardiaCare</string>
     <string name="title_activity_main">MainActivity</string>
 
     <!-- Login Strings -->
@@ -27,15 +27,16 @@
     <string name="stay_healthy">Stay Healthy</string>
     <string name="track_medication">Track Your Medication</string>
 
+    <string name="value">kg/m<sub>2</sub></string>
     <!-- Health Related Question-->
     <string name="Do_you_smoke">Do you smoke?</string>
-    <string name="had_heart_attack">Did you had a heart attack before?</string>
+    <string name="had_heart_attack">Have you had a heart attack before?</string>
     <string name="have_diabetes">Do you have diabetes?</string>
     <string name="have_blood_presssure">Do you have high blood pressure?</string>
     <string name="have_cholesterol">Do you have high cholesterol?</string>
-    <string name="had_paralytic_stroke">Did you ever had a paralytic stroke?</string>
+    <string name="had_paralytic_stroke">Have you ever had a paralytic stroke?</string>
     <string name="have_astama">Do you have bronchial asthma?</string>
-    <string name="family_health">Did anyone in your immediate family had a heart attack?</string>
+    <string name="family_health">Has anyone in your immediate family had a heart attack?</string>
     <string name="title_activity_maps">Map</string>
     <string name="gps_network_not_enabled">Location services is turned off, please enable</string>
     <string name="open_location_settings">ENABLE</string>

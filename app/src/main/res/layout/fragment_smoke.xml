@@ -69,7 +69,7 @@
         android:textSize="20sp"
         android:gravity="center"
         android:layout_marginTop="10dp"
-        android:text=" If yes, How many?"
+        android:text=" If yes, how many?"
         android:layout_below="@+id/linearLayout3"
         android:id="@+id/textView2" />
 

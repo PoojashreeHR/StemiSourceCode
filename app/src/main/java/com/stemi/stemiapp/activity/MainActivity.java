@@ -54,12 +54,7 @@ public class MainActivity extends AppCompatActivity implements AppConstants,View
         CommonUtils.setRobotoRegularFonts(MainActivity.this,tvForgotPassword);
         CommonUtils.setRobotoRegularFonts(MainActivity.this,tvNotRegistered);
 
-        if(appSharedPreferences.getUserToken(USER_TOKEN) != null){
-            startActivity(new Intent(MainActivity.this,TrackActivity.class));
-            finish();
-        }else {
-            Log.e(TAG, "onCreate: TOKEN IS NULL" );
-        }
+
 
         btnLogin.setOnClickListener(this);
         tvNotRegistered.setOnClickListener(this);
@@ -116,7 +111,8 @@ public class MainActivity extends AppCompatActivity implements AppConstants,View
 
             @Override
             public void onFailure(Call<SignUpResponseModel> call, Throwable t) {
-
+                CommonUtils.hideLoadingProgress();
+                Toast.makeText(MainActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }

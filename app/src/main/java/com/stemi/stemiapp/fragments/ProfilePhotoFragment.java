@@ -159,46 +159,10 @@ public class ProfilePhotoFragment extends Fragment implements AppConstants,View.
     }
 
     private void takePhotoFromCamera(){
-       /* File file = new File(Environment.getExternalStorageDirectory(),  ("StemiImg"+".jpg"));
-        if(!file.exists()){
-            try {
-                file.createNewFile();
-            } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-        }else{
-            file.delete();
-            try {
-                file.createNewFile();
-            } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-        }
-        capturedImageUri = FileProvider.getUriForFile(getActivity(), "AUTHORITY", file);
-       // Intent i = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-        Intent i = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-
-        i.putExtra(MediaStore.EXTRA_OUTPUT, capturedImageUri);
-        startActivityForResult(i, CAMERA);*/
         Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
         cameraIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         startActivityForResult(cameraIntent, CAMERA);
 
-    }
-
-    private void previewCapturedImage() {
-        try {
-            // bimatp factory
-            fileUri = getOutputMediaFileUri(MEDIA_TYPE_IMAGE);
-            BitmapFactory.Options options = new BitmapFactory.Options();
-            final Bitmap bitmap = BitmapFactory.decodeFile(fileUri.getPath(), options);
-            bitmapConvertToFile(bitmap,0);
-            img.setImageBitmap(bitmap);
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-        }
     }
 
     private File bitmapConvertToFile(Bitmap bitmap, int i) {
@@ -208,7 +172,6 @@ public class ProfilePhotoFragment extends Fragment implements AppConstants,View.
             File printFolder = null;
             printFolder = CommonUtils.getOutputMediaFile(getActivity(), 100);
             assert printFolder != null;
-            //croppedFile = new File(printFolder.getPath(), "IMG_" + (new SimpleDateFormat("yyyyMMddHHmmss")).format(Calendar.getInstance().getTime()) + ".jpg");
 
             croppedFile = new File(printFolder.getPath(), "stemiImage1.jpg");
             Bitmap out = Bitmap.createScaledBitmap(bitmap, bitmap.getWidth(), bitmap.getHeight(), false);
@@ -268,13 +231,17 @@ public class ProfilePhotoFragment extends Fragment implements AppConstants,View.
                    // dBforUserDetails.removeNote(RegistrationActivity.registeredUserDetails.getName());
                     if(!editmode) {
                         String uid = dBforUserDetails.addEntry(RegistrationActivity.registeredUserDetails, getActivity());
-                        if( dBforUserDetails.getProfilesCount() == 1) {
-                            appSharedPreference.setUserId(uid);
-                            GlobalClass.userID = uid;
-                        }
+                            Log.e(TAG, "onClick: PROFILE "+dBforUserDetails.getProfilesCount(appSharedPreference.getLoginId()));
+                            if(dBforUserDetails.getProfilesCount(appSharedPreference.getLoginId()) == 1){
+                                appSharedPreference.setUserId(uid);
+                                GlobalClass.userID = appSharedPreference.getUserId();
+                            }
+                        Log.e(TAG, "onClick: DB COUNT : PROFILE " + dBforUserDetails.getProfilesCount(appSharedPreference.getLoginId()));
                     }
                     else{
                         String uid = dBforUserDetails.updateEntry(RegistrationActivity.registeredUserDetails, getActivity());
+                     //   appSharedPreference.setUserId(uid);
+                       // GlobalClass.userID = uid;
 //                        appSharedPreference.setUserId(uid);
 //                        GlobalClass.userID = uid;
                     }
@@ -283,7 +250,7 @@ public class ProfilePhotoFragment extends Fragment implements AppConstants,View.
 
                    // }
                     RegistrationActivity.registeredUserDetails = new RegisteredUserDetails();
-                    Log.e(TAG, "onClick: DB COUNT " + dBforUserDetails.getProfilesCount());
+                   // Log.e(TAG, "onClick: DB COUNT " + dBforUserDetails.getProfilesCount());
 
                     startActivity(new Intent(getActivity(), TrackActivity.class));
                     getActivity().finish();
