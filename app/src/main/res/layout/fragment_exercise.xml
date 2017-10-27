@@ -30,7 +30,7 @@
         android:layout_alignRight="@+id/tv_excercise_today"
         android:layout_alignEnd="@+id/tv_excercise_today" />
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/excerciseLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -47,7 +47,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="10dp">
 
             <FrameLayout
                 android:layout_width="wrap_content"
@@ -64,7 +69,8 @@
                     android:layout_gravity="right"
                     android:tag="null"
                     android:background="@drawable/ic_unchecked_1"
-                    android:layout_marginTop="5dp" />
+                    android:layout_marginTop="5dp"
+                    android:layout_marginRight="5dp"/>
             </FrameLayout>
 
             <TextView
@@ -84,7 +90,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:layout_marginTop="20dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true">
 
             <FrameLayout
                 android:layout_width="wrap_content"
@@ -121,7 +130,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginEnd="15dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true">
 
             <FrameLayout
                 android:layout_width="wrap_content"
@@ -159,7 +174,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:layout_below="@+id/ll_walking"
+            android:layout_toLeftOf="@+id/ll_cycling"
+            android:layout_toStartOf="@+id/ll_cycling"
+            android:layout_marginTop="30dp"
+            android:layout_marginBottom="20dp">
 
             <FrameLayout
                 android:layout_width="wrap_content"
@@ -196,7 +216,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:layout_alignTop="@+id/ll_aerobics"
+            android:layout_toRightOf="@+id/ll_cycling"
+            android:layout_toEndOf="@+id/ll_cycling">
 
             <FrameLayout
                 android:layout_width="wrap_content"
@@ -213,7 +236,8 @@
                     android:layout_gravity="right"
                     android:tag="null"
                     android:background="@drawable/ic_unchecked_1"
-                    android:layout_marginTop="5dp" />
+                    android:layout_marginTop="5dp"
+                    android:layout_marginRight="10dp"/>
             </FrameLayout>
 
             <TextView
@@ -227,7 +251,14 @@
                 android:layout_marginTop="5dp"
                 android:layout_marginBottom="10dp"/>
         </LinearLayout>
+    </RelativeLayout>
 
-    </LinearLayout>
-
+    <Button
+        android:id="@+id/exercise_save"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/appBackground"
+        android:text="SAVE"
+        android:textColor="@color/white"/>
 </RelativeLayout>

@@ -461,6 +461,7 @@ public class TrackActivity extends AppCompatActivity implements NavigationView.O
         tabLayout.getTabAt(0).setCustomView(tabOne);
         tab = tabLayout.getTabAt(0);
         tab.select();
+        toolBarText = "Learn";
 //        toolbarTitle.setText("Learn");
         ubTateTab(0, TrackActivity.this);
 

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:id="@+id/rv_symptoms"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_below="@+id/textView1"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <com.stemi.stemiapp.customviews.CircleImageView
+        android:id="@+id/symtonsImage"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:background="@drawable/symptom_1"
+        android:layout_margin="10dp"/>
+    <TextView
+        android:id="@+id/symptomsNumb"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_toRightOf="@+id/symtonsImage"
+        android:layout_toEndOf="@+id/symtonsImage"
+        android:background="@drawable/rounded_textview"
+        android:textSize="12sp"
+        android:text="1"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:layout_margin="10dp"/>
+
+    <TextView
+        android:id="@+id/symptoms"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/symptomsNumb"
+        android:layout_toRightOf="@+id/symtonsImage"
+        android:layout_toEndOf="@+id/symtonsImage"
+        android:textSize="16sp"
+        android:typeface="sans"
+        android:textColor="@color/black"
+        android:text="@string/heart_pain"
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginBottom="10dp"/>
+</RelativeLayout>

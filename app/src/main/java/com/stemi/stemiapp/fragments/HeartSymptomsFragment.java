@@ -145,6 +145,8 @@ public class HeartSymptomsFragment extends Fragment implements TrackActivity.OnB
             return 5;
         }
     }
-
-
+    @Override
+    public void setMenuVisibility(boolean menuVisible) {
+        super.setMenuVisibility(menuVisible);
+    }
 }

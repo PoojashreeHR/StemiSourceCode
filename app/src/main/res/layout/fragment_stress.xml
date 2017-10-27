@@ -1,282 +1,301 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
-    android:background="@color/lightWhite"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/lightWhite"
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/tv_food_today"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:textSize="18sp"
-        android:paddingLeft="10dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
         android:layout_marginTop="21dp"
         android:drawableRight="@drawable/ic_spinner"
+        android:gravity="center"
+        android:paddingLeft="10dp"
         android:text="Today  "
         android:textColor="@color/appBackground"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
+        android:textSize="18sp" />
+
     <View
         android:id="@+id/view"
         android:layout_width="wrap_content"
         android:layout_height="2dp"
-        android:background="@color/colorAccent"
-        android:layout_marginTop="10dp"
-        android:layout_below="@+id/tv_food_today"
+        android:layout_alignEnd="@+id/tv_food_today"
         android:layout_alignLeft="@+id/tv_food_today"
-        android:layout_alignStart="@+id/tv_food_today"
         android:layout_alignRight="@+id/tv_food_today"
-        android:layout_alignEnd="@+id/tv_food_today" />
-<!--
-    <TextView
-        android:id="@+id/tv_food_que"
-        android:layout_width="match_parent"
+        android:layout_alignStart="@+id/tv_food_today"
+        android:layout_below="@+id/tv_food_today"
+        android:layout_marginTop="10dp"
+        android:background="@color/colorAccent" />
+    <!--
+        <TextView
+            android:id="@+id/tv_food_que"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/view"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:gravity="center"
+            android:layout_margin="15dp"
+            android:text="Rate your stress level" />-->
+
+    <ScrollView
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/view"
-        android:textColor="@color/black"
-        android:textSize="20sp"
-        android:gravity="center"
-        android:layout_margin="15dp"
-        android:text="Rate your stress level" />-->
-<RelativeLayout
-    android:id="@+id/rl_stressCount"
-    android:layout_below="@+id/view"
-    android:layout_width="wrap_content"
-    android:background="@color/white"
-    android:layout_marginTop="20dp"
-    android:layout_marginLeft="10dp"
-    android:layout_marginRight="10dp"
-    android:layout_height="wrap_content">
+        android:layout_marginTop="10dp">
 
-    <TextView
-        android:id="@+id/tv_stress"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Rate your stress level today"
-        android:gravity="center"
-        android:typeface="serif"
-        android:layout_margin="10dp"
-        android:textSize="14sp"/>
-
-        <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginLeft="10dp"
-            android:background="@drawable/ic_min"
-            android:layout_alignParentLeft="true"
-            android:layout_below="@+id/tv_stress"
-            android:id="@+id/imageView2" />
-<!--
-    <LinearLayout
-        android:id="@+id/ll_seekbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/tv_stress"
-        android:orientation="horizontal"
-        android:weightSum="5">
-
-        <SeekBar
-            android:id="@+id/seekbar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="20dp"
-            android:max="5"
-            android:layout_weight="3"
-            android:thumbTint="@color/appBackground"
-            android:progressTint="@color/appBackground"/>
-
-        <LinearLayout
-            android:id="@+id/seekbarText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_below="@+id/seekbar"/>
-    </LinearLayout>
--->
-
-    <ImageView
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:background="@drawable/ic_max"
-        android:layout_alignParentRight="true"
-        android:id="@+id/img3"
-        android:layout_marginRight="10dp"
-        android:layout_marginTop="10dp"
-        android:layout_below="@+id/tv_stress" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/tv_stress"
-        android:layout_toEndOf="@+id/imageView2"
-        android:layout_toRightOf="@+id/imageView2"
-        android:layout_toLeftOf="@+id/img3"
-        android:layout_toStartOf="@+id/img3"
-        android:orientation="vertical">
-
-        <SeekBar
-            android:id="@+id/seekbar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:max="5"
-            android:layout_weight="3"
-            android:thumbTint="@color/appBackground"
-            android:progressTint="@color/appBackground"/>
-
-        <LinearLayout
-            android:id="@+id/seekbarText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginBottom="10dp"
-            android:layout_below="@+id/seekbar"/>
-
-    </LinearLayout>
-</RelativeLayout>
-    <TextView
-        android:layout_below="@+id/rl_stressCount"
-        android:id="@+id/tv_stress_health"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:textSize="14sp"
-        android:layout_marginTop="40dp"
-        android:text="Breathe deeply. Reduce stress levels with "/>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/tv_stress_health"
-        android:orientation="horizontal"
-        android:layout_marginTop="20dp"
-        android:weightSum="3">
-    <LinearLayout
-        android:id="@+id/ll_yoga"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_weight="1">
-
-        <FrameLayout
+        <RelativeLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center">
-            <ImageView
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:background="@drawable/ic_yoga"
-                android:layout_margin="10dp"/>
-            <ImageView
-                android:id="@+id/iv_yoga"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_gravity="right"
-                android:tag="null"
-                android:background="@drawable/ic_unchecked_1"
-                android:layout_marginRight="15dp"
-                android:layout_marginTop="5dp" />
-        </FrameLayout>
+            android:layout_height="wrap_content">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Yoga"
-            android:gravity="center"
-            android:layout_gravity="center"
-            android:textSize="10sp"
-            android:textColor="@color/colorLightGrey"
-            android:fontFamily="serif"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="10dp"/>
-    </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/ll_meditation"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_weight="1">
+            <RelativeLayout
+                android:id="@+id/rl_stressCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="20dp"
+                android:background="@color/white">
 
-        <FrameLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center">
-            <ImageView
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:background="@drawable/ic_meditation"
-                android:layout_margin="10dp"/>
-            <ImageView
-                android:id="@+id/iv_meditation"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:tag="null"
-                android:layout_gravity="right"
-                android:background="@drawable/ic_unchecked_1"
-                android:layout_marginRight="15dp"
-                android:layout_marginTop="5dp"/>
-        </FrameLayout>
+                <TextView
+                    android:id="@+id/tv_stress"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:gravity="center"
+                    android:text="Rate your stress level today"
+                    android:textSize="14sp"
+                    android:typeface="serif" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Meditation"
-            android:textColor="@color/colorLightGrey"
-            android:fontFamily="serif"
-            android:gravity="center"
-            android:layout_gravity="center"
-            android:textSize="10sp"
-            android:singleLine="true"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="10dp"/>
-    </LinearLayout>
+                <ImageView
+                    android:id="@+id/imageView2"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_below="@+id/tv_stress"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/ic_min" />
+                <!--
+                    <LinearLayout
+                        android:id="@+id/ll_seekbar"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/tv_stress"
+                        android:orientation="horizontal"
+                        android:weightSum="5">
 
-    <LinearLayout
-        android:id="@+id/ll_hobies"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_weight="1">
+                        <SeekBar
+                            android:id="@+id/seekbar"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="20dp"
+                            android:max="5"
+                            android:layout_weight="3"
+                            android:thumbTint="@color/appBackground"
+                            android:progressTint="@color/appBackground"/>
 
-        <FrameLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center">
-            <ImageView
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:background="@drawable/ic_hobbies"
-                android:layout_margin="10dp"/>
+                        <LinearLayout
+                            android:id="@+id/seekbarText"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_below="@+id/seekbar"/>
+                    </LinearLayout>
+                -->
 
-            <ImageView
-                android:id="@+id/iv_hobbies"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_gravity="right"
-                android:layout_marginRight="15dp"
-                android:layout_marginTop="5dp"
-                android:background="@drawable/ic_unchecked_1"
-                android:tag="null" />
-        </FrameLayout>
+                <ImageView
+                    android:id="@+id/img3"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_below="@+id/tv_stress"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/ic_max" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Hobbies"
-            android:layout_gravity="center"
-            android:textSize="10sp"
-            android:textColor="@color/colorLightGrey"
-            android:fontFamily="serif"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="10dp"/>
-    </LinearLayout>
-    </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tv_stress"
+                    android:layout_toEndOf="@+id/imageView2"
+                    android:layout_toLeftOf="@+id/img3"
+                    android:layout_toRightOf="@+id/imageView2"
+                    android:layout_toStartOf="@+id/img3"
+                    android:orientation="vertical">
 
+                    <SeekBar
+                        android:id="@+id/seekbar"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:layout_weight="3"
+                        android:max="5"
+                        android:progressTint="@color/appBackground"
+                        android:thumbTint="@color/appBackground" />
+
+                    <LinearLayout
+                        android:id="@+id/seekbarText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/seekbar"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="20dp"
+                        android:orientation="horizontal" />
+
+                </LinearLayout>
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/tv_stress_health"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/rl_stressCount"
+                android:layout_marginTop="40dp"
+                android:gravity="center"
+                android:text="Breathe deeply. Reduce stress levels with "
+                android:textSize="14sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tv_stress_health"
+                android:layout_marginTop="20dp"
+                android:orientation="horizontal"
+                android:weightSum="3">
+
+                <LinearLayout
+                    android:id="@+id/ll_yoga"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <FrameLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center">
+
+                        <ImageView
+                            android:layout_width="60dp"
+                            android:layout_height="60dp"
+                            android:layout_margin="10dp"
+                            android:background="@drawable/ic_yoga" />
+
+                        <ImageView
+                            android:id="@+id/iv_yoga"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_gravity="right"
+                            android:layout_marginRight="15dp"
+                            android:layout_marginTop="5dp"
+                            android:background="@drawable/ic_unchecked_1"
+                            android:tag="null" />
+                    </FrameLayout>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginTop="5dp"
+                        android:fontFamily="serif"
+                        android:gravity="center"
+                        android:text="Yoga"
+                        android:textColor="@color/colorLightGrey"
+                        android:textSize="10sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/ll_meditation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <FrameLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center">
+
+                        <ImageView
+                            android:layout_width="60dp"
+                            android:layout_height="60dp"
+                            android:layout_margin="10dp"
+                            android:background="@drawable/ic_meditation" />
+
+                        <ImageView
+                            android:id="@+id/iv_meditation"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_gravity="right"
+                            android:layout_marginRight="15dp"
+                            android:layout_marginTop="5dp"
+                            android:background="@drawable/ic_unchecked_1"
+                            android:tag="null" />
+                    </FrameLayout>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginTop="5dp"
+                        android:fontFamily="serif"
+                        android:gravity="center"
+                        android:singleLine="true"
+                        android:text="Meditation"
+                        android:textColor="@color/colorLightGrey"
+                        android:textSize="10sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/ll_hobies"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <FrameLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center">
+
+                        <ImageView
+                            android:layout_width="60dp"
+                            android:layout_height="60dp"
+                            android:layout_margin="10dp"
+                            android:background="@drawable/ic_hobbies" />
+
+                        <ImageView
+                            android:id="@+id/iv_hobbies"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_gravity="right"
+                            android:layout_marginRight="15dp"
+                            android:layout_marginTop="5dp"
+                            android:background="@drawable/ic_unchecked_1"
+                            android:tag="null" />
+                    </FrameLayout>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginTop="5dp"
+                        android:fontFamily="serif"
+                        android:text="Hobbies"
+                        android:textColor="@color/colorLightGrey"
+                        android:textSize="10sp" />
+                </LinearLayout>
+            </LinearLayout>
+        </RelativeLayout>
+    </ScrollView>
 </RelativeLayout>

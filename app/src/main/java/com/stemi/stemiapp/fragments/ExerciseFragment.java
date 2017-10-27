@@ -81,8 +81,10 @@ public class ExerciseFragment extends Fragment implements View.OnClickListener, 
     @BindView(R.id.iv_others)
     ImageView ivOthers;
 
+/*
     @BindView(R.id.excerciseLayout)
     LinearLayout excerciseLayout;
+*/
 
     @BindView(R.id.tv_excercise_today)
     TextView tvExcerciseToday;

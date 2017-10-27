@@ -1,18 +1,27 @@
 package com.stemi.stemiapp.fragments;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.stemi.stemiapp.R;
 import com.stemi.stemiapp.activity.TrackActivity;
 
 import com.stemi.stemiapp.activity.UpdateableFragment;
+import com.stemi.stemiapp.customviews.CircleImageView;
 import com.stemi.stemiapp.databases.TrackExerciseDB;
 import com.stemi.stemiapp.databases.TrackMedicationDB;
 import com.stemi.stemiapp.databases.TrackSmokingDB;
@@ -20,6 +29,7 @@ import com.stemi.stemiapp.databases.TrackStressDB;
 import com.stemi.stemiapp.databases.TrackWeightDB;
 import com.stemi.stemiapp.databases.UserDetailsTable;
 import com.stemi.stemiapp.model.DataSavedEvent;
+import com.stemi.stemiapp.model.HeartSymptomsModel;
 import com.stemi.stemiapp.model.RegisteredUserDetails;
 import com.stemi.stemiapp.model.apiModels.StatusMessageResponse;
 import com.stemi.stemiapp.preference.AppSharedPreference;
@@ -34,7 +44,9 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -57,8 +69,12 @@ public class LearnFragment extends Fragment implements AppConstants, UpdateableF
     @BindView(R.id.desc_smoking) TextView tvDescSmoking;
     @BindView(R.id.desc_stress) TextView tvDescStress;
     @BindView(R.id.desc_weight) TextView tvDescWeight;
+    @BindView(R.id.pager_tabDots)TabLayout tabLayout;
+    private List<HeartSymptomsModel> heartSymptomsModel;
 
+    @BindView(R.id.banner_view_pager)ViewPager bannerViewPager;
 
+    ImagesPagerAdapter pagerAdapter;
     ApiInterface apiInterface;
     AppSharedPreference appSharedPreference;
     public LearnFragment() {
@@ -97,7 +113,7 @@ public class LearnFragment extends Fragment implements AppConstants, UpdateableF
         apiInterface = ApiClient.getClient().create(ApiInterface.class);
         appSharedPreference = new AppSharedPreference(getActivity());
         callGetTipOfTheDay();
-
+        heartSymptomsModel = new ArrayList<>();
 //        ((TrackActivity) getActivity()).setActionBarTitle("Learn");
 
         CommonUtils.setRobotoLightFonts(getActivity(),tvTips);
@@ -108,10 +124,28 @@ public class LearnFragment extends Fragment implements AppConstants, UpdateableF
                 ((TrackActivity) getActivity()).showFragment(new HeartSymptomsFragment());
             }
         });
-
-
-
+        heartAttackSymptomsData();
+        pagerAdapter = new ImagesPagerAdapter(getActivity(),heartSymptomsModel);
+        bannerViewPager.setAdapter(pagerAdapter);
+        tabLayout.setupWithViewPager(bannerViewPager);
         return view;
+    }
+
+    private void heartAttackSymptoms(int img, String symptoms, String symptomsNumb) {
+        HeartSymptomsModel symptomsModel = new HeartSymptomsModel();
+        symptomsModel.setSymptomsImg(img);
+        symptomsModel.setSymptoms(symptoms);
+        symptomsModel.setSymptomNumb(symptomsNumb);
+        heartSymptomsModel.add(symptomsModel);
+
+    }
+    private void heartAttackSymptomsData() {
+        heartAttackSymptoms(R.drawable.symptom_1,getResources().getString(R.string.heart_pain),"1");
+        heartAttackSymptoms(R.drawable.symptom_2,getResources().getString(R.string.jaw_pain),"2");
+        heartAttackSymptoms(R.drawable.symptom_3,getResources().getString(R.string.shortnessOfBreath),"3");
+        heartAttackSymptoms(R.drawable.symptom_4,getResources().getString(R.string.lightheadednes),"4");
+        heartAttackSymptoms(R.drawable.symptom_5,getResources().getString(R.string.vomitting),"5");
+
     }
 
     private void populatePerformanceTexts() {
@@ -206,6 +240,50 @@ public class LearnFragment extends Fragment implements AppConstants, UpdateableF
                 ((TrackActivity) getActivity()).setActionBarTitle("Learn");
                 updateSelf();
             }
+        }
+    }
+
+    /**
+     * place the images in ViewPager.
+     */
+    public class ImagesPagerAdapter extends PagerAdapter {
+        final Context mContext;
+        final LayoutInflater mLayoutInflater;
+        final List<HeartSymptomsModel> mResources;
+
+        ImagesPagerAdapter(Context context, List<HeartSymptomsModel> mResources) {
+            mContext = context;
+            mLayoutInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            this.mResources = mResources;
+        }
+
+        @Override
+        public int getCount() {
+            return mResources.size();
+        }
+
+        @Override
+        public boolean isViewFromObject(View view, Object object) {
+            return view == object;
+        }
+
+        @Override
+        public Object instantiateItem(ViewGroup container, final int position) {
+            View itemView = mLayoutInflater.inflate(R.layout.heart_symptoms_single_layout, container, false);
+            TextView symptoms = (TextView) itemView.findViewById(R.id.tvSymptoms);
+            TextView symptomsNumb = (TextView) itemView.findViewById(R.id.tvSymptomsNumb);
+            CircleImageView symptomsImg = (CircleImageView) itemView.findViewById(R.id.symtonsImg);
+
+            symptomsImg.setBackgroundResource(mResources.get(position).getSymptomsImg());
+            symptoms.setText(mResources.get(position).getSymptoms());
+            symptomsNumb.setText(mResources.get(position).getSymptomNumb());
+            container.addView(itemView);
+            return itemView;
+        }
+
+        @Override
+        public void destroyItem(ViewGroup container, int position, Object object) {
+            container.removeView((RelativeLayout) object);
         }
     }
 
