@@ -822,6 +822,11 @@ public class MedicationFragment extends Fragment implements AppConstants, View.O
     public void doBack() {
 
         EventBus.getDefault().post(new MessageEvent("Hello!"));
+
+        FragmentManager fm = getActivity().getSupportFragmentManager();
+        for(int i = 0; i < fm.getBackStackEntryCount(); ++i) {
+            fm.popBackStack();
+        }
             /*for (int i = 0; i < m1.size(); i++) {
 *//*
                 String MedicineString = new Gson().toJson(beforeAdd.get(i));

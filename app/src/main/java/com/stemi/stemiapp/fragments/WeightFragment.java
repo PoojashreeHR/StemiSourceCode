@@ -377,17 +377,20 @@ public class WeightFragment  extends Fragment implements View.OnClickListener,Tr
     // Interpret what BMI means
     private String interpretBMI(float bmiValue) {
 
-        if (bmiValue < 16) {
-            return "Severely underweight";
-        } else if (bmiValue < 18.5) {
-            return "This means you are underweight";
+      /*  if (bmiValue < 16) {
+            return "This means you are in the Severely underweight category";
+        } else */
+      if (bmiValue < 18.5) {
+            return "This means you are in the underweight category";
         } else if (bmiValue < 25) {
-            return "This means you are normal";
+            return "This means you are in the Healthy category";
         } else if (bmiValue < 30) {
-            return "This means you are overweight";
-        } else {
-            return "This means you are obese";
-        }
+            return "This means you are in the overweight category";
+        } else if(bmiValue < 40) {
+            return "This means you are obese category";
+        }else {
+          return "This means you are in extremely obese category";
+      }
     }
 
     public void SaveData(){

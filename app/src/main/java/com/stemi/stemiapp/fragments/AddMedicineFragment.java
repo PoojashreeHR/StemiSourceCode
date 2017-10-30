@@ -612,8 +612,10 @@ public class AddMedicineFragment extends Fragment implements View.OnClickListene
                         }
                         storeMedicalDetails();
                         ((TrackActivity) getActivity()).showFragment(new MedicationFragment());
-                        getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
-
+                        FragmentManager fm = getActivity().getSupportFragmentManager();
+                        for(int i = 0; i < fm.getBackStackEntryCount(); ++i) {
+                            fm.popBackStack();
+                        }
                         //  ((TrackActivity) getActivity()).showFragment(new MedicationFragment());
                         //Toast.makeText(getActivity(), "You pressed Back", Toast.LENGTH_SHORT).show();
                     } else {
