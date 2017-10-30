@@ -334,6 +334,11 @@ public class StatusFragment extends Fragment implements UpdateableFragment {
         stressGraph.getGridLabelRenderer().setNumHorizontalLabels(5);
         stressGraph.getGridLabelRenderer().setNumVerticalLabels(4);
 
+        //stressGraph.getGridLabelRenderer().setPadding(20);
+        stressGraph.getGridLabelRenderer().setLabelsSpace(10);
+        stressGraph.getGridLabelRenderer().setTextSize(22f);
+        stressGraph.getGridLabelRenderer().reloadStyles();
+
         stressGraph.getViewport().setYAxisBoundsManual(true);
         stressGraph.getViewport().setMinY(0);
         stressGraph.getViewport().setMaxY(3);
@@ -448,7 +453,7 @@ public class StatusFragment extends Fragment implements UpdateableFragment {
         healthGraph.getGridLabelRenderer().setNumHorizontalLabels(5);
         healthGraph.getGridLabelRenderer().setNumVerticalLabels(4);
 
-
+        healthGraph.getGridLabelRenderer().setTextSize(22f);
 
 
         healthGraph.getViewport().setYAxisBoundsManual(true);

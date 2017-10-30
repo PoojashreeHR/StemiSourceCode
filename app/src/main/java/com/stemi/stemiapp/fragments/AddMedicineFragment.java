@@ -1014,19 +1014,19 @@ public class AddMedicineFragment extends Fragment implements View.OnClickListene
             String date3 = new SimpleDateFormat("dd-MMM-yyyy").format(new Date());
             String s2 = date3 + " " + morningTime.getText().toString();
             long startTime = CommonUtils.parseToMilliseconds(s2);
-            addEvent(medicineNamee.getText().toString(), "Take Capsule", startTime);
+            addEvent(medicineNamee.getText().toString(), "Take Medicine", startTime);
         }
         if (noonTime.getVisibility() == View.VISIBLE) {
             String date3 = new SimpleDateFormat("dd-MMM-yyyy").format(new Date());
             String s2 = date3 + " " + noonTime.getText().toString();
             long startTime = CommonUtils.parseToMilliseconds(s2);
-            addEvent(medicineNamee.getText().toString(), "Take Capsule", startTime);
+            addEvent(medicineNamee.getText().toString(), "Take Medicine", startTime);
         }
         if (nightTime.getVisibility() == View.VISIBLE) {
             String date3 = new SimpleDateFormat("dd-MMM-yyyy").format(new Date());
             String s2 = date3 + " " + nightTime.getText().toString();
             long startTime = CommonUtils.parseToMilliseconds(s2);
-            addEvent(medicineNamee.getText().toString(), "Take Capsule", startTime);
+            addEvent(medicineNamee.getText().toString(), "Take Medicine", startTime);
         }
     }
   /*  @Override
