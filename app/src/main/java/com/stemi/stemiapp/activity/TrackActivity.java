@@ -255,7 +255,7 @@ public class TrackActivity extends AppCompatActivity implements NavigationView.O
         //    clearBackStack();
         } else if (currentFragmentName.equalsIgnoreCase("WeightFragment")) {
             ((WeightFragment) currentFragment).saveAllData();
-        //    clearBackStack();
+           //clearBackStack();
         } else if(currentFragmentName.equalsIgnoreCase("BloodTestFragment")){
             //ignore
             ((BloodTestFragment) currentFragment).saveAllData();
