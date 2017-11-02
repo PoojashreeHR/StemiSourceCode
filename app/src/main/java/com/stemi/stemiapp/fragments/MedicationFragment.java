@@ -971,7 +971,7 @@ public class MedicationFragment extends Fragment implements AppConstants, View.O
                             }
                         }
                         infoDialogFragment.dismiss();
-
+                        checkChanges= false;
                     }
                     else {
                         infoDialogFragment.dismiss();
