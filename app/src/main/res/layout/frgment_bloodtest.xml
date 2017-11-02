@@ -245,7 +245,7 @@
                 android:text="mg/dL"
                 android:layout_alignBaseline="@+id/tl_Triglycerides"
                 android:layout_alignRight="@+id/tl_Triglycerides"
-                android:layout_marginRight="10dp"
+                android:layout_marginRight="14dp"
                 android:layout_marginTop="390dp"
                 android:textSize="15sp"/>
 

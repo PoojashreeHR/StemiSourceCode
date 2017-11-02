@@ -36,7 +36,6 @@ import com.stemi.stemiapp.databases.MedicineDetailsTable;
 import com.stemi.stemiapp.databases.MedicineTable;
 import com.stemi.stemiapp.databases.TrackMedicationDB;
 import com.stemi.stemiapp.model.DataPassListener;
-import com.stemi.stemiapp.model.DataSavedEvent;
 import com.stemi.stemiapp.model.MedicineDetails;
 import com.stemi.stemiapp.model.MedicinesTakenOrNot;
 import com.stemi.stemiapp.model.MessageEvent;
@@ -169,17 +168,19 @@ public class MedicationFragment extends Fragment implements AppConstants, View.O
         btnMedicationSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (medicineContains !=null) {
+                if ((medicineContains.getMedicineMorning() != null && medicineContains.getMedicineAfternoon().size() >0)
+                        || (medicineContains.getMedicineAfternoon() !=null && medicineContains.getMedicineAfternoon().size() >0)
+                        || (medicineContains.getMedicineNight() != null && medicineContains.getMedicineNight().size() >0)) {
                     Boolean checkedOrNot = false;
                     TrackMedication med = new TrackMedication();
                     Log.e(TAG, "doBack: " + medicineContains);
                     storeData();
                     alreadySaved = true;
-                }else {
-                    FragmentManager fm = getActivity().getSupportFragmentManager();
-                    for(int i = 0; i < fm.getBackStackEntryCount(); ++i) {
+                } else {
+                  /*  FragmentManager fm = getActivity().getSupportFragmentManager();
+                    for (int i = 0; i < fm.getBackStackEntryCount(); ++i) {
                         fm.popBackStack();
-                    }
+                    }*/
                     EventBus.getDefault().post(new MessageEvent("Hello!"));
                     //  ((TrackActivity) getActivity()).setActionBarTitle("Track");
                 }
@@ -236,8 +237,8 @@ public class MedicationFragment extends Fragment implements AppConstants, View.O
             savedDate = tvMedicationToday.getText().toString();
         }
         medicineWithDate = medicineTable.getAllMedicineDEtails(GlobalClass.userID, savedDate);
-        Log.e("db", "GlobalClass.userID = "+ GlobalClass.userID);
-        Log.e("db", "medicineWithDate = "+ new Gson().toJson(medicineWithDate));
+        Log.e("db", "GlobalClass.userID = " + GlobalClass.userID);
+        Log.e("db", "medicineWithDate = " + new Gson().toJson(medicineWithDate));
 
         if (medicineWithDate != null && medicineWithDate.size() > 0) {
             Log.e(TAG, "callSavedMethod: " + "CALL HERE");
@@ -295,7 +296,7 @@ public class MedicationFragment extends Fragment implements AppConstants, View.O
             ViewGroup parent = viewGroup;
             //Log.e("db", " viewGroup.getChildCount() = "+  viewGroup.getChildCount());
             int childCount = viewGroup.getChildCount();
-            for (int i = 0; i < childCount;  i++) {
+            for (int i = 0; i < childCount; i++) {
                 //Log.e("db", "entering  loop "+i);
                 View child = viewGroup.getChildAt(0);
                 //Log.e("db", "child = "+child.toString());
@@ -316,8 +317,6 @@ public class MedicationFragment extends Fragment implements AppConstants, View.O
     public void getMedicineDetails(final MedicineDetails medInfo, final String time, final RelativeLayout layout) {
         //final ArrayList<String> medicine = medicineTable.getMedicine(appSharedPreference.getUserId(), time);
         //for (int i = 0; i < medInfo.size(); i++) {
-
-
 
 
         String medicineTime = "";
@@ -632,21 +631,8 @@ public class MedicationFragment extends Fragment implements AppConstants, View.O
         int id = v.getId();
         switch (id) {
             case R.id.ivInfo:
-                //dBforUserDetails.getMedicine("Morning");
-                ArrayList<String> Mmedicine = medicineTable.getMedicine(GlobalClass.userID, "Morning", savedDate);
-                if(medicineContains != null){
+                if (medicineContains != null) {
                     ArrayList<MedicinesTakenOrNot> medicines = medicineContains.getMedicineMorning();
-               /* for (int i = 0; i < medicines.size(); i++) {
-                    MedicinesTakenOrNot medicineInfo = new MedicinesTakenOrNot();
-*//*
-                    Gson gsonObj = new Gson();
-                    MedicineDetails medicineDetails = gsonObj.fromJson(s, MedicineDetails.class);
-                    Log.e(TAG, "onCreateView: " + medicineDetails);*//*
-
-                    medicineInfo = medicineContains.getMedicineMorning().get(i);
-                    medicines.add(medicineInfo);
-*/
-                    //     }
                     infoDialogFragment = new MyDialogFragment(medicines, "MORNING MEDICINES", 1);
                     infoDialogFragment.setCancelable(false);
                     infoDialogFragment.show(getActivity().getFragmentManager(), "Medicine Info");
@@ -655,21 +641,9 @@ public class MedicationFragment extends Fragment implements AppConstants, View.O
                 break;
 
             case R.id.ivInfo1:
-                //   ArrayList<String> Amedicine = medicineTable.getMedicine(GlobalClass.userID, "Afternoon", savedDate);
-                if(medicineContains != null) {
+                if (medicineContains != null) {
                     ArrayList<MedicinesTakenOrNot> Amedicines = medicineContains.getMedicineAfternoon();
 
-              /*  for (int i = 0; i < Amedicine.size(); i++) {
-                    MedicineDetails AmedicineInfo = new MedicineDetails();
-
-                    String s = Amedicine.get(i);
-                    Gson gsonObj = new Gson();
-                    MedicineDetails medicineDetails = gsonObj.fromJson(s, MedicineDetails.class);
-                    Log.e(TAG, "onCreateView: " + medicineDetails);
-
-                    AmedicineInfo = medicineDetails;
-                    Amedicines.add(AmedicineInfo);*/
-                    // }
                     infoDialogFragment = new MyDialogFragment(Amedicines, "AFTERNOON MEDICINES", 2);
                     infoDialogFragment.setCancelable(false);
                     infoDialogFragment.show(getActivity().getFragmentManager(), "Medicine Info");
@@ -677,20 +651,9 @@ public class MedicationFragment extends Fragment implements AppConstants, View.O
                 break;
 
             case R.id.ivInfo2:
-                //  ArrayList<String> Nmedicine = medicineTable.getMedicine(GlobalClass.userID, "Night", savedDate);
-                if(medicineContains != null) {
+                if (medicineContains != null) {
                     ArrayList<MedicinesTakenOrNot> Nmedicines = medicineContains.getMedicineNight();
-              /*  for (int i = 0; i < Nmedicine.size(); i++) {
-                    MedicineDetails NmedicineInfo = new MedicineDetails();
 
-                    String s = Nmedicine.get(i);
-                    Gson gsonObj = new Gson();
-                    MedicineDetails medicineDetails = gsonObj.fromJson(s, MedicineDetails.class);
-                    Log.e(TAG, "onCreateView: " + medicineDetails);
-
-                    NmedicineInfo = medicineDetails;
-                    Nmedicines.add(NmedicineInfo);
-                }*/
                     infoDialogFragment = new MyDialogFragment(Nmedicines, "NIGHT MEDICINES", 3);
                     infoDialogFragment.setCancelable(false);
                     infoDialogFragment.show(getActivity().getFragmentManager(), "Medicine Info");
@@ -729,32 +692,29 @@ public class MedicationFragment extends Fragment implements AppConstants, View.O
             medicineTable.addMedicineDetails(medicineContains, GlobalClass.userID);
             EventBus.getDefault().post(new MessageEvent("Hello!"));
             //if(getActivity() != null)
-               // ((TrackActivity) getActivity()).setActionBarTitle("Track");
+            // ((TrackActivity) getActivity()).setActionBarTitle("Track");
         } else {
             medicineTable.updateDataWithDate(GlobalClass.userID, savedDate, medicineContains);
             EventBus.getDefault().post(new MessageEvent("Hello!"));
-            if(getActivity() != null)
+            if (getActivity() != null)
                 ((TrackActivity) getActivity()).setActionBarTitle("Track");
             FragmentManager fm = getActivity().getSupportFragmentManager();
-            for(int i = 0; i < fm.getBackStackEntryCount(); ++i) {
+            for (int i = 0; i < fm.getBackStackEntryCount(); ++i) {
                 fm.popBackStack();
             }
-        //    ((TrackActivity) getActivity()).setActionBarTitle("Track");
+            //    ((TrackActivity) getActivity()).setActionBarTitle("Track");
         }
-
 
 
         boolean hadMorning = false, hadAfternoon = false, hadNight = false;
         List<MedicinesTakenOrNot> morningMedicines = medicineContains.getMedicineMorning();
-        if(morningMedicines == null || morningMedicines.size() == 0){
+        if (morningMedicines == null || morningMedicines.size() == 0) {
             hadMorning = true;
-        }
-        else{
-            for(MedicinesTakenOrNot takenOrNot : morningMedicines){
-                if(takenOrNot.getTakenorNot()){
+        } else {
+            for (MedicinesTakenOrNot takenOrNot : morningMedicines) {
+                if (takenOrNot.getTakenorNot()) {
                     hadMorning = true;
-                }
-                else{
+                } else {
                     hadMorning = false;
                     break;
                 }
@@ -762,15 +722,13 @@ public class MedicationFragment extends Fragment implements AppConstants, View.O
         }
 
         List<MedicinesTakenOrNot> afternoonMedicines = medicineContains.getMedicineAfternoon();
-        if(afternoonMedicines == null || afternoonMedicines.size() == 0){
+        if (afternoonMedicines == null || afternoonMedicines.size() == 0) {
             hadAfternoon = true;
-        }
-        else{
-            for(MedicinesTakenOrNot takenOrNot : afternoonMedicines){
-                if(takenOrNot.getTakenorNot()){
+        } else {
+            for (MedicinesTakenOrNot takenOrNot : afternoonMedicines) {
+                if (takenOrNot.getTakenorNot()) {
                     hadAfternoon = true;
-                }
-                else{
+                } else {
                     hadAfternoon = false;
                     break;
                 }
@@ -778,15 +736,13 @@ public class MedicationFragment extends Fragment implements AppConstants, View.O
         }
 
         List<MedicinesTakenOrNot> nightMedicines = medicineContains.getMedicineNight();
-        if(nightMedicines == null || nightMedicines.size() == 0){
+        if (nightMedicines == null || nightMedicines.size() == 0) {
             hadNight = true;
-        }
-        else{
-            for(MedicinesTakenOrNot takenOrNot : nightMedicines){
-                if(takenOrNot.getTakenorNot()){
+        } else {
+            for (MedicinesTakenOrNot takenOrNot : nightMedicines) {
+                if (takenOrNot.getTakenorNot()) {
                     hadNight = true;
-                }
-                else{
+                } else {
                     hadNight = false;
                     break;
                 }
@@ -794,26 +750,21 @@ public class MedicationFragment extends Fragment implements AppConstants, View.O
         }
 
 
-        if(hadMorning && hadAfternoon && hadNight){
+        if (hadMorning && hadAfternoon && hadNight) {
             trackMedication.setHadAllMedicines(true);
-        }
-        else{
+        } else {
             trackMedication.setHadAllMedicines(false);
         }
 
-        if((morningMedicines == null || morningMedicines.size() == 0) &&
+        if ((morningMedicines == null || morningMedicines.size() == 0) &&
                 (afternoonMedicines == null || afternoonMedicines.size() == 0) &&
-                (nightMedicines == null || nightMedicines.size() == 0)){
+                (nightMedicines == null || nightMedicines.size() == 0)) {
             hadMorning = false;
             hadAfternoon = false;
             hadNight = false;
-        }
-        else{
+        } else {
             trackMedicationDB.addEntry(trackMedication);
         }
-
-
-
 
 
     }
@@ -824,7 +775,7 @@ public class MedicationFragment extends Fragment implements AppConstants, View.O
         EventBus.getDefault().post(new MessageEvent("Hello!"));
 
         FragmentManager fm = getActivity().getSupportFragmentManager();
-        for(int i = 0; i < fm.getBackStackEntryCount(); ++i) {
+        for (int i = 0; i < fm.getBackStackEntryCount(); ++i) {
             fm.popBackStack();
         }
             /*for (int i = 0; i < m1.size(); i++) {
@@ -897,15 +848,15 @@ public class MedicationFragment extends Fragment implements AppConstants, View.O
     }
 
     public void saveAllData() {
-        if(!alreadySaved) {
+        if (!alreadySaved) {
             Log.e("fragment", "MedicationFragment saveAllData()");
-            if (medicineContains !=null) {
+            if (medicineContains != null) {
                 storeData();
                 alreadySaved = true;
-            }else {
+            } else {
                 alreadySaved = false;
                 FragmentManager fm = getActivity().getSupportFragmentManager();
-                for(int i = 0; i < fm.getBackStackEntryCount(); ++i) {
+                for (int i = 0; i < fm.getBackStackEntryCount(); ++i) {
                     fm.popBackStack();
                 }
             }
@@ -929,7 +880,7 @@ public class MedicationFragment extends Fragment implements AppConstants, View.O
         }
 
         public void onDateSet(DatePicker view, int year, int month, int day) {
-            if(view.isShown()){
+            if (view.isShown()) {
                 Date parseDate = null;
                 Calendar cal = Calendar.getInstance();
                 SimpleDateFormat month_date = new SimpleDateFormat("MMM");
@@ -955,6 +906,7 @@ public class MedicationFragment extends Fragment implements AppConstants, View.O
     }
 
     Button saveButton;
+    Boolean checkChanges = false;
 
     @SuppressLint("ValidFragment")
     public class MyDialogFragment extends DialogFragment {
@@ -1007,7 +959,25 @@ public class MedicationFragment extends Fragment implements AppConstants, View.O
             closeButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    infoDialogFragment.dismiss();
+                    if(checkChanges){
+                        ArrayList<String> med = medicineTable.getAllMedicineDEtails(GlobalClass.userID, savedDate);
+
+                        if (med != null && med.size() > 0) {
+                            //    getMedicineDetails()
+                            for (int i = 0; i < medicineWithDate.size(); i++) {
+                                String s = medicineWithDate.get(i);
+                                Gson gsonObj = new Gson();
+                                medicineContains = gsonObj.fromJson(s, MedicineDetails.class);
+                            }
+                        }
+                        infoDialogFragment.dismiss();
+
+                    }
+                    else {
+                        infoDialogFragment.dismiss();
+                    }
+
+
                 }
             });
 
@@ -1102,16 +1072,16 @@ public class MedicationFragment extends Fragment implements AppConstants, View.O
                 @Override
                 public void onClick(View v) {
                     ArrayList<MedicinesTakenOrNot> medList = new ArrayList<>();
-                    if(id==1) {
+                    if (id == 1) {
                         medList = medicineContains.getMedicineMorning();
-                    }else if(id==2) {
+                    } else if (id == 2) {
                         medList = medicineContains.getMedicineAfternoon();
-                    }else if(id==3) {
+                    } else if (id == 3) {
                         medList = medicineContains.getMedicineNight();
                     }
-                        editData.add(medicineContains);
-                        mCallback.passData(editData,medList.get(position).getMedName());
-                        infoDialogFragment.dismiss();
+                    editData.add(medicineContains);
+                    mCallback.passData(editData, medList.get(position).getMedName());
+                    infoDialogFragment.dismiss();
                     //((TrackActivity) getActivity()).showFragment(new AddMedicineFragment());
 
                 }
@@ -1130,6 +1100,7 @@ public class MedicationFragment extends Fragment implements AppConstants, View.O
                             notifyItemRemoved(position - 1);
                             saveButton.setTextColor(getResources().getColor(R.color.appBackground));
                             saveButton.setEnabled(true);
+                            checkChanges = true;
 
                         } else {
                             medicineLists.remove(position);
@@ -1138,6 +1109,7 @@ public class MedicationFragment extends Fragment implements AppConstants, View.O
                             notifyItemRemoved(position);
                             saveButton.setTextColor(getResources().getColor(R.color.appBackground));
                             saveButton.setEnabled(true);
+                            checkChanges = true;
 
                         }
                     } else if (id == 2) {
@@ -1149,6 +1121,7 @@ public class MedicationFragment extends Fragment implements AppConstants, View.O
                             notifyItemRemoved(position - 1);
                             saveButton.setTextColor(getResources().getColor(R.color.appBackground));
                             saveButton.setEnabled(true);
+                            checkChanges = true;
 
                         } else {
                             medicineLists.remove(position);
@@ -1157,6 +1130,7 @@ public class MedicationFragment extends Fragment implements AppConstants, View.O
                             notifyItemRemoved(position);
                             saveButton.setTextColor(getResources().getColor(R.color.appBackground));
                             saveButton.setEnabled(true);
+                            checkChanges = true;
                         }
                     } else if (id == 3) {
                         medicineLists = medDetailList.getMedicineNight();
@@ -1167,7 +1141,7 @@ public class MedicationFragment extends Fragment implements AppConstants, View.O
                             notifyItemRemoved(position - 1);
                             saveButton.setTextColor(getResources().getColor(R.color.appBackground));
                             saveButton.setEnabled(true);
-
+                            checkChanges = true;
                         } else {
                             medicineLists.remove(position);
                             medDetailList.setMedicineNight(medicineLists);
@@ -1175,6 +1149,7 @@ public class MedicationFragment extends Fragment implements AppConstants, View.O
                             notifyItemRemoved(position);
                             saveButton.setTextColor(getResources().getColor(R.color.appBackground));
                             saveButton.setEnabled(true);
+                            checkChanges = true;
 
                         }
                     }
