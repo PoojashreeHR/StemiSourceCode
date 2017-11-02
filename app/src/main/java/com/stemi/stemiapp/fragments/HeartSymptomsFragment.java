@@ -70,6 +70,7 @@ public class HeartSymptomsFragment extends Fragment implements TrackActivity.OnB
         heartSymptomsRecycler.setLayoutManager(mLayoutManager);
         heartSymptomsRecycler.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL));
         heartSymptomsRecycler.setAdapter(heartSymptomsAdapter);
+        heartSymptomsRecycler.setNestedScrollingEnabled(false);
         askHelp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

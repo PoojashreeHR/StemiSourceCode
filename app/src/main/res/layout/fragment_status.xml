@@ -42,6 +42,7 @@
             android:layout_height="200dip"
             android:id="@+id/stress_graph"
             android:layout_marginTop="30dp"
+            android:layout_marginLeft="10dp"
             />
 
     </RelativeLayout>
@@ -60,6 +61,7 @@
             android:id="@+id/weight_graph"
             android:layout_marginLeft="10dp"
             android:layout_marginTop="30dp"
+            android:layout_centerInParent="true"
             />
 
 
