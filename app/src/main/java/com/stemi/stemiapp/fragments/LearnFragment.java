@@ -80,6 +80,7 @@ public class LearnFragment extends Fragment implements AppConstants, UpdateableF
 
     @BindView(R.id.banner_view_pager)ViewPager bannerViewPager;
 
+    TrackActivity trackActivity;
     ImagesPagerAdapter pagerAdapter;
     ApiInterface apiInterface;
     AppSharedPreference appSharedPreference;
@@ -122,6 +123,7 @@ public class LearnFragment extends Fragment implements AppConstants, UpdateableF
         heartSymptomsModel = new ArrayList<>();
 //        ((TrackActivity) getActivity()).setActionBarTitle("Learn");
 
+        trackActivity = new TrackActivity();
         CommonUtils.setRobotoLightFonts(getActivity(),tvTips);
         CommonUtils.setRobotoRegularFonts(getActivity(),tvExpandableSymptoms);
         tvExpandableSymptoms.setOnClickListener(new View.OnClickListener() {
@@ -261,18 +263,23 @@ public class LearnFragment extends Fragment implements AppConstants, UpdateableF
         int id = v.getId();
         switch (id){
             case R.id.learn_medication:
+                trackActivity.ubTateTab(1,getActivity());
                 ((TrackActivity) getActivity()).showFragment(new MedicationFragment());
                 break;
             case R.id.learn_weight:
+                trackActivity.ubTateTab(1,getActivity());
                 ((TrackActivity) getActivity()).showFragment(new WeightFragment());
                 break;
             case R.id.learn_smoking:
+                trackActivity.ubTateTab(1,getActivity());
                 ((TrackActivity) getActivity()).showFragment(new SmokingFragment());
                 break;
             case R.id.learn_exercise:
+                trackActivity.ubTateTab(1,getActivity());
                 ((TrackActivity) getActivity()).showFragment(new ExerciseFragment());
                 break;
             case R.id.learn_stress:
+                trackActivity.ubTateTab(1,getActivity());
                 ((TrackActivity) getActivity()).showFragment(new StressFragment());
                 break;
         }
