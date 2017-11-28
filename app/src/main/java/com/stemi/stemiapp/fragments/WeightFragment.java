@@ -58,6 +58,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -250,7 +251,7 @@ public class WeightFragment  extends Fragment implements View.OnClickListener,Tr
     public Boolean validateField(){
         Boolean valid = true;
         String weight = todaysWeight.getText().toString();
-        if (Integer.parseInt(weight) < 20 || Integer.parseInt(weight) > 200) {
+        if (Float.parseFloat(weight) < 20.0 || Float.parseFloat(weight) > 200.0) {
             todaysWeight.setError("Enter valid weight");
             valid = false;
         } else {
@@ -272,8 +273,10 @@ public class WeightFragment  extends Fragment implements View.OnClickListener,Tr
         if (dbForTrackActivities.getDate((savedDate), GlobalClass.userID)) {
             ArrayList<UserEventDetails> eventDetails = dbForTrackActivities.getDetails(GlobalClass.userID, savedDate, 4);
             Log.e("db", "eventDetails = "+ new Gson().toJson(eventDetails));
-            if (eventDetails.size() > 0 && eventDetails.get(0).getTodaysWeight() != null) {
-                todaysWeight.setText(eventDetails.get(0).getTodaysWeight());
+            if (eventDetails.size() > 0 && (eventDetails.get(0).getTodaysWeight() > 0)) {
+                DecimalFormat decimalFormat = new DecimalFormat();
+                String weight = decimalFormat.format(eventDetails.get(0).getTodaysWeight());
+                todaysWeight.setText(weight);
                 bmiLayout.setVisibility(View.GONE);
             }
             else {
@@ -401,7 +404,7 @@ public class WeightFragment  extends Fragment implements View.OnClickListener,Tr
 
         trackWeight = new TrackWeight();
         trackWeight.setUserId(GlobalClass.userID);
-        trackWeight.setWeight(Integer.parseInt(todaysWeight.getText().toString()));
+        trackWeight.setWeight(Float.parseFloat((todaysWeight.getText().toString())));
 
         if (tvWeightToday.getText().equals("Today  ")){
             Date dt = new Date();
@@ -428,8 +431,9 @@ public class WeightFragment  extends Fragment implements View.OnClickListener,Tr
         }
         Log.e("db", new Gson().toJson(trackWeight));
 
+
         EventBus.getDefault().post(new DataSavedEvent(""));
-        TrackActivity.userEventDetails.setTodaysWeight(todaysWeight.getText().toString());
+        TrackActivity.userEventDetails.setTodaysWeight(Double.parseDouble(todaysWeight.getText().toString()));
         if(bmiCount == null){
             if(appSharedPreference.getUserHeight(AppConstants.USER_HEIGHT) != null) {
                 float bmiValue = calculateBMI(todaysWeight.getText().toString(), appSharedPreference.getUserHeight(AppConstants.USER_HEIGHT));

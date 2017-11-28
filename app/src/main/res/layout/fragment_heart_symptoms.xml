@@ -42,10 +42,11 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Find any of these symptoms?"
+            android:text="Are you experiencing any of these symptoms?"
             android:layout_below="@+id/rl_symptoms"
-            android:textSize="15sp"
+            android:textSize="14sp"
             android:layout_margin="10dp"
+            android:layout_centerHorizontal="true"
             android:textColor="@color/colorPrimary"
             android:typeface="serif"
             android:gravity="center"

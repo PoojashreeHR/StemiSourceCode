@@ -95,6 +95,7 @@ public class ExerciseFragment extends Fragment implements View.OnClickListener, 
     DBForTrackActivities dbForTrackActivities;
     AppSharedPreference appSharedPreference;
 
+    TrackActivity trackActivity;
     String savedDate;
     private boolean alreadySaved;
     private TrackExercise trackExercise;
@@ -119,6 +120,7 @@ public class ExerciseFragment extends Fragment implements View.OnClickListener, 
         //((TrackActivity) getActivity()).setActionBarTitle("Exercise");
         dbForTrackActivities = new DBForTrackActivities();
         appSharedPreference = new AppSharedPreference(getActivity());
+        trackActivity = new TrackActivity();
 
         llWalking.setOnClickListener(this);
         llCycling.setOnClickListener(this);

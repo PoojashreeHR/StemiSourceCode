@@ -220,7 +220,6 @@ public class MedicationFragment extends Fragment implements AppConstants, View.O
         addNewMedicine.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 ((TrackActivity) getActivity()).showFragment(new AddMedicineFragment());
             }
         });

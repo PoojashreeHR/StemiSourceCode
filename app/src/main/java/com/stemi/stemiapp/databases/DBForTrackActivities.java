@@ -267,7 +267,7 @@ public class DBForTrackActivities {
                     c.moveToNext();
                     break;
                 case 4:
-                    userEventDetails.setTodaysWeight(c.getString(c.getColumnIndex(TODAY_WEIGHT)));
+                    userEventDetails.setTodaysWeight(c.getDouble(c.getColumnIndex(TODAY_WEIGHT)));
                     userDetailsTables.add(userEventDetails);
                     c.moveToNext();
                     break;

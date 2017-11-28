@@ -18,7 +18,7 @@ public class UserEventDetails {
     private String hobbies;
     private String smokeToday;
     private String howMany;
-    private String todaysWeight;
+    private double todaysWeight;
     private String bmiValue;
 
 
@@ -70,11 +70,11 @@ public class UserEventDetails {
         this.howMany = howMany;
     }
 
-    public String getTodaysWeight() {
+    public double getTodaysWeight() {
         return todaysWeight;
     }
 
-    public void setTodaysWeight(String todaysWeight) {
+    public void setTodaysWeight(double todaysWeight) {
         this.todaysWeight = todaysWeight;
     }
 

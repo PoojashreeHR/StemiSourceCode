@@ -28,10 +28,14 @@ public class AnswerTemplateView extends LinearLayout implements View.OnClickList
     private Drawable setBackground;
     private int layoutVal;
 
+    public AnswerTemplateView() {
+        super(null);
+
+    }
+
     public void setResponseChangedListener(ResponseChangedListener responseChangedListener) {
         this.responseChangedListener = responseChangedListener;
     }
-
 
     public interface ResponseChangedListener{
         void onResponse(String response);

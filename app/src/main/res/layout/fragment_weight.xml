@@ -48,9 +48,9 @@
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:padding="10dp"
-        android:maxLength="3"
+        android:maxLength="5"
         android:hint="Enter Weight"
-        android:inputType="number"
+        android:inputType="numberDecimal"
         android:textColor="@color/appBackground"
         android:gravity="center"/>
 
