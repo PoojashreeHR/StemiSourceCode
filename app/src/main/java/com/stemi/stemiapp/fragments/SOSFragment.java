@@ -5,12 +5,15 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v4.app.Fragment;
+import android.telephony.SmsManager;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -32,6 +35,10 @@ import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.stemi.stemiapp.R;
 import com.stemi.stemiapp.activity.MapsActivity;
 import com.stemi.stemiapp.activity.TrackActivity;
@@ -41,7 +48,10 @@ import com.stemi.stemiapp.model.MessageEvent;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -71,6 +81,7 @@ public class SOSFragment extends Fragment implements View.OnClickListener, Track
     private EditText etLocation;
     String selectedPersonName = null;
     private double latitude, longitude;
+    GoogleMap googleMap;
 
     public SOSFragment() {
         // Required empty public constructor
@@ -150,6 +161,7 @@ public class SOSFragment extends Fragment implements View.OnClickListener, Track
                 Place place = PlacePicker.getPlace(data, getActivity());
                 latitude = place.getLatLng().latitude;
                 longitude = place.getLatLng().longitude;
+
                 String toastMsg = String.format("Place: %s", place.getAddress());
                 etLocation.setText(place.getAddress());
             }
@@ -264,7 +276,15 @@ public class SOSFragment extends Fragment implements View.OnClickListener, Track
                 if (ValidateFields()) {
                     Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
                     sharingIntent.setType("text/plain");
-                    String shareBodyText = "Hi " + selectedPersonName + " is in emergency his/her location is " + etLocation.getText().toString();
+
+                    String geoUri = "http://maps.google.com/maps?q=loc:" + latitude + "," + longitude + " (" + "Location" +  ")" ;
+
+                    String shareBodyText =  selectedPersonName + " has chest pain and might be suffering from a heart attack.Please send help to "+etLocation.getText().toString()+"\n\n"+ geoUri;
+                    //   shareBodyText.append(Uri.parse(uri));
+                    SmsManager smsManager = SmsManager.getDefault();
+                    String destination = "https://www.google.co.in/";
+                    smsManager.sendTextMessage(destination, null, shareBodyText, null, null);
+
                     sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Subject here");
                     sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBodyText);
                     startActivity(Intent.createChooser(sharingIntent, "Shearing Option"));
@@ -278,12 +298,7 @@ public class SOSFragment extends Fragment implements View.OnClickListener, Track
                 break;
 
             case R.id.rl_locateMap:
-//                Uri gmmIntentUri = Uri.parse("https://goo.gl/maps/vfsSm2dbFXz");
-//                Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
-//                mapIntent.setPackage("com.google.android.apps.maps");
-//                if (mapIntent.resolveActivity(getActivity().getPackageManager()) != null) {
-//                    startActivity(mapIntent);
-//                }
+
                 String location = etLocation.getText().toString();
                 if(TextUtils.isEmpty(location)){
                     etLocation.setError("Location is required");
