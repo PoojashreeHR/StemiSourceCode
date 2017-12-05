@@ -169,21 +169,21 @@ public class LearnFragment extends Fragment implements AppConstants, UpdateableF
         tvDescMedication.setText("You've been right on track for "+medNoOfDays+" days with your medication!");
 
         TrackWeightDB trackWeightDB = new TrackWeightDB(getActivity());
-        int weight = trackWeightDB.getLastKnownWeight(GlobalClass.userID);
+        double weight = trackWeightDB.getLastKnownWeight(GlobalClass.userID);
 
         if(weight == 0){
             UserDetailsTable userDetailsTable = new UserDetailsTable(getActivity());
             RegisteredUserDetails userDetails = userDetailsTable.getUserDetails(GlobalClass.userID);
-            if(userDetails != null && userDetails.getWeight() != null) {
-                weight = Integer.parseInt(userDetails.getWeight());
+            if(userDetails != null && String.valueOf(userDetails.getWeight()) != null) {
+                weight = userDetails.getWeight();
             }
         }
 
         String weightStr;
-        if(weight >= getUpperWeight()){
+        if( getUpperWeight() <= weight){
             weightStr = "Oh no! You're in the overweight weight range as per your BMI";
         }
-        else if(weight <= getLowerWeight()){
+        else if(getLowerWeight() >= weight){
             weightStr = "Oh no! You're in the low weight range as per your BMI";
         }
         else{

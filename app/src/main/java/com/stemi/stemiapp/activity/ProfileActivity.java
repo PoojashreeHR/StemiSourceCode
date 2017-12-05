@@ -158,7 +158,7 @@ public class ProfileActivity extends AppCompatActivity {
                                         RegisteredUserDetails userDetails = dBforUserDetails.getUserDetails(GlobalClass.userID);
                                         if(userDetails != null && userDetails.getHeight() != null) {
                                             int heightInCms = (int) Double.parseDouble(userDetails.getHeight());
-                                            GlobalClass.heightInM = heightInCms / 100;
+                                            GlobalClass.heightInM = (double) heightInCms / 100;
                                         }
                                         startActivity(new Intent(ProfileActivity.this, TrackActivity.class));
                                         finish();

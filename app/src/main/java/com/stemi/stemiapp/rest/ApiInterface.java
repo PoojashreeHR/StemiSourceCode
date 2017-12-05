@@ -54,7 +54,7 @@ public interface ApiInterface {
             @Field("phoneno") String phoneNo,
             @Field("address") String address,
             @Field("heightInCms") String heightInCms,
-            @Field("weightInKgs") String weightInKgs,
+            @Field("weightInKgs") Double weightInKgs,
             @Field("waistInch") String waistInch,
             @Field("isSmoker") String isSmoker,
             @Field("hadHeartAttackBefore") String hadHeartAttackBefore,

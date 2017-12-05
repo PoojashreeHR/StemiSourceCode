@@ -219,7 +219,7 @@ public class UserDetailsTable {
                 registeredUserDetails.setPhone(cursor.getString(cursor.getColumnIndex(USER_PHONE)));
                 registeredUserDetails.setUniqueId(cursor.getString(cursor.getColumnIndex(USER_UID)));
                 registeredUserDetails.setWaist(cursor.getString(cursor.getColumnIndex(USER_WAIST)));
-                registeredUserDetails.setWeight(cursor.getString(cursor.getColumnIndex(USER_WEIGHT)));
+                registeredUserDetails.setWeight(cursor.getDouble(cursor.getColumnIndex(USER_WEIGHT)));
                 cursor.moveToNext();
             }
 
@@ -283,7 +283,7 @@ public class UserDetailsTable {
                 registeredUserDetails.setUniqueId(cursor.getString(cursor.getColumnIndex(USER_UID)));
                 Log.e("TrackActivity",registeredUserDetails.getUniqueId());
                 registeredUserDetails.setWaist(cursor.getString(cursor.getColumnIndex(USER_WAIST)));
-                registeredUserDetails.setWeight(cursor.getString(cursor.getColumnIndex(USER_WEIGHT)));
+                registeredUserDetails.setWeight(cursor.getDouble(cursor.getColumnIndex(USER_WEIGHT)));
                 registeredUserDetailsList.add(registeredUserDetails);
                 cursor.moveToNext();
             }

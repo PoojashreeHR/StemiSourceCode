@@ -18,7 +18,7 @@ public class RegisteredUserDetails implements Parcelable{
     String email;
     String address;
     String  height;
-    String  weight;
+    double  weight;
     String waist;
     String do_you_smoke;
     String heart_attack;
@@ -45,7 +45,7 @@ public class RegisteredUserDetails implements Parcelable{
         email = in.readString();
         address = in.readString();
         height = in.readString();
-        weight = in.readString();
+        weight = in.readDouble();
         waist = in.readString();
         do_you_smoke = in.readString();
         heart_attack = in.readString();
@@ -170,9 +170,9 @@ public class RegisteredUserDetails implements Parcelable{
         this.height = height;
     }
 
-    public String getWeight() {return weight; }
+    public double getWeight() {return weight; }
 
-    public void setWeight(String weight) {
+    public void setWeight(double weight) {
         this.weight = weight;
     }
 
@@ -263,7 +263,7 @@ public class RegisteredUserDetails implements Parcelable{
         parcel.writeString(email);
         parcel.writeString(address);
         parcel.writeString(height);
-        parcel.writeString(weight);
+        parcel.writeDouble(weight);
         parcel.writeString(waist);
         parcel.writeString(do_you_smoke);
         parcel.writeString(heart_attack);

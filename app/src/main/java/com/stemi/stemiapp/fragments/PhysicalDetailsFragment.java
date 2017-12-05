@@ -22,6 +22,7 @@ import com.stemi.stemiapp.model.RegisteredUserDetails;
 import com.stemi.stemiapp.preference.AppSharedPreference;
 import com.stemi.stemiapp.utils.AppConstants;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import butterknife.BindView;
@@ -58,7 +59,7 @@ public class PhysicalDetailsFragment extends Fragment implements View.OnClickLis
     private boolean editmode;
     private boolean isHeightInFtChanged;
     private boolean isWaistInCmsChanged;
-
+    DecimalFormat decimalFormat;
     public PhysicalDetailsFragment() {
     }
 
@@ -69,6 +70,7 @@ public class PhysicalDetailsFragment extends Fragment implements View.OnClickLis
         View view = inflater.inflate(R.layout.fragment_physical_details, container, false);
         ButterKnife.bind(this, view);
         view.findViewById(R.id.bt_physical_next).setOnClickListener(this);
+         decimalFormat = new DecimalFormat();
 
         appSharedPreference = new AppSharedPreference(getActivity());
        // spinner = (BetterSpinner) view.findViewById(R.id.spinner);
@@ -86,7 +88,13 @@ public class PhysicalDetailsFragment extends Fragment implements View.OnClickLis
 
         if (RegistrationActivity.registeredUserDetails != null) {
             //etHeight.setText(RegistrationActivity.registeredUserDetails.getHeight());
-            etWeight.setText(RegistrationActivity.registeredUserDetails.getWeight());
+            if(RegistrationActivity.registeredUserDetails.getWeight() > 0.0){
+                String weight = decimalFormat.format(RegistrationActivity.registeredUserDetails.getWeight());
+                etWeight.setText(weight);
+            }else {
+                etWeight.setText(null);
+            }
+
            // etWaist.setText(RegistrationActivity.registeredUserDetails.getWaist());
             etAddress.setText(RegistrationActivity.registeredUserDetails.getAddress());
             if (RegistrationActivity.registeredUserDetails.getDo_you_smoke() != null) {
@@ -114,7 +122,8 @@ public class PhysicalDetailsFragment extends Fragment implements View.OnClickLis
         if(user != null){
             editmode = true;
             etAddress.setText(user.getAddress());
-            etWeight.setText(user.getWeight());
+            String weight = decimalFormat.format(user.getWeight());
+            etWeight.setText(weight);
             et_HeightCm.setText(user.getHeight());
 
             Log.e("db", "user.getHeight() = "+user.getHeight());
@@ -173,7 +182,7 @@ public class PhysicalDetailsFragment extends Fragment implements View.OnClickLis
         }
 
        RegistrationActivity.registeredUserDetails.setHeight(HeightIncm);
-       RegistrationActivity.registeredUserDetails.setWeight(etWeight.getText().toString());
+       RegistrationActivity.registeredUserDetails.setWeight(Double.parseDouble(etWeight.getText().toString()));
        RegistrationActivity.registeredUserDetails.setWaist(Waist);
        RegistrationActivity.registeredUserDetails.setAddress(etAddress.getText().toString());
        RegistrationActivity.registeredUserDetails.setDo_you_smoke(smokeAnswer.getResponse());
@@ -208,7 +217,7 @@ public class PhysicalDetailsFragment extends Fragment implements View.OnClickLis
         if (TextUtils.isEmpty(weight)) {
             etWeight.setError("Required");
             valid = false;
-        } else if (Integer.parseInt(weight) < 20 || Integer.parseInt(weight) > 200) {
+        } else if (Float.parseFloat(weight) < 20.0 || Float.parseFloat(weight) > 200.0) {
             etWeight.setError("Enter valid data");
             valid = false;
         } else {
