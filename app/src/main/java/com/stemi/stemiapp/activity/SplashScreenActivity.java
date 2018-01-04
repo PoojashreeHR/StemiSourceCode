@@ -8,14 +8,13 @@ import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 
 import com.stemi.stemiapp.R;
+import com.stemi.stemiapp.activity.LoginView.MainActivity;
 import com.stemi.stemiapp.databases.MedicineTable;
 import com.stemi.stemiapp.databases.UserDetailsTable;
 import com.stemi.stemiapp.preference.AppSharedPreference;
 import com.stemi.stemiapp.utils.AppConstants;
-import com.stemi.stemiapp.utils.GlobalClass;
 
 public class SplashScreenActivity extends AppCompatActivity implements AppConstants {
 

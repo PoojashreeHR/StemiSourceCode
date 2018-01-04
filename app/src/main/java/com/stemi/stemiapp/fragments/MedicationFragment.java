@@ -168,7 +168,7 @@ public class MedicationFragment extends Fragment implements AppConstants, View.O
         btnMedicationSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if ((medicineContains.getMedicineMorning() != null && medicineContains.getMedicineAfternoon().size() >0)
+                if ((medicineContains.getMedicineMorning() != null && medicineContains.getMedicineMorning().size() >0)
                         || (medicineContains.getMedicineAfternoon() !=null && medicineContains.getMedicineAfternoon().size() >0)
                         || (medicineContains.getMedicineNight() != null && medicineContains.getMedicineNight().size() >0)) {
                     Boolean checkedOrNot = false;
@@ -929,13 +929,6 @@ public class MedicationFragment extends Fragment implements AppConstants, View.O
             saveButton = (Button) v.findViewById(R.id.saveButton);
 
 
-/*            DisplayMetrics metrics = new DisplayMetrics();
-            getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
-            LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) dialogLayout.getLayoutParams();
-            params.width = (metrics.widthPixels)/2;
-            params.height = (metrics.heightPixels)/2;
-            dialogLayout.setLayoutParams(params);*/
-
             TextView heading = (TextView) v.findViewById(R.id.heading);
             TextView noItems = (TextView) v.findViewById(R.id.ifNoItems);
 
@@ -989,22 +982,6 @@ public class MedicationFragment extends Fragment implements AppConstants, View.O
                     //infoDialogFragment.setCancelable(false);
                     infoDialogFragment.dismiss();
                     ((TrackActivity) getActivity()).showFragment(new MedicationFragment());
-                   /* MedicineDetails medDetailList = medicineContains;
-                    if (id == 1) {
-                        medicineTable.updateMedicine(medDetails., getActivity(), 1);
-                        infoDialogFragment.dismiss();
-
-                    } else if (id == 2) {
-                        medicineTable.updateMedicine(medDetails, getActivity(), 2);
-                        infoDialogFragment.dismiss();
-
-                    } else if (id == 3) {
-                        medicineTable.updateMedicine(medDetails, getActivity(), 3);
-                        infoDialogFragment.dismiss();
-                    }
-                    infoDialogFragment.setCancelable(false);
-                    ((TrackActivity) getActivity()).showFragment(new MedicationFragment());
-                }*/
                 }
             });
             //get your recycler view and populate it.

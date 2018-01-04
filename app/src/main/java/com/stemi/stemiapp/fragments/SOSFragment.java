@@ -5,13 +5,12 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
-import android.location.Address;
-import android.location.Geocoder;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.telephony.SmsManager;
 import android.text.Editable;
@@ -36,9 +35,6 @@ import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.stemi.stemiapp.R;
 import com.stemi.stemiapp.activity.MapsActivity;
 import com.stemi.stemiapp.activity.TrackActivity;
@@ -48,10 +44,7 @@ import com.stemi.stemiapp.model.MessageEvent;
 
 import org.greenrobot.eventbus.EventBus;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -121,25 +114,30 @@ public class SOSFragment extends Fragment implements View.OnClickListener, Track
 
         ((TrackActivity) getActivity()).setOnBackPressedListener(this);
 
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(getActivity(), R.layout.spinner_layout, personName);
-        personSpinner.setAdapter(arrayAdapter);
-        personSpinner.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
+            ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(getActivity(), R.layout.spinner_layout, personName);
+            personSpinner.setAdapter(arrayAdapter);
+            if(personName.size() == 1){
+                selectedPersonName = personName.get(0).toString();
+                personSpinner.setText(selectedPersonName);
             }
 
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            personSpinner.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-            }
+                }
 
-            @Override
-            public void afterTextChanged(Editable s) {
-                selectedPersonName = personSpinner.getText().toString();
-                Log.e("TAG", "Text is :" + personSpinner.getText().toString());
-            }
-        });
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+                    selectedPersonName = personSpinner.getText().toString();
+                    Log.e("TAG", "Text is :" + personSpinner.getText().toString());
+                }
+            });
         Log.e(TAG, "onCreateView: SOS Fragment" + dBforUserDetails.getRecords());
         return view;
     }
@@ -149,7 +147,7 @@ public class SOSFragment extends Fragment implements View.OnClickListener, Track
         super.setMenuVisibility(menuVisible);
         if (getActivity() != null) {
             if (menuVisible) {
-                    ((TrackActivity) getActivity()).setActionBarTitle("SOS");
+                ((TrackActivity) getActivity()).setActionBarTitle("SOS");
 
             }
         }
@@ -256,8 +254,7 @@ public class SOSFragment extends Fragment implements View.OnClickListener, Track
             Toast.makeText(getActivity(), "Select person name", Toast.LENGTH_SHORT).show();
         }else if(TextUtils.isEmpty(location)){
             valid = false;
-            etLocation.setError("Location is Required");
-        }
+            Toast.makeText(getActivity(), "Select Location", Toast.LENGTH_SHORT).show();        }
 
         return valid;
     }
@@ -292,9 +289,13 @@ public class SOSFragment extends Fragment implements View.OnClickListener, Track
                 break;
 
             case R.id.rl_call:
-                Intent intent = new Intent(Intent.ACTION_DIAL);
+
+                Intent callIntent = new Intent(Intent.ACTION_CALL);
+                callIntent.setData(Uri.parse("tel:108"));
+                startActivity(callIntent);
+/*                Intent intent = new Intent(Intent.ACTION_DIAL);
                 intent.setData(Uri.parse("tel:108"));
-                startActivity(intent);
+                startActivity(intent);*/
                 break;
 
             case R.id.rl_locateMap:

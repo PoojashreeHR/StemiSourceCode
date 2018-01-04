@@ -1,7 +1,6 @@
-package com.stemi.stemiapp.activity;
+package com.stemi.stemiapp.activity.LoginView;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -13,6 +12,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.stemi.stemiapp.R;
+import com.stemi.stemiapp.activity.ForgotPasswordActivity;
+import com.stemi.stemiapp.activity.RegistrationActivity;
+import com.stemi.stemiapp.activity.SignUpActivity;
+import com.stemi.stemiapp.activity.TrackActivity;
 import com.stemi.stemiapp.databases.UserDetailsTable;
 import com.stemi.stemiapp.model.RegisteredUserDetails;
 import com.stemi.stemiapp.model.apiModels.SignUpResponseModel;

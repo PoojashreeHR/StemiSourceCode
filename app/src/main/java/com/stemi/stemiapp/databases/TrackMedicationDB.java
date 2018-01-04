@@ -299,7 +299,44 @@ public class TrackMedicationDB {
         return data;
     }
 
-    public int getNumberOfDays(String userId){
+    public int getNumberofDays(String userID){
+        int dayCount = 0;
+        SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
+        String query = "SELECT " +COLUMN_DATE_TIME+ " FROM " + TABLE_MEDICATION
+                + " WHERE " + COLUMN_USER_ID + " = '" + userID + "'  AND "+ COLUMN_HAD_MEDICINES+" = 1"
+                + " ORDER BY " + COLUMN_DATE_TIME + " DESC LIMIT 1";
+        Cursor cursor = db.rawQuery(query, null);
+        cursor.moveToFirst();
+        Log.e("db", "query = " + query);
+
+
+        while (!cursor.isAfterLast()) {
+            String date = cursor.getString(cursor.getColumnIndex(COLUMN_DATE_TIME));
+            cursor.moveToNext();
+
+            try {
+                String currentDate = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+
+                Date date1 = null;
+                Date date2 = null;
+                SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+                date1 = df.parse(date);
+                date2 = df.parse(currentDate);
+                long diff = Math.abs(date1.getTime() - date2.getTime());
+                long diffDays = diff / (24 * 60 * 60 * 1000);
+
+                Log.e(TAG, "getNumberofDays: "+ diffDays );
+                dayCount = (int) diffDays;
+                Log.e(TAG, "getNumberofDays: "+ date );
+            } catch (Exception e1) {
+                System.out.println("exception " + e1);
+            }
+        }
+        return dayCount;
+    }
+
+
+    /*public int getNumberOfDays(String userId){
         int dayCount = 0;
         SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
         try{
@@ -328,5 +365,5 @@ public class TrackMedicationDB {
 
         }
         return dayCount;
-    }
+    }*/
 }

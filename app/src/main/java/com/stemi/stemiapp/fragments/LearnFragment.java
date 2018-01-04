@@ -165,8 +165,12 @@ public class LearnFragment extends Fragment implements AppConstants, UpdateableF
 
     private void populatePerformanceTexts() {
         TrackMedicationDB trackMedicationDB = new TrackMedicationDB(getActivity());
-        int medNoOfDays = trackMedicationDB.getNumberOfDays(GlobalClass.userID);
-        tvDescMedication.setText("You've been right on track for "+medNoOfDays+" days with your medication!");
+        int medNoOfDays = trackMedicationDB.getNumberofDays(GlobalClass.userID);
+        if(medNoOfDays > 0){
+            tvDescMedication.setText("You've been right on track for "+medNoOfDays+" days with your medication!");
+        }else {
+            tvDescMedication.setText("You’ve not taken your medication for the last "+medNoOfDays+" day(s). Take your pills regularly. ");
+        }
 
         TrackWeightDB trackWeightDB = new TrackWeightDB(getActivity());
         double weight = trackWeightDB.getLastKnownWeight(GlobalClass.userID);
@@ -191,19 +195,35 @@ public class LearnFragment extends Fragment implements AppConstants, UpdateableF
         }
         tvDescWeight.setText(weightStr);
 
+        String smokingText = "";
         TrackSmokingDB trackSmokingDB = new TrackSmokingDB(getActivity());
         int smokingNoDays = trackSmokingDB.getNumberOfDays(GlobalClass.userID);
-        String smokingText = "Bravo! "+smokingNoDays+" day(s) since you last smoked";
+        if(smokingNoDays == 0){
+            smokingText  = "Bravo! "+smokingNoDays+" day(s) since you last smoked";
+        }else {
+            smokingText =  "You smoked recently. Act now. Quit smoking";
+        }
         tvDescSmoking.setText(smokingText);
 
+        String exerciseText = "";
         TrackExerciseDB trackExerciseDB = new TrackExerciseDB(getActivity());
+        int numb = trackExerciseDB.getNumberofDays(GlobalClass.userID);
         int exerciseDays = trackExerciseDB.getNumberOfWeeks(GlobalClass.userID);
-        String exerciseText = "Amazing! You've been exercising regularly for "+exerciseDays+" weeks.";
+        if(exerciseDays > 0){
+            exerciseText = "Amazing! You've been exercising regularly for "+exerciseDays+" weeks.";
+        }else {
+            exerciseText = "Get your shoes on! You last worked out "+ numb +" day(s) ago";
+        }
         tvDescExercise.setText(exerciseText);
 
+        String stressText = "";
         TrackStressDB trackStressDB = new TrackStressDB(getActivity());
         int stressCount = trackStressDB.getNumberOfDays(GlobalClass.userID);
-        String stressText = "Cool as a cucumber! Your stress levels haven't spiked in "+stressCount+" days";
+        if(stressCount >= 3 ){
+            stressText = "Red alert! High stress levels recorded. De-stress with a hobby. ";
+        }else {
+            stressText = "Cool as a cucumber! Your stress levels haven't spiked in " + stressCount + " days";
+        }
         tvDescStress.setText(stressText);
     }
 

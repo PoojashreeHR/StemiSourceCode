@@ -34,6 +34,7 @@ import android.widget.TextView;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import com.stemi.stemiapp.R;
+import com.stemi.stemiapp.activity.LoginView.MainActivity;
 import com.stemi.stemiapp.customviews.CircleImageView;
 import com.stemi.stemiapp.customviews.CustomViewPager;
 import com.stemi.stemiapp.databases.UserDetailsTable;

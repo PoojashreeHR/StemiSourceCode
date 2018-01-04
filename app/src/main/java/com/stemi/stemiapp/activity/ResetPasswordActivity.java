@@ -7,10 +7,10 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.stemi.stemiapp.R;
+import com.stemi.stemiapp.activity.LoginView.MainActivity;
 import com.stemi.stemiapp.model.apiModels.StatusMessageResponse;
 import com.stemi.stemiapp.preference.AppSharedPreference;
 import com.stemi.stemiapp.rest.ApiClient;
