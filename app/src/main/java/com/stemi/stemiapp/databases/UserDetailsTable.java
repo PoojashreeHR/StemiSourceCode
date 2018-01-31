@@ -45,6 +45,7 @@ public class UserDetailsTable {
     private static final String USER_PHONE = "phone";
     private static final String USER_EMAIL = "email";
     private static final String USER_ADDRESS = "address";
+    private static final String AMBULANCE_NUMB = "ambulance_numb";
     private static final String USER_HEIGHT = "height";
     private static final String USER_WEIGHT = "weight";
     private static final String USER_WAIST = "waist";
@@ -69,6 +70,7 @@ public class UserDetailsTable {
             + USER_PHONE + " TEXT,"
             + USER_EMAIL + " TEXT,"
             + USER_ADDRESS + " REAL,"
+            + AMBULANCE_NUMB + " TEXT,"
             + USER_HEIGHT + " TEXT,"
             + USER_WEIGHT + " TEXT,"
             + USER_WAIST + " TEXT,"
@@ -138,6 +140,7 @@ public class UserDetailsTable {
         values.put(USER_PHONE,registeredUserDetails.getPhone());
         values.put(USER_EMAIL, registeredUserDetails.getEmail());
         values.put(USER_ADDRESS,registeredUserDetails.getAddress());
+        values.put(AMBULANCE_NUMB, registeredUserDetails.getAmbulance_numb());
         values.put(USER_HEIGHT,registeredUserDetails.getHeight());
         values.put(USER_WEIGHT,registeredUserDetails.getWeight());
         values.put(USER_WAIST,registeredUserDetails.getWaist());
@@ -206,6 +209,7 @@ public class UserDetailsTable {
                 registeredUserDetails.setBlood_pressure(cursor.getString(cursor.getColumnIndex(HIGH_BLOOD_PRESSURE)));
                 registeredUserDetails.setCholesterol(cursor.getString(cursor.getColumnIndex(HIGH_CHOLESTEROL)));
                 registeredUserDetails.setDiabetes(cursor.getString(cursor.getColumnIndex(HAVE_DIABETES)));
+                registeredUserDetails.setAmbulance_numb(cursor.getString(cursor.getColumnIndex(AMBULANCE_NUMB)));
                 registeredUserDetails.setDo_you_smoke(cursor.getString(cursor.getColumnIndex(DO_YOU_SMOKE)));
                 registeredUserDetails.setEmail(cursor.getString(cursor.getColumnIndex(USER_EMAIL)));
                 registeredUserDetails.setFamily_had_heart_attack(cursor.getString(cursor.getColumnIndex(FAMILY_HEALTH)));
@@ -309,6 +313,7 @@ public class UserDetailsTable {
         values.put(USER_PHONE,registeredUserDetails.getPhone());
         values.put(USER_EMAIL, registeredUserDetails.getEmail());
         values.put(USER_ADDRESS,registeredUserDetails.getAddress());
+        values.put(AMBULANCE_NUMB,registeredUserDetails.getAmbulance_numb());
         values.put(USER_HEIGHT,registeredUserDetails.getHeight());
         values.put(USER_WEIGHT,registeredUserDetails.getWeight());
         values.put(USER_WAIST,registeredUserDetails.getWaist());

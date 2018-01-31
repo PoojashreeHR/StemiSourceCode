@@ -30,6 +30,7 @@ import com.stemi.stemiapp.customviews.CircleImageView;
 import com.stemi.stemiapp.databases.UserDetailsTable;
 import com.stemi.stemiapp.model.RegisteredUserDetails;
 import com.stemi.stemiapp.preference.AppSharedPreference;
+import com.stemi.stemiapp.utils.AppConstants;
 import com.stemi.stemiapp.utils.CompressImageUtil;
 import com.stemi.stemiapp.utils.GlobalClass;
 
@@ -152,14 +153,16 @@ public class ProfileActivity extends AppCompatActivity {
                                     @Override
                                     public void onClick(DialogInterface dialogInterface, int i) {
                                         GlobalClass.userID = user.getUniqueId();
-                                        new AppSharedPreference(ProfileActivity.this)
-                                                .setUserId(user.getUniqueId());
+                                        AppSharedPreference app = new AppSharedPreference(ProfileActivity.this);
+                                        app.setUserId(user.getUniqueId());
                                         UserDetailsTable dBforUserDetails = new UserDetailsTable(ProfileActivity.this);
                                         RegisteredUserDetails userDetails = dBforUserDetails.getUserDetails(GlobalClass.userID);
+                                        app.addAmbulanceNumb(AppConstants.AMBULANCE_NUMB,userDetails.getAmbulance_numb());
                                         if(userDetails != null && userDetails.getHeight() != null) {
                                             int heightInCms = (int) Double.parseDouble(userDetails.getHeight());
                                             GlobalClass.heightInM = (double) heightInCms / 100;
                                         }
+
                                         startActivity(new Intent(ProfileActivity.this, TrackActivity.class));
                                         finish();
 

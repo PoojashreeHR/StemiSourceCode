@@ -11,6 +11,7 @@ public interface AppConstants {
     String APP_PREF_NAME = "stemi-PREFS";      //SharedPreference Name
 
     String USER_EMAIL_ID = "userEmailAddress";
+    String AMBULANCE_NUMB = "ambulance";
     String USER_HEIGHT = "userHeight";
     String PROFILE_NAME = "profileName";
     String IS_FIRST_TIME_LAUNCH = "isFirsttime";

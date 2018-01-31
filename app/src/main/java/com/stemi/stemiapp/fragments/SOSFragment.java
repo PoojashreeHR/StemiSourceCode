@@ -41,6 +41,8 @@ import com.stemi.stemiapp.activity.TrackActivity;
 import com.stemi.stemiapp.customviews.BetterSpinner;
 import com.stemi.stemiapp.databases.UserDetailsTable;
 import com.stemi.stemiapp.model.MessageEvent;
+import com.stemi.stemiapp.preference.AppSharedPreference;
+import com.stemi.stemiapp.utils.AppConstants;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -56,7 +58,7 @@ import static android.app.Activity.RESULT_OK;
  * Created by Pooja on 24-07-2017.
  */
 
-public class SOSFragment extends Fragment implements View.OnClickListener, TrackActivity.OnBackPressedListener {
+public class SOSFragment extends Fragment implements View.OnClickListener, TrackActivity.OnBackPressedListener,AppConstants {
     @BindView(R.id.bt_share_location)
     Button shateLocation;
     @BindView(R.id.rl_call)
@@ -64,6 +66,7 @@ public class SOSFragment extends Fragment implements View.OnClickListener, Track
     @BindView(R.id.rl_locateMap)
     RelativeLayout rlLocateMap;
 
+    AppSharedPreference appSharedPreference;
     UserDetailsTable dBforUserDetails;
     BetterSpinner personSpinner;
     ArrayList<String> personName;
@@ -96,7 +99,7 @@ public class SOSFragment extends Fragment implements View.OnClickListener, Track
         rlLocateMap.setOnClickListener(this);
         shateLocation.setOnClickListener(this);
         // ((TrackActivity) getActivity()).setActionBarTitle("SOS");
-
+        appSharedPreference = new AppSharedPreference(getActivity());
         personSpinner = (BetterSpinner) view.findViewById(R.id.person_Spinner);
         //pick_location = (ImageView) view.findViewById(R.id.pick_location);
         etLocation = (EditText) view.findViewById(R.id.et_location);
@@ -289,9 +292,15 @@ public class SOSFragment extends Fragment implements View.OnClickListener, Track
                 break;
 
             case R.id.rl_call:
+                Intent callIntent = new Intent(Intent.ACTION_DIAL);
+                if(appSharedPreference.getAmbulanceNum(AMBULANCE_NUMB) != ""
+                        || appSharedPreference.getAmbulanceNum(AMBULANCE_NUMB) == null){
+                    String call = appSharedPreference.getAmbulanceNum(AMBULANCE_NUMB);
+                    callIntent.setData(Uri.parse("tel:"+call));
+                }else {
+                    callIntent.setData(Uri.parse("tel:"));
+                }
 
-                Intent callIntent = new Intent(Intent.ACTION_CALL);
-                callIntent.setData(Uri.parse("tel:108"));
                 startActivity(callIntent);
 /*                Intent intent = new Intent(Intent.ACTION_DIAL);
                 intent.setData(Uri.parse("tel:108"));

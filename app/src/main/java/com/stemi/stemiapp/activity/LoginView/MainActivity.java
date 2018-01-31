@@ -34,7 +34,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MainActivity extends AppCompatActivity implements AppConstants,View.OnClickListener {
+public class MainActivity extends AppCompatActivity implements AppConstants,View.OnClickListener, LoginContract.LoginView {
     private static final String TAG = "SignupResponse";
     ApiInterface apiInterface;
     AppSharedPreference appSharedPreferences;
@@ -44,6 +44,8 @@ public class MainActivity extends AppCompatActivity implements AppConstants,View
     @BindView(R.id.btn_login) Button btnLogin;
     @BindView(R.id.tv_not_registered) TextView tvNotRegistered;
     @BindView(R.id.tv_forgot_password) TextView tvForgotPassword;
+
+    LoginContract.LoginPresenter loginPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

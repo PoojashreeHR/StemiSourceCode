@@ -126,5 +126,17 @@ public class AppSharedPreference implements AppConstants {
     public String getLoginId(){
         return sharedPreferences.getString(LOGINID,null);
     }
+
+    //Store Token in SP
+    public void addAmbulanceNumb(String key, String value) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(key, value);
+        editor.apply();
+    }
+    // Get Token from SP.
+    public String getAmbulanceNum(String key) {
+        return sharedPreferences.getString(key, null);
+    }
+
 }
 

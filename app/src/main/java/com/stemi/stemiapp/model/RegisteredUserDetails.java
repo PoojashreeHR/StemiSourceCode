@@ -17,6 +17,7 @@ public class RegisteredUserDetails implements Parcelable{
     String  phone;
     String email;
     String address;
+    String ambulance_numb;
     String  height;
     double  weight;
     String waist;
@@ -44,6 +45,7 @@ public class RegisteredUserDetails implements Parcelable{
         phone = in.readString();
         email = in.readString();
         address = in.readString();
+        ambulance_numb = in.readString();
         height = in.readString();
         weight = in.readDouble();
         waist = in.readString();
@@ -70,6 +72,14 @@ public class RegisteredUserDetails implements Parcelable{
             return new RegisteredUserDetails[size];
         }
     };
+
+    public String getAmbulance_numb() {
+        return ambulance_numb;
+    }
+
+    public void setAmbulance_numb(String ambulance_numb) {
+        this.ambulance_numb = ambulance_numb;
+    }
 
     public String getEmail() {
         return email;

@@ -46,6 +46,7 @@ public class PhysicalDetailsFragment extends Fragment implements View.OnClickLis
     @BindView(R.id.et_address) EditText etAddress;
     @BindView(R.id.smoke_answerLayout) AnswerTemplateView smokeAnswer;
     @BindView(R.id.heart_attack) AnswerTemplateView heartAttack;
+    @BindView(R.id.et_ambulance_contact) EditText ambulanceContact;
 
     AppSharedPreference appSharedPreference;
     //  BetterSpinner gender_spinner;
@@ -53,7 +54,9 @@ public class PhysicalDetailsFragment extends Fragment implements View.OnClickLis
     String HeightInFeet = null;
     String HeightIncm = null;
     String Waist;
-  //  BetterSpinner spinner;
+    String phonePatteren = "[0-9]";
+
+    //  BetterSpinner spinner;
     RegisteredUserDetails registeredUserDetails;
     private RegisteredUserDetails user;
     private boolean editmode;
@@ -97,6 +100,7 @@ public class PhysicalDetailsFragment extends Fragment implements View.OnClickLis
 
            // etWaist.setText(RegistrationActivity.registeredUserDetails.getWaist());
             etAddress.setText(RegistrationActivity.registeredUserDetails.getAddress());
+            ambulanceContact.setText(RegistrationActivity.registeredUserDetails.getAmbulance_numb());
             if (RegistrationActivity.registeredUserDetails.getDo_you_smoke() != null) {
                 smokeAnswer.setResponse(RegistrationActivity.registeredUserDetails.getDo_you_smoke());
             }
@@ -122,6 +126,7 @@ public class PhysicalDetailsFragment extends Fragment implements View.OnClickLis
         if(user != null){
             editmode = true;
             etAddress.setText(user.getAddress());
+            ambulanceContact.setText(user.getAmbulance_numb());
             String weight = decimalFormat.format(user.getWeight());
             etWeight.setText(weight);
             et_HeightCm.setText(user.getHeight());
@@ -185,6 +190,7 @@ public class PhysicalDetailsFragment extends Fragment implements View.OnClickLis
        RegistrationActivity.registeredUserDetails.setWeight(Double.parseDouble(etWeight.getText().toString()));
        RegistrationActivity.registeredUserDetails.setWaist(Waist);
        RegistrationActivity.registeredUserDetails.setAddress(etAddress.getText().toString());
+       RegistrationActivity.registeredUserDetails.setAmbulance_numb(ambulanceContact.getText().toString());
        RegistrationActivity.registeredUserDetails.setDo_you_smoke(smokeAnswer.getResponse());
        RegistrationActivity.registeredUserDetails.setHeart_attack(heartAttack.getResponse());
     }
@@ -197,6 +203,7 @@ public class PhysicalDetailsFragment extends Fragment implements View.OnClickLis
                 if(validateFields()) {
                     saveDetails();
                     appSharedPreference.addUserHeight(USER_HEIGHT,RegistrationActivity.registeredUserDetails.getHeight());
+                    appSharedPreference.addAmbulanceNumb(AMBULANCE_NUMB, RegistrationActivity.registeredUserDetails.getAmbulance_numb());
                     ((RegistrationActivity) getActivity()).showFragment(new HealthDetailFragment_1());
                     break;
                 }
@@ -212,6 +219,14 @@ public class PhysicalDetailsFragment extends Fragment implements View.OnClickLis
         } else {
             etAddress.setError(null);
         }
+
+        String ambulance = ambulanceContact.getText().toString();
+        if(TextUtils.isEmpty(ambulance)){
+            ambulanceContact.setText("");
+        }/*else if(!ambulanceContact.getText().toString().matches(phonePatteren)) {
+            ambulanceContact.setError("Enter Valid Mobile Number");
+            valid = false;
+        }*/
 
         String weight = etWeight.getText().toString();
         if (TextUtils.isEmpty(weight)) {

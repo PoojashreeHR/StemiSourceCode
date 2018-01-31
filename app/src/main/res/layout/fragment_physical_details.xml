@@ -6,6 +6,7 @@
     android:layout_height="match_parent">
 
     <ScrollView
+        android:layout_above="@+id/bt_physical_next"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
@@ -36,6 +37,22 @@
                 android:imeOptions="actionNext" />
         </android.support.design.widget.TextInputLayout>
 
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/tl_ambulance"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/StyledTilEditText">
+
+            <EditText
+                android:id="@+id/et_ambulance_contact"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="AMBULANCE PHONE NUMBER"
+                android:inputType="number"
+                android:maxLength="13"
+                android:imeOptions="actionNext" />
+        </android.support.design.widget.TextInputLayout>
 <!--        <com.stemi.stemiapp.customviews.BetterSpinner
             android:id="@+id/spinner"
             android:layout_width="match_parent"
@@ -325,10 +342,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Next"
+        android:layout_marginTop="10dp"
+        android:layout_alignParentBottom="true"
         android:textSize="20sp"
         android:background="@color/appBackground"
         android:textColor="@color/white"
-        android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true" />
 
 </RelativeLayout>
