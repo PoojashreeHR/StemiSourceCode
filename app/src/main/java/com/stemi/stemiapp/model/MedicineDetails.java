@@ -18,6 +18,7 @@ public class MedicineDetails implements Parcelable {
     private  Integer medicineColor;
     private String morning;
     private String Afternoon;
+    private String startDate;
     private String night;
     private ArrayList<MedicinesTakenOrNot> medicineMorning;
     private String medicineMorningTime;
@@ -31,6 +32,14 @@ public class MedicineDetails implements Parcelable {
     private Boolean afternoonChecked;
     private Boolean nightChecked;
     private Boolean allChecked;
+
+    public String getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(String startDate) {
+        this.startDate = startDate;
+    }
 
     private MedicineDetails medicineDetails;
 

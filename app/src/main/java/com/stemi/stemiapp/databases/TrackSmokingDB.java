@@ -17,6 +17,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import static android.content.ContentValues.TAG;
+
 /**
  * Created by praburaam on 04/09/17.
  */
@@ -211,7 +213,51 @@ public class TrackSmokingDB extends SQLiteOpenHelper{
         }
     }
 
-    public int getNumberOfDays(String userId){
+    public int getNumbDays(String userId){
+            int dayCount = 0;
+            ArrayList<String> dates =  new ArrayList<>();
+            SQLiteDatabase db = this.getReadableDatabase();
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            String query = "SELECT " + COLUMN_DATE_TIME + " FROM " + TABLE_SMOKING
+                    + " WHERE " + COLUMN_USER_ID + " = '"+userId + "' AND "+ COLUMN_SMOKED+" = 1"
+                    + " ORDER BY " + COLUMN_DATE_TIME + " DESC LIMIT 1";
+            Cursor cursor = db.rawQuery(query, null);
+            cursor.moveToFirst();
+            Log.e("db", "query = " + query);
+
+
+            while (!cursor.isAfterLast()) {
+                String date = cursor.getString(cursor.getColumnIndex(COLUMN_DATE_TIME));
+                cursor.moveToNext();
+
+                try {
+                    String currentDate = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+
+                    Date date1 = null;
+                    Date date2 = null;
+                    SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+                    date1 = df.parse(date);
+                    date2 = df.parse(currentDate);
+                    long diff = Math.abs(date1.getTime() - date2.getTime());
+                    long diffDays = diff / (24 * 60 * 60 * 1000);
+
+                    if(date.equals(currentDate)){
+                        dayCount = -1;
+                    }else {
+                        Log.e(TAG, "getNumberofDays: " + diffDays);
+                        dayCount = (int) diffDays;
+                        Log.e(TAG, "getNumberofDays: " + date);
+                    }
+
+                } catch (Exception e1) {
+                    System.out.println("exception " + e1);
+                }
+            }
+            return dayCount;
+
+    }
+
+    public int getNumberofWeeks(String userId){
         int dayCount = 0;
         SQLiteDatabase db = this.getReadableDatabase();
         Date previousDateObj = null;

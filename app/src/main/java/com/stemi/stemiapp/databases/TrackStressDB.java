@@ -16,6 +16,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import static android.content.ContentValues.TAG;
+
 /**
  * Created by praburaam on 04/09/17.
  */
@@ -29,7 +31,7 @@ public class TrackStressDB extends SQLiteOpenHelper{
     public static final String COLUMN_USER_ID = "_id";
     public static final String COLUMN_DATE_TIME = "_datetime";
     public static final String COLUMN_STRESSED = "stressed";
-
+    public static final String COLUMN_STRESS_COUNT = "";
     public static final String COLUMN_YOGA = "yoga";
     public static final String COLUMN_MEDITATION = "meditation";
     public static final String COLUMN_HOBBIES = "hobbies";
@@ -175,6 +177,9 @@ public class TrackStressDB extends SQLiteOpenHelper{
         }
         return stressList;
     }
+
+
+
     public List<TrackStress> getStressTrackingInfo(String userid, String date1, String date2){
         List<TrackStress> stressList = new ArrayList<>();
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -235,6 +240,49 @@ public class TrackStressDB extends SQLiteOpenHelper{
                 onCreate(db);
             }
         }
+    }
+
+    public int getNumbDays(String userId){
+        int dayCount = 0;
+        ArrayList<String> dates =  new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        String query = "SELECT " + COLUMN_DATE_TIME + " FROM " + TABLE_STRESS
+                + " WHERE " + COLUMN_USER_ID + " = '"+userId + "' AND "+ COLUMN_STRESSED +" = 1"
+                + " ORDER BY " + COLUMN_DATE_TIME + " DESC LIMIT 1";
+        Cursor cursor = db.rawQuery(query, null);
+        cursor.moveToFirst();
+        Log.e("db", "query = " + query);
+
+
+        while (!cursor.isAfterLast()) {
+            String date = cursor.getString(cursor.getColumnIndex(COLUMN_DATE_TIME));
+            cursor.moveToNext();
+
+            try {
+                String currentDate = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+
+                Date date1 = null;
+                Date date2 = null;
+                SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+                date1 = df.parse(date);
+                date2 = df.parse(currentDate);
+                long diff = Math.abs(date1.getTime() - date2.getTime());
+                long diffDays = diff / (24 * 60 * 60 * 1000);
+
+                if(date1.equals(date2)){
+                    dayCount = -1;
+                }else {
+                    Log.e(TAG, "getNumberofDays: " + diffDays);
+                    dayCount = (int) diffDays;
+                    Log.e(TAG, "getNumberofDays: " + date);
+                }
+            } catch (Exception e1) {
+                System.out.println("exception " + e1);
+            }
+        }
+        return dayCount;
+
     }
 
     public int getNumberOfDays(String userId){

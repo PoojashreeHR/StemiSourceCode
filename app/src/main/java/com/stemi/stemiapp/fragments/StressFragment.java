@@ -415,11 +415,19 @@ public class StressFragment extends Fragment implements AppConstants, TrackActiv
         }
         Log.e("db", new Gson().toJson(trackStress));
 
-        if(trackStress.isHobbies() || trackStress.isMeditation() || trackStress.isYoga()){
-            trackStress.setStressed(false);
-        }
-        else{
-            trackStress.setStressed(true);
+        int stress = Integer.parseInt(stressCount);
+        if((trackStress.isHobbies() || trackStress.isMeditation() || trackStress.isYoga())){
+            if(stress > 3){
+                trackStress.setStressed(false);
+            } else {
+                trackStress.setStressed(true);
+            }
+        } else{
+            if(stress > 3){
+                trackStress.setStressed(true);
+            } else {
+                trackStress.setStressed(false);
+            }
         }
 
 

@@ -165,12 +165,17 @@ public class LearnFragment extends Fragment implements AppConstants, UpdateableF
 
     private void populatePerformanceTexts() {
         TrackMedicationDB trackMedicationDB = new TrackMedicationDB(getActivity());
-        int medNoOfDays = trackMedicationDB.getNumberofDays(GlobalClass.userID);
-        if(medNoOfDays > 0){
-            tvDescMedication.setText("You've been right on track for "+medNoOfDays+" days with your medication!");
+        int medNoOfDays = trackMedicationDB.getNumberofWeeks(GlobalClass.userID);
+        int medDays = trackMedicationDB.getNumberofDays(GlobalClass.userID);
+        if(medDays > 0){
+            tvDescMedication.setText("You’ve not taken your medication for the last "+ medDays +" day(s). Take your pills regularly. ");
+         //   tvDescMedication.setText("Have you had your meds today?");
+        }else if(medNoOfDays == 0) {
+            tvDescMedication.setText("Have you had your meds today?");
         }else {
-            tvDescMedication.setText("You’ve not taken your medication for the last "+medNoOfDays+" day(s). Take your pills regularly. ");
+            tvDescMedication.setText("You've been right on track with your medications!");
         }
+
 
         TrackWeightDB trackWeightDB = new TrackWeightDB(getActivity());
         double weight = trackWeightDB.getLastKnownWeight(GlobalClass.userID);
@@ -197,11 +202,18 @@ public class LearnFragment extends Fragment implements AppConstants, UpdateableF
 
         String smokingText = "";
         TrackSmokingDB trackSmokingDB = new TrackSmokingDB(getActivity());
-        int smokingNoDays = trackSmokingDB.getNumberOfDays(GlobalClass.userID);
+        int smokingNoDays = trackSmokingDB.getNumbDays(GlobalClass.userID);
         if(smokingNoDays == 0){
+            smokingText =  " Occasional or chain, track your smoking game";
+            // smokingText =  "You smoked recently. Act now. Quit smoking";
+        }else if(smokingNoDays > 0){
             smokingText  = "Bravo! "+smokingNoDays+" day(s) since you last smoked";
-        }else {
+            // smokingText  = "Bravo! "+smokingNoDays+" day(s) since you last smoked";
+        }else if(smokingNoDays < 0){
             smokingText =  "You smoked recently. Act now. Quit smoking";
+            /*else {
+            smokingText  = "Bravo! "+smokingNoDays+" day(s) since you last smoked";
+        }*/
         }
         tvDescSmoking.setText(smokingText);
 
@@ -209,20 +221,26 @@ public class LearnFragment extends Fragment implements AppConstants, UpdateableF
         TrackExerciseDB trackExerciseDB = new TrackExerciseDB(getActivity());
         int numb = trackExerciseDB.getNumberofDays(GlobalClass.userID);
         int exerciseDays = trackExerciseDB.getNumberOfWeeks(GlobalClass.userID);
-        if(exerciseDays > 0){
-            exerciseText = "Amazing! You've been exercising regularly for "+exerciseDays+" weeks.";
-        }else {
+        if(numb == 0) {
+            exerciseText = "Log your daily workout regime";
+        }else if(numb > 0){
             exerciseText = "Get your shoes on! You last worked out "+ numb +" day(s) ago";
+        }else {
+            exerciseText = "Amazing! You've been exercising regularly";
         }
         tvDescExercise.setText(exerciseText);
 
+
         String stressText = "";
         TrackStressDB trackStressDB = new TrackStressDB(getActivity());
-        int stressCount = trackStressDB.getNumberOfDays(GlobalClass.userID);
-        if(stressCount >= 3 ){
-            stressText = "Red alert! High stress levels recorded. De-stress with a hobby. ";
-        }else {
+        int stressCount = trackStressDB.getNumbDays(GlobalClass.userID);
+        if(stressCount == 0 ) {
+            stressText = "Keep calm and stay cool as a cucumber";
+        }else if(stressCount > 0){
             stressText = "Cool as a cucumber! Your stress levels haven't spiked in " + stressCount + " days";
+        }else  {
+            stressText = "Red alert! High stress levels recorded. De-stress with a hobby. ";
+
         }
         tvDescStress.setText(stressText);
     }

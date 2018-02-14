@@ -318,10 +318,12 @@ public class MedicineTable {
             Gson gsonObj = new Gson();
             MedicineDetails medicineDetails = gsonObj.fromJson(fieldToAdd, MedicineDetails.class);
 
-            if (medicineDetails.getMedicineMorning().equals("") &&
-                    medicineDetails.getMedicineAfternoon().equals("")
-                    && medicineDetails.getMedicineNight().equals("")) {
-                db.delete(MED_TABLE_NAME, MED_MEDICINE_DETAILS + " ='" + fieldToAdd + "'", null);
+            if (medicineDetails != null) {
+                if ((medicineDetails.getMedicineMorning() != null && medicineDetails.getMedicineMorning().size() == 0 ) &&
+                        ( medicineDetails.getMedicineAfternoon() !=null && medicineDetails.getMedicineAfternoon().size() == 0)
+                        && ( medicineDetails.getMedicineNight() !=null && medicineDetails.getMedicineNight().size() == 0)) {
+                    db.delete(MED_TABLE_NAME, MED_MEDICINE_DETAILS + " ='" + fieldToAdd + "'", null);
+                }
             }
         }
         DatabaseManager.getInstance().closeDatabase();

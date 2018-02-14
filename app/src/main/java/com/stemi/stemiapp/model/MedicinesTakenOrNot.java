@@ -15,9 +15,18 @@ public class MedicinesTakenOrNot implements Parcelable{
     private String medTime;
     private String type;
     private String duration;
+    private String startDate;
     private int medColor;
 
     public MedicinesTakenOrNot(){}
+
+    public String getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(String startDate) {
+        this.startDate = startDate;
+    }
 
     protected MedicinesTakenOrNot(Parcel in) {
         date = in.readString();

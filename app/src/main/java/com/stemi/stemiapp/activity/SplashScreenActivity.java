@@ -15,6 +15,7 @@ import com.stemi.stemiapp.databases.MedicineTable;
 import com.stemi.stemiapp.databases.UserDetailsTable;
 import com.stemi.stemiapp.preference.AppSharedPreference;
 import com.stemi.stemiapp.utils.AppConstants;
+import com.stemi.stemiapp.utils.GlobalClass;
 
 public class SplashScreenActivity extends AppCompatActivity implements AppConstants {
 
@@ -32,7 +33,7 @@ public class SplashScreenActivity extends AppCompatActivity implements AppConsta
         introScreensShown = sharedPreference.isFirstTimeLaunch(IS_FIRST_TIME_LAUNCH);
         checkAppPermission();
         dBforUserDetails = new MedicineTable();
-        //dBforUserDetails.removeMedicalData(GlobalClass.userID);
+        dBforUserDetails.removeMedicalData(GlobalClass.userID);
     }
 
 

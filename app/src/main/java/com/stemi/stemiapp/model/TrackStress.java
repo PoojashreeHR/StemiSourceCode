@@ -11,6 +11,7 @@ public class TrackStress {
     private Date dateTime;
     private boolean stressed;
     private boolean yoga;
+    private String stressCount;
     private boolean meditation;
     private boolean hobbies;
 
@@ -36,6 +37,14 @@ public class TrackStress {
 
     public void setStressed(boolean stressed) {
         this.stressed = stressed;
+    }
+
+    public String getStressCount() {
+        return stressCount;
+    }
+
+    public void setStressCount(String stressCount) {
+        this.stressCount = stressCount;
     }
 
     public boolean isYoga() {

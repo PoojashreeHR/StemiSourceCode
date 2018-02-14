@@ -1,9 +1,14 @@
 package com.stemi.stemiapp.fragments;
 
+import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.location.LocationManager;
 import android.net.Uri;
@@ -274,20 +279,75 @@ public class SOSFragment extends Fragment implements View.OnClickListener, Track
         switch (id) {
             case R.id.bt_share_location:
                 if (ValidateFields()) {
+                    PackageManager manager = getContext().getPackageManager();
                     Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
                     sharingIntent.setType("text/plain");
+                    sharingIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+
 
                     String geoUri = "http://maps.google.com/maps?q=loc:" + latitude + "," + longitude + " (" + "Location" +  ")" ;
 
+                    //String shareBodyText = "Hi pooja";
                     String shareBodyText =  selectedPersonName + " has chest pain and might be suffering from a heart attack.Please send help to "+etLocation.getText().toString()+"\n\n"+ geoUri;
                     //   shareBodyText.append(Uri.parse(uri));
-                    SmsManager smsManager = SmsManager.getDefault();
+                    /*SmsManager smsManager = SmsManager.getDefault();
                     String destination = "https://www.google.co.in/";
                     smsManager.sendTextMessage(destination, null, shareBodyText, null, null);
-
+*/
                     sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Subject here");
                     sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBodyText);
-                    startActivity(Intent.createChooser(sharingIntent, "Shearing Option"));
+
+
+
+
+/*
+
+                    String SMS_SENT = "SMS_SENT";
+                    String SMS_DELIVERED = "SMS_DELIVERED";
+
+                    PendingIntent sentPendingIntent = PendingIntent.getBroadcast(getActivity(), 0, new Intent(SMS_SENT), 0);
+                    PendingIntent deliveredPendingIntent = PendingIntent.getBroadcast(getActivity(), 0, new Intent(SMS_DELIVERED), 0);
+
+                    ArrayList<String> smsBodyParts = smsManager.divideMessage(shareBodyText);
+                    ArrayList<PendingIntent> sentPendingIntents = new ArrayList<PendingIntent>();
+                    ArrayList<PendingIntent> deliveredPendingIntents = new ArrayList<PendingIntent>();
+
+                    for (int i = 0; i < smsBodyParts.size(); i++) {
+                        sentPendingIntents.add(sentPendingIntent);
+                        deliveredPendingIntents.add(deliveredPendingIntent);
+                    }
+
+// For when the SMS has been sent
+                    getActivity().registerReceiver(new BroadcastReceiver() {
+                        @Override
+                        public void onReceive(Context context, Intent intent) {
+                            switch (getResultCode()) {
+                                case Activity.RESULT_OK:
+                                    Toast.makeText(context, "SMS sent successfully", Toast.LENGTH_SHORT).show();
+                                    break;
+                                case SmsManager.RESULT_ERROR_GENERIC_FAILURE:
+                                    Toast.makeText(context, "Generic failure cause", Toast.LENGTH_SHORT).show();
+                                    break;
+                                case SmsManager.RESULT_ERROR_NO_SERVICE:
+                                    Toast.makeText(context, "Service is currently unavailable", Toast.LENGTH_SHORT).show();
+                                    break;
+                                case SmsManager.RESULT_ERROR_NULL_PDU:
+                                    Toast.makeText(context, "No pdu provided", Toast.LENGTH_SHORT).show();
+                                    break;
+                                case SmsManager.RESULT_ERROR_RADIO_OFF:
+                                    Toast.makeText(context, "Radio was explicitly turned off", Toast.LENGTH_SHORT).show();
+                                    break;
+                            }
+                        }
+                    }, new IntentFilter(SMS_SENT));
+*/
+
+
+                    if (sharingIntent.resolveActivity(manager) != null) {
+                        startActivity(Intent.createChooser(sharingIntent, "Shearing Option"));
+                    } else {
+                        Log.d(TAG, "No Intent available to handle action");
+                    }
                 }
                 break;
 

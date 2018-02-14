@@ -242,9 +242,13 @@ public class TrackExerciseDB extends SQLiteOpenHelper {
                     long diff = Math.abs(date1.getTime() - date2.getTime());
                     long diffDays = diff / (24 * 60 * 60 * 1000);
 
-                    Log.e(TAG, "getNumberofDays: "+ diffDays );
-                    dayCount = (int) diffDays;
-                    Log.e(TAG, "getNumberofDays: "+ date );
+                    if(date.equals(currentDate)){
+                        dayCount = -1;
+                    }else {
+                        Log.e(TAG, "getNumberofDays: " + diffDays);
+                        dayCount = (int) diffDays;
+                        Log.e(TAG, "getNumberofDays: " + date);
+                    }
                 } catch (Exception e1) {
                     System.out.println("exception " + e1);
                 }

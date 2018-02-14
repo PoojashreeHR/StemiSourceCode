@@ -7,6 +7,7 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.Drawable;
@@ -28,6 +29,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.stemi.stemiapp.R;
@@ -168,21 +170,26 @@ public class MedicationFragment extends Fragment implements AppConstants, View.O
         btnMedicationSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if ((medicineContains.getMedicineMorning() != null && medicineContains.getMedicineMorning().size() >0)
-                        || (medicineContains.getMedicineAfternoon() !=null && medicineContains.getMedicineAfternoon().size() >0)
-                        || (medicineContains.getMedicineNight() != null && medicineContains.getMedicineNight().size() >0)) {
-                    Boolean checkedOrNot = false;
-                    TrackMedication med = new TrackMedication();
-                    Log.e(TAG, "doBack: " + medicineContains);
-                    storeData();
-                    alreadySaved = true;
-                } else {
-                  /*  FragmentManager fm = getActivity().getSupportFragmentManager();
-                    for (int i = 0; i < fm.getBackStackEntryCount(); ++i) {
-                        fm.popBackStack();
-                    }*/
-                    EventBus.getDefault().post(new MessageEvent("Hello!"));
-                    //  ((TrackActivity) getActivity()).setActionBarTitle("Track");
+                try {
+                    if ((medicineContains.getMedicineMorning() != null && medicineContains.getMedicineMorning().size() > 0)
+                                || (medicineContains.getMedicineAfternoon() != null && medicineContains.getMedicineAfternoon().size() > 0)
+                                || (medicineContains.getMedicineNight() != null && medicineContains.getMedicineNight().size() > 0)) {
+                            Boolean checkedOrNot = false;
+                            TrackMedication med = new TrackMedication();
+                            Log.e(TAG, "doBack: " + medicineContains);
+                            storeData();
+                            alreadySaved = true;
+                        } else {
+                      /*  FragmentManager fm = getActivity().getSupportFragmentManager();
+                        for (int i = 0; i < fm.getBackStackEntryCount(); ++i) {
+                            fm.popBackStack();
+                        }*/
+                            EventBus.getDefault().post(new MessageEvent("Hello!"));
+                            //  ((TrackActivity) getActivity()).setActionBarTitle("Track");
+                        }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
         });
@@ -920,6 +927,7 @@ public class MedicationFragment extends Fragment implements AppConstants, View.O
             this.info = medicineInfo;
             this.time = session;
             this.id = id;
+
         }
 
         @Override
@@ -1100,13 +1108,17 @@ public class MedicationFragment extends Fragment implements AppConstants, View.O
                             checkChanges = true;
 
                         } else {
-                            medicineLists.remove(position);
-                            medDetailList.setMedicineAfternoon(medicineLists);
-                            medicineContains = medDetailList;
-                            notifyItemRemoved(position);
-                            saveButton.setTextColor(getResources().getColor(R.color.appBackground));
-                            saveButton.setEnabled(true);
-                            checkChanges = true;
+                            try {
+                                medicineLists.remove(position);
+                                medDetailList.setMedicineAfternoon(medicineLists);
+                                medicineContains = medDetailList;
+                                notifyItemRemoved(position);
+                                saveButton.setTextColor(getResources().getColor(R.color.appBackground));
+                                saveButton.setEnabled(true);
+                                checkChanges = true;
+                            } catch (Resources.NotFoundException e) {
+                                e.printStackTrace();
+                            }
                         }
                     } else if (id == 3) {
                         medicineLists = medDetailList.getMedicineNight();

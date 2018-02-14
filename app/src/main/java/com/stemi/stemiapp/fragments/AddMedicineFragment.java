@@ -122,6 +122,7 @@ public class AddMedicineFragment extends Fragment implements View.OnClickListene
     MedicineTable medicineTable;
     ArrayList<MedicineDetails> showReceivedData;
     int checkEditOrNot = 0;
+    String startDate1;
 
     public AddMedicineFragment() {
         // Required empty public constructor
@@ -193,7 +194,7 @@ public class AddMedicineFragment extends Fragment implements View.OnClickListene
                         medType = meds.getMedicineMorning().get(i).getType();
                         medName = meds.getMedicineMorning().get(i).getMedName();
                         medDuration = meds.getMedicineMorning().get(i).getDuration();
-
+                        startDate1 = meds.getMedicineMorning().get(i).getDate();
                         morningMedicine.setBackgroundResource(R.drawable.oval_shape_textview);
                         morningMedicine.setTextColor(getResources().getColor(R.color.white));
                         morningTime.setVisibility(View.VISIBLE);
@@ -211,6 +212,7 @@ public class AddMedicineFragment extends Fragment implements View.OnClickListene
                         medType = meds.getMedicineAfternoon().get(i).getType();
                         medName = meds.getMedicineAfternoon().get(i).getMedName();
                         medDuration = meds.getMedicineAfternoon().get(i).getDuration();
+                        startDate1 = meds.getMedicineAfternoon().get(i).getDate();
 
                         noonMedicine.setBackgroundResource(R.drawable.oval_shape_textview);
                         noonMedicine.setTextColor(getResources().getColor(R.color.white));
@@ -228,6 +230,7 @@ public class AddMedicineFragment extends Fragment implements View.OnClickListene
                         medType = meds.getMedicineNight().get(i).getType();
                         medName = meds.getMedicineNight().get(i).getMedName();
                         medDuration = meds.getMedicineNight().get(i).getDuration();
+                        startDate1 = meds.getMedicineNight().get(i).getDate();
 
                         nightMedicine.setBackgroundResource(R.drawable.oval_shape_textview);
                         nightMedicine.setTextColor(getResources().getColor(R.color.white));
@@ -595,7 +598,7 @@ public class AddMedicineFragment extends Fragment implements View.OnClickListene
                 break;
             case R.id.medicineRemainder:
                 if (!medicineRemainder.isChecked()) {
-                    Toast.makeText(getActivity(), "Please Check here", Toast.LENGTH_SHORT).show();
+                 //   Toast.makeText(getActivity(), "Please Check here", Toast.LENGTH_SHORT).show();
                     medicineRemainder.setChecked(false);
                 } else {
                     medicineRemainder.setChecked(true);
@@ -613,7 +616,7 @@ public class AddMedicineFragment extends Fragment implements View.OnClickListene
                         storeMedicalDetails();
                         ((TrackActivity) getActivity()).showFragment(new MedicationFragment());
                         FragmentManager fm = getActivity().getSupportFragmentManager();
-                        for(int i = 0; i < fm.getBackStackEntryCount(); ++i) {
+                        for (int i = 0; i < fm.getBackStackEntryCount(); ++i) {
                             fm.popBackStack();
                         }
                         //  ((TrackActivity) getActivity()).showFragment(new MedicationFragment());
@@ -733,6 +736,7 @@ public class AddMedicineFragment extends Fragment implements View.OnClickListene
     public void storeMedicalDetails() {
 
         String date = new SimpleDateFormat("dd MMM yyyy").format(new Date());
+        String startDate = new SimpleDateFormat("dd MMM yyyy").format(new Date());
         String incDate = new SimpleDateFormat("dd MMM yyyy").format(new Date());
         SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy");
         Calendar c = Calendar.getInstance();
@@ -745,11 +749,18 @@ public class AddMedicineFragment extends Fragment implements View.OnClickListene
         ArrayList<MedicinesTakenOrNot> medicinesTakenOrNots = new ArrayList<>();
         int maxDay = Integer.parseInt(medicineDays.getText().toString());
         for (int co = 0; co < maxDay; co++) {
+            String localDate = startDate1;
+
             MedicineDetails medicineDetails = new MedicineDetails();
             // MedicineDetails medInformation = new MedicineDetails();
             c.add(Calendar.DATE, 1);
-            medicineDetails.setDate(incDate);
+            if(checkEditOrNot == 1){
+                medicineDetails.setDate(localDate);
 
+            }else {
+                medicineDetails.setDate(incDate);
+            }
+            //medicineDetails.setStartDate(startDate);
             medicineDetails.setPersonName(GlobalClass.userID);
             medicineDetails.setMedicineName(medicineNamee.getText().toString());
             medicineDetails.setMedicineDays(medicineDays.getText().toString());
@@ -764,7 +775,13 @@ public class AddMedicineFragment extends Fragment implements View.OnClickListene
                 medicinesTakenOrNotMorning = new MedicinesTakenOrNot();
                 medicineDetails.setMorning("Morning");
                 medicinesTakenOrNotMorning.setMedName(medicineNamee.getText().toString());
-                medicinesTakenOrNotMorning.setDate(incDate);
+                if(checkEditOrNot == 1){
+                    medicinesTakenOrNotMorning.setDate(localDate);
+
+                }else {
+                    medicinesTakenOrNotMorning.setDate(incDate);
+                }
+                medicinesTakenOrNotMorning.setStartDate(startDate);
                 medicinesTakenOrNotMorning.setMedTime(morningTime.getText().toString());
                 medicinesTakenOrNotMorning.setTakenorNot(false);
                 medicinesTakenOrNotMorning.setType(typeOfMedicine);
@@ -782,7 +799,13 @@ public class AddMedicineFragment extends Fragment implements View.OnClickListene
                 medicinesTakenOrNotAfternoon = new MedicinesTakenOrNot();
                 medicineDetails.setAfternoon("Afternoon");
                 medicinesTakenOrNotAfternoon.setMedName(medicineNamee.getText().toString());
-                medicinesTakenOrNotAfternoon.setDate(incDate);
+                if(checkEditOrNot == 1){
+                    medicinesTakenOrNotAfternoon.setDate(localDate);
+
+                }else {
+                    medicinesTakenOrNotAfternoon.setDate(incDate);
+                }
+                medicinesTakenOrNotAfternoon.setStartDate(startDate);
                 medicinesTakenOrNotAfternoon.setMedTime(noonTime.getText().toString());
                 medicinesTakenOrNotAfternoon.setTakenorNot(false);
                 medicinesTakenOrNotAfternoon.setType(typeOfMedicine);
@@ -800,7 +823,12 @@ public class AddMedicineFragment extends Fragment implements View.OnClickListene
                 medicinesTakenOrNotNight = new MedicinesTakenOrNot();
                 medicineDetails.setNight("Night");
                 medicinesTakenOrNotNight.setMedName(medicineNamee.getText().toString());
-                medicinesTakenOrNotNight.setDate(incDate);
+                if(checkEditOrNot == 1){
+                    medicinesTakenOrNotNight.setDate(localDate);
+
+                }else {
+                    medicinesTakenOrNotNight.setDate(incDate);
+                }                medicinesTakenOrNotNight.setStartDate(startDate);
                 medicinesTakenOrNotNight.setMedTime(nightTime.getText().toString());
                 medicinesTakenOrNotNight.setTakenorNot(false);
                 medicinesTakenOrNotNight.setType(typeOfMedicine);
@@ -818,16 +846,165 @@ public class AddMedicineFragment extends Fragment implements View.OnClickListene
             Log.e(TAG, "storeMedicalDetails: " + incDate);
             if (checkEditOrNot == 1) {
                 MedicineDetails medDetails = new MedicineDetails();
-                ArrayList<String> oldEntry = medicineTable.getAllMedicineDEtails(GlobalClass.userID,incDate);
-                for (int i = 0; i < oldEntry.size(); i++) {
+                Calendar cal = Calendar.getInstance();
+
+                try {
+                    cal.setTime(sdf.parse(startDate1));
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+             /*   int updatedDay = Integer.parseInt(medicineDays.getText().toString());
+                String localIncDate = startDate1;
+                Calendar cal = Calendar.getInstance();
+                try {
+                    cal.setTime(sdf.parse(date));
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                for (int m = 0; m < updatedDay; m++) {*/
+                    ArrayList<String> oldEntry = medicineTable.getAllMedicineDEtails(GlobalClass.userID, localDate);
+                    if(oldEntry.isEmpty()){
+                        //add new tablet
+                        medicineTable.addMedicineDetails(medicineDetails, medicineDetails.getPersonName());
+                        long getCount = medicineTable.getMedicineDetailsCount();
+                      //  startDate1 = sdf.format(c.getTime());
+                        cal.add(Calendar.DATE, 1);
+                        startDate1 = sdf.format(cal.getTime());
+                        Log.e(TAG, "onCreateView: Get Medicine Count " + getCount);
+                    } else{
+                        //update tablet
+                        for (int i = 0; i < oldEntry.size(); i++) {
+                            String s = oldEntry.get(i);
+                            Gson gsonObj = new Gson();
+                            medDetails = gsonObj.fromJson(s, MedicineDetails.class);
+                            cal.add(Calendar.DATE, 1);
+
+                            if (morningTime.getVisibility() == View.VISIBLE) {
+                                Boolean morning = true;
+                                ArrayList<MedicinesTakenOrNot> medicineLists = new ArrayList<>();
+                                if (medDetails.getMedicineMorning() != null && medDetails.getMedicineMorning().size() != 0) {
+                                    medicineLists = medDetails.getMedicineMorning();
+                                    for (int mName = 0; mName < medicineLists.size(); mName++) {
+                                        if (medicineLists.get(mName).getMedName().equalsIgnoreCase(name)) {
+                                            Log.e(TAG, "storeMedicalDetails: " + "EQUAL");
+                                            medicineLists.set(mName, medicinesTakenOrNotMorning);
+                                            medDetails.setMedicineMorning(medicineLists);
+                                            morning = false;
+                                            break;
+                                        }/*else {
+                                    medicineLists.add(medicinesTakenOrNotMorning);
+                                    medDetails.setMedicineMorning(medicineLists);
+                                    break;
+                                }*/
+                                    }
+                                    if (morning) {
+                                        medicineLists.add(medicinesTakenOrNotMorning);
+                                        medDetails.setMedicineMorning(medicineLists);
+                                    }
+                                } else {
+                                    medicineLists.add(medicinesTakenOrNotMorning);
+                                    medDetails.setMedicineMorning(medicineLists);
+                                }
+                            } else {
+                                if (medDetails.getMedicineMorning() != null && medDetails.getMedicineMorning().size() != 0) {
+                                    ArrayList<MedicinesTakenOrNot> medicineLists = medDetails.getMedicineMorning();
+                                    for (int mName = 0; mName < medicineLists.size(); mName++) {
+                                        if (medicineLists.get(mName).getMedName().equalsIgnoreCase(name)) {
+                                            medicineLists.remove(mName);
+                                            medDetails.setMedicineMorning(medicineLists);
+                                        }
+                                    }
+                                }
+                            }
+                            if (noonTime.getVisibility() == View.VISIBLE) {
+                                Boolean Aftrenoon = true;
+                                ArrayList<MedicinesTakenOrNot> medicineLists = new ArrayList<>();
+                                if (medDetails.getMedicineAfternoon() != null && medDetails.getMedicineAfternoon().size() != 0) {
+                                    medicineLists = medDetails.getMedicineAfternoon();
+                                    for (int mName = 0; mName < medicineLists.size(); mName++) {
+                                        if (medicineLists.get(mName).getMedName().equalsIgnoreCase(name)) {
+                                            Log.e(TAG, "storeMedicalDetails: " + "EQUAL");
+                                            medicineLists.set(mName, medicinesTakenOrNotAfternoon);
+                                            medDetails.setMedicineAfternoon(medicineLists);
+                                            Aftrenoon = false;
+                                            break;
+                                        } /*else {
+                                    medicineLists.add(medicinesTakenOrNotAfternoon);
+                                    medDetails.setMedicineAfternoon(medicineLists);
+                                    break;
+                                }*/
+                                    }
+                                    if (Aftrenoon) {
+                                        medicineLists.add(medicinesTakenOrNotAfternoon);
+                                        medDetails.setMedicineAfternoon(medicineLists);
+                                    }
+                                } else {
+                                    medicineLists.add(medicinesTakenOrNotAfternoon);
+                                    medDetails.setMedicineAfternoon(medicineLists);
+                                }
+                            } else {
+                                if (medDetails.getMedicineAfternoon() != null && medDetails.getMedicineAfternoon().size() != 0) {
+                                    ArrayList<MedicinesTakenOrNot> medicineLists = medDetails.getMedicineAfternoon();
+                                    for (int mName = 0; mName < medicineLists.size(); mName++) {
+                                        if (medicineLists.get(mName).getMedName().equalsIgnoreCase(name)) {
+                                            medicineLists.remove(mName);
+                                            medDetails.setMedicineAfternoon(medicineLists);
+                                        }
+                                    }
+                                }
+                            }
+                            if (nightTime.getVisibility() == View.VISIBLE) {
+                                Boolean night = true;
+                                ArrayList<MedicinesTakenOrNot> medicineLists = new ArrayList<>();
+                                if (medDetails.getMedicineNight() != null && medDetails.getMedicineNight().size() != 0) {
+                                    medicineLists = medDetails.getMedicineNight();
+                                    for (int mName = 0; mName < medicineLists.size(); mName++) {
+                                        if (medicineLists.get(mName).getMedName().equalsIgnoreCase(name)) {
+                                            Log.e(TAG, "storeMedicalDetails: " + "EQUAL");
+                                            medicineLists.set(mName, medicinesTakenOrNotNight);
+                                            medDetails.setMedicineNight(medicineLists);
+                                            night = false;
+                                            break;
+                                        }/* else {
+                                    medicineLists.add(medicinesTakenOrNotNight);
+                                    medDetails.setMedicineNight(medicineLists);
+                                    break;
+                                }*/
+                                    }
+                                    if (night) {
+                                        medicineLists.add(medicinesTakenOrNotNight);
+                                        medDetails.setMedicineNight(medicineLists);
+                                    }
+                                } else {
+                                    medicineLists.add(medicinesTakenOrNotNight);
+                                    medDetails.setMedicineNight(medicineLists);
+                                }
+                            } else {
+                                if (medDetails.getMedicineNight() != null && medDetails.getMedicineNight().size() != 0) {
+                                    ArrayList<MedicinesTakenOrNot> medicineLists = medDetails.getMedicineNight();
+                                    for (int mName = 0; mName < medicineLists.size(); mName++) {
+                                        if (medicineLists.get(mName).getMedName().equalsIgnoreCase(name)) {
+                                            medicineLists.remove(mName);
+                                            medDetails.setMedicineNight(medicineLists);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        medicineTable.updateDataWithDate(GlobalClass.userID, localDate, medDetails);
+                        startDate1 = sdf.format(cal.getTime());
+                       // }
+                }
+              //  ArrayList<String> oldEntry = medicineTable.getAllMedicineDEtails(GlobalClass.userID, incDate);
+             /*   for (int i = 0; i < oldEntry.size(); i++) {
                     String s = oldEntry.get(i);
                     Gson gsonObj = new Gson();
-                    medDetails = gsonObj.fromJson(s, MedicineDetails.class);
+                    medDetails = gsonObj.fromJson(s, MedicineDetails.class);*/
 
-                    if(morningTime.getVisibility() == View.VISIBLE) {
+                  /*  if (morningTime.getVisibility() == View.VISIBLE) {
                         Boolean morning = true;
                         ArrayList<MedicinesTakenOrNot> medicineLists = new ArrayList<>();
-                        if (medDetails.getMedicineMorning() != null && medDetails.getMedicineMorning().size() != 0 ) {
+                        if (medDetails.getMedicineMorning() != null && medDetails.getMedicineMorning().size() != 0) {
                             medicineLists = medDetails.getMedicineMorning();
                             for (int mName = 0; mName < medicineLists.size(); mName++) {
                                 if (medicineLists.get(mName).getMedName().equalsIgnoreCase(name)) {
@@ -836,21 +1013,21 @@ public class AddMedicineFragment extends Fragment implements View.OnClickListene
                                     medDetails.setMedicineMorning(medicineLists);
                                     morning = false;
                                     break;
-                                }/*else {
+                                }*//*else {
                                     medicineLists.add(medicinesTakenOrNotMorning);
                                     medDetails.setMedicineMorning(medicineLists);
                                     break;
-                                }*/
+                                }*//*
                             }
-                           if(morning){
-                               medicineLists.add(medicinesTakenOrNotMorning);
-                               medDetails.setMedicineMorning(medicineLists);
-                           }
-                        }else {
+                            if (morning) {
+                                medicineLists.add(medicinesTakenOrNotMorning);
+                                medDetails.setMedicineMorning(medicineLists);
+                            }
+                        } else {
                             medicineLists.add(medicinesTakenOrNotMorning);
                             medDetails.setMedicineMorning(medicineLists);
                         }
-                    }else {
+                    } else {
                         if (medDetails.getMedicineMorning() != null && medDetails.getMedicineMorning().size() != 0) {
                             ArrayList<MedicinesTakenOrNot> medicineLists = medDetails.getMedicineMorning();
                             for (int mName = 0; mName < medicineLists.size(); mName++) {
@@ -861,10 +1038,10 @@ public class AddMedicineFragment extends Fragment implements View.OnClickListene
                             }
                         }
                     }
-                    if(noonTime.getVisibility() == View.VISIBLE) {
-                        Boolean Aftrenoon =true;
+                    if (noonTime.getVisibility() == View.VISIBLE) {
+                        Boolean Aftrenoon = true;
                         ArrayList<MedicinesTakenOrNot> medicineLists = new ArrayList<>();
-                        if (medDetails.getMedicineAfternoon() != null && medDetails.getMedicineAfternoon().size() !=0) {
+                        if (medDetails.getMedicineAfternoon() != null && medDetails.getMedicineAfternoon().size() != 0) {
                             medicineLists = medDetails.getMedicineAfternoon();
                             for (int mName = 0; mName < medicineLists.size(); mName++) {
                                 if (medicineLists.get(mName).getMedName().equalsIgnoreCase(name)) {
@@ -873,21 +1050,21 @@ public class AddMedicineFragment extends Fragment implements View.OnClickListene
                                     medDetails.setMedicineAfternoon(medicineLists);
                                     Aftrenoon = false;
                                     break;
-                                } /*else {
+                                } *//*else {
                                     medicineLists.add(medicinesTakenOrNotAfternoon);
                                     medDetails.setMedicineAfternoon(medicineLists);
                                     break;
-                                }*/
+                                }*//*
                             }
-                            if(Aftrenoon){
+                            if (Aftrenoon) {
                                 medicineLists.add(medicinesTakenOrNotAfternoon);
                                 medDetails.setMedicineAfternoon(medicineLists);
                             }
-                        }else {
+                        } else {
                             medicineLists.add(medicinesTakenOrNotAfternoon);
                             medDetails.setMedicineAfternoon(medicineLists);
                         }
-                    }else {
+                    } else {
                         if (medDetails.getMedicineAfternoon() != null && medDetails.getMedicineAfternoon().size() != 0) {
                             ArrayList<MedicinesTakenOrNot> medicineLists = medDetails.getMedicineAfternoon();
                             for (int mName = 0; mName < medicineLists.size(); mName++) {
@@ -898,10 +1075,10 @@ public class AddMedicineFragment extends Fragment implements View.OnClickListene
                             }
                         }
                     }
-                    if(nightTime.getVisibility() == View.VISIBLE) {
+                    if (nightTime.getVisibility() == View.VISIBLE) {
                         Boolean night = true;
                         ArrayList<MedicinesTakenOrNot> medicineLists = new ArrayList<>();
-                        if (medDetails.getMedicineNight() != null && medDetails.getMedicineNight().size() !=0) {
+                        if (medDetails.getMedicineNight() != null && medDetails.getMedicineNight().size() != 0) {
                             medicineLists = medDetails.getMedicineNight();
                             for (int mName = 0; mName < medicineLists.size(); mName++) {
                                 if (medicineLists.get(mName).getMedName().equalsIgnoreCase(name)) {
@@ -910,21 +1087,21 @@ public class AddMedicineFragment extends Fragment implements View.OnClickListene
                                     medDetails.setMedicineNight(medicineLists);
                                     night = false;
                                     break;
-                                }/* else {
+                                }*//* else {
                                     medicineLists.add(medicinesTakenOrNotNight);
                                     medDetails.setMedicineNight(medicineLists);
                                     break;
-                                }*/
+                                }*//*
                             }
-                            if(night){
+                            if (night) {
                                 medicineLists.add(medicinesTakenOrNotNight);
                                 medDetails.setMedicineNight(medicineLists);
                             }
-                        }else {
+                        } else {
                             medicineLists.add(medicinesTakenOrNotNight);
                             medDetails.setMedicineNight(medicineLists);
                         }
-                    }else {
+                    } else {
                         if (medDetails.getMedicineNight() != null && medDetails.getMedicineNight().size() != 0) {
                             ArrayList<MedicinesTakenOrNot> medicineLists = medDetails.getMedicineNight();
                             for (int mName = 0; mName < medicineLists.size(); mName++) {
@@ -937,8 +1114,7 @@ public class AddMedicineFragment extends Fragment implements View.OnClickListene
                     }
                 }
                 medicineTable.updateDataWithDate(GlobalClass.userID, incDate, medDetails);
-                incDate = sdf.format(c.getTime());
-
+                incDate = sdf.format(c.getTime());*/
             } else if (medicineTable.isMedicineExist(incDate)) {
                 MedicineDetails medDetails = new MedicineDetails();
                 ArrayList<String> oldEntry = medicineTable.getAllMedicineDEtails(GlobalClass.userID, incDate);
@@ -947,49 +1123,49 @@ public class AddMedicineFragment extends Fragment implements View.OnClickListene
                     Gson gsonObj = new Gson();
                     medDetails = gsonObj.fromJson(s, MedicineDetails.class);
                     ArrayList<MedicinesTakenOrNot> medicineLists = new ArrayList<>();
-                        if(morningTime.getVisibility() == View.VISIBLE) {
-                            if(medDetails.getMedicineMorning() != null) {
-                                medicineLists = medDetails.getMedicineMorning();
-                                medicineLists.add(medicinesTakenOrNotMorning);
-                                medDetails.setMedicineMorning(medicineLists);
-                            }else {
-                                medicineLists = new ArrayList<>();
-                                medicineLists.add(medicinesTakenOrNotMorning);
-                                medDetails.setMedicineMorning(medicineLists);
-                            }
-                        }else {
-                            Log.e(TAG, "storeMedicalDetails: There is no data in Morning" );
+                    if (morningTime.getVisibility() == View.VISIBLE) {
+                        if (medDetails.getMedicineMorning() != null) {
+                            medicineLists = medDetails.getMedicineMorning();
+                            medicineLists.add(medicinesTakenOrNotMorning);
+                            medDetails.setMedicineMorning(medicineLists);
+                        } else {
+                            medicineLists = new ArrayList<>();
+                            medicineLists.add(medicinesTakenOrNotMorning);
+                            medDetails.setMedicineMorning(medicineLists);
                         }
-                       // medicineLists.clear();
-                        if(noonTime.getVisibility() == View.VISIBLE) {
-                            if(medDetails.getMedicineAfternoon()!=null) {
-                                medicineLists = medDetails.getMedicineAfternoon();
-                                medicineLists.add(medicinesTakenOrNotAfternoon);
-                                medDetails.setMedicineAfternoon(medicineLists);
-                            }else {
-                                medicineLists = new ArrayList<>();
-                                medicineLists.add(medicinesTakenOrNotAfternoon);
-                                medDetails.setMedicineAfternoon(medicineLists);
-                            }
+                    } else {
+                        Log.e(TAG, "storeMedicalDetails: There is no data in Morning");
+                    }
+                    // medicineLists.clear();
+                    if (noonTime.getVisibility() == View.VISIBLE) {
+                        if (medDetails.getMedicineAfternoon() != null) {
+                            medicineLists = medDetails.getMedicineAfternoon();
+                            medicineLists.add(medicinesTakenOrNotAfternoon);
+                            medDetails.setMedicineAfternoon(medicineLists);
+                        } else {
+                            medicineLists = new ArrayList<>();
+                            medicineLists.add(medicinesTakenOrNotAfternoon);
+                            medDetails.setMedicineAfternoon(medicineLists);
+                        }
 
-                        }else {
-                            Log.e(TAG, "storeMedicalDetails: There is no data in Afternoon" );
+                    } else {
+                        Log.e(TAG, "storeMedicalDetails: There is no data in Afternoon");
                         //medicineLists.clear();
                     }
-                        if(nightTime.getVisibility() == View.VISIBLE) {
-                            if(medDetails.getMedicineNight() !=null) {
-                                medicineLists = medDetails.getMedicineNight();
-                                medicineLists.add(medicinesTakenOrNotNight);
-                                medDetails.setMedicineNight(medicineLists);
-                            }else {
-                                medicineLists = new ArrayList<>();
-                                medicineLists.add(medicinesTakenOrNotNight);
-                                medDetails.setMedicineNight(medicineLists);
-                            }
-                        }else {
-                            Log.e(TAG, "storeMedicalDetails: There is no data in Night");
+                    if (nightTime.getVisibility() == View.VISIBLE) {
+                        if (medDetails.getMedicineNight() != null) {
+                            medicineLists = medDetails.getMedicineNight();
+                            medicineLists.add(medicinesTakenOrNotNight);
+                            medDetails.setMedicineNight(medicineLists);
+                        } else {
+                            medicineLists = new ArrayList<>();
+                            medicineLists.add(medicinesTakenOrNotNight);
+                            medDetails.setMedicineNight(medicineLists);
                         }
-                        // medicineLists.clear();
+                    } else {
+                        Log.e(TAG, "storeMedicalDetails: There is no data in Night");
+                    }
+                    // medicineLists.clear();
                 }
 
                 medicineTable.updateDataWithDate(GlobalClass.userID, incDate, medDetails);
@@ -997,12 +1173,12 @@ public class AddMedicineFragment extends Fragment implements View.OnClickListene
                 //long getCount = medicineTable.getMedicineDetailsCount();
                 //incDate = sdf.format(c.getTime());
                 //Log.e(TAG, "onCreateView: Get Medicine Count " + getCount);
-            } else if(checkEditOrNot == 0) {
-                    medicineTable.addMedicineDetails(medicineDetails, medicineDetails.getPersonName());
-                    long getCount = medicineTable.getMedicineDetailsCount();
-                    incDate = sdf.format(c.getTime());
-                    Log.e(TAG, "onCreateView: Get Medicine Count " + getCount);
-               // }
+            } else if (checkEditOrNot == 0) {
+                medicineTable.addMedicineDetails(medicineDetails, medicineDetails.getPersonName());
+                long getCount = medicineTable.getMedicineDetailsCount();
+                incDate = sdf.format(c.getTime());
+                Log.e(TAG, "onCreateView: Get Medicine Count " + getCount);
+                // }
             }
         }
 
@@ -1010,6 +1186,17 @@ public class AddMedicineFragment extends Fragment implements View.OnClickListene
 
 
     }
+// To update Medicine
+    public void updateMedicineDetails(){
+
+    }
+
+    // To store medicine for particular time
+
+    public void storeMedicineForParticularTime(){
+
+    }
+
 
     public void syncWithCalender() {
         if (morningTime.getVisibility() == View.VISIBLE) {
@@ -1087,7 +1274,7 @@ public class AddMedicineFragment extends Fragment implements View.OnClickListene
         boolean valid = true;
 
         String medicineName = medicineNamee.getText().toString();
-       // String userName = medicineTable.isExist(medicineDetails, medicineName);
+        // String userName = medicineTable.isExist(medicineDetails, medicineName);
 
         if (TextUtils.isEmpty(medicineName)) {
             medicineNamee.setError("Required");
@@ -1136,7 +1323,7 @@ public class AddMedicineFragment extends Fragment implements View.OnClickListene
 
     public void saveAllData() {
         FragmentManager fm = getActivity().getSupportFragmentManager();
-        for(int i = 0; i < fm.getBackStackEntryCount(); ++i) {
+        for (int i = 0; i < fm.getBackStackEntryCount(); ++i) {
             fm.popBackStack();
         }
     }
