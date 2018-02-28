@@ -344,7 +344,7 @@ public class SOSFragment extends Fragment implements View.OnClickListener, Track
 
 
                     if (sharingIntent.resolveActivity(manager) != null) {
-                        startActivity(Intent.createChooser(sharingIntent, "Shearing Option"));
+                        startActivity(Intent.createChooser(sharingIntent, "Sharing Option"));
                     } else {
                         Log.d(TAG, "No Intent available to handle action");
                     }
