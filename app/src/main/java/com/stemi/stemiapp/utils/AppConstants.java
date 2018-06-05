@@ -6,7 +6,7 @@ package com.stemi.stemiapp.utils;
 
 public interface AppConstants {
 
-    String BASE_URL = "http://www.stemiindia.com/healthapp/api/";
+    String BASE_URL = "https://www.stemiindia.com/healthapp/api/";
     String USER_TOKEN = "user_token";
     String APP_PREF_NAME = "stemi-PREFS";      //SharedPreference Name
 
