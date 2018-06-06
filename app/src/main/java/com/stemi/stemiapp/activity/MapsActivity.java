@@ -6,9 +6,9 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
-import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.util.Log;
@@ -28,8 +28,6 @@ import com.stemi.stemiapp.model.apiModels.Hospital;
 import com.stemi.stemiapp.model.apiModels.NearestHospitalResponse;
 import com.stemi.stemiapp.preference.AppSharedPreference;
 import com.stemi.stemiapp.utils.AppConstants;
-
-import java.util.List;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback,
         LoaderManager.LoaderCallbacks<NearestHospitalResponse>,
@@ -57,7 +55,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Log.e(TAG, "longitude = " + longitude);
         Log.e(TAG, "token = " + token);
 
-        if(latitude != 0.0 && longitude != 0.0) {
+        if (latitude != 0.0 && longitude != 0.0) {
             getSupportLoaderManager().restartLoader(0, null, this).forceLoad();
         }
 
@@ -109,21 +107,23 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     public Loader<NearestHospitalResponse> onCreateLoader(int i, Bundle bundle) {
-        Log.e(TAG,"Calling loader - HospitalsLoader");
-        return new HospitalsLoader(this,token,latitude,longitude);
+        Log.e(TAG, "Calling loader - HospitalsLoader");
+        return new HospitalsLoader(this, token, latitude, longitude);
     }
 
     @Override
     public void onLoadFinished(Loader<NearestHospitalResponse> loader, NearestHospitalResponse hospitals) {
-        if(hospitals.getStatus().equalsIgnoreCase("success")) {
-            Log.e(TAG, "hospitals.size() = " + hospitals.getHospitalList().size());
-            for (Hospital hospital : hospitals.getHospitalList()) {
-                LatLng latLng = new LatLng(hospital.getLatitude(), hospital.getLongitude());
-                MarkerOptions markerOptions = new MarkerOptions();
-                markerOptions.position(latLng);
-                markerOptions.title(hospital.getHospitalName());
-                markerOptions.snippet(hospital.getHospitalAddress());
-                mMap.addMarker(markerOptions);
+        if (hospitals != null) {
+            if (hospitals.getStatus().equalsIgnoreCase("success")) {
+                Log.e(TAG, "hospitals.size() = " + hospitals.getHospitalList().size());
+                for (Hospital hospital : hospitals.getHospitalList()) {
+                    LatLng latLng = new LatLng(hospital.getLatitude(), hospital.getLongitude());
+                    MarkerOptions markerOptions = new MarkerOptions();
+                    markerOptions.position(latLng);
+                    markerOptions.title(hospital.getHospitalName());
+                    markerOptions.snippet(hospital.getHospitalAddress());
+                    mMap.addMarker(markerOptions);
+                }
             }
         }
     }
@@ -135,14 +135,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     public void onLocationChanged(Location location) {
-        Log.e(TAG, "location = "+ new Gson().toJson(location));
-        Log.e(TAG, "latitude = "+latitude+" longitude = "+ longitude);
-        if(location != null){
-            if(latitude == 0.0 || longitude == 0.0){
+        Log.e(TAG, "location = " + new Gson().toJson(location));
+        Log.e(TAG, "latitude = " + latitude + " longitude = " + longitude);
+        if (location != null) {
+            if (latitude == 0.0 || longitude == 0.0) {
                 latitude = location.getLatitude();
                 longitude = location.getLongitude();
                 moveToCurrentLoc();
-                getSupportLoaderManager().restartLoader(0,null,this).forceLoad();
+                getSupportLoaderManager().restartLoader(0, null, this).forceLoad();
             }
         }
     }
