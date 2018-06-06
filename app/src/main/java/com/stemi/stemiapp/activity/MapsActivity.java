@@ -115,14 +115,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onLoadFinished(Loader<NearestHospitalResponse> loader, NearestHospitalResponse hospitals) {
         if (hospitals != null) {
             if (hospitals.getStatus().equalsIgnoreCase("success")) {
-                Log.e(TAG, "hospitals.size() = " + hospitals.getHospitalList().size());
-                for (Hospital hospital : hospitals.getHospitalList()) {
-                    LatLng latLng = new LatLng(hospital.getLatitude(), hospital.getLongitude());
-                    MarkerOptions markerOptions = new MarkerOptions();
-                    markerOptions.position(latLng);
-                    markerOptions.title(hospital.getHospitalName());
-                    markerOptions.snippet(hospital.getHospitalAddress());
-                    mMap.addMarker(markerOptions);
+                if (hospitals.getHospitalList() != null) {
+                    Log.e(TAG, "hospitals.size() = " + hospitals.getHospitalList().size());
+                    for (Hospital hospital : hospitals.getHospitalList()) {
+                        LatLng latLng = new LatLng(hospital.getLatitude(), hospital.getLongitude());
+                        MarkerOptions markerOptions = new MarkerOptions();
+                        markerOptions.position(latLng);
+                        markerOptions.title(hospital.getHospitalName());
+                        markerOptions.snippet(hospital.getHospitalAddress());
+                        mMap.addMarker(markerOptions);
+                    }
                 }
             }
         }
